@@ -38,16 +38,18 @@ async function loadReport() {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td contenteditable="true">${escapeHtml(row.program || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.milestones || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.duration || '')}</td>
                         <td contenteditable="true">${escapeHtml(row.objectives || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.persons_involved || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.school_resources || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.program_content_and_activities || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.service_delivery || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.partnerships_and_stakeholders || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.facilitators_and_trainers || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.program_start_and_end_dates || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.frequency_of_activities || '')}</td>
                         <td contenteditable="true">${escapeHtml(row.community_resources || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.collaborating_agencies || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.budget || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.means_of_verification || '')}</td>
-                        <td contenteditable="true">${escapeHtml(row.remarks || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.school_resources || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.risk_management_and_contingency_plans || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.sustainability_and_follow_up || '')}</td>
+                        <td contenteditable="true">${escapeHtml(row.promotion_and_awareness || '')}</td>
                     `;
                     tableBody.appendChild(tr);
                 });
@@ -88,6 +90,8 @@ function addEmptyRow() {
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
         <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
     `;
     tableBody.appendChild(tr);
 }
@@ -112,23 +116,25 @@ function collectFormData() {
         details: []
     };
     
-    // Collect table data
+    // Collect table data - UPDATED for 13 columns
     const rows = document.querySelectorAll('.program-table tbody tr');
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        if (cells.length >= 11) {
+        if (cells.length >= 13) {
             formData.details.push({
                 program: cells[0]?.innerText || '',
-                milestones: cells[1]?.innerText || '',
-                duration: cells[2]?.innerText || '',
-                objectives: cells[3]?.innerText || '',
-                persons_involved: cells[4]?.innerText || '',
-                school_resources: cells[5]?.innerText || '',
-                community_resources: cells[6]?.innerText || '',
-                collaborating_agencies: cells[7]?.innerText || '',
-                budget: cells[8]?.innerText || '',
-                means_of_verification: cells[9]?.innerText || '',
-                remarks: cells[10]?.innerText || ''
+                objectives: cells[1]?.innerText || '',
+                program_content_and_activities: cells[2]?.innerText || '',
+                service_delivery: cells[3]?.innerText || '',
+                partnerships_and_stakeholders: cells[4]?.innerText || '',
+                facilitators_and_trainers: cells[5]?.innerText || '',
+                program_start_and_end_dates: cells[6]?.innerText || '',
+                frequency_of_activities: cells[7]?.innerText || '',
+                community_resources: cells[8]?.innerText || '',
+                school_resources: cells[9]?.innerText || '',
+                risk_management_and_contingency_plans: cells[10]?.innerText || '',
+                sustainability_and_follow_up: cells[11]?.innerText || '',
+                promotion_and_awareness: cells[12]?.innerText || ''
             });
         }
     });
@@ -283,7 +289,7 @@ window.collectFormData = function() {
     }
 };
 
-// ===== FIXED ADD/DELETE ROW FUNCTIONS =====
+// ===== FIXED ADD/DELETE ROW FUNCTIONS FOR 13 COLUMNS =====
 document.addEventListener("DOMContentLoaded", function() {
     // Load the report
     loadReport();
@@ -292,14 +298,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const addRowBtn = document.querySelector(".add-row-btn");
     const deleteRowBtn = document.querySelector(".delete-row-btn");
     
-    // Add Row Function
+    // Add Row Function - UPDATED for 13 columns
     if (addRowBtn) {
         addRowBtn.addEventListener("click", function() {
             const tableBody = document.querySelector('.program-table tbody');
             if (tableBody) {
                 const newRow = document.createElement("tr");
-                // Create 11 editable cells
-                for (let i = 0; i < 11; i++) {
+                // Create 13 editable cells (matching table columns)
+                for (let i = 0; i < 13; i++) {
                     const td = document.createElement("td");
                     td.contentEditable = "true";
                     newRow.appendChild(td);
@@ -329,6 +335,3 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-
-// Remove the old button declarations and event listeners at the bottom
-// The old code at lines 85-112 should be replaced with the above

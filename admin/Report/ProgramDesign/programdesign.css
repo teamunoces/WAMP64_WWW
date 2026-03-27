@@ -7,12 +7,12 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    margin-left: 150px; /* Account for fixed sidebar */
+    margin-left: 100px; /* Account for fixed sidebar */
 }
 
 /* ===== Frames (Layout Shell) ===== */
 #sidebarFrame {
-    width: 150px;
+    width: 100px;
     height: 100vh;
     border: none;
     position: fixed;
@@ -28,9 +28,9 @@ body {
     border: none;
     position: fixed;
     top: 0;
-    left: 150px;
+    left: 100px;
     right: 0;
-    width: calc(100% - 150px);
+    width: calc(100% - 100px);
     z-index: 1000;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -43,7 +43,7 @@ body {
     max-width: 1100px;
     padding: 40px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    margin-top: 60px; /* Prevents overlap with fixed header */
+    margin-top: 100px; /* Prevents overlap with fixed header */
     margin-bottom: 40px;
     margin-left: auto; /* Center horizontally */
     margin-right: auto; /* Center horizontally */
@@ -192,6 +192,41 @@ body {
     background-color: #ffffff;
     outline: none; /* Remove default outline when typing */
     padding: 6px;
+}
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Ensures headers wrap nicely */
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    font-size: 0.75rem;
+    vertical-align: top;
+    word-wrap: break-word;
+}
+
+thead th {
+    background-color: #d1d5db; /* Grey header background */
+    text-align: center;
+    font-weight: bold;
+}
+
+.sub-header th {
+    font-weight: normal;
+    font-size: 0.7rem;
+    padding: 4px;
+}
+
+/* Specific Column Widths */
+.narrow {
+    width: 12%;
+}
+
+tbody td {
+    height: 400px; /* Large empty space as per screenshot */
 }
 
 /* Base style for both buttons */

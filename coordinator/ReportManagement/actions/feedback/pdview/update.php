@@ -82,16 +82,18 @@ try {
         $deleteStmt = $pdo->prepare("DELETE FROM pd_detail WHERE report_id = :report_id");
         $deleteStmt->execute([':report_id' => $reportId]);
 
-        // Insert new details
+       // Insert new details
         if (isset($data['details']) && is_array($data['details']) && count($data['details']) > 0) {
             $detailStmt = $pdo->prepare("INSERT INTO pd_detail 
-                (report_id, program, milestones, duration, objectives, persons_involved, 
-                school_resources, community_resources, collaborating_agencies, budget, 
-                means_of_verification, remarks) 
+                (report_id, program, objectives, program_content_and_activities, service_delivery, 
+                partnerships_and_stakeholders, facilitators_and_trainers, program_start_and_end_dates, 
+                frequency_of_activities, community_resources, school_resources, 
+                risk_management_and_contingency_plans, sustainability_and_follow_up, promotion_and_awareness) 
                 VALUES 
-                (:report_id, :program, :milestones, :duration, :objectives, :persons_involved, 
-                :school_resources, :community_resources, :collaborating_agencies, :budget, 
-                :means_of_verification, :remarks)");
+                (:report_id, :program, :objectives, :program_content_and_activities, :service_delivery, 
+                :partnerships_and_stakeholders, :facilitators_and_trainers, :program_start_and_end_dates, 
+                :frequency_of_activities, :community_resources, :school_resources, 
+                :risk_management_and_contingency_plans, :sustainability_and_follow_up, :promotion_and_awareness)");
 
             $insertCount = 0;
             
@@ -109,16 +111,18 @@ try {
                     $detailResult = $detailStmt->execute([
                         ':report_id' => $reportId,
                         ':program' => $row['program'] ?? '',
-                        ':milestones' => $row['milestones'] ?? '',
-                        ':duration' => $row['duration'] ?? '',
                         ':objectives' => $row['objectives'] ?? '',
-                        ':persons_involved' => $row['persons_involved'] ?? '',
-                        ':school_resources' => $row['school_resources'] ?? '',
+                        ':program_content_and_activities' => $row['program_content_and_activities'] ?? '',
+                        ':service_delivery' => $row['service_delivery'] ?? '',
+                        ':partnerships_and_stakeholders' => $row['partnerships_and_stakeholders'] ?? '',
+                        ':facilitators_and_trainers' => $row['facilitators_and_trainers'] ?? '',
+                        ':program_start_and_end_dates' => $row['program_start_and_end_dates'] ?? '',
+                        ':frequency_of_activities' => $row['frequency_of_activities'] ?? '',
                         ':community_resources' => $row['community_resources'] ?? '',
-                        ':collaborating_agencies' => $row['collaborating_agencies'] ?? '',
-                        ':budget' => $row['budget'] ?? '',
-                        ':means_of_verification' => $row['means_of_verification'] ?? '',
-                        ':remarks' => $row['remarks'] ?? ''
+                        ':school_resources' => $row['school_resources'] ?? '',
+                        ':risk_management_and_contingency_plans' => $row['risk_management_and_contingency_plans'] ?? '',
+                        ':sustainability_and_follow_up' => $row['sustainability_and_follow_up'] ?? '',
+                        ':promotion_and_awareness' => $row['promotion_and_awareness'] ?? ''
                     ]);
 
                     if (!$detailResult) {
@@ -127,6 +131,7 @@ try {
                     $insertCount++;
                 }
             }
+
             
             // Optional: Check if at least one row was inserted
             if ($insertCount === 0) {

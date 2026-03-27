@@ -1,7 +1,7 @@
 /* ===== Layout Frames ===== */
 
 #sidebarFrame{
-    width:150px;
+    width:100px;
     height:100vh;
     border:none;
     position:fixed;
@@ -16,8 +16,8 @@
     border:none;
     position:fixed;
     top:0;
-    left:150px;
-    width:calc(100% - 150px);
+    right:0; /* Changed from left:100px to right:0 */
+    width:calc(100% - 100px); /* Adjusted width calculation */
     z-index:1000;
     background:#fff;
     box-shadow:0 2px 6px rgba(0,0,0,0.1);

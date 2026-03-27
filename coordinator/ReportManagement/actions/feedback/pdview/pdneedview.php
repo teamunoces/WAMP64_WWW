@@ -1,4 +1,8 @@
 <?php
+session_start();
+
+$userName = $_SESSION['name'] ?? '';
+$userDean = $_SESSION['dean'] ?? '';
 $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program Design";
 $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 ?>
@@ -9,40 +13,43 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program Design Form - SMCC</title>
-    <link rel="stylesheet" href="needfix.css">
+    <link rel="stylesheet" href="view.css">
     <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
-        <!-- Header -->
-        <iframe 
-             src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
-            id="headerFrame"
-            frameborder="0"
-            scrolling="no"
-            title="Header">
-        </iframe>
 
-        <!-- Sidebar -->
-        <iframe 
-            src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
-            id="sidebarFrame"
-            frameborder="0"
-            scrolling="no"
-            title="Navigation Sidebar">
-        </iframe>
+    <iframe 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
+        id="headerFrame"
+        frameborder="0"
+        scrolling="no"
+        title="Header">
+    </iframe>
 
-    
+    <!-- Sidebar -->
+    <iframe 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html" 
+        id="sidebarFrame"
+        frameborder="0"
+        scrolling="no"
+        title="Navigation Sidebar">
+    </iframe>
+
+     
+                                  
+                          
 
     <div class="form-container">
-                       <!-- feedback-->
-                                <div class="admin-comment">
-                                    <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
-                                    <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
-                                </div>
-                           
+             <!--------------------feedback------------------ -->
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
+                                          <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
+                                    </div>
+                        
+                      
         <header>
             <div class="header-content">
-                <img src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -51,7 +58,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                 </div>
                 <div class="logos-right">
-                    <img src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/images/ISOlogo.png" alt="SOCOTEC Logo">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
                 </div>
             </div>
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
@@ -80,7 +87,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         </div>
         <form class="table_form">
                 <table class="program-table">
-                  <thead>
+                     <thead>
                         <tr>
                             <th rowspan="2">Program Title</th>
                             <th rowspan="2">Objectives</th>
@@ -120,14 +127,22 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                         </tr>
                     </tbody>
                    
-                
+                    <button type="button" class="add-row-btn">Add Row</button>
+                    <button type="button" class="delete-row-btn">Delete Row</button>
                 </table>
         </form>
 
+                    <!-- submit button-->
+
+                        <div>
+                           <button type="button" class="submit-button" id="resubmitBtn">Re-submit</button>
+                        </div>
+
+                    <!-- FOOTER -->
                     <footer>
                         <div class="footer-bottom">
                             <div class="footer-logos">
-                                <img src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/images/footerlogo.png" alt="Org Logo 1">
+                                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
                             </div>
                         </div>
                     </footer>
@@ -141,9 +156,9 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
           <input type="hidden" id="currentReportType" value="<?php echo $reportType; ?>">
 
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="get.js" ></script>
-    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/action/action.js"></script>
-    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/pdneedfix/darkmode.js"></script>
-></script>
+    <script src="./get.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="./download.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

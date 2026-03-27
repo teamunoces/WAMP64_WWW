@@ -12,7 +12,7 @@ body {
 
 /* ===== Frames (Layout Shell) ===== */
 #sidebarFrame {
-    width: 150px;
+    width: 100px;
     height: 100vh;
     border: none;
     position: fixed;
@@ -28,9 +28,9 @@ body {
     border: none;
     position: fixed;
     top: 0;
-    left: 150px;
+    left: 100px;
     right: 0;
-    width: calc(100% - 150px);
+    width: calc(100% - 100px);
     z-index: 1000;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -43,7 +43,7 @@ body {
     max-width: 1100px;
     padding: 40px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    margin-top: 60px; /* Prevents overlap with fixed header */
+    margin-top: 100px; /* Prevents overlap with fixed header */
     margin-bottom: 40px;
     margin-left: auto; /* Center horizontally */
     margin-right: auto; /* Center horizontally */

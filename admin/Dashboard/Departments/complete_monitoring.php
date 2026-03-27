@@ -8,7 +8,7 @@ $password = "";
 $dbname = "ces_reports_db";
 
 // Define arrays
-$departments = ["CCIS", "CTHM", "CAS", "CBM", "JHS", "SHS", "CTE", "CCJE", "CCF"];
+$departments = ["CCIS", "CTHM", "CAS", "CBM", "JHS", "SHS", "CTE", "CCJE", "CCF", "ELEM"];
 $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // Document types and their corresponding tables

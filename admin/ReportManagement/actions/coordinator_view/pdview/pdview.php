@@ -92,19 +92,26 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         </div>
         <form class="table_form">
                 <table class="program-table">
-                    <thead>
+                   <thead>
                         <tr>
-                            <th>Program</th>
-                            <th>Milestones</th>
-                            <th>Duration</th>
-                            <th>Objectives</th>
-                            <th>Persons Involved</th>
-                            <th>Resources Needed from the School (funds, equipment)</th>
-                            <th>Resources Needed from the Community (funds, equipment)</th>
-                            <th>Collaborating Agencies</th>
-                            <th>Budget</th>
-                            <th>Means of Verification</th>
-                            <th>Remarks</th>
+                            <th rowspan="2">Program Title</th>
+                            <th rowspan="2">Objectives</th>
+                            <th rowspan="2">Program Content and Activities</th>
+                            <th colspan="3">Approach and Methodology</th>
+                            <th colspan="2">Program Timeline and Milestones</th>
+                            <th colspan="2">Resources Needed</th>
+                            <th rowspan="2" class="narrow">Risk Management and Contingency Plans</th>
+                            <th rowspan="2" class="narrow">Sustainability and Follow-up</th>
+                            <th rowspan="2" class="narrow">Promotion & Awareness</th>
+                        </tr>
+                        <tr class="sub-header">
+                            <th>Service Delivery</th>
+                            <th>Partnerships and Stakeholders</th>
+                            <th>Facilitators and Trainers</th>
+                            <th>Program's Start and End Dates</th>
+                            <th>Frequency of Activities</th>
+                            <th>Community Material Resources and Financial Resources</th>
+                            <th>School Material Resources and Financial Resources</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,10 +127,10 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                             <td contenteditable="true"></td>
                             <td contenteditable="true"></td>
                             <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
                         </tr>
                     </tbody>
-                   
-                
                 </table>
         </form>
 

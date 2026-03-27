@@ -44,18 +44,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Collect Table Data
         tableBody.querySelectorAll("tr").forEach((row) => {
             const cells = row.querySelectorAll("td");
-            if (cells.length === 11) {
+            if (cells.length === 13) {
                 formData.append(`program[]`, cells[0].innerText.trim());
-                formData.append(`milestones[]`, cells[1].innerText.trim());
-                formData.append(`duration[]`, cells[2].innerText.trim());
-                formData.append(`objectives[]`, cells[3].innerText.trim());
-                formData.append(`persons_involved[]`, cells[4].innerText.trim());
-                formData.append(`school_resources[]`, cells[5].innerText.trim());
-                formData.append(`community_resources[]`, cells[6].innerText.trim());
-                formData.append(`collaborating_agencies[]`, cells[7].innerText.trim());
-                formData.append(`budget[]`, cells[8].innerText.trim());
-                formData.append(`means_of_verification[]`, cells[9].innerText.trim());
-                formData.append(`remarks[]`, cells[10].innerText.trim());
+                formData.append(`objectives[]`, cells[1].innerText.trim());
+                formData.append(`program_content_and_activities[]`, cells[2].innerText.trim());
+                formData.append(`service_delivery[]`, cells[3].innerText.trim());
+                formData.append(`partnerships_and_stakeholders[]`, cells[4].innerText.trim());
+                formData.append(`facilitators_and_trainers[]`, cells[5].innerText.trim());
+                formData.append(`program_start_and_end_dates[]`, cells[6].innerText.trim());
+                formData.append(`frequency_of_activities[]`, cells[7].innerText.trim());
+                formData.append(`community_resources[]`, cells[8].innerText.trim());
+                formData.append(`school_resources[]`, cells[9].innerText.trim());
+                formData.append(`risk_management_and_contingency_plans[]`, cells[10].innerText.trim());
+                formData.append(`sustainability_and_follow_up[]`, cells[11].innerText.trim());
+                formData.append(`promotion_and_awareness[]`, cells[12].innerText.trim());
             }
         });
 

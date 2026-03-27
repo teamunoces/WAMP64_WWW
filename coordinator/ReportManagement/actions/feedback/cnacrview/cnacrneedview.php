@@ -1,9 +1,11 @@
 <?php
 session_start();
-// These should be set when user logs in
-$userDepartment = $_SESSION['department'] ?? '';
-// Get selected report type from query parameter
+
+$userName = $_SESSION['name'] ?? '';
+$userDean = $_SESSION['dean'] ?? '';
+
 $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community Needs Assessment Consolidated Report";
+$reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,16 +13,15 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Needs Assessment Report</title>
-    <link rel="stylesheet" href="cnacr.css">
-    <link rel="stylesheet" href="darkmode.css">
+    <link rel="stylesheet" href="cnacrview.css">
+    <link rel="stylesheet" href="darkmode.css">">
 </head>
 <body>
 
 
 
-   <!-- Header -->
-   <iframe 
-        src="../../Profile/profile.html" 
+  <iframe 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -29,19 +30,25 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
 
     <!-- Sidebar -->
     <iframe 
-        src="../../Sidebar/sidebar.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html" 
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
         title="Navigation Sidebar">
     </iframe>
 
+
     <div class="report-container">
 
+                                     <!--------------------feedback------------------ -->
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
+                                          <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
+                                    </div>
 
         <header>
             <div class="header-content">
-                <img src="../images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -50,7 +57,7 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                 </div>
                 <div class="logos-right">
-                    <img src="../images/ISOlogo.png" alt="SOCOTEC Logo">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
                 </div>
             </div>
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
@@ -63,9 +70,9 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
 
         <div class="header-grid">
             <div class="label-box bg-gray">Department</div>
-            <input type="text" name="department" id="department"  value="<?php echo htmlspecialchars($userDepartment); ?>" placeholder="Type here..." >
+            <input type="text" name="department" id="department"  placeholder="Type here..." >
             <div class="label-box bg-gray">Date Submitted</div>
-            <input type="text" name="date" id="date_submitted" value="<?php echo date('Y-m-d'); ?>" placeholder="Type here..." >
+            <input type="text" name="date" id="date_submitted" placeholder="Type here..." >
         </div>
 
         <div class="section-content">
@@ -193,19 +200,15 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
             </div>
         </div>
 
-
-          <div class="form-actions">
-                <button type="submit" class="submit-button" onclick="submitReport()">Submit</button>
-          </div>
-        
-
-                    
+                        <div>
+                           <button type="button" class="submit-button" id="resubmitBtn">Re-submit</button>
+                        </div>
                       <!--______________________________ footer___________________________ -->
 
                          <footer>
                             <div class="footer-bottom">
                                 <div class="footer-logos">
-                                    <img src="../images/footerlogo.png" alt="Org Logo 1">
+                                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
                                 </div>
                             </div>
                         </footer>
@@ -218,9 +221,24 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
 
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Get ID from URL
+            const params = new URLSearchParams(window.location.search);
+            const reportId = params.get("id");
+
+            if (reportId) {
+                loadReportById(reportId);
+            } else {
+                console.error("No report ID in URL");
+            }
+
+        });
+    </script>
+
     <script src="./darkmode.js"></script>
-    <SCript src="./post.js"></SCript>
-    <script src="./actions.js"></script>
+    <SCript src="./viewget.js"></SCript>
 
 </body>
 </html>

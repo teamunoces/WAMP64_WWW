@@ -2,7 +2,7 @@
    VARIABLES & THEMES
 ========================================================= */
 :root {
-    --sidebar-w: 150px;
+    --sidebar-w: 100px;
     --header-h: 60px;
     
     /* Light Mode */
@@ -46,7 +46,7 @@ body {
 
 /* ===== Frames (Layout Shell) ===== */
 #sidebarFrame {
-    width: 150px;
+    width: 100px;
     height: 100vh;
     border: none;
     position: fixed;
@@ -62,9 +62,9 @@ body {
     border: none;
     position: fixed;
     top: 0;
-    left: 150px;
+    left: 100px;
     right: 0;
-    width: calc(100% - 150px);
+    width: calc(100% - 100px);
     z-index: 1000;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);

@@ -568,9 +568,8 @@ $debug_mode = false; // Set to true to see debug info
                 <?php if (empty($all_reports)): ?>
                     <div class="no-reports">
                         <p>No approved coordinator reports found for <?php echo htmlspecialchars($department); ?> department.</p>
-                        <small>Records must have: status = 'approve' and role = 'coordinator'</small>
                         <br><br>
-                        <small class="debug-text">Debug: Checked tables: <?php echo implode(', ', $existing_tables); ?></small>
+                       
                     </div>
                 <?php else: ?>
                     <?php foreach ($all_reports as $report): 

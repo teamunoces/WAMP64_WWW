@@ -2,6 +2,7 @@ const adminToggle = document.getElementById('admin-toggle');
 const menu = document.querySelector('.menu-card');
 let isMenuInParent = false;
 let injectedStyle = null;
+let injectedFontAwesome = null;
 
 /* ================= MENU CSS INJECTION ================= */
 async function loadAndInjectCSS() {
@@ -19,11 +20,36 @@ async function loadAndInjectCSS() {
     }
 }
 
+/* ================= FONT AWESOME INJECTION ================= */
+function injectFontAwesome() {
+    try {
+        if (parent && parent.document) {
+            // Check if Font Awesome is already loaded in parent
+            const existingFA = parent.document.querySelector('link[href*="font-awesome"], link[href*="fa.min.css"], link[href*="fontawesome"]');
+            
+            if (!existingFA) {
+                console.log('Injecting Font Awesome into parent document');
+                injectedFontAwesome = parent.document.createElement('link');
+                injectedFontAwesome.rel = 'stylesheet';
+                injectedFontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+                parent.document.head.appendChild(injectedFontAwesome);
+            } else {
+                console.log('Font Awesome already exists in parent');
+            }
+        }
+    } catch (error) {
+        console.error('Failed to inject Font Awesome:', error);
+    }
+}
+
 /* ================= MENU SHOW / HIDE ================= */
 function showMenu() {
     if (!menu) return;
 
     if (!injectedStyle) loadAndInjectCSS();
+    
+    // CRITICAL: Inject Font Awesome before moving menu to parent
+    injectFontAwesome();
 
     if (!isMenuInParent) {
         parent.document.body.appendChild(menu);
@@ -32,6 +58,17 @@ function showMenu() {
         menu.style.right = '30px';
         menu.style.zIndex = '999999';
         isMenuInParent = true;
+        
+        // Force re-render of icons after moving to parent
+        setTimeout(() => {
+            const icons = menu.querySelectorAll('i');
+            icons.forEach(icon => {
+                // This forces the browser to re-render the icon
+                icon.style.display = 'none';
+                icon.offsetHeight; // Force reflow
+                icon.style.display = '';
+            });
+        }, 10);
     }
 
     menu.classList.add('show');
@@ -55,6 +92,13 @@ function hideMenu() {
         parent.document.head.removeChild(injectedStyle);
         injectedStyle = null;
     }
+    
+    // Optional: Remove Font Awesome when menu hides
+    // Uncomment if you want to clean up
+    if (injectedFontAwesome && parent?.document) {
+  parent.document.head.removeChild(injectedFontAwesome);
+        injectedFontAwesome = null;
+    }
 }
 
 adminToggle?.addEventListener('click', (e) => {
@@ -63,16 +107,24 @@ adminToggle?.addEventListener('click', (e) => {
 });
 
 /* ================= HEADER UPDATE BASED ON CURRENT PAGE ================= */
-document.addEventListener('DOMContentLoaded', () => {
+function updateHeaderBasedOnPage() {
     const headerTitle = document.querySelector('.header-title');
     const headerIcon = document.querySelector('.dashboard-icon');
 
     if (!headerTitle || !headerIcon) return;
 
-    const currentPath = parent?.location?.pathname || window.location.pathname;
+    // Get the current path from parent if in iframe, otherwise from window
+    let currentPath;
+    try {
+        // Try to get from parent first (if in iframe)
+        currentPath = parent?.location?.pathname || window.location.pathname;
+    } catch (e) {
+        // Cross-origin error fallback
+        currentPath = window.location.pathname;
+    }
 
     const pageMap = {
-        'Dashboard.html': { title: 'DASHBOARD', icon: 'fa-th-large' },
+        'dashboard.html': { title: 'DASHBOARD', icon: 'fa-th-large' },
         'Reports.html': { title: 'REPORT', icon: 'fa-file-alt' },
         'ReportManagement.html': { title: 'REPORT MANAGEMENT', icon: 'fa-cogs' },
         'AccountManagement.html': { title: 'ACCOUNT MANAGEMENT', icon: 'fa-users' },
@@ -91,18 +143,71 @@ document.addEventListener('DOMContentLoaded', () => {
         'programdesign.php': { title: 'Program Design', icon: 'fa-file-alt' },
         'pdview.php': { title: 'Program Design View', icon: 'fa-file-alt' },
         'dpir.php': { title: 'Departmental Planned Initiative Report', icon: 'fa-file-alt' },
-        'pdview.php': { title: 'Program Design View', icon: 'fa-file-alt' },
-        'marview.php' : { title: 'Monthly Accomplishment Report View', icon: 'fa-file-alt' },
-        'cnacrview.php': { title: 'Community Needs Assessment Consolidated Report View', icon: 'fa-file-alt' 
-}
-        
+        'marview.php': { title: 'Monthly Accomplishment Report View', icon: 'fa-file-alt' },
+        'mar.php': { title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
+        '3ydpneedview.php': { title: '3 Year Development Plan Need Fix', icon: 'fa-tools' },
+        'cnacrneedview.php': { title: 'Community Needs Assessment Consolidated Report Need Fix', icon: 'fa-tools' },
+        'marneedview.php': { title: 'Monthly Accomplishment Report Need Fix', icon: 'fa-tools' },
+        'pdneedview.php': { title: 'Program Design Need Fix', icon: 'fa-tools' }
     };
 
     const currentPage = currentPath.split('/').pop();
+    
+    console.log('Current page:', currentPage); // For debugging
 
     if (pageMap[currentPage]) {
         headerTitle.textContent = pageMap[currentPage].title;
         headerIcon.className = `fas dashboard-icon ${pageMap[currentPage].icon}`;
+    } else {
+        // Optional: Set a default title for unknown pages
+        headerTitle.textContent = 'DASHBOARD';
+        headerIcon.className = 'fas dashboard-icon fa-th-large';
+    }
+}
+
+// Function to listen for iframe navigation changes
+function setupIframeNavigationListener() {
+    try {
+        // Check if we're in an iframe
+        if (window.self !== window.top) {
+            // Listen for messages from the parent about iframe navigation
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'iframe-navigation') {
+                    // Update header when iframe navigates
+                    updateHeaderBasedOnPage();
+                }
+            });
+            
+            // Also try to observe iframe src changes if possible
+            let lastPath = '';
+            const checkForNavigation = setInterval(() => {
+                try {
+                    const currentPath = parent?.location?.href || window.location.href;
+                    if (currentPath !== lastPath) {
+                        lastPath = currentPath;
+                        updateHeaderBasedOnPage();
+                    }
+                } catch (e) {
+                    // Cross-origin error - clear interval to stop trying
+                    clearInterval(checkForNavigation);
+                }
+            }, 500);
+        }
+    } catch (e) {
+        console.log('Not in iframe or cross-origin restrictions');
+    }
+}
+
+// Initialize header update on page load and when iframe changes
+document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderBasedOnPage();
+    setupIframeNavigationListener();
+});
+
+// Also update when the page becomes visible (user returns to tab)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        updateHeaderBasedOnPage();
     }
 });
 
@@ -128,21 +233,17 @@ logoutBtn?.addEventListener('click', () => {
 const modeToggle = document.getElementById('mode-toggle');
 
 if (modeToggle) {
-    // 1. Send the message when the switch is clicked
     modeToggle.addEventListener('change', () => {
         const isEnabled = modeToggle.checked;
         
-        // Notify the parent window
         parent.postMessage({ type: 'toggle-dark-mode', enabled: isEnabled }, '*');
         
-        // Apply locally to the header immediately for instant feedback
         if (isEnabled) {
             document.body.classList.add('dark-mode');
         } else {
             document.body.classList.remove('dark-mode');
         }
 
-        // Save preference safely
         try {
             if (parent?.localStorage) {
                 parent.localStorage.setItem('darkMode', isEnabled ? 'enabled' : 'disabled');
@@ -153,8 +254,6 @@ if (modeToggle) {
     });
 }
 
-// 2. Listen for messages FROM the parent 
-// (Useful if the parent changes mode from elsewhere or on initial load)
 window.addEventListener('message', (event) => {
     if (event.data.type === 'apply-dark-mode') {
         const isEnabled = event.data.enabled;
@@ -168,7 +267,6 @@ window.addEventListener('message', (event) => {
     }
 });
 
-// 3. Initial Check: Sync state with parent's saved preference on load
 window.addEventListener('DOMContentLoaded', () => {
     try {
         const savedMode = parent.localStorage.getItem('darkMode');
@@ -180,4 +278,3 @@ window.addEventListener('DOMContentLoaded', () => {
         /* Parent storage might be blocked by browser security */
     }
 });
-
