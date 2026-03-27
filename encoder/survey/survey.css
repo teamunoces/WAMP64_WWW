@@ -1,0 +1,653 @@
+/* survey.css - Responsive Survey Form Styles */
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
+    min-height: 100vh;
+    padding: 20px;
+    font-size: 18px;
+}
+
+/* ===== HEADER IFRAME ===== */
+#headerFrame {
+    width: 100%;
+    height: auto;
+    min-height: 80px;
+    border: none;
+    margin-bottom: 20px;
+    background: transparent;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== HEADINGS ===== */
+h1 {
+    background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 2.2rem;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+h2 {
+    background: #f0f0f0;
+    color: #254911;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 1.6rem;
+    margin: 0;
+    border-bottom: 3px solid #59AF29;
+    word-wrap: break-word;
+    font-weight: 600;
+}
+
+h3 {
+    background: #f8f9fa;
+    color: #59AF29;
+    padding: 15px 20px;
+    font-size: 1.6rem;
+    margin: 20px 0 15px 0;
+    border-left: 5px solid #59AF29;
+    position: relative;
+    font-weight: 600;
+}
+
+/* ===== SECTIONS ===== */
+section {
+    padding: 25px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+/* ===== FORM ROWS ===== */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.row label {
+    font-weight: 600;
+    color: #254911;
+    min-width: 120px;
+    font-size: 1.1rem;
+}
+
+.row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.row input:focus {
+    outline: none;
+    border-color: #59AF29;
+    box-shadow: 0 0 0 3px rgba(89, 175, 41, 0.1);
+}
+
+/* ===== FORM ELEMENTS ===== */
+input, select, textarea {
+    font-family: inherit;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #59AF29;
+    box-shadow: 0 0 0 3px rgba(89, 175, 41, 0.1);
+}
+
+.short {
+    width: auto;
+    min-width: 150px;
+    display: inline-block;
+}
+
+.long {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* ===== CHECKBOX GROUPS ===== */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: normal;
+    cursor: pointer;
+    padding: 8px 15px;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    color: #333;
+}
+
+.checkbox-group label:hover {
+    background: #e8f5e9;
+    transform: translateX(3px);
+    border-left: 3px solid #59AF29;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #59AF29;
+}
+
+/* ===== DROPDOWN GROUPS ===== */
+.dropbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 15px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.dropbox-group label {
+    font-weight: 600;
+    color: #254911;
+    margin-top: 10px;
+    display: block;
+    font-size: 1rem;
+}
+
+.dropbox-group select {
+    width: 100%;
+    margin-top: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 12px;
+}
+
+/* ===== PARAGRAPH STYLES ===== */
+p {
+    font-weight: 600;
+    color: #254911;
+    margin: 25px 0 12px 0;
+    font-size: 1.15rem;
+    padding: 8px 0;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* ===== TEXTAREA ===== */
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #59AF29;
+    box-shadow: 0 0 0 3px rgba(89, 175, 41, 0.1);
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.submit-btn {
+    background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
+    color: white;
+    border: none;
+    padding: 18px 35px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 73, 17, 0.3);
+    background: linear-gradient(135deg, #6bc835 0%, #2f5a15 100%);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ===== FORM CONTAINER ===== */
+form {
+    padding: 0 25px 25px 25px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Tablet Styles (768px and below) */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        font-size: 17px;
+    }
+    
+    h1 {
+        font-size: 1.9rem;
+        padding: 20px 15px;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+        padding: 12px 15px;
+    }
+    
+    h3 {
+        font-size: 1.4rem;
+        padding: 12px 15px;
+    }
+    
+    section {
+        padding: 20px;
+    }
+    
+    .row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .row label {
+        min-width: auto;
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+    
+    .row input {
+        width: 100%;
+    }
+    
+    .checkbox-group {
+        gap: 12px;
+    }
+    
+    .checkbox-group label {
+        flex: 1;
+        min-width: calc(50% - 12px);
+        font-size: 0.95rem;
+        padding: 8px 12px;
+    }
+    
+    .short {
+        width: 100%;
+        margin-top: 5px;
+    }
+    
+    form {
+        padding: 0 20px 20px 20px;
+    }
+    
+    p {
+        font-size: 1.05rem;
+    }
+}
+
+/* Mobile Styles (480px and below) */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+        font-size: 16px;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+        padding: 15px 10px;
+    }
+    
+    h2 {
+        font-size: 1.2rem;
+        padding: 12px 10px;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+        padding: 12px 10px;
+        margin: 15px 0 10px 0;
+    }
+    
+    section {
+        padding: 15px;
+    }
+    
+    .checkbox-group label {
+        min-width: 100%;
+        flex: auto;
+        font-size: 0.95rem;
+    }
+    
+    .dropbox-group {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .dropbox-group label {
+        font-size: 0.95rem;
+    }
+    
+    .dropbox-group select {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 0.95rem;
+        padding: 10px 12px;
+    }
+    
+    .submit-btn {
+        padding: 14px 25px;
+        font-size: 1rem;
+    }
+    
+    p {
+        font-size: 1rem;
+        margin: 20px 0 10px 0;
+    }
+    
+    .container {
+        border-radius: 15px;
+    }
+}
+
+/* Extra Small Devices (375px and below) */
+@media (max-width: 375px) {
+    body {
+        padding: 5px;
+        font-size: 15px;
+    }
+    
+    h1 {
+        font-size: 1.4rem;
+        padding: 12px 8px;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+    }
+    
+    h3 {
+        font-size: 1.1rem;
+    }
+    
+    .checkbox-group label {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+    }
+    
+    .submit-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+    
+    p {
+        font-size: 2rem;
+    }
+}
+
+/* ===== TOUCH-FRIENDLY INTERACTIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+    .checkbox-group label,
+    .submit-btn,
+    input,
+    select,
+    textarea {
+        cursor: default;
+    }
+    
+    .checkbox-group label {
+        padding: 10px 15px;
+    }
+    
+    input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .submit-btn {
+        padding: 16px 25px;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+        font-size: 12pt;
+    }
+    
+    .container {
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .submit-btn,
+    #headerFrame {
+        display: none;
+    }
+    
+    .checkbox-group label {
+        break-inside: avoid;
+    }
+    
+    section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+/* ===== CUSTOM SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #59AF29;
+}
+
+/* ===== LOADING STATE ===== */
+.submit-btn.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.submit-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== FORM VALIDATION STYLES ===== */
+input:invalid,
+select:invalid,
+textarea:invalid {
+    border-color: #ff6b6b;
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-message {
+    background: #59AF29;
+    color: white;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+    animation: slideDown 0.3s ease-out;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===== FOCUS VISIBLE FOR ACCESSIBILITY ===== */
+:focus-visible {
+    outline: 3px solid #59AF29;
+    outline-offset: 2px;
+}
+
+/* ===== ADDITIONAL TEXT ENHANCEMENTS ===== */
+label {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+input::placeholder,
+textarea::placeholder {
+    font-size: 0.95rem;
+    color: #999;
+}
+
+option {
+    font-size: 1rem;
+    padding: 8px;
+}
+
+/* Increase readability for longer text */
+.checkbox-group label,
+.dropbox-group label,
+.row label {
+    line-height: 1.4;
+}
+
+/* Better spacing for mobile touch targets */
+@media (max-width: 768px) {
+    .checkbox-group label,
+    .row input,
+    select,
+    button {
+        min-height: 44px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+        min-height: 22px;
+    }
+}

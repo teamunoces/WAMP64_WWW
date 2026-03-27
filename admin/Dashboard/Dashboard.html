@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Overview Dashboard</title>
+    <link rel="stylesheet" href="Dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        
+     
+
+        <!-- Header -->
+        <iframe 
+             src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
+            id="headerFrame"
+            frameborder="0"
+            scrolling="no"
+            title="Header">
+        </iframe>
+
+        <!-- Sidebar -->
+        <iframe 
+            src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
+            id="sidebarFrame"
+            frameborder="0"
+            scrolling="no"
+            title="Navigation Sidebar">
+        </iframe>
+
+        <!-- Main Content -->
+        <main class="dashboard-main-content">
+            <div class="container">
+                <!-- Header + Stats -->
+                <div class="dashboard-row">
+                    <div class="dashboard-header">
+                        <h1>DATA OVERVIEW</h1>
+                    </div>
+
+                    <div class="stats-container">
+
+                        <button class="stat-card stat-button" onclick="window.location.href='/SYSTEM_VERSION_!/admin/Dashboard/Pending/Pending.html'">
+                            <h3>PENDING AND NEED FIXES REPORTS</h3>
+                            <div class="stat-number" id="pendingCount">0</div>
+                            <div class="stat-label">Requires Attention</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider"></div>
+
+
+
+
+                   <!-- Community Needs Assessment -->
+                <div class="community-assessment-section">
+                    <div class="section-header">
+                        <h2>COMMUNITY NEEDS ASSESSMENT CONSOLIDATED RESULT</h2>
+                        <button class="view-all-btn"onclick="window.location.href='./consolidated_result/cnacr.html'">
+                            <i class="fas fa-external-link-alt"></i> View All
+                        </button>
+                    </div>
+
+                    <h3 class="barangay-title">BARANGAY</h3>
+                    <div class="chart-container" style="width:100%; height:400px;">
+                            <canvas id="barangayChart"></canvas>
+                    </div>
+
+                </div>
+
+                <!-- 3 Year Development Plan -->
+                <div class="development-plan-section">
+                    <div class="section-header">
+                        <h2>DEPARTMENTS</h2>
+                        <button class="view-all-btn" onclick="window.location.href='./Departments/Departments.html'">
+                            <i class="fas fa-external-link-alt"></i> View All
+                        </button>
+                    </div>
+                </div>
+
+                
+        </main>
+    </div>
+    
+    <script src="/SYSTEM_VERSION_!/admin/Dashboard/darkmode.js"></script>
+    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Dashboard.js"></script>
+    <script src="/SYSTEM_VERSION_!/admin/Dashboard/barangay-table.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    
+</body>
+</html>

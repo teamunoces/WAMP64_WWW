@@ -1,0 +1,310 @@
+/* ================= DARK MODE STYLES ================= */
+/* This file contains all dark mode overrides for the Departments page.
+   It is designed to work with darkmode.js and the existing Departments.css.
+   Include this file after Departments.css in your HTML. */
+
+/* Base dark mode body style */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* ===== HEADER IFRAME DARK MODE ===== */
+body.dark-mode #headerFrame {
+    background: #1e1e1e;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== SIDEBAR IFRAME DARK MODE ===== */
+body.dark-mode #sidebarFrame {
+    background: #1a1a1a;
+}
+
+/* ===== CONTENT AREA DARK MODE ===== */
+body.dark-mode .content-area {
+    background: #121212;
+}
+
+/* ===== MAIN CONTENT DARK MODE ===== */
+body.dark-mode .main-wrapper {
+    background: transparent;
+}
+
+/* ===== BANNER DARK MODE ===== */
+body.dark-mode .green-banner {
+    background: #2c6e2c;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== DEPARTMENT CARDS DARK MODE ===== */
+/* Card backgrounds remain vibrant but with adjusted shadows and overlays */
+body.dark-mode .dept-card {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .dept-card:hover {
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5), 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Add a subtle dark overlay to card backgrounds for better contrast in dark mode */
+body.dark-mode .dept-card {
+    position: relative;
+}
+
+body.dark-mode .dept-card::before {
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0.3;
+}
+
+body.dark-mode .dept-card:hover::before {
+    opacity: 0.5;
+}
+
+/* Keep text white and readable */
+body.dark-mode .dept-name {
+    color: #ffffff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Arrow decoration in dark mode */
+body.dark-mode .dept-card::after {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .dept-card:hover::after {
+    color: #ffffff;
+}
+
+/* ===== SUBMISSION TRACKER TABLE DARK MODE ===== */
+/* Table Container */
+body.dark-mode .table-container {
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Title Header */
+body.dark-mode .title-header {
+    background: #2c6e2c;
+    border-bottom: 1px solid #3c8e3c;
+}
+
+body.dark-mode .title-header h1 {
+    color: #ffffff;
+}
+
+/* Table Wrapper */
+body.dark-mode .responsive-wrapper {
+    background: #1e1e1e;
+}
+
+/* Table Styles */
+body.dark-mode .submission-table {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+
+/* Table Header */
+body.dark-mode .submission-table thead tr {
+    background: #2a2a2a;
+}
+
+body.dark-mode .submission-table th {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-bottom: 2px solid #3c8e3c;
+    border-right: 1px solid #3a3a3a;
+    padding: 12px 8px;
+    font-weight: 600;
+}
+
+body.dark-mode .submission-table th:last-child {
+    border-right: none;
+}
+
+/* Department header cells - clickable */
+body.dark-mode .submission-table th[data-dept] {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+body.dark-mode .submission-table th[data-dept]:hover {
+    background: #3a3a3a;
+    color: #80cbc4;
+}
+
+/* Table Body */
+body.dark-mode .submission-table tbody tr {
+    border-bottom: 1px solid #3a3a3a;
+    transition: background-color 0.2s ease;
+}
+
+body.dark-mode .submission-table tbody tr:hover {
+    background: #2a2a2a;
+}
+
+body.dark-mode .submission-table td {
+    padding: 10px 8px;
+    border-right: 1px solid #3a3a3a;
+    color: #e0e0e0;
+}
+
+body.dark-mode .submission-table td:last-child {
+    border-right: none;
+}
+
+/* Status Badges/Cells */
+body.dark-mode .submission-table td.status-submitted {
+    color: #81c784;
+    font-weight: 500;
+}
+
+body.dark-mode .submission-table td.status-pending {
+    color: #ffb74d;
+    font-weight: 500;
+}
+
+body.dark-mode .submission-table td.status-missing {
+    color: #e57373;
+    font-weight: 500;
+}
+
+body.dark-mode .submission-table td.status-approved {
+    color: #64b5f6;
+    font-weight: 500;
+}
+
+/* Document and Month rows */
+body.dark-mode .submission-table tr.document-row td:first-child,
+body.dark-mode .submission-table tr.month-row td:first-child {
+    background: #252525;
+    font-weight: 600;
+}
+
+/* Table Footer */
+body.dark-mode .submission-table tfoot {
+    background: #2a2a2a;
+    border-top: 2px solid #3a3a3a;
+}
+
+body.dark-mode .submission-table tfoot td {
+    color: #b0b0b0;
+    padding: 12px 8px;
+}
+
+/* Main Footer (outside table) */
+body.dark-mode footer {
+    background: #1a1a1a;
+    color: #b0b0b0;
+    border-top: 1px solid #3a3a3a;
+    padding: 12px 16px;
+    font-size: 12px;
+}
+
+body.dark-mode footer strong {
+    color: #80cbc4;
+}
+
+/* Scrollbar for table wrapper */
+body.dark-mode .responsive-wrapper::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+body.dark-mode .responsive-wrapper::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 4px;
+}
+
+body.dark-mode .responsive-wrapper::-webkit-scrollbar-thumb {
+    background: #4a6e4a;
+    border-radius: 4px;
+}
+
+body.dark-mode .responsive-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #5c8e5c;
+}
+
+/* ===== ADDITIONAL DARK MODE STYLES ===== */
+/* Style for any potential text elements */
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode div:not(.dept-card):not(.green-banner):not(.table-container) {
+    color: #e0e0e0;
+}
+
+/* Style for any links that might appear */
+body.dark-mode a {
+    color: #80cbc4;
+}
+
+body.dark-mode a:hover {
+    color: #b2dfdb;
+}
+
+/* Ensure iframe content has proper dark mode background */
+body.dark-mode iframe {
+    background: #1e1e1e;
+}
+
+/* Style for any scrollbars in dark mode (optional, for WebKit browsers) */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #2c2c2c;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* ===== RESPONSIVE DARK MODE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+    body.dark-mode .green-banner {
+        background: #2c6e2c;
+    }
+    
+    body.dark-mode .dept-card {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-mode .submission-table th,
+    body.dark-mode .submission-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    body.dark-mode .title-header h1 {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 1367px) {
+    body.dark-mode .green-banner {
+        background: #2c6e2c;
+    }
+}
+
+/* ===== TRANSITION SMOOTHING ===== */
+/* Smooth transition when toggling dark mode */
+body,
+body.dark-mode .green-banner,
+body.dark-mode .dept-card,
+body.dark-mode .dept-card::before,
+body.dark-mode .dept-card::after,
+body.dark-mode .table-container,
+body.dark-mode .submission-table th,
+body.dark-mode .submission-table td,
+body.dark-mode .submission-table tr {
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
