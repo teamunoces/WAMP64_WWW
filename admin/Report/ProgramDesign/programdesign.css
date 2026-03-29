@@ -226,7 +226,7 @@ thead th {
 }
 
 tbody td {
-    height: 400px; /* Large empty space as per screenshot */
+    height: 100px; /* Large empty space as per screenshot */
 }
 
 /* Base style for both buttons */

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addRowBtn.addEventListener("click", () => {
         const newRow = document.createElement("tr");
         // Create 11 editable cells
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 13; i++) {
             const td = document.createElement("td");
             td.contentEditable = "true";
             newRow.appendChild(td);

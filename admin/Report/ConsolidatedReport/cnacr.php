@@ -195,7 +195,7 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
 
 
           <div class="form-actions">
-                <button type="submit" class="submit-button" onclick="submitReport()">Submit</button>
+                <button type="submit" class="submit-button" onclick="submitReport()">Save</button>
           </div>
         
 

@@ -115,7 +115,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
 
             <!-- Submit Buttons -->
             <div class="form-actions">
-                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="submit" class="btn btn-submit">Save</button>
                 <button type="button" class="btn btn-clear">Clear</button>
                 <button type="button" class="btn recommendation-btn">
                     💡Recommendations
