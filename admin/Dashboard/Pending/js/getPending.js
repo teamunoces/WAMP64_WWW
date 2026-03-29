@@ -78,7 +78,7 @@ function viewReport(id, type, status) {
 
     if (status === 'need fix') {
         if (typeLower === '3-year development plan') {
-            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/3ydpneedfix/needfix.html?id=${id}`;
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/3ydpneedfix/3ydpneedfix.html?id=${id}`;
             return;
         } 
         if (typeLower === 'community needs assessment consolidated report') {
@@ -86,7 +86,7 @@ function viewReport(id, type, status) {
             return;
         }
         if (typeLower === 'program design') {
-            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/pdneedfix/needfix.html?id=${id}`;
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/pdneedfix/pdneedfix.html?id=${id}`;
             return;
         }
         if (typeLower === 'departmental planned initiative report') {
@@ -95,7 +95,7 @@ function viewReport(id, type, status) {
         }
         
         if (typeLower === "monthly accomplishment report") {
-            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/marneedfix/marview.php?id=${id}`;
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/marneedfix/marneedfix.php?id=${id}`;
             return;
         }
     }

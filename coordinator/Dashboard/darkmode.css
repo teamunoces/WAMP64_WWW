@@ -1,7 +1,7 @@
 /* ================= DARK MODE ================= */
 
 body.dark-mode{
-    background:linear-gradient(135deg,#0f1720,#1c2633);
+    background:#1a1a1a;
     color:#e4e4e4;
 }
 

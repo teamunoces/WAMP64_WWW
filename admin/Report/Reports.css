@@ -124,7 +124,7 @@ body {
     align-items: center; /* Keeps the children centered */
     gap: 10px;
     width: 100%;
-    max-width: 1100px; /* Adjust based on your screen size */
+    max-width: 1200px; /* Adjust based on your screen size */
     margin: 0 auto;
 }
 

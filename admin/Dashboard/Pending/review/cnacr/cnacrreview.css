@@ -1,6 +1,6 @@
 /* ===== 1. VARIABLES & CORE SETUP ===== */
 :root {
-    --sidebar-w: 150px;
+    --sidebar-w: 100px;
     --header-h: 60px;
     --primary-green: #59af29;
     --secondary-green: #254911;

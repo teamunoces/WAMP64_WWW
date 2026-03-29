@@ -152,10 +152,7 @@ body.dark-mode a:hover {
     color: #b2dfdb;
 }
 
-/* Ensure any iframe content has proper dark mode background */
-body.dark-mode iframe {
-    background: #1e1e1e;
-}
+
 
 /* ===== SCROLLBAR DARK MODE (WebKit) ===== */
 body.dark-mode ::-webkit-scrollbar {
@@ -209,4 +206,61 @@ body.dark-mode .submission-table th,
 body.dark-mode .status-submitted,
 body.dark-mode .legend {
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Add at the end of monitoring.css */
+/* Dark mode styles for monitoring page */
+body.dark-mode {
+    background-color: #121212;
+}
+
+body.dark-mode .table-container {
+    background: #1e1e1e;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .submission-table td {
+    background-color: #1e1e1e;
+    border-bottom-color: #2c2c2c;
+    border-right-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+body.dark-mode .submission-table td:first-child {
+    background: #1e1e1e;
+    color: #6CC24A;
+    border-right-color: #2c2c2c;
+}
+
+body.dark-mode .submission-table tbody tr:hover td {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .submission-table tbody tr:hover td:first-child {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .dept-filter-row {
+    background: #1a1a1a;
+    border-bottom-color: #6CC24A;
+}
+
+body.dark-mode .dept-btn {
+    background: #2a2a2a;
+    color: #6CC24A;
+    border-color: #6CC24A;
+}
+
+body.dark-mode .dept-btn.active {
+    background: #6CC24A;
+    color: #1a1a1a;
+}
+
+body.dark-mode .filter-label {
+    background: #2a2a2a;
+    color: #6CC24A;
+}
+
+body.dark-mode footer {
+    border-top-color: #2c2c2c;
 }

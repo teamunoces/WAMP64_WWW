@@ -9,15 +9,27 @@ body.dark-mode {
     color: #e0e0e0;
 }
 
-/* ===== HEADER IFRAME DARK MODE ===== */
-body.dark-mode #headerFrame {
-    background: #1e1e1e;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* ===== SIDEBAR IFRAME DARK MODE ===== */
+/* ===== IFRAME FIXES - Prevent grey tint in dark mode ===== */
 body.dark-mode #sidebarFrame {
     background: #1a1a1a;
+    /* Force proper rendering */
+    color-scheme: dark;
+}
+
+/* Fix for iframe content appearing grey */
+body.dark-mode iframe {
+    background: #1a1a1a;
+    /* Prevent any transparency or overlay effects */
+    opacity: 1;
+    /* Force proper color rendering */
+    color-scheme: dark;
+}
+
+/* If you can access the iframe content, add this style to ensure
+   the iframe's body also has proper dark mode colors */
+body.dark-mode #sidebarFrame,
+body.dark-mode iframe[src*="sidebar"] {
+    background-color: #1a1a1a !important;
 }
 
 /* ===== CONTENT AREA DARK MODE ===== */
@@ -93,9 +105,17 @@ body.dark-mode a:hover {
     color: #b2dfdb;
 }
 
-/* Ensure iframe content has proper dark mode background */
-body.dark-mode iframe {
-    background: #1e1e1e;
+/* Fix for text and icons in iframes becoming grey */
+body.dark-mode iframe * {
+    /* Prevent inherited opacity that might cause greyness */
+    opacity: 1 !important;
+}
+
+/* Specific fix for sidebar iframe content */
+body.dark-mode #sidebarFrame * {
+    color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 /* Style for any scrollbars in dark mode (optional, for WebKit browsers) */
