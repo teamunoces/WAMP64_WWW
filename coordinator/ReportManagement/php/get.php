@@ -42,6 +42,7 @@ $coordinatorTables = [
     "pd_main",
     "mar_header",
     "dpir",
+    "program_monitoring_form"
 ];
 
 while ($tableRow = $tablesResult->fetch_array()) {
@@ -85,7 +86,7 @@ while ($tableRow = $tablesResult->fetch_array()) {
     while ($row = $result->fetch_assoc()) {
         // Detect title
         $title = "N/A";
-        foreach (['title', 'title_of_project', 'title_of_activity', 'title_of_program', 'title_act', 'report_title', 'project_title'] as $field) {
+        foreach (['title', 'program_title','title_of_project', 'title_of_activity', 'title_of_program', 'title_act', 'report_title', 'project_title'] as $field) {
             if (isset($row[$field]) && !empty($row[$field])) {
                 $title = $row[$field];
                 break;

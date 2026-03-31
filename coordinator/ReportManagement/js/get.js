@@ -24,8 +24,8 @@ async function loadReports() {
             "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
             "3ydp": "3 Year Development Plan",
             "pd_main": "Program Design",
-            "dpir": "Departmental Planned Initiative Report",
-            "mar_header": "Monthly Accomplishment Report"
+            "mar_header": "Monthly Accomplishment Report",
+            "program_monitoring_form": "Program Monitoring Form",
         };
 
         // Clear previous data
@@ -42,7 +42,9 @@ async function loadReports() {
                 index: index
             };
 
-            if (status === "approve" || status === "approved") {
+            
+
+            if (status === "approve") {
                 approvedReports.push(reportWithMeta);
             } else if (status === "need fix") {
                 needFixReports.push(reportWithMeta);
@@ -50,6 +52,8 @@ async function loadReports() {
                 rejectedReports.push(reportWithMeta);
             }
         });
+
+
 
         // Initialize filter event listeners
         initFilterListeners();
@@ -301,6 +305,7 @@ function attachSectionEvents(container) {
                     "3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/3ydpview/3ydpview.php",
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pdview/pdview.php",
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/marview/marview.php",
+                    "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
                     "dpir": "./actions/view/dpirview/view.php"
                 };
             } else {
@@ -310,6 +315,7 @@ function attachSectionEvents(container) {
                     "3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/3ydpview/3ydpneedview.php",
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pdview/pdneedview.php",
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/marview/marneedview.php",
+                    "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
                     "dpir": "./actions/fix/dpirfix/view.php"
                 };
             }

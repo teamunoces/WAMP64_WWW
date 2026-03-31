@@ -25,6 +25,14 @@ function displayFeedback(feedback) {
         autoExpand(adminComment);
     }
 }
+// Display feedback in the admin comment textarea
+function displayFeedback(feedback) {
+    const adminComment = document.getElementById('admincomment');
+    if (adminComment) {
+        adminComment.value = feedback || '';
+        autoExpand(adminComment);
+    }
+}
 
 // Populate form fields with report data
 function populateFormFields(report) {

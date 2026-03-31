@@ -48,7 +48,8 @@ try {
         'pd_main' => ['id','type','title_of_activity AS title','created_by_name AS name','department','created_at AS date','status'],
         'dpir' => ['id','type','title_of_program AS title','created_by_name AS name','department','created_at AS date','status'],
         'mar_header' => ['id','type','title_act AS title','created_by_name AS name','department','created_at AS date','status'],
-        'coordinator_cnacr' => ['id','type','title_of_program AS title','created_by_name AS name','department','created_at AS date','status']
+        'coordinator_cnacr' => ['id','type','title_of_program AS title','created_by_name AS name','department','created_at AS date','status'],
+         'program_monitoring_form' => ['id', 'type', 'program_title AS title', 'created_by_name AS name', 'department', 'created_at AS date','status']
     ];
 
     $allReports = [];

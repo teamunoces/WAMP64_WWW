@@ -148,7 +148,14 @@ function updateHeaderBasedOnPage() {
         '3ydpneedview.php': { title: '3 Year Development Plan Need Fix', icon: 'fa-tools' },
         'cnacrneedview.php': { title: 'Community Needs Assessment Consolidated Report Need Fix', icon: 'fa-tools' },
         'marneedview.php': { title: 'Monthly Accomplishment Report Need Fix', icon: 'fa-tools' },
-        'pdneedview.php': { title: 'Program Design Need Fix', icon: 'fa-tools' }
+        'pdneedview.php': { title: 'Program Design Need Fix', icon: 'fa-tools' },
+        'pmfreport.php': { title: 'Program Monitoring Form', icon: 'fa-file-alt' },
+        'pmfview.php': { title: 'Program Monitoring Form View', icon: 'fa-file-alt' },
+        'pmfneedview.php': { title: 'Program Monitoring Form Need Fix', icon: 'fa-tools' },
+        'evaluation.php': { title: 'Evaluation Sheet for Extension Services', icon: 'fa-file-alt' },
+        'evaluationview.php': { title: 'Evaluation Sheet for Extension Services View', icon: 'fa-file-alt' },
+        'evaluationneedview.php': { title: 'Evaluation Sheet for Extension Services Need Fix', icon: 'fa-tools' }
+
     };
 
     const currentPage = currentPath.split('/').pop();

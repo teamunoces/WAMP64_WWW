@@ -1,0 +1,215 @@
+
+/* ===== Frames (Layout Shell) ===== */
+#sidebarFrame {
+    width: 100px;
+    height: 100vh;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+#headerFrame {
+    height: 60px;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 100px;
+    width: calc(100% - 100px);
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ===== Header Section ===== */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.logo-left {
+    height: 90px;
+    width: auto;
+}
+
+.logos-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.logos-right img {
+    height: 80px;
+    width: auto;
+}
+
+.college-info {
+    text-align: center;
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+.college-info h1 {
+    font-family: "Times New Roman", Times, serif;
+    color: #4f81bd;
+    font-size: 26px;
+    margin: 0;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+.college-info p {
+    font-size: 11px;
+    margin: 2px 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.college-info a {
+    font-size: 13px;
+    color: #0000EE;
+    text-decoration: underline;
+}
+
+/* ===== Office Title ===== */
+.office-title {
+    text-align: center;
+    font-size: 18px;
+    color: #595959;
+    font-weight: bold;
+    margin: 20px 0 5px 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.double-line {
+    border-top: 4px double #4f81bd;
+    margin-bottom: 25px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #333;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.evaluation-container {
+    max-width: 850px;
+    margin: 100px auto;
+    background: #fff;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    text-align: center;
+    font-size: 18px;
+    text-decoration: underline;
+    margin-bottom: 30px;
+}
+
+.header-info .input-line {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: flex-end;
+}
+
+.header-info label {
+    font-weight: bold;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.full-line {
+    border: none;
+    border-bottom: 1px solid #000;
+    flex-grow: 1;
+    outline: none;
+}
+
+.checkbox-grid {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.checkbox-grid .column {
+    width: 48%;
+}
+
+.checkbox-grid label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.instructions {
+    margin: 20px 0 10px 0;
+}
+
+/* Tables Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #000;
+}
+
+td {
+    padding: 8px;
+    vertical-align: top;
+}
+
+.legend-table td.score-cell {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.evaluation-table thead th {
+    background-color: #f2f2f2;
+}
+
+.evaluation-table .num-col {
+    width: 40px;
+    text-align: center;
+}
+
+.category-row {
+    background-color: #e9e9e9;
+    font-weight: bold;
+}
+
+tr td em {
+    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+}
+
+.signature-section {
+    margin-top: 40px;
+}
+
+.sig-line {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Print Optimization */
+@media print {
+    body { background: none; padding: 0; }
+    .evaluation-container { box-shadow: none; width: 100%; max-width: 100%; }
+}
