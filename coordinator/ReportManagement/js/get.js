@@ -26,6 +26,7 @@ async function loadReports() {
             "pd_main": "Program Design",
             "mar_header": "Monthly Accomplishment Report",
             "program_monitoring_form": "Program Monitoring Form",
+            "evaluation_reports": "Evaluation Sheet for Extension Services"
         };
 
         // Clear previous data
@@ -306,6 +307,7 @@ function attachSectionEvents(container) {
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pdview/pdview.php",
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/marview/marview.php",
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
+                    "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/evaluationview/evaluationview.php",
                     "dpir": "./actions/view/dpirview/view.php"
                 };
             } else {
@@ -316,6 +318,7 @@ function attachSectionEvents(container) {
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pdview/pdneedview.php",
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/marview/marneedview.php",
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
+                    "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/evaluationview/evaluationneedview.php",
                     "dpir": "./actions/fix/dpirfix/view.php"
                 };
             }
@@ -971,7 +974,8 @@ async function loadReportFiles(reportId, reportTable) {
     fileListDiv.innerHTML = "<p>Loading files...</p>";
     
     try {
-        const url = `/SYSTEM_VERSION_!/coordinator/ReportManagement/php/get_report_files.php?report_id=${reportId}`;
+        // IMPORTANT: Add report_table to the URL
+        const url = `/SYSTEM_VERSION_!/coordinator/ReportManagement/php/get_report_files.php?report_id=${reportId}&report_table=${encodeURIComponent(reportTable)}`;
         console.log("Fetching files from:", url);
         
         const response = await fetch(url);

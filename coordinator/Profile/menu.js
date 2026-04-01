@@ -154,7 +154,10 @@ function updateHeaderBasedOnPage() {
         'pmfneedview.php': { title: 'Program Monitoring Form Need Fix', icon: 'fa-tools' },
         'evaluation.php': { title: 'Evaluation Sheet for Extension Services', icon: 'fa-file-alt' },
         'evaluationview.php': { title: 'Evaluation Sheet for Extension Services View', icon: 'fa-file-alt' },
-        'evaluationneedview.php': { title: 'Evaluation Sheet for Extension Services Need Fix', icon: 'fa-tools' }
+        'evaluationneedview.php': { title: 'Evaluation Sheet for Extension Services Need Fix', icon: 'fa-tools' },
+        'certificate.php': { title: 'Certificate of Appearance', icon: 'fa-certificate' },
+         'certview.php': { title: 'Certificate of Appearance View', icon: 'fa-certificate' },
+         'certneedview.php': { title: 'Certificate of Appearance Need Fix', icon: 'fa-tools' }
 
     };
 

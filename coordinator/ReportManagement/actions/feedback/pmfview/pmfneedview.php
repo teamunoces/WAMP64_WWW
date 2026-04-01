@@ -19,7 +19,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
   <!-- Header -->
    <iframe 
-          src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -28,7 +28,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
     <!-- Sidebar -->
     <iframe 
-       src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html" 
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"

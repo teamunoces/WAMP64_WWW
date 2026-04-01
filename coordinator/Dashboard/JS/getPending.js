@@ -7,7 +7,10 @@ const reviewPages = {
     "3-year development plan": "./review/3ydp/3ydpreview.php",
     "program design": "./review/programdesign/pdview.php",
     "departmental planned initiative report": "./review/dpir/dpirreview.php",
-    "monthly accomplishment report": "./review/monthlyaccomplishment/monthlyaccomplishmentreview.php"
+    "monthly accomplishment report": "./review/monthlyaccomplishment/monthlyaccomplishmentreview.php",
+    "evaluation sheet for extension services": "./review/evaluation/evaluationreview.php"
+
+
 };
 
 async function loadReports(status, tableBodyId) {
