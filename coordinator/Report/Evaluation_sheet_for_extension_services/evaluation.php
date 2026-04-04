@@ -250,7 +250,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
 
             <div>
                 <button type="submit" class="submit-button">Submit</button>
-          </div>
+            </div>
         </form>
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>

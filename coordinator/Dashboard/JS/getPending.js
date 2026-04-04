@@ -8,7 +8,8 @@ const reviewPages = {
     "program design": "./review/programdesign/pdview.php",
     "departmental planned initiative report": "./review/dpir/dpirreview.php",
     "monthly accomplishment report": "./review/monthlyaccomplishment/monthlyaccomplishmentreview.php",
-    "evaluation sheet for extension services": "./review/evaluation/evaluationreview.php"
+    "evaluation sheet for extension services": "./review/evaluation/evaluationreview.php",
+    "Certificate of Appearance" : "./review/coa/coareview.php",
 
 
 };

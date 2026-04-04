@@ -24,7 +24,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
 
     <!-- Sidebar -->
     <iframe 
-       src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
@@ -36,7 +36,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
                                           <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
                                           <textarea id="admincomment" rows="5" readonly></textarea>
                                     </div>
-                            </div>
+                                </div>
 
     <div class="evaluation-container">
         <header>
@@ -257,7 +257,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
 
             <div>
                 <button type="submit" class="submit-button">Re-submit</button>
-          </div>
+            </div>
            <footer>
             <div class="footer-bottom">
                 <div class="footer-logos">

@@ -9,12 +9,12 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate of Appearance</title>
-    <link rel="stylesheet" href="cert.css">
+    <link rel="stylesheet" href="coa.css">
 </head>
 <body>
  <!-- Header -->
    <iframe 
-        src="../../Profile/profile.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -23,18 +23,25 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
 
     <!-- Sidebar -->
     <iframe 
-        src="../../Sidebar/sidebar.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
         title="Navigation Sidebar">
     </iframe>
 
+                                <div class="wrapper">
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
+                                          <textarea id="admincomment" rows="5" readonly></textarea>
+                                    </div>
+                                </div>
+
     <div class="certificate-container">
 
           <header>
             <div class="header-content">
-                <img src="../images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -43,7 +50,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                 </div>
                 <div class="logos-right">
-                    <img src="../images/ISOlogo.png" alt="SOCOTEC Logo">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
                 </div>
             </div>
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
@@ -94,21 +101,23 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
               </div>
           </section>
 
-         <div>
-                <button type="submit" class="submit-button">Submit</button>
-          </div>
+            <div>
+                <button type="submit" class="submit-button">Re-submit</button>
+            </div>
 
 
          <footer>
             <div class="footer-bottom">
                 <div class="footer-logos">
-                    <img src="../images/footerlogo.png" alt="Org Logo 1">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
                 </div>
             </div>
         </footer>
 
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="./post.js"></script>
+    <script src="./get.js"></script>
+    <script src="./update.js"></script>
+  
 </body>
 </html>

@@ -9,6 +9,7 @@ function getFormData() {
         location: document.getElementById('location')?.value || '',
         date_held: document.getElementById('date_held')?.value || '',
         month_held: document.getElementById('month_held')?.value || '',
+        year_held: document.getElementById('year_held')?.value || '',
         location_two: document.getElementById('location_two')?.value || '',
         monitored_by: document.getElementById('monitored_by')?.value || '',
         verified_by: document.getElementById('verified_by')?.value || '',
@@ -31,7 +32,7 @@ function displayFormData() {
     console.log(`Department: ${data.cert_department}`);
     console.log(`Activity/Project: ${data.activity_name}`);
     console.log(`Location: ${data.location}`);
-    console.log(`Date Held: ${data.date_held} ${data.month_held}, 2025`);
+    console.log(`Date Held: ${data.date_held} ${data.month_held} ${data.year_held}`);
     console.log(`Location Two: ${data.location_two}`);
     console.log(`Monitored By: ${data.monitored_by}`);
     console.log(`Verified By: ${data.verified_by}`);
@@ -111,6 +112,7 @@ function validateFormData() {
     if (!data.location || !data.location.trim()) errors.push('Location is required');
     if (!data.date_held || !data.date_held.trim()) errors.push('Date is required');
     if (!data.month_held || !data.month_held.trim()) errors.push('Month is required');
+    if (!data.year_held || !data.year_held.trim()) errors.push('Year is required');
     if (!data.location_two || !data.location_two.trim()) errors.push('Location two is required');
     if (!data.monitored_by || !data.monitored_by.trim()) errors.push('Monitored by is required');
     if (!data.verified_by || !data.verified_by.trim()) errors.push('Verified by is required');
@@ -131,6 +133,7 @@ function clearForm() {
         'location',
         'date_held',
         'month_held',
+        'year_held',
         'location_two',
         'monitored_by',
         'verified_by',
@@ -213,6 +216,7 @@ class FormHandler {
             'location',
             'date_held',
             'month_held',
+            'year_held',
             'location_two',
             'monitored_by',
             'verified_by',
@@ -237,6 +241,7 @@ class FormHandler {
             location: data.location,
             date_held: data.date_held,
             month_held: data.month_held,
+            year_held: data.year_held,
             location_two: data.location_two,
             monitored_by: data.monitored_by,
             verified_by: data.verified_by,

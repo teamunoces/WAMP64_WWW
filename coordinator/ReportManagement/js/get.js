@@ -26,7 +26,8 @@ async function loadReports() {
             "pd_main": "Program Design",
             "mar_header": "Monthly Accomplishment Report",
             "program_monitoring_form": "Program Monitoring Form",
-            "evaluation_reports": "Evaluation Sheet for Extension Services"
+            "evaluation_reports": "Evaluation Sheet for Extension Services",
+            "cert_appearance" : "Certificate of Appearance",
         };
 
         // Clear previous data
@@ -308,7 +309,7 @@ function attachSectionEvents(container) {
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/marview/marview.php",
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/evaluationview/evaluationview.php",
-                    "dpir": "./actions/view/dpirview/view.php"
+                    "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/coaview/coaview.php",
                 };
             } else {
                 // NORMAL VIEW (need fix)
@@ -319,7 +320,7 @@ function attachSectionEvents(container) {
                     "mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/marview/marneedview.php",
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/evaluationview/evaluationneedview.php",
-                    "dpir": "./actions/fix/dpirfix/view.php"
+                    "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/coaview/coaneedview.php",
                 };
             }
 

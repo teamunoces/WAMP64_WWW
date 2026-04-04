@@ -60,10 +60,10 @@ try {
     
     // Insert into cert_appearance table
     $sql = "INSERT INTO cert_appearance 
-            (type, participant, cert_department, activity_name, location, date_held, month_held, location_two, 
+            (type, participant, cert_department, activity_name, location, date_held, month_held, year_held, location_two, 
              monitored_by, verified_by, created_by_name, feedback, status, role, user_id, dean, department, archived) 
             VALUES 
-            (:type, :participant, :cert_department, :activity_name, :location, :date_held, :month_held, :location_two, 
+            (:type, :participant, :cert_department, :activity_name, :location, :date_held, :month_held, :year_held, :location_two, 
              :monitored_by, :verified_by, :created_by_name, :feedback, :status, :role, :user_id, :dean, :department, :archived)";
     
     $stmt = $pdo->prepare($sql);
@@ -75,6 +75,7 @@ try {
         ':location'          => $input['location'] ?? '',
         ':date_held'         => $input['date_held'] ?? '',
         ':month_held'        => $input['month_held'] ?? '',
+        ':year_held'         => $input['year_held'] ?? '',
         ':location_two'      => $input['location_two'] ?? '',
         ':monitored_by'      => $input['monitored_by'] ?? '',
         ':verified_by'       => $input['verified_by'] ?? '',
