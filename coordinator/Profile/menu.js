@@ -156,8 +156,14 @@ function updateHeaderBasedOnPage() {
         'evaluationview.php': { title: 'Evaluation Sheet for Extension Services View', icon: 'fa-file-alt' },
         'evaluationneedview.php': { title: 'Evaluation Sheet for Extension Services Need Fix', icon: 'fa-tools' },
         'certificate.php': { title: 'Certificate of Appearance', icon: 'fa-certificate' },
-         'certview.php': { title: 'Certificate of Appearance View', icon: 'fa-certificate' },
-         'certneedview.php': { title: 'Certificate of Appearance Need Fix', icon: 'fa-tools' }
+        'certview.php': { title: 'Certificate of Appearance View', icon: 'fa-certificate' },
+        'certneedview.php': { title: 'Certificate of Appearance Need Fix', icon: 'fa-tools' },
+        'reflection.php': { title: 'Monthly Accomplishment Report- Reflection Paper', icon: 'fa-file-alt' },
+        'reflectionview.php': { title: 'Monthly Accomplishment Report- Reflection Paper View', icon: 'fa-file-alt' },
+        'reflectionneedview.php': { title: 'Monthly Accomplishment Report- Reflection Paper Need Fix', icon: 'fa-tools' },
+        'narrative.php': { title: 'Monthly Accomplishment Report- Narrative Report', icon: 'fa-file-alt' },
+        'narrativeview.php': { title: 'Monthly Accomplishment Report- Narrative Report View', icon: 'fa-file-alt' },
+        'narrativeneedview.php': { title: 'Monthly Accomplishment Report- Narrative Report Need Fix', icon: 'fa-tools' }
 
     };
 

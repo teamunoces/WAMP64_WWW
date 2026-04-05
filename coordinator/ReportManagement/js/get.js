@@ -28,6 +28,7 @@ async function loadReports() {
             "program_monitoring_form": "Program Monitoring Form",
             "evaluation_reports": "Evaluation Sheet for Extension Services",
             "cert_appearance" : "Certificate of Appearance",
+            "reflection_paper" : "Monthly Accomplishment Report- Reflection Paper"
         };
 
         // Clear previous data
@@ -310,6 +311,7 @@ function attachSectionEvents(container) {
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/evaluationview/evaluationview.php",
                     "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/coaview/coaview.php",
+                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/reflectionview/reflectionview.php"
                 };
             } else {
                 // NORMAL VIEW (need fix)
@@ -321,6 +323,7 @@ function attachSectionEvents(container) {
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/evaluationview/evaluationneedview.php",
                     "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/coaview/coaneedview.php",
+                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/reflectionview/reflectionneedview.php"
                 };
             }
 

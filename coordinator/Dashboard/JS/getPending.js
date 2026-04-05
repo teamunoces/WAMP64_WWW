@@ -10,6 +10,8 @@ const reviewPages = {
     "monthly accomplishment report": "./review/monthlyaccomplishment/monthlyaccomplishmentreview.php",
     "evaluation sheet for extension services": "./review/evaluation/evaluationreview.php",
     "Certificate of Appearance" : "./review/coa/coareview.php",
+    "Monthly Accomplishment Report- Reflection Paper" : "./review/reflection/reflectionreview.php"
+
 
 
 };

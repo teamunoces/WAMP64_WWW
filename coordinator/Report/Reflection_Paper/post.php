@@ -47,7 +47,7 @@ if (!$input) {
     exit();
 }
 
-// Validate required fields
+// Define required fields
 $requiredFields = ['beneficiary_name', 'implementing_department'];
 $missingFields = [];
 
@@ -65,6 +65,15 @@ if (!empty($missingFields)) {
     exit();
 }
 
+// Optional: Validate at least one extension service is selected
+if (empty($input['extension_services'])) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Please select at least one extension service type.'
+    ]);
+    exit();
+}
+
 // Database connection
 $host = 'localhost';
 $dbname = 'ces_reports_db';
@@ -75,42 +84,7 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    // Prepare SQL statement with session data fields
-    $sql = "INSERT INTO reflection_paper (
-        beneficiary_name,
-        implementing_department,
-        extension_services,
-        answer_one,
-        answer_two,
-        answer_three,
-        beneficiary_signature,
-        report_type,
-        submitted_at,
-        created_by_name,
-        created_by_role,
-        created_by_department,
-        dean,
-        created_at
-    ) VALUES (
-        :beneficiary_name,
-        :implementing_department,
-        :extension_services,
-        :answer_one,
-        :answer_two,
-        :answer_three,
-        :beneficiary_signature,
-        :report_type,
-        :submitted_at,
-        :created_by_name,
-        :created_by_role,
-        :created_by_department,
-        :dean,
-        NOW()
-    )";
-    
-    $stmt = $pdo->prepare($sql);
-    
-    // Sanitize and bind parameters from form input
+    // Sanitize input data
     $beneficiary_name = htmlspecialchars(strip_tags(trim($input['beneficiary_name'])));
     $implementing_department = htmlspecialchars(strip_tags(trim($input['implementing_department'])));
     $extension_services = htmlspecialchars(strip_tags(trim($input['extension_services'] ?? '')));
@@ -118,17 +92,66 @@ try {
     $answer_two = htmlspecialchars(strip_tags(trim($input['answer_two'] ?? '')));
     $answer_three = htmlspecialchars(strip_tags(trim($input['answer_three'] ?? '')));
     $beneficiary_signature = htmlspecialchars(strip_tags(trim($input['beneficiary_signature'] ?? '')));
-    $report_type = htmlspecialchars(strip_tags(trim($input['report_type'] ?? 'MONTHLY ACCOMPLISHMENT REPORT- REFLECTION PAPER')));
-    $submitted_at = $input['submitted_at'] ?? date('Y-m-d H:i:s');
+    $report_type = htmlspecialchars(strip_tags(trim($input['report_type'] ?? 'Monthly Accomplishment Report- Reflection Paper')));
     
     // Get session data
     $created_by_name = $_SESSION['name'] ?? '';
-    $created_by_role = $_SESSION['role'] ?? '';
-    $created_by_department = $_SESSION['department'] ?? '';
+    $user_role = $_SESSION['role'] ?? '';
+    $user_department = $_SESSION['department'] ?? '';
     $dean = $_SESSION['dean'] ?? '';
+    $user_id = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
     
-    // Execute the statement
-    $stmt->execute([
+    // Validate required session data
+    if (empty($created_by_name)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Session error: User name not found.'
+        ]);
+        exit();
+    }
+    
+    // Prepare SQL statement matching your table structure
+    $sql = "INSERT INTO reflection_paper (
+        type,
+        beneficiary_name,
+        implementing_department,
+        extension_services,
+        answer_one,
+        answer_two,
+        answer_three,
+        beneficiary_signature,
+        created_by_name,
+        role,
+        department,
+        dean,
+        user_id,
+        status,
+        archived,
+        created_at
+    ) VALUES (
+        :type,
+        :beneficiary_name,
+        :implementing_department,
+        :extension_services,
+        :answer_one,
+        :answer_two,
+        :answer_three,
+        :beneficiary_signature,
+        :created_by_name,
+        :role,
+        :department,
+        :dean,
+        :user_id,
+        :status,
+        :archived,
+        NOW()
+    )";
+    
+    $stmt = $pdo->prepare($sql);
+    
+    // Execute with all parameters
+    $result = $stmt->execute([
+        ':type' => $report_type,
         ':beneficiary_name' => $beneficiary_name,
         ':implementing_department' => $implementing_department,
         ':extension_services' => $extension_services,
@@ -136,36 +159,41 @@ try {
         ':answer_two' => $answer_two,
         ':answer_three' => $answer_three,
         ':beneficiary_signature' => $beneficiary_signature,
-        ':report_type' => $report_type,
-        ':submitted_at' => $submitted_at,
         ':created_by_name' => $created_by_name,
-        ':created_by_role' => $created_by_role,
-        ':created_by_department' => $created_by_department,
-        ':dean' => $dean
+        ':role' => $user_role,
+        ':department' => $user_department,
+        ':dean' => $dean,
+        ':user_id' => $user_id,
+        ':status' => 'pending',  // Default status for new submissions
+        ':archived' => 'not archived'
     ]);
+    
+    if (!$result) {
+        throw new Exception('Failed to insert data into database');
+    }
     
     // Get the inserted ID
     $insertedId = $pdo->lastInsertId();
     
-    // Return success response with session info
+    // Return success response
     echo json_encode([
         'success' => true,
-        'message' => 'Report submitted successfully',
+        'message' => 'Report submitted successfully!',
         'data' => [
             'id' => $insertedId,
             'beneficiary_name' => $beneficiary_name,
             'implementing_department' => $implementing_department,
-            'submitted_at' => $submitted_at,
+            'extension_services' => $extension_services,
+            'status' => 'pending',
+            'submitted_at' => date('Y-m-d H:i:s'),
             'submitted_by' => $created_by_name,
-            'department' => $created_by_department,
+            'department' => $user_department,
+            'role' => $user_role,
             'dean' => $dean
         ]
     ]);
     
 } catch (PDOException $e) {
-    // Log error (in production, use error_log)
-    error_log("Database error: " . $e->getMessage());
-    
     echo json_encode([
         'success' => false,
         'message' => 'Database error: Unable to save report. Please try again later.'
@@ -173,7 +201,7 @@ try {
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'An unexpected error occurred: ' . $e->getMessage()
+        'message' => 'An unexpected error occurred. Please try again later.'
     ]);
 }
 ?>

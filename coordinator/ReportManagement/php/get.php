@@ -45,6 +45,7 @@ $coordinatorTables = [
     "program_monitoring_form",
     "evaluation_reports",
     "cert_appearance",
+    "reflection_paper",
 ];
 
 while ($tableRow = $tablesResult->fetch_array()) {

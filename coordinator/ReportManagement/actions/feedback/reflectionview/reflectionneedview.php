@@ -14,9 +14,9 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 <body>
 
 
- <!-- Header -->
-   <iframe 
-        src="../../Profile/profile.html" 
+  <!-- Header -->
+    <iframe 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -25,18 +25,26 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
     <!-- Sidebar -->
     <iframe 
-        src="../../Sidebar/sidebar.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
         title="Navigation Sidebar">
     </iframe>
 
+                                <div class="wrapper">
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
+                                          <textarea id="admincomment" rows="5" readonly></textarea>
+                                    </div>
+                                </div>
+
+
 
     <div class="container">
          <header>
             <div class="header-content">
-                <img src="../images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -45,7 +53,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                 </div>
                 <div class="logos-right">
-                    <img src="../images/ISOlogo.png" alt="SOCOTEC Logo">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
                 </div>
             </div>
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
@@ -158,11 +166,12 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     </div>
 
              <div>
-                <button type="submit" class="submit-button">Submit</button>
+                <button type="submit" class="submit-button">Re-submit</button>
             </div>
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
     <script src="./expand.js"></script>
-    <script src="./post.js"></script>
+    <script src="./get.js"></script>
+    <script src="./update.js"></script>
 </body>
 </html>

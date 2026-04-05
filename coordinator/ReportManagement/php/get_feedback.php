@@ -33,7 +33,7 @@ if (empty($reportId) || empty($table)) {
 }
 
 // Sanitize table name to prevent SQL injection
-$allowedTables = ['coordinator_cnacr', '3ydp', 'pd_main', 'mar_header', 'program_monitoring_form', 'evaluation_reports', 'cert_appearance'];
+$allowedTables = ['coordinator_cnacr', '3ydp', 'pd_main', 'mar_header', 'program_monitoring_form', 'evaluation_reports', 'cert_appearance', 'reflection_paper'];
 if (!in_array($table, $allowedTables)) {
     echo json_encode(["success" => false, "error" => "Invalid table"]);
     exit;

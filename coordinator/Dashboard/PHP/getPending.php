@@ -51,7 +51,8 @@ try {
         'coordinator_cnacr' => ['id','type','title_of_program AS title','created_by_name AS name','department','created_at AS date','status'],
         'program_monitoring_form' => ['id', 'type', 'program_title AS title', 'created_by_name AS name', 'department', 'created_at AS date','status'],
         'evaluation_reports' => ['id', 'type', 'implementing_department AS title', 'created_by_name AS name', 'department', 'created_at AS date','status'],
-        'cert_appearance' => ['id', 'type', 'activity_name AS title', 'created_by_name AS name', 'department', 'created_at AS date','status']
+        'cert_appearance' => ['id', 'type', 'activity_name AS title', 'created_by_name AS name', 'department', 'created_at AS date','status'],
+        'reflection_paper' => ['id', 'type', 'beneficiary_name AS title', 'created_by_name AS name', 'department', 'created_at AS date','status']
     ];
 
     $allReports = [];
