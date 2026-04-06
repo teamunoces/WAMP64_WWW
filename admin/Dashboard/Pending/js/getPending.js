@@ -5,7 +5,13 @@ const reviewPages = {
     "3-year development plan": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/3ydp/3ydpreview.php",
     "program design": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/programdesign/pdview.php",
     "departmental planned initiative report": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/dpir/dpirreview.php",
-    "monthly accomplishment report": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/monthlyreport/mar.php"
+    "monthly accomplishment report": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/monthlyreport/mar.php",
+    "program monitoring form": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/monitoring/monitoringreview.php",
+    "evaluation sheet for extension services": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/evaluation/evaluationreview.php",
+    "Certificate of Appearance" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/coa/coareview.php",
+    "Monthly Accomplishment Report- Reflection Paper" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/reflection/reflectionreview.php",
+    "Monthly Accomplishment Report- Narrative Report" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/narrative/narrativeview.php"
+
 };
 
 async function loadReports(status, tableBodyId) {

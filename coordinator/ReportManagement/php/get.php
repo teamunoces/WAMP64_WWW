@@ -46,6 +46,7 @@ $coordinatorTables = [
     "evaluation_reports",
     "cert_appearance",
     "reflection_paper",
+    "narrative_report",
 ];
 
 while ($tableRow = $tablesResult->fetch_array()) {
@@ -89,7 +90,7 @@ while ($tableRow = $tablesResult->fetch_array()) {
     while ($row = $result->fetch_assoc()) {
         // Detect title
         $title = "N/A";
-        foreach (['title', 'implementing_department', 'activity_name','program_title','title_of_project', 'title_of_activity', 'title_of_program', 'title_act', 'report_title', 'project_title'] as $field) {
+        foreach (['title','implementing_department', 'activity_name','program_title','title_of_project', 'title_of_activity', 'title_of_program', 'title_act', 'report_title', 'project_title'] as $field) {
             if (isset($row[$field]) && !empty($row[$field])) {
                 $title = $row[$field];
                 break;

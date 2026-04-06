@@ -149,6 +149,8 @@ function updateHeaderBasedOnPage() {
         'ApprovedReports.php' : { title: 'Approved Report Attachments', icon: 'fa-check-circle' },
         'marview.php': { title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
         'marreport.php': {title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
+        'monitoringreview.php': {title: 'Program Monitoring Form Review', icon: 'fa-file-alt'},
+
         
     }
     const currentPage = currentPath.split('/').pop();

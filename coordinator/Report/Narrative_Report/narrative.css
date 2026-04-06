@@ -164,3 +164,27 @@ header h1 {
     font-style: italic;
     font-weight: 300;
 }
+
+/* Submit Button */
+.submit-button {
+    display: block;
+    padding: 6px 30px;
+    border-radius: 50px;
+    border: 1px solid #1a1a1a;
+    background: linear-gradient(to right, #63b32e, #3d7025);
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    margin-left: auto; /* Align right */
+    width: fit-content;
+}
+
+.submit-button:hover {
+    opacity: 0.9;
+}

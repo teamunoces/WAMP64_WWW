@@ -57,6 +57,26 @@ switch($type){
     case "monthly accomplishment report":
         $table = "mar_header";
         break;
+        
+    case "program monitoring form":
+        $table = "program_monitoring_form";
+        break;
+        
+    case "evaluation reports":
+        $table = "evaluation_reports";
+        break;
+        
+    case "certification appearance":
+        $table = "cert_appearance";
+        break;
+    
+    case "reflection paper":
+        $table = "reflection_paper";
+        break;
+        
+    case "monthly accomplishment report- narrative report":
+        $table = "narrative_report";
+        break;
 
    
 

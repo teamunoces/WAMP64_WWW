@@ -28,7 +28,8 @@ async function loadReports() {
             "program_monitoring_form": "Program Monitoring Form",
             "evaluation_reports": "Evaluation Sheet for Extension Services",
             "cert_appearance" : "Certificate of Appearance",
-            "reflection_paper" : "Monthly Accomplishment Report- Reflection Paper"
+            "reflection_paper" : "Monthly Accomplishment Report- Reflection Paper",
+            "narrative_report" : "Monthly Accomplishment Report- Narrative Report"
         };
 
         // Clear previous data
@@ -311,7 +312,8 @@ function attachSectionEvents(container) {
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/evaluationview/evaluationview.php",
                     "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/coaview/coaview.php",
-                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/reflectionview/reflectionview.php"
+                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/reflectionview/reflectionview.php",
+                    "narrative_report" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/narrativeview/narrativeview.php"
                 };
             } else {
                 // NORMAL VIEW (need fix)
@@ -323,7 +325,8 @@ function attachSectionEvents(container) {
                     "program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
                     "evaluation_reports": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/evaluationview/evaluationneedview.php",
                     "cert_appearance" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/coaview/coaneedview.php",
-                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/reflectionview/reflectionneedview.php"
+                    "reflection_paper" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/reflectionview/reflectionneedview.php",
+                    "narrative_report" : "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/narrativeview/narrativeneedview.php"
                 };
             }
 

@@ -1,19 +1,19 @@
 <?php
 session_start();
 $userDepartment = $_SESSION['department'] ?? '';
-$reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certificate of Appearance";
+$reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly Accomplishment Report- Narrative Report";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate of Appearance</title>
-    <link rel="stylesheet" href="coa.css">
+    <title>Monthly Accomplishment Report Form</title>
+    <link rel="stylesheet" href="narrative.css">
 </head>
 <body>
- <!-- Header -->
-   <iframe 
+    <!-- Header -->
+    <iframe 
         src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
@@ -42,9 +42,9 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
                                     </div>
                                 </div>
 
-    <div class="certificate-container">
 
-          <header>
+    <div class="report-container">
+        <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
@@ -61,54 +61,33 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
             <div class="double-line"></div>
         </header>
+
         <header>
-            <h1>CERTIFICATE OF APPEARANCE</h1>
+            <h1>MONTHLY ACCOMPLISHMENT REPORT- NARRATIVE REPORT</h1>
         </header>
-          <section class="content">
-              <p>
-                  This is to certify that 
-                  <span class="line-wrap"><input type="text" class="long-line" id="participant"><span class="sub-label">(Name)</span></span> 
-                  of 
-                  <span class="line-wrap"><input type="text" class="long-line" id="cert_department"><span class="sub-label">(Department)</span></span>,
-              </p>
 
-              <p>
-                  has visited and monitored the activity /project on 
-                  <input type="text" class="med-line" id="activity_name">
-                  <div class="sub-label-center">(title of the activity/project)</div>
-              </p>
+        <form id="narrativeForm">
+            <ol class="report-list">
+                <li>
+                    <label class="label">Narrate Success</label> 
+                    <textarea class="line-input dynamic-textarea" id="narrate_success" ></textarea>
+                </li>
+                <li>
+                    <label class="label">Provide Data</label> 
+                    <textarea class="line-input dynamic-textarea" id="provide_data" ></textarea>
+                </li>
+                <li>
+                    <label class="label">Identify Problems</label> 
+                    <textarea class="line-input dynamic-textarea" id="identify_problems" ></textarea>
+                </li>
+                <li>
+                    <label class="label">Propose Solutions</label> 
+                    <textarea class="line-input dynamic-textarea" id="propose_solutions"></textarea>
+                </li>
+            </ol>
+        </form>
 
-              <div class="location-group">
-                  held at <input type="text" class="full-line" id="location">
-              </div>
-
-              <div class="date-group">
-                  Done this <input type="text" class="short-line" id="date_held">
-                  day of <input type="text" class="month-line" id="month_held">, <input type="text" class="short-line" id="year_held"> at <input type="text" class="location-line" id="location_two">
-              </div>
-          </section>
-
-          <section class="signatures">
-              <div class="signature-block">
-                 <p><strong>Monitored by:</strong></p>
-                  <div class="sig-line">
-                      <input type="text" id="monitored_by">
-                      <span class="sub-label">Signature over printed name</span>
-                  </div>
-              </div>
-
-              <div class="signature-block">
-                  <p><strong>Verified by the Barangay Official/ Community Head/Beneficiary:</strong></p>
-                  <div class="sig-line">
-                      <input type="text" id="verified_by">
-                      <span class="sub-label">Signature over printed name</span>
-                  </div>
-              </div>
-          </section>
-
-
-
-                        <!-- APPROVAL SECTIONS -->
+                                <!-- APPROVAL SECTIONS -->
                     <section class="approvals-container">
                         <div class="approval-row">
                             <div class="signature-group">
@@ -152,49 +131,36 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
                         </section>
 
 
-
-
-
-        <!-- DOCUMENT INFORMATION -->
-        <section class="document-info">
-          <table class="doc-header">
-            <tr>
-              <td class="label">Form Code No.</td><td>:</td>
-              <td class="value"><p class="document_type">FM-DPM-SMCC-CES-07</p></td>
-            </tr>
-            <tr>
-              <td class="label">Issue Status</td><td>:</td>
-              <td class="value"><input type="text" name="issue_status" disabled></td>
-            </tr>
-            <tr>
-              <td class="label">Revision No.</td><td>:</td>
-              <td class="value"><input type="text" name="revision_number" disabled></td>
-            </tr>
-            <tr>
-              <td class="label">Date Effective</td><td>:</td>
-              <td class="value"><input type="text" name="date_effective" disabled></td>
-            </tr>
-            <tr>
-              <td class="label">Approved By</td><td>:</td>
-              <td class="value"><input type="text" name="approved_by" disabled></td>
-            </tr>
-          </table>
-        </section>
-          
-
-
-         <footer>
-            <div class="footer-bottom">
-                <div class="footer-logos">
-                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
-                </div>
-            </div>
-        </footer>
+                          <!-- DOCUMENT INFORMATION -->
+                      <section class="document-info">
+                        <table class="doc-header">
+                          <tr>
+                            <td class="label">Form Code No.</td><td>:</td>
+                            <td class="value"><p class="document_type">FM-DPM-SMCC-CES-05A</p></td>
+                          </tr>
+                          <tr>
+                            <td class="label">Issue Status</td><td>:</td>
+                            <td class="value"><input type="text" name="issue_status" disabled></td>
+                          </tr>
+                          <tr>
+                            <td class="label">Revision No.</td><td>:</td>
+                            <td class="value"><input type="text" name="revision_number" disabled></td>
+                          </tr>
+                          <tr>
+                            <td class="label">Date Effective</td><td>:</td>
+                            <td class="value"><input type="text" name="date_effective" disabled></td>
+                          </tr>
+                          <tr>
+                            <td class="label">Approved By</td><td>:</td>
+                            <td class="value"><input type="text" name="approved_by" disabled></td>
+                          </tr>
+                        </table>
+                      </section>
 
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
      <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./expand.js"></script>
     <script src="./get.js"></script>
     <script src="./print.js"></script>
     <script src="./download.js"></script>
