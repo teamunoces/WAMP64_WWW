@@ -1,3 +1,4 @@
+
 /* ===== Frames (Layout Shell) ===== */
 #sidebarFrame {
     width: 100px;
@@ -22,16 +23,6 @@
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-
-/* Updated: Added pointer-events: none to prevent user interaction */
-.form-container {
-    background: #fff;
-    max-width: 900px;
-    margin: 100px auto;
-    padding: 40px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
 
 
 /* ===== Header Section ===== */
@@ -87,6 +78,7 @@
     text-decoration: underline;
 }
 
+/* ===== Office Title ===== */
 .office-title {
     text-align: center;
     font-size: 18px;
@@ -102,11 +94,20 @@
     margin-bottom: 25px;
 }
 
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.4;
     padding: 20px;
     background-color: #f4f4f4;
+}
+
+.form-container {
+    background: #fff;
+    max-width: 900px;
+    margin: 100px auto;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 h2 {
@@ -121,6 +122,7 @@ h3 {
     font-size: 1.1em;
 }
 
+/* Header Info Styling */
 .header-info {
     margin-bottom: 20px;
 }
@@ -142,8 +144,6 @@ h3 {
     border-bottom: 1px solid black;
     width: 100%;
     outline: none;
-    background: transparent;
-    color: #000;
 }
 
 /* Table Styling */
@@ -158,7 +158,6 @@ th, td {
     padding: 8px;
     font-size: 0.9em;
     vertical-align: top;
-    color: #000;
 }
 
 th {
@@ -175,9 +174,9 @@ tbody tr {
     height: 30px;
 }
 
-/* Removed :disabled styling to keep colors original */
+/* Checkbox alignment */
 input[type="checkbox"] {
-    cursor: default;
+    cursor: pointer;
 }
 
 .checkbox-cell {
@@ -190,8 +189,6 @@ input[type="checkbox"] {
     padding: 4px;
     text-align: center;
     border: none;
-    background: transparent;
-    color: #000;
 }
 
 textarea {
@@ -200,9 +197,7 @@ textarea {
     padding: 4px;
     font-family: Arial, sans-serif;
     font-size: 0.9em;
-    resize: none;
-    background: transparent;
-    color: #000;
+    resize: vertical;
 }
 
 /* Paper Lines Textarea Styling */
@@ -210,26 +205,78 @@ textarea {
     width: 100%;
     border: none;
     outline: none;
-    font-size: 0.9em;
+    resize: none;
+    font-size:  0.9em;
     line-height: 30px;
     padding: 0;
     background-attachment: local;
+    
+    /* Creates the horizontal lines */
     background-image: linear-gradient(to bottom, transparent 29px, #000 29px);
     background-size: 100% 30px;
+    
     background-color: transparent;
     font-family: Arial, sans-serif;
     overflow: hidden;
     margin-top: 8px;
 }
 
+.paper-lines::placeholder {
+    color: #ccc;
+    font-style: Arial, sans-serif;
+}
+
+/* Footer Underlines */
 .footer-notes {
     margin-top: 20px;
 }
 
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-print {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-reset {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* This hides the buttons when you print the page */
 @media print {
-    .no-print { display: none; }
-    body { background-color: white; padding: 0; }
-    .form-container { box-shadow: none; width: 100%; max-width: none; }
+    .no-print {
+        display: none;
+    }
+    body {
+        background-color: white;
+        padding: 0;
+    }
+    .form-container {
+        box-shadow: none;
+        width: 100%;
+        max-width: none;
+    }
+    
     .paper-lines {
         background-image: linear-gradient(to bottom, transparent 29px, #000 29px);
         background-size: 100% 30px;
@@ -241,23 +288,38 @@ textarea {
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
+    table-layout: auto; /* Ensures table expands vertically */
 }
 
 #feedbackTable th, #feedbackTable td {
     border: 1px solid #000;
     padding: 10px;
+    vertical-align: top;
 }
 
+#feedbackTable th {
+    background-color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+/* THE FIX FOR THE TEXTAREAS */
 .feedbackSummary, .feedbackAction {
     width: 100%;
     box-sizing: border-box;
     border: none;
+    border-radius: 2px;
     padding: 8px;
     font-family: inherit;
-    font-size: 0.9em;
+    font-size:  0.9em;
+    resize: none; /* Turn off manual resize, we'll handle it automatically */
     display: block;
-    overflow: hidden;
-    min-height: 50px;
+    overflow: hidden; /* Hide scrollbars to keep it clean */
+    min-height: 50px; /* Starting height */
+}
+
+.feedbackSummary:focus, .feedbackAction:focus {
+    outline: none;
 }
 
 #otherIssues {
@@ -267,88 +329,37 @@ textarea {
     padding: 8px;
     font-family: inherit;
     font-size: 13px;
+    resize: none;
     display: block;
     overflow: hidden;
-    min-height: 38px;
+    min-height: 38px; /* Standard single-line height */
 }
 
-/*__________________________________________________BUTTON___________________________________________*/
-.button-container {
-    display: flex;
-    justify-content: space-between; /* Pushes buttons to opposite sides */
-    gap: 200px; /* Optional spacing between buttons */
-    margin-top: 30px; /* spacing from top */
+#otherIssues:focus {
+    outline: none;
+    background-color: #f9f9f9; /* Subtle hint that you are typing here */
 }
 
-/* Keep individual button styling */
-.rejectbtn, .approvebtn, .needFixes{
-    padding: 12px 60px;
+/* Submit Button */
+.submit-button {
+    display: block;
+    padding: 6px 30px;
     border-radius: 50px;
-    border: none;
-    color: #ffffff;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    border: 1px solid #1a1a1a;
+    background: linear-gradient(to right, #63b32e, #3d7025);
+    color: white;
+    font-family: sans-serif;
     font-weight: bold;
     font-size: 15px;
     text-align: center;
+    transition: opacity 0.2s ease;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 4px 15px rgba(61, 112, 37, 0.3);
+    margin-top: 30px;
+    margin-bottom: 40px;
+    margin-left: auto; /* Align right */
     width: fit-content;
 }
 
-/* Optional: different colors for reject/approve */
-
-.rejectbtn {
-    background: linear-gradient(to right, #d9534f, #c12d2d); /* red gradient */
-}
-.needFixes {
-    background: linear-gradient(to right, #f0ad4e, #d58512); /* orange gradient */
-}
-.approvebtn {
-    background: linear-gradient(to right, #63b32e, #3d7025); /* green gradient */
-}
-
-/* Hover effect */
-.button-container button:hover {
-    transform: translateY(-2px);
-    opacity: 0.95;
-    box-shadow: 0 6px 20px rgba(61, 112, 37, 0.4);
-}
-
-.admin-comment-label{
-  font-weight: bold;
-  font-size: 35px;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  
-}
-#admincomment{
-    display: block; 
-    width: 100%;          /* Increased slightly for better paragraph width */
-    max-width: 1000px; 
-    margin: 20px auto; 
-    min-height: 150px;   /* Increased height to invite paragraph entry */
-    padding: 15px;
-    
-    /* Typography for Paragraphs */
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;    /* Essential for reading long paragraphs */
-    text-align: justify; /* Optional: gives a clean "block" look to paragraphs */
-    color: #333;
-
-    /* Behavior */
-    white-space: pre-wrap; /* Ensures line breaks and spaces are preserved */
-    overflow-wrap: break-word;
-    
-    /* Aesthetics */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    resize: vertical; 
-    outline: none;
-    transition: all 0.3s ease;
-    background-color: #fafafa; /* Subtle background color change */
-}
-
-section{
-    pointer-events: none; /* Prevents user interaction with the entire section */
+.submit-button:hover {
+    opacity: 0.9;
 }

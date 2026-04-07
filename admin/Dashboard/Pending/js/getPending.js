@@ -104,6 +104,26 @@ function viewReport(id, type, status) {
             window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/marneedfix/marneedfix.php?id=${id}`;
             return;
         }
+        if (typeLower === "program monitoring form") {
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/monitoringneedfix/pmfneedview.php?id=${id}`;
+            return;
+        }
+        if (typeLower === "evaluation sheet for extension services") {
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/evaluationneedfix/evaluationneedfix.php?id=${id}`;
+            return;
+        }
+        if (typeLower === "Certificate of Appearance".toLowerCase()) {
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/coaneedfix/coaneedfix.php?id=${id}`;
+            return;
+        }   
+        if (typeLower === "Monthly Accomplishment Report- Reflection Paper".toLowerCase()) {
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/reflectionneedfix/reflectionneedfix.php?id=${id}`;
+            return;
+        }
+        if (typeLower === "Monthly Accomplishment Report- Narrative Report".toLowerCase()) {
+            window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/narrativeneedfix/narrativeneedfix.php?id=${id}`;
+            return;
+        }
     }
 
     const page = reviewPages[typeLower];

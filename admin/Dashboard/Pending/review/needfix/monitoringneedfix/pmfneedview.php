@@ -19,7 +19,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
   <!-- Header -->
    <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -28,13 +28,19 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
     <!-- Sidebar -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
+        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html" 
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
         title="Navigation Sidebar">
     </iframe>
 
+                            <div class="wrapper">
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
+                                          <textarea id="admincomment" rows="5" readonly></textarea>
+                                    </div>
+                            </div>
         
     <div class="form-container">
 
@@ -238,8 +244,6 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         </section>
 
 
-      
-                    
         <footer>
             <div class="footer-bottom">
                 <div class="footer-logos">
@@ -247,28 +251,12 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                 </div>
             </div>
         </footer>
-          <!--- ADMIN FEEBACK AND BUTTONS --->
-
-
-                                 <div class="admin-comment">
-                                    <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
-                                    <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
-                                </div>
-
-
-                                 <div class="button-container">      
-                                        <button class="rejectbtn" id="rejectReport" value="">Reject</button>
-                                        <button class="needFixes" id="needFixes" value="">Need Fixes</button>
-                                        <button class="approvebtn" id="approveReport" value="">Approve</button>
-                                </div>
 
     </div>
     
     
-    <input type="hidden" id="currentReportId" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>">
-    <input type="hidden" id="currentReportType" value="<?php echo $reportType; ?>">
+
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/action/action.js"></script>
     <script src="./get.js"></script>
 
 </body>

@@ -144,7 +144,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     
     </div>
 
-      <input type="hidden" id="currentReportId" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>">
+       <input type="hidden" id="currentReportId" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>">
        <input type="hidden" id="currentReportType" value="<?php echo $reportType; ?>">
       <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
       <script src="./get.js" ></script>

@@ -30,9 +30,36 @@
     margin: 100px auto;
     padding: 40px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    pointer-events: none; /* Prevents user interaction with the form container */
 }
 
 
+
+.admin-comment {
+    width: 100%; 
+    max-width: 990px;
+    box-sizing: border-box;
+    display: block;
+    margin: 50px auto 40px auto;
+}
+
+#admincomment {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    margin-top: 10px;
+    background-color: #fff9db;
+    color: #856404;
+    border: 2px solid #f59e0b;
+    border-left: 8px solid #f59e0b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    font-style: italic;
+    padding: 20px;
+    font-family: inherit;
+    border-radius: 4px 12px 12px 4px;
+    resize: none;
+}
 
 /* ===== Header Section ===== */
 .header-content {
@@ -272,83 +299,27 @@ textarea {
     min-height: 38px;
 }
 
-/*__________________________________________________BUTTON___________________________________________*/
-.button-container {
-    display: flex;
-    justify-content: space-between; /* Pushes buttons to opposite sides */
-    gap: 200px; /* Optional spacing between buttons */
-    margin-top: 30px; /* spacing from top */
-}
 
-/* Keep individual button styling */
-.rejectbtn, .approvebtn, .needFixes{
-    padding: 12px 60px;
+/* Submit Button */
+.submit-button {
+    display: block;
+    padding: 6px 30px;
     border-radius: 50px;
-    border: none;
-    color: #ffffff;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    border: 1px solid #1a1a1a;
+    background: linear-gradient(to right, #63b32e, #3d7025);
+    color: white;
+    font-family: sans-serif;
     font-weight: bold;
     font-size: 15px;
     text-align: center;
+    transition: opacity 0.2s ease;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 4px 15px rgba(61, 112, 37, 0.3);
+    margin-top: 30px;
+    margin-bottom: 40px;
+    margin-left: auto; /* Align right */
     width: fit-content;
 }
 
-/* Optional: different colors for reject/approve */
-
-.rejectbtn {
-    background: linear-gradient(to right, #d9534f, #c12d2d); /* red gradient */
-}
-.needFixes {
-    background: linear-gradient(to right, #f0ad4e, #d58512); /* orange gradient */
-}
-.approvebtn {
-    background: linear-gradient(to right, #63b32e, #3d7025); /* green gradient */
-}
-
-/* Hover effect */
-.button-container button:hover {
-    transform: translateY(-2px);
-    opacity: 0.95;
-    box-shadow: 0 6px 20px rgba(61, 112, 37, 0.4);
-}
-
-.admin-comment-label{
-  font-weight: bold;
-  font-size: 35px;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  
-}
-#admincomment{
-    display: block; 
-    width: 100%;          /* Increased slightly for better paragraph width */
-    max-width: 1000px; 
-    margin: 20px auto; 
-    min-height: 150px;   /* Increased height to invite paragraph entry */
-    padding: 15px;
-    
-    /* Typography for Paragraphs */
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;    /* Essential for reading long paragraphs */
-    text-align: justify; /* Optional: gives a clean "block" look to paragraphs */
-    color: #333;
-
-    /* Behavior */
-    white-space: pre-wrap; /* Ensures line breaks and spaces are preserved */
-    overflow-wrap: break-word;
-    
-    /* Aesthetics */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    resize: vertical; 
-    outline: none;
-    transition: all 0.3s ease;
-    background-color: #fafafa; /* Subtle background color change */
-}
-
-section{
-    pointer-events: none; /* Prevents user interaction with the entire section */
+.submit-button:hover {
+    opacity: 0.9;
 }

@@ -17,7 +17,12 @@ $allowedTables = [
     "cnacr",
     "coordinator_cnacr",
     "mar_header",
-    "pd_main"
+    "pd_main",
+    "program_monitoring_form",
+    "evaluation_sheet",
+    "cert_appearence",
+    "reflection_paper",
+    "narrative_report"
 ];
 
 foreach ($allowedTables as $tableName) {
@@ -48,6 +53,7 @@ foreach ($allowedTables as $tableName) {
                      $row['title_of_project'] ??
                      $row['title_of_activity'] ??
                      $row['title_of_program'] ??
+                     $row['program_title'] ??
                      "N/A";
 
             // ✅ DEPARTMENT DETECTION

@@ -36,7 +36,12 @@ function renderAdminTable(data) {
         "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
         "3ydp": "3 Year Development Plan",
         "pd_main": "Program Design",
-        "mar_header": "Monthly Accomplishment Report"
+        "mar_header": "Monthly Accomplishment Report",
+        "program_monitoring_form": "Program Monitoring Form",
+        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "cert_appearence": "Certificate of Appearance",
+        "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+        "narrative_report": "Monthly Accomplishment Report- Narrative Report"
     };
 
     data.forEach((report, index) => {
@@ -81,7 +86,13 @@ function renderApprovedTable(data) {
         "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
         "3ydp": "3 Year Development Plan",
         "pd_main": "Program Design",
-        "mar_header": "Monthly Accomplishment Report"
+        "mar_header": "Monthly Accomplishment Report",
+        "program_monitoring_form": "Program Monitoring Form",
+        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "cert_appearence": "Certificate of Appearance",
+        "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+        "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+
     };
 
     data.forEach((report, index) => {
@@ -125,7 +136,12 @@ function renderRejectedTable(data) {
         "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
         "3ydp": "3 Year Development Plan",
         "pd_main": "Program Design",
-        "mar_header": "Monthly Accomplishment Report"
+        "mar_header": "Monthly Accomplishment Report",
+        "program_monitoring_form": "Program Monitoring Form",
+        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "cert_appearence": "Certificate of Appearance",
+        "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+        "narrative_report": "Monthly Accomplishment Report- Narrative Report"
     };
 
     data.forEach((report, index) => {
@@ -224,7 +240,12 @@ function populateFilterDropdowns() {
                 "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
                 "3ydp": "3 Year Development Plan",
                 "pd_main": "Program Design",
-                "mar_header": "Monthly Accomplishment Report"
+                "mar_header": "Monthly Accomplishment Report",
+                "program_monitoring_form": "Program Monitoring Form",
+                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "cert_appearence": "Certificate of Appearance",
+                "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+                "narrative_report": "Monthly Accomplishment Report- Narrative Report"
             };
            const typeName = typeMap[report.source_table] || report.source_table;
             
@@ -332,7 +353,13 @@ function filterAdminReports() {
                 "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
                 "3ydp": "3 Year Development Plan",
                 "pd_main": "Program Design",
-                "mar_header": "Monthly Accomplishment Report"
+                "mar_header": "Monthly Accomplishment Report",
+                "program_monitoring_form": "Program Monitoring Form",
+                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "cert_appearence": "Certificate of Appearance",
+                "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+                "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+
             };
             const typeName = typeMap[report.source_table] || report.source_table;
             return typeName === selectedType;
@@ -375,7 +402,13 @@ function filterApprovedReports() {
                 "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
                 "3ydp": "3 Year Development Plan",
                 "pd_main": "Program Design",
-                "mar_header": "Monthly Accomplishment Report"
+                "mar_header": "Monthly Accomplishment Report",
+                "program_monitoring_form": "Program Monitoring Form",
+                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "cert_appearence": "Certificate of Appearance",
+                "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+                "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+
             };
             const typeName = typeMap[report.source_table] || report.source_table;
             return typeName === selectedType;
@@ -418,7 +451,13 @@ function filterRejectedReports() {
                 "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
                 "3ydp": "3 Year Development Plan",
                 "pd_main": "Program Design",
-                "mar_header": "Monthly Accomplishment Report"
+                "mar_header": "Monthly Accomplishment Report",
+                "program_monitoring_form": "Program Monitoring Form",
+                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "cert_appearence": "Certificate of Appearance",
+                "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+                "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+
             };
             const typeName = typeMap[report.source_table] || report.source_table;
             return typeName === selectedType;
@@ -522,7 +561,13 @@ function attachActionEvents(data) {
                     "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
                     "3ydp": "3 Year Development Plan",
                     "pd_main": "Program Design",
-                    "mar_header": "Monthly Accomplishment Report"
+                    "mar_header": "Monthly Accomplishment Report",
+                    "program_monitoring_form": "Program Monitoring Form",
+                    "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                    "cert_appearence": "Certificate of Appearance",
+                    "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+                    "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+
                 };
                 
                 const reportWithDisplay = {
@@ -650,6 +695,11 @@ function getViewPath(report, row) {
             "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",
             "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/pdview/pdview.php",
             "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
+            "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
+            "evaluation_sheet": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
+            "cert_appearence": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/cert_appearenceview/cert_appearenceview.php",
+            "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
+            "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
             "default": "/admin/ReportManagement/actions/admin_view/defaultview/view.php"
         },
         coordinatorApproved: {
@@ -657,6 +707,11 @@ function getViewPath(report, row) {
             "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/3ydpview/3ydpview.php",
             "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/pdview/pdview.php",
             "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/marview/marview.php",
+            "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/program_monitoring_formview/program_monitoring_formview.php",
+            "evaluation_sheet": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/evaluation_sheetview/evaluation_sheetview.php",
+            "cert_appearence": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/cert_appearenceview/cert_appearenceview.php",
+            "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/reflection_paperview/reflection_paperview.php",
+            "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/narrative_reportview/narrative_reportview.php",
             "default": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/defaultview/view.php"
         },
         coordinatorRejected: {
@@ -716,7 +771,13 @@ function showUploadModal(reportId, reportTable, report = null) {
         "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
         "3ydp": "3 Year Development Plan",
         "pd_main": "Program Design",
-        "mar_header": "Monthly Accomplishment Report"
+        "mar_header": "Monthly Accomplishment Report",
+        "program_monitoring_form": "Program Monitoring Form",
+        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "cert_appearence": "Certificate of Appearance",
+        "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+        "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+        
     };
     
     const displayType = report ? (typeMap[report.source_table] || report.source_table) : 'N/A';

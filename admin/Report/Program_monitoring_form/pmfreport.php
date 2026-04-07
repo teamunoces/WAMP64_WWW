@@ -1,11 +1,8 @@
 <?php
 session_start();
-
-$userName = $_SESSION['name'] ?? '';
+$userDepartment = $_SESSION['department'] ?? '';
 $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program Monitoring Form";
-$reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +16,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
   <!-- Header -->
    <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
+        src="../../Profile/profile.html" 
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -28,7 +25,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
     <!-- Sidebar -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
+        src="../../Nav/navigation.html" 
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
@@ -40,7 +37,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
           <header>
             <div class="header-content">
-                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="../images/smcclogo.png" alt="SMCC Logo" class="logo-left">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -49,7 +46,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                 </div>
                 <div class="logos-right">
-                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
+                    <img src="../images/ISOlogo.png" alt="SOCOTEC Logo">
                 </div>
             </div>
             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
@@ -63,27 +60,27 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
             <div class="header-info">
                 <div class="input-group">
                     <label>Program Title:</label>
-                    <input type="text" id="programTitle"  >
+                    <input type="text" id="programTitle" placeholder="Type here...">
                 </div>
                 <div class="input-group">
                     <label>Activity Conducted:</label>
-                    <input type="text" id="activityConducted" >
+                    <input type="text" id="activityConducted" placeholder="Type here...">
                 </div>
                 <div class="input-group">
                     <label>Location:</label>
-                    <input type="text" id="location" >
+                    <input type="text" id="location" placeholder="Type here...">
                 </div>
                 <div class="input-group">
                     <label>Beneficiaries:</label>
-                    <input type="text" id="beneficiaries" >
+                    <input type="text" id="beneficiaries" placeholder="Type here...">
                 </div>
                 <div class="input-group">
                     <label>Date of Monitoring:</label>
-                    <input type="text" id="monitoringDate" >
+                    <input type="text" id="monitoringDate" placeholder="Type here...">
                 </div>
                 <div class="input-group">
                     <label>Monitored by:</label>
-                    <input type="text" id="monitoredBy" >
+                    <input type="text" id="monitoredBy" placeholder="Type here...">
                 </div>
             </div>
         </header>
@@ -101,58 +98,59 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="0" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="0" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="0"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="0"></td>
                         <td><strong>Low Participation and Engagement:</strong> Lack of awareness or interest in CES activities.</td>
-                        <td><input type="text" class="followUp" data-row="0" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="0" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="1" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="1" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="1"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="1"></td>
                         <td><strong>Resource Constraints:</strong> Insufficient funding, manpower, and infrastructure.</td>
-                        <td><input type="text" class="followUp" data-row="1" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="1" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="2" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="2" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="2"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="2"></td>
                         <td><strong>Lack of Proper Coordination:</strong> Poor communication between stakeholders and misalignment of goals.</td>
-                        <td><input type="text" class="followUp" data-row="2" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="2" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="3" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="3" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="3"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="3"></td>
                         <td><strong>Cultural and Social Barriers:</strong> Resistance to change and difficulties in reaching marginalized groups.</td>
-                        <td><input type="text" class="followUp" data-row="3" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="3" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="4" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="4" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="4"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="4"></td>
                         <td><strong>Sustainability Challenges:</strong> Short-term programs without long-term support or resources.</td>
-                        <td><input type="text" class="followUp" data-row="4" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="4" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="5" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="5" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="5"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="5"></td>
                         <td><strong>Inadequate Monitoring and Evaluation:</strong> Difficulty in tracking progress or measuring impact.</td>
-                        <td><input type="text" class="followUp" data-row="5" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="5" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="6" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="6" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="6"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="6"></td>
                         <td><strong>Limited Training and Capacity Building:</strong> Lack of training and opportunities for beneficiaries to grow.</td>
-                        <td><input type="text" class="followUp" data-row="6" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="6" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="7" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="7" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="7"></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="7"></td>
                         <td><strong>Mismanagement or Corruption:</strong> Misuse of resources or lack of transparency.</td>
-                        <td><input type="text" class="followUp" data-row="7" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="7" placeholder="Y/N" maxlength="1"></td>
                     </tr>
                     <tr>
                         <td colspan="2" class="center-text"><strong>Others (Pls. Specify)</strong></td>
                         <td colspan="2">
                             <textarea id="otherIssues" 
                                       class="auto-expand" 
+                                      placeholder="Specify other issues or challenges" 
                                       rows="1"></textarea>
                         </td>
                     </tr>
@@ -173,18 +171,18 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                 <tbody>
                     <tr>
                         <td><input type="checkbox" class="feedbackCheck" data-feedback="positive"> Positive Feedback</td>
-                        <td><textarea class="feedbackSummary" data-feedback="positive" rows="2"></textarea></td>
-                        <td><textarea class="feedbackAction" data-feedback="positive" rows="2" ></textarea></td>
+                        <td><textarea class="feedbackSummary" data-feedback="positive" rows="2" placeholder="type here..."></textarea></td>
+                        <td><textarea class="feedbackAction" data-feedback="positive" rows="2" placeholder="type here..."></textarea></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="feedbackCheck" data-feedback="negative"> Negative Feedback</td>
-                        <td><textarea class="feedbackSummary" data-feedback="negative" rows="2" ></textarea></td>
-                        <td><textarea class="feedbackAction" data-feedback="negative" rows="2" ></textarea></td>
+                        <td><textarea class="feedbackSummary" data-feedback="negative" rows="2" placeholder="type here..."></textarea></td>
+                        <td><textarea class="feedbackAction" data-feedback="negative" rows="2" placeholder="type here..."></textarea></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="feedbackCheck" data-feedback="suggestions"> Suggestions for Improvement</td>
-                        <td><textarea class="feedbackSummary" data-feedback="suggestions" rows="2" ></textarea></td>
-                        <td><textarea class="feedbackAction" data-feedback="suggestions" rows="2" ></textarea></td>
+                        <td><textarea class="feedbackSummary" data-feedback="suggestions" rows="2" placeholder="type here..."></textarea></td>
+                        <td><textarea class="feedbackAction" data-feedback="suggestions" rows="2" placeholder="type here..."></textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -233,43 +231,28 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
             
             <div class="footer-notes">
                 <p><strong>Other Recommendation/s Please Specify:</strong></p>
-               <textarea name="other_identified_needs" class="paper-lines" id="other_recommendations" rows="1" ></textarea>
+               <textarea name="other_identified_needs" class="paper-lines" rows="1" placeholder="Type here..."></textarea>
             </div>
         </section>
 
+        
+          <div>
+                <button type="submit" class="submit-button">Submit</button>
+          </div>
 
-      
-                    
         <footer>
             <div class="footer-bottom">
                 <div class="footer-logos">
-                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
+                    <img src="../images/footerlogo.png" alt="Org Logo 1">
                 </div>
             </div>
         </footer>
-          <!--- ADMIN FEEBACK AND BUTTONS --->
-
-
-                                 <div class="admin-comment">
-                                    <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
-                                    <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
-                                </div>
-
-
-                                 <div class="button-container">      
-                                        <button class="rejectbtn" id="rejectReport" value="">Reject</button>
-                                        <button class="needFixes" id="needFixes" value="">Need Fixes</button>
-                                        <button class="approvebtn" id="approveReport" value="">Approve</button>
-                                </div>
 
     </div>
     
     
-    <input type="hidden" id="currentReportId" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>">
-    <input type="hidden" id="currentReportType" value="<?php echo $reportType; ?>">
-    <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/action/action.js"></script>
-    <script src="./get.js"></script>
 
+    <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
+    <script src="./post.js"></script>
 </body>
 </html>
