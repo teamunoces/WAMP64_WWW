@@ -62,7 +62,7 @@ switch($type){
         $table = "program_monitoring_form";
         break;
         
-    case "evaluation reports":
+    case "evaluation sheet for extension services":
         $table = "evaluation_reports";
         break;
         

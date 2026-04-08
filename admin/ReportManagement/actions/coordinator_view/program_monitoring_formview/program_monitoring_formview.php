@@ -19,7 +19,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
   <!-- Header -->
    <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
+          src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -28,17 +28,22 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
     <!-- Sidebar -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
+       src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html" 
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
         title="Navigation Sidebar">
     </iframe>
 
+
+                            <div class="buttons">
+                                <button  onclick="printReport()">Print</button>
+                                <button id="downloadPDF" type="button">Download PDF</button>
+                            </div>
                             <div class="wrapper">
                                     <div class="admin-comment">
                                           <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
-                                          <textarea id="admincomment" rows="5" readonly></textarea>
+                                          <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
                                     </div>
                             </div>
         
@@ -69,27 +74,27 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
             <div class="header-info">
                 <div class="input-group">
                     <label>Program Title:</label>
-                    <input type="text" id="programTitle"  >
+                    <input type="text" id="programTitle" readonly >
                 </div>
                 <div class="input-group">
                     <label>Activity Conducted:</label>
-                    <input type="text" id="activityConducted" >
+                    <input type="text" id="activityConducted" readonly>
                 </div>
                 <div class="input-group">
                     <label>Location:</label>
-                    <input type="text" id="location" >
+                    <input type="text" id="location" readonly>
                 </div>
                 <div class="input-group">
                     <label>Beneficiaries:</label>
-                    <input type="text" id="beneficiaries" >
+                    <input type="text" id="beneficiaries" readonly>
                 </div>
                 <div class="input-group">
                     <label>Date of Monitoring:</label>
-                    <input type="text" id="monitoringDate" >
+                    <input type="text" id="monitoringDate" readonly>
                 </div>
                 <div class="input-group">
                     <label>Monitored by:</label>
-                    <input type="text" id="monitoredBy" >
+                    <input type="text" id="monitoredBy" readonly>
                 </div>
             </div>
         </header>
@@ -107,52 +112,52 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="0" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="0" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="0" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="0" readonly></td>
                         <td><strong>Low Participation and Engagement:</strong> Lack of awareness or interest in CES activities.</td>
-                        <td><input type="text" class="followUp" data-row="0" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="0" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="1" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="1" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="1" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="1" readonly></td>
                         <td><strong>Resource Constraints:</strong> Insufficient funding, manpower, and infrastructure.</td>
-                        <td><input type="text" class="followUp" data-row="1" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="1" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="2" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="2" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="2" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="2" readonly></td>
                         <td><strong>Lack of Proper Coordination:</strong> Poor communication between stakeholders and misalignment of goals.</td>
-                        <td><input type="text" class="followUp" data-row="2" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="2" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="3" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="3" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="3" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="3" readonly></td>
                         <td><strong>Cultural and Social Barriers:</strong> Resistance to change and difficulties in reaching marginalized groups.</td>
-                        <td><input type="text" class="followUp" data-row="3" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="3" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="4" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="4" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="4" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="4" readonly></td>
                         <td><strong>Sustainability Challenges:</strong> Short-term programs without long-term support or resources.</td>
-                        <td><input type="text" class="followUp" data-row="4" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="4" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="5" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="5" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="5" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="5" readonly></td>
                         <td><strong>Inadequate Monitoring and Evaluation:</strong> Difficulty in tracking progress or measuring impact.</td>
-                        <td><input type="text" class="followUp" data-row="5" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="5" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="6" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="6" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="6" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="6" readonly></td>
                         <td><strong>Limited Training and Capacity Building:</strong> Lack of training and opportunities for beneficiaries to grow.</td>
-                        <td><input type="text" class="followUp" data-row="6" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="6" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
-                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="7" ></td>
-                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="7" ></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="naCheck" data-row="7" readonly></td>
+                        <td class="checkbox-cell"><input type="checkbox" class="yesCheck" data-row="7" readonly></td>
                         <td><strong>Mismanagement or Corruption:</strong> Misuse of resources or lack of transparency.</td>
-                        <td><input type="text" class="followUp" data-row="7" placeholder="" maxlength="1" ></td>
+                        <td><input type="text" class="followUp" data-row="7" placeholder="" maxlength="1" readonly></td>
                     </tr>
                     <tr>
                         <td colspan="2" class="center-text"><strong>Others (Pls. Specify)</strong></td>
@@ -239,10 +244,85 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
             
             <div class="footer-notes">
                 <p><strong>Other Recommendation/s Please Specify:</strong></p>
-               <textarea name="other_identified_needs" class="paper-lines" id="other_recommendations" rows="1" ></textarea>
+               <textarea name="other_identified_needs" class="paper-lines" id="other_recommendations" rows="1" readonly></textarea>
             </div>
         </section>
 
+
+        <!-- APPROVAL SECTIONS -->
+                    <section class="approvals-container">
+                        <div class="approval-row">
+                            <div class="signature-group">
+                            <div class="label">Prepared by:</div>
+                            <div class="signature-line" id="created_by"></div>
+                            <div class="title bold">CES Coordinator</div>
+                            </div>
+                        </div>
+
+                        <div class="label" style="margin-top: 20px;">Noted by:</div>
+                        <div class="approval-row">
+                            <div class="signature-group">
+                             <div class="signature-line" id="dean"></div>
+                            <div class="title bold">Dean</div>
+                            </div>
+                            <div class="signature-group">
+                            <div class="signature-line" id="ces_head"></div>
+                            <div class="title bold">CES Head</div>
+                            </div>
+                        </div>
+
+                        <div class="approval-centered" style="margin-top: 40px;">
+                            <div class="label left-align">Recommending Approval:</div>
+                            <div class="admin-block">
+                            <div class="name-underlined" id="vp_acad"></div>
+                            <div class="title bold">Vice-President for Academic Affairs and Research</div>
+                            </div>
+                            <div class="admin-block">
+                            <div class="name-underlined"id="vp_admin" ></div>
+                            <div class="title bold">Vice-President for Administrative Affairs</div>
+                            </div>
+                        </div>
+
+                        <div class="approval-centered">
+                            <div class="label left-align">Approved by:</div>
+                            <div class="admin-block">
+                            <div class="name-underlined"id="school_president"></div>
+                            <div class="title bold">School President</div>
+                            </div>
+                        </div>
+                        </section>
+
+
+
+
+
+        <!-- DOCUMENT INFORMATION -->
+        <section class="document-info">
+          <table class="doc-header">
+            <tr>
+              <td class="label">Form Code No.</td><td>:</td>
+              <td class="value"><p class="document_type">FM-DPM-SMCC-CES-06</p></td>
+            </tr>
+            <tr>
+              <td class="label">Issue Status</td><td>:</td>
+              <td class="value"><input type="text" name="issue_status" disabled></td>
+            </tr>
+            <tr>
+              <td class="label">Revision No.</td><td>:</td>
+              <td class="value"><input type="text" name="revision_number" disabled></td>
+            </tr>
+            <tr>
+              <td class="label">Date Effective</td><td>:</td>
+              <td class="value"><input type="text" name="date_effective" disabled></td>
+            </tr>
+            <tr>
+              <td class="label">Approved By</td><td>:</td>
+              <td class="value"><input type="text" name="approved_by" disabled></td>
+            </tr>
+          </table>
+        </section>
+
+      
 
         <footer>
             <div class="footer-bottom">
@@ -258,6 +338,8 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
     <script src="./get.js"></script>
-
+ <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/js/getapproval.js"></script>
+ <script src="./print.js"></script>
+ <script src="./download.js"></script>
 </body>
 </html>

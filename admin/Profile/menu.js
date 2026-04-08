@@ -150,6 +150,9 @@ function updateHeaderBasedOnPage() {
         'marview.php': { title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
         'marreport.php': {title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
         'monitoringreview.php': {title: 'Program Monitoring Form Review', icon: 'fa-file-alt'},
+        'evaluationreview.php': {title: 'Evaluation Sheet for Extension Services Review', icon: 'fa-file-alt'},
+        'evaluationneedfix.php': {title: 'Evaluation Sheet for Extension Services Needs Fix', icon: 'fa-file-alt'},
+
 
         
     }

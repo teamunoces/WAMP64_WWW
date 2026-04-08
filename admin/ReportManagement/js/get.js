@@ -38,7 +38,7 @@ function renderAdminTable(data) {
         "pd_main": "Program Design",
         "mar_header": "Monthly Accomplishment Report",
         "program_monitoring_form": "Program Monitoring Form",
-        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "evaluation_reports": "Evaluation Sheet for Extension Services",
         "cert_appearence": "Certificate of Appearance",
         "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
         "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -88,7 +88,7 @@ function renderApprovedTable(data) {
         "pd_main": "Program Design",
         "mar_header": "Monthly Accomplishment Report",
         "program_monitoring_form": "Program Monitoring Form",
-        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "evaluation_reports": "Evaluation Sheet for Extension Services",
         "cert_appearence": "Certificate of Appearance",
         "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
         "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -138,7 +138,7 @@ function renderRejectedTable(data) {
         "pd_main": "Program Design",
         "mar_header": "Monthly Accomplishment Report",
         "program_monitoring_form": "Program Monitoring Form",
-        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "evaluation_reports": "Evaluation Sheet for Extension Services",
         "cert_appearence": "Certificate of Appearance",
         "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
         "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -242,7 +242,7 @@ function populateFilterDropdowns() {
                 "pd_main": "Program Design",
                 "mar_header": "Monthly Accomplishment Report",
                 "program_monitoring_form": "Program Monitoring Form",
-                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "evaluation_reports": "Evaluation Sheet for Extension Services",
                 "cert_appearence": "Certificate of Appearance",
                 "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                 "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -355,7 +355,7 @@ function filterAdminReports() {
                 "pd_main": "Program Design",
                 "mar_header": "Monthly Accomplishment Report",
                 "program_monitoring_form": "Program Monitoring Form",
-                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "evaluation_reports": "Evaluation Sheet for Extension Services",
                 "cert_appearence": "Certificate of Appearance",
                 "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                 "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -404,7 +404,7 @@ function filterApprovedReports() {
                 "pd_main": "Program Design",
                 "mar_header": "Monthly Accomplishment Report",
                 "program_monitoring_form": "Program Monitoring Form",
-                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "evaluation_reports": "Evaluation Sheet for Extension Services",
                 "cert_appearence": "Certificate of Appearance",
                 "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                 "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -453,7 +453,7 @@ function filterRejectedReports() {
                 "pd_main": "Program Design",
                 "mar_header": "Monthly Accomplishment Report",
                 "program_monitoring_form": "Program Monitoring Form",
-                "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                "evaluation_reports": "Evaluation Sheet for Extension Services",
                 "cert_appearence": "Certificate of Appearance",
                 "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                 "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -563,7 +563,7 @@ function attachActionEvents(data) {
                     "pd_main": "Program Design",
                     "mar_header": "Monthly Accomplishment Report",
                     "program_monitoring_form": "Program Monitoring Form",
-                    "evaluation_sheet": "Evaluation Sheet for Extension Services",
+                    "evaluation_reports": "Evaluation Sheet for Extension Services",
                     "cert_appearence": "Certificate of Appearance",
                     "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                     "narrative_report": "Monthly Accomplishment Report- Narrative Report"
@@ -696,7 +696,7 @@ function getViewPath(report, row) {
             "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/pdview/pdview.php",
             "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
             "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
-            "evaluation_sheet": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
+            "evaluation_reports": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
             "cert_appearence": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/cert_appearenceview/cert_appearenceview.php",
             "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
             "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
@@ -708,7 +708,7 @@ function getViewPath(report, row) {
             "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/pdview/pdview.php",
             "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/marview/marview.php",
             "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/program_monitoring_formview/program_monitoring_formview.php",
-            "evaluation_sheet": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/evaluation_sheetview/evaluation_sheetview.php",
+            "evaluation_reports": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/evaluation_sheetview/evaluation_sheetview.php",
             "cert_appearence": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/cert_appearenceview/cert_appearenceview.php",
             "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/reflection_paperview/reflection_paperview.php",
             "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/narrative_reportview/narrative_reportview.php",
@@ -773,7 +773,7 @@ function showUploadModal(reportId, reportTable, report = null) {
         "pd_main": "Program Design",
         "mar_header": "Monthly Accomplishment Report",
         "program_monitoring_form": "Program Monitoring Form",
-        "evaluation_sheet": "Evaluation Sheet for Extension Services",
+        "evaluation_reports": "Evaluation Sheet for Extension Services",
         "cert_appearence": "Certificate of Appearance",
         "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
         "narrative_report": "Monthly Accomplishment Report- Narrative Report"

@@ -19,7 +19,7 @@ $allowedTables = [
     "mar_header",
     "pd_main",
     "program_monitoring_form",
-    "evaluation_sheet",
+    "evaluation_reports",
     "cert_appearence",
     "reflection_paper",
     "narrative_report"
