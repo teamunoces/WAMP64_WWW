@@ -20,7 +20,7 @@ $allowedTables = [
     "pd_main",
     "program_monitoring_form",
     "evaluation_reports",
-    "cert_appearence",
+    "cert_appearance",
     "reflection_paper",
     "narrative_report"
 ];
@@ -67,7 +67,7 @@ foreach ($allowedTables as $tableName) {
                           null;
 
             // ✅ ROLE FIX
-            $role = $hasRole ? strtolower($row['role']) : 'admin';
+            $role = $hasRole ? strtolower($row['role']) : 'coordinator';
 
             // ✅ STATUS FIX
             $status = $hasStatus ? strtolower($row['status']) : 'pending';

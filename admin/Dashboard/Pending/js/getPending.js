@@ -8,9 +8,9 @@ const reviewPages = {
     "monthly accomplishment report": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/monthlyreport/mar.php",
     "program monitoring form": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/monitoring/monitoringreview.php",
     "evaluation sheet for extension services": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/evaluation/evaluationreview.php",
-    "Certificate of Appearance" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/coa/coareview.php",
-    "Monthly Accomplishment Report- Reflection Paper" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/reflection/reflectionreview.php",
-    "Monthly Accomplishment Report- Narrative Report" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/narrative/narrativeview.php"
+    "certificate of appearance" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/coa/coareview.php",
+    "monthly accomplishment report- reflection paper" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/reflection/reflectionreview.php",
+    "monthly accomplishment report- narrative report" : "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/narrative/narrativeview.php"
 
 };
 
@@ -112,15 +112,15 @@ function viewReport(id, type, status) {
             window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/evaluationneedfix/evaluationneedfix.php?id=${id}`;
             return;
         }
-        if (typeLower === "Certificate of Appearance".toLowerCase()) {
+        if (typeLower === "certificate of appearance".toLowerCase()) {
             window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/coaneedfix/coaneedfix.php?id=${id}`;
             return;
         }   
-        if (typeLower === "Monthly Accomplishment Report- Reflection Paper".toLowerCase()) {
+        if (typeLower === "monthly accomplishment report- reflection paper".toLowerCase()) {
             window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/reflectionneedfix/reflectionneedfix.php?id=${id}`;
             return;
         }
-        if (typeLower === "Monthly Accomplishment Report- Narrative Report".toLowerCase()) {
+        if (typeLower === "monthly accomplishment report- narrative report".toLowerCase()) {
             window.location.href = `/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/needfix/narrativeneedfix/narrativeneedfix.php?id=${id}`;
             return;
         }

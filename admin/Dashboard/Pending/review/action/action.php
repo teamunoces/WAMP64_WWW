@@ -66,11 +66,11 @@ switch($type){
         $table = "evaluation_reports";
         break;
         
-    case "certification appearance":
+    case "certificate of appearance":
         $table = "cert_appearance";
         break;
     
-    case "reflection paper":
+    case "monthly accomplishment report- reflection paper":
         $table = "reflection_paper";
         break;
         

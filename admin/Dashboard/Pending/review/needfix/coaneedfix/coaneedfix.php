@@ -30,8 +30,12 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
         title="Navigation Sidebar">
     </iframe>
 
-                          
-
+                                <div class="wrapper">
+                                    <div class="admin-comment">
+                                          <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
+                                          <textarea id="admincomment" rows="5" readonly></textarea>
+                                    </div>
+                                </div>
 
     <div class="certificate-container">
 
@@ -97,9 +101,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
               </div>
           </section>
 
+     
 
-
-            
 
          <footer>
             <div class="footer-bottom">
@@ -109,26 +112,10 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
             </div>
         </footer>
 
-          <!--- ADMIN FEEBACK AND BUTTONS --->
-
-
-                                 <div class="admin-comment">
-                                    <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
-                                    <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
-                                </div>
-
-
-                                 <div class="button-container">      
-                                        <button class="rejectbtn" id="rejectReport" value="">Reject</button>
-                                        <button class="needFixes" id="needFixes" value="">Need Fixes</button>
-                                        <button class="approvebtn" id="approveReport" value="">Approve</button>
-                                </div>
-
     </div>
-     <input type="hidden" id="currentReportId" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>">
-    <input type="hidden" id="currentReportType" value="<?php echo $reportType; ?>">
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/action/action.js"></script>
     <script src="./get.js"></script>
+    <script src="./update.js"></script>
+  
 </body>
 </html>

@@ -152,6 +152,11 @@ function updateHeaderBasedOnPage() {
         'monitoringreview.php': {title: 'Program Monitoring Form Review', icon: 'fa-file-alt'},
         'evaluationreview.php': {title: 'Evaluation Sheet for Extension Services Review', icon: 'fa-file-alt'},
         'evaluationneedfix.php': {title: 'Evaluation Sheet for Extension Services Needs Fix', icon: 'fa-file-alt'},
+        'reflectionreview.php': {title: 'Reflection Sheet for Extension Services Review', icon: 'fa-file-alt'},
+        'coareview.php': {title: 'Certificate of Appearance Review', icon: 'fa-file-alt'},
+        'coaneedfix.php': {title: 'Certificate of Appearance Needs Fix', icon: 'fa-file-alt'},
+        'reflectionneedfix.php': {title: 'Reflection Paper Needs Fix', icon: 'fa-file-alt'},
+
 
 
         
