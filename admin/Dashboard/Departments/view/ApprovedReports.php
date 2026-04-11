@@ -63,6 +63,16 @@ function getReportType($table_name) {
             return 'Monthly Accomplishment Report';
         case 'pd_main':
             return 'Program Design';
+        case 'program_monitoring_form':
+            return 'Program Monitoring Form';
+        case 'cert_appearance':
+            return 'Certificate of Appearance';
+        case 'evaluation_reports':
+            return 'Evaluation Sheet for Extension Services';
+        case 'reflection_paper':
+            return 'Monthly Accomplishment Report- Reflection Paper';
+        case 'narrative_report':
+            return 'Monthly Accomplishment Report- Narrative Report';
         default:
             return ucfirst(str_replace('_', ' ', $table_name));
     }
@@ -512,7 +522,12 @@ $debug_mode = false; // Set to true to see debug info
                                                 '3-Year Development Plan',
                                                 'Community Needs Assessment Consolidated Report',
                                                 'Monthly Accomplishment Report',
-                                                'Program Design'
+                                                'Program Design',
+                                                'Program Monitoring Form',
+                                                'Certificate of Appearance',
+                                                'Evaluation Sheet for Extension Services',
+                                                'Monthly Accomplishment Report- Reflection Paper',
+                                                'Monthly Accomplishment Report- Narrative Report'
                                             ];
                                             
                                             // Display in the order you want, then add any others

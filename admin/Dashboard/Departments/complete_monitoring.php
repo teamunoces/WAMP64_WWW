@@ -1,4 +1,11 @@
 <?php
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Clear any output buffers
+if (ob_get_level()) ob_end_clean();
+
 header('Content-Type: application/json');
 
 // Database configuration
@@ -16,10 +23,30 @@ $documents = [
     "3-Year Development Plan" => "3ydp",
     "Community Needs Assessment Consolidated Report" => "coordinator_cnacr",
     "Monthly Accomplishment Report" => "mar_header",
-    "Program Design" => "pd_main"
+    "Program Design" => "pd_main",
+    "Program Monitoring Form" => "program_monitoring_form",
+    "Evaluation Sheet for Extension Services" => "evaluation_reports",
+    "Certificate of Appearance" => "cert_appearance",
+    "Monthly Accomplishment Report- Reflection Paper" => "reflection_paper",
+    "Monthly Accomplishment Report- Narrative Report" => "narrative_report"
 ];
 
-$docKeys = ["devPlan", "needsAssessment", "monthlyReport", "programDesign"];
+// Update docKeys to match ALL documents (9 keys)
+$docKeys = [
+    "devPlan",           // 3-Year Development Plan
+    "needsAssessment",   // Community Needs Assessment Consolidated Report
+    "monthlyReport",     // Monthly Accomplishment Report
+    "programDesign",     // Program Design
+    "programMonitoring", // Program Monitoring Form
+    "evaluationSheet",   // Evaluation Sheet for Extension Services
+    "certificate",       // Certificate of Appearance
+    "reflectionPaper",   // Monthly Accomplishment Report- Reflection Paper
+    "narrativeReport"    // Monthly Accomplishment Report- Narrative Report
+];
+
+// NO NEED to slice arrays anymore - we want ALL documents
+// Remove these lines:
+// $docKeys = array_slice($docKeys, 0, count($documents));
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -43,18 +70,26 @@ $currentYear = date('Y');
 foreach ($departments as $department) {
     $submissionData[$department] = [];
     
-    // For each document type
+    // Process ALL documents (no slicing)
     $docIndex = 0;
     foreach ($documents as $docName => $tableName) {
         // Initialize monthly data array with zeros for 12 months
         $monthlyData = array_fill(0, 12, 0);
         
+        // Check if table exists to avoid SQL errors
+        $checkTable = $conn->query("SHOW TABLES LIKE '$tableName'");
+        if ($checkTable && $checkTable->num_rows == 0) {
+            // Table doesn't exist, store empty data
+            $submissionData[$department][$docKeys[$docIndex]] = $monthlyData;
+            $docIndex++;
+            continue;
+        }
+        
         // Query to get submissions for this department and document type
-        // Added role = 'coordinator' condition
         $sql = "SELECT 
                     MONTH(created_at) as month,
                     COUNT(*) as submission_count
-                FROM $tableName 
+                FROM `$tableName` 
                 WHERE department = ? 
                     AND status = 'approve'
                     AND role = 'coordinator'
@@ -70,9 +105,9 @@ foreach ($departments as $department) {
             
             // Fill in the months where submissions exist
             while ($row = $result->fetch_assoc()) {
-                $monthIndex = (int)$row['month'] - 1; // Convert month (1-12) to index (0-11)
+                $monthIndex = (int)$row['month'] - 1;
                 if ($monthIndex >= 0 && $monthIndex < 12) {
-                    $monthlyData[$monthIndex] = 1; // Mark as submitted if at least one exists
+                    $monthlyData[$monthIndex] = 1;
                 }
             }
             $stmt->close();
@@ -85,14 +120,16 @@ foreach ($departments as $department) {
 
 $conn->close();
 
-// Return the data as JSON
-echo json_encode([
+// Ensure clean JSON output - send ALL documents
+$response = [
     'success' => true,
     'months' => $months,
     'departments' => $departments,
-    'documents' => array_keys($documents),
-    'docKeys' => $docKeys,
+    'documents' => array_keys($documents), // Send ALL document names
+    'docKeys' => $docKeys, // Send ALL document keys
     'submissionData' => $submissionData,
     'currentYear' => $currentYear
-]);
+];
+
+echo json_encode($response);
 ?>

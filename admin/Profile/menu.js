@@ -156,6 +156,9 @@ function updateHeaderBasedOnPage() {
         'coareview.php': {title: 'Certificate of Appearance Review', icon: 'fa-file-alt'},
         'coaneedfix.php': {title: 'Certificate of Appearance Needs Fix', icon: 'fa-file-alt'},
         'reflectionneedfix.php': {title: 'Reflection Paper Needs Fix', icon: 'fa-file-alt'},
+        'narrativeview.php': {title: 'Narrative Report Review', icon: 'fa-file-alt'},
+        'narrativeneedfix.php': {title: 'Narrative Report Needs Fix', icon: 'fa-file-alt'},
+        'narrative_reportview.php': {title: 'Approved Narrative Report', icon: 'fa-file-alt'},
 
 
 
