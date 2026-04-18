@@ -10,6 +10,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Program Monitoring Form</title>
     <link rel="stylesheet" href="pmf.css">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
 
@@ -254,5 +255,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
 
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
     <script src="./post.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

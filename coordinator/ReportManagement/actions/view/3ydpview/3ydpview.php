@@ -233,25 +233,9 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
   <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
   <script src="download.js"></script>
   <script src="./darkmode.js"></script>
+  <script src="./print.js"></script>
 
-  <script>
-          function printReport() {
-              // Select elements you want to hide
-              const buttons = document.querySelectorAll('.buttons');
-              const iframes = document.querySelectorAll('iframe');
 
-              // Hide them before printing
-              buttons.forEach(btn => btn.style.display = 'none');
-              iframes.forEach(frame => frame.style.display = 'none');
-
-              // Trigger print
-              window.print();
-
-              // Restore visibility after print
-              buttons.forEach(btn => btn.style.display = '');
-              iframes.forEach(frame => frame.style.display = '');
-          }
-</script>
 
 </body>
 </html>

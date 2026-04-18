@@ -159,6 +159,13 @@ function updateHeaderBasedOnPage() {
         'narrativeview.php': {title: 'Narrative Report Review', icon: 'fa-file-alt'},
         'narrativeneedfix.php': {title: 'Narrative Report Needs Fix', icon: 'fa-file-alt'},
         'narrative_reportview.php': {title: 'Approved Narrative Report', icon: 'fa-file-alt'},
+        'pmfreport.php': {title: 'Program Monitoring Form', icon: 'fa-file-alt'},
+        'evaluation.php': {title: 'Evaluation Sheet for Extension Services', icon: 'fa-file-alt'},
+        'reflection.php': {title: 'Reflection Sheet for Extension Services', icon: 'fa-file-alt'},
+        'certificate.php': {title: 'Certificate of Appearance', icon: 'fa-file-alt'},
+        'narrative.php': {title: 'Narrative Report', icon: 'fa-file-alt'},
+
+
 
 
 

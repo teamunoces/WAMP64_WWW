@@ -9,40 +9,36 @@ function printReport() {
         return;
     }
     
-    // Clone the evaluation form to avoid modifying the original
-    const printContent = evaluationForm.cloneNode(true);
-    
-    // Ensure radio button states are preserved
-    fixRadioStatesForPrint(printContent);
-    
-    // Extract header content from the parent evaluation-container
+    // Get the parent evaluation container for header/footer
     const evaluationContainer = document.querySelector('.evaluation-container');
-    let headerHTML = '';
-    let footerHTML = '';
     
-    if (evaluationContainer) {
-        // Extract header content (the first header with header-content and office-title)
-        const mainHeader = evaluationContainer.querySelector('header:first-of-type');
-        if (mainHeader) {
-            headerHTML = mainHeader.outerHTML;
-        }
-        
-        // Extract the second header (the "EVALUATION SHEET FOR EXTENSION SERVICES" title)
-        const titleHeader = evaluationContainer.querySelector('header:not(:first-of-type)');
-        if (titleHeader) {
-            headerHTML += titleHeader.outerHTML;
-        }
-        
-        // Extract footer content
-        const footerElement = evaluationContainer.querySelector('footer');
-        if (footerElement) {
-            footerHTML = footerElement.outerHTML;
-        }
+    if (!evaluationContainer) {
+        console.error('Evaluation container not found');
+        alert('Could not find evaluation container');
+        return;
     }
     
-    // Create a comprehensive style element for print-specific styles
-    const style = document.createElement('style');
-    style.textContent = `
+    // Clone the entire evaluation container
+    const printClone = evaluationContainer.cloneNode(true);
+    
+    // Ensure radio button states are preserved in the clone
+    fixRadioStatesForPrint(printClone);
+    
+    // Get all original styles from the page
+    const originalStyles = document.querySelectorAll('link[rel="stylesheet"], style:not([data-print-ignore])');
+    let stylesHTML = '';
+    originalStyles.forEach(styleTag => {
+        if (styleTag.tagName === 'LINK') {
+            stylesHTML += `<link rel="stylesheet" href="${styleTag.href}">`;
+        } else if (styleTag.tagName === 'STYLE' && styleTag.textContent) {
+            if (!styleTag.textContent.includes('@media print')) {
+                stylesHTML += `<style>${styleTag.innerHTML}</style>`;
+            }
+        }
+    });
+    
+    // Create print-specific styles
+    const printStyles = `
         /* ===== BASE PRINT STYLES ===== */
         * {
             margin: 0;
@@ -60,27 +56,46 @@ function printReport() {
             padding: 0;
         }
         
+        /* Hide everything except print-container */
+        body > *:not(#print-container) {
+            display: none !important;
+        }
+        
+        #print-container {
+            display: block !important;
+            position: relative;
+            width: 100%;
+            background: white;
+        }
+        
         /* Hide frames, buttons, and admin elements */
         #sidebarFrame, #headerFrame, .buttons, .admin-comment, .action-buttons {
             display: none !important;
         }
         
-        /* Main form styling - NO header/footer inside */
-        #evaluationForm {
+        /* Main container */
+        .evaluation-container {
             max-width: 900px;
             margin: 0 auto;
             background: white !important;
-            padding: 0 40px 40px 40px !important;
+            padding: 0;
+            box-shadow: none;
+        }
+        
+        /* Main form - proper spacing */
+        #evaluationForm {
+            background: white !important;
+            padding: 20px 40px 120px 40px !important;
             box-shadow: none;
             pointer-events: none;
         }
         
         /* ===== PRINT PAGE MARGINS ===== */
         @page {
-            margin: 15mm 15mm 15mm 15mm;
+            margin: 0.5in;
         }
         
-        /* ===== HEADER SECTION - REPEATING ON EVERY PAGE ===== */
+        /* ===== HEADER - Fixed on every page ===== */
         .print-header {
             position: fixed;
             top: 0;
@@ -88,12 +103,12 @@ function printReport() {
             right: 0;
             background: white;
             z-index: 1000;
-            padding: 10px 20px 5px 20px;
+            padding: 10px 20px 10px 20px;
             border-bottom: 1px solid #ddd;
-            page-break-after: avoid;
+            box-sizing: border-box;
         }
         
-        /* ===== FOOTER SECTION - REPEATING ON EVERY PAGE ===== */
+        /* ===== FOOTER - Fixed on every page ===== */
         .print-footer {
             position: fixed;
             bottom: 0;
@@ -101,55 +116,57 @@ function printReport() {
             right: 0;
             background: white;
             z-index: 1000;
-            padding: 5px 20px 10px 20px;
+            padding: 10px 20px;
             border-top: 1px solid #ddd;
-            page-break-before: avoid;
+            box-sizing: border-box;
         }
         
-        /* ===== MAIN CONTENT SPACING ===== */
-        #evaluationForm {
-            /* Space for fixed header */
-            margin-top: 180px;
-            /* Space for fixed footer */
-            margin-bottom: 80px;
-            /* Prevent content from being hidden */
+        /* ===== SPACER BLOCKS - Prevent overlap ===== */
+        .header-spacer {
+            height: 230px;
+        }
+        
+        .footer-spacer {
+            height: 80px;
+        }
+        
+        /* ===== TABLE PAGE BREAK HANDLING ===== */
+        table {
+            page-break-inside: auto;
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            page-break-after: auto;
+        }
+        
+        tr {
             page-break-inside: avoid;
         }
         
-        /* Ensure proper spacing for all pages */
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            
-            .print-header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: white;
-                z-index: 1000;
-                padding: 10px 20px 5px 20px;
-                border-bottom: 1px solid #ddd;
-            }
-            
-            .print-footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: white;
-                z-index: 1000;
-                padding: 5px 20px 10px 20px;
-                border-top: 1px solid #ddd;
-            }
-            
-            #evaluationForm {
-                margin-top: 250px !important;
-                margin-bottom: 100px !important;
-                padding-top: 0;
-            }
+        td {
+            page-break-inside: avoid;
+        }
+        
+        thead {
+            display: table-header-group;
+        }
+        
+        tbody {
+            display: table-row-group;
+        }
+        
+        /* Prevent headings from breaking awkwardly */
+        h1, h2, h3, h4, h5, h6, p {
+            page-break-after: avoid;
+            orphans: 3;
+            widows: 3;
+        }
+        
+        /* Prevent images from breaking across pages */
+        img {
+            page-break-inside: avoid;
+            max-width: 100%;
+            height: auto;
         }
         
         /* ===== HEADER CONTENT STYLES ===== */
@@ -159,6 +176,7 @@ function printReport() {
             justify-content: space-between;
             margin-bottom: 10px;
             width: 100%;
+            flex-wrap: wrap;
         }
         
         .logo-left {
@@ -203,6 +221,7 @@ function printReport() {
             font-size: 13px;
             color: #0000EE !important;
             text-decoration: underline;
+            word-break: break-all;
         }
         
         /* ===== OFFICE TITLE ===== */
@@ -234,6 +253,7 @@ function printReport() {
             display: flex;
             margin-bottom: 10px;
             align-items: flex-end;
+            flex-wrap: wrap;
         }
         
         .header-info label {
@@ -257,6 +277,7 @@ function printReport() {
             display: flex;
             justify-content: space-between;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
         
         .checkbox-grid .column {
@@ -269,12 +290,6 @@ function printReport() {
         }
         
         /* ===== TABLES ===== */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
         table, th, td {
             border: 1px solid #000 !important;
         }
@@ -315,7 +330,7 @@ function printReport() {
             margin-top: 2px;
         }
         
-        /* Radio button styling - RED color without check mark */
+        /* Radio button styling */
         .radio-cell {
             text-align: center;
             vertical-align: middle;
@@ -345,6 +360,10 @@ function printReport() {
             background-color: #dc2626 !important;
         }
         
+        input[type="checkbox"] {
+            accent-color: #dc2626 !important;
+        }
+        
         /* ===== SIGNATURE SECTION ===== */
         .signature-section {
             margin-top: 40px;
@@ -356,6 +375,7 @@ function printReport() {
             font-weight: bold;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .sig-input {
@@ -438,6 +458,7 @@ function printReport() {
             justify-content: flex-end;
             padding-bottom: 5px;
             width: 100%;
+            flex-wrap: wrap;
         }
         
         .footer-logos {
@@ -501,7 +522,7 @@ function printReport() {
                 border-bottom: 1px solid #000 !important;
             }
             
-            #evaluationForm {
+            .evaluation-container {
                 box-shadow: none;
                 background: white !important;
             }
@@ -512,126 +533,77 @@ function printReport() {
         }
     `;
     
-    // Get all original styles from the page
-    const originalStyles = document.querySelectorAll('link[rel="stylesheet"], style:not([data-print-ignore])');
-    let stylesHTML = '';
-    originalStyles.forEach(styleTag => {
-        if (styleTag.tagName === 'LINK') {
-            stylesHTML += `<link rel="stylesheet" href="${styleTag.href}">`;
-        } else if (styleTag.tagName === 'STYLE' && styleTag.textContent) {
-            if (!styleTag.textContent.includes('@media print')) {
-                stylesHTML += `<style>${styleTag.innerHTML}</style>`;
-            }
-        }
+    // Extract header and footer from the clone
+    const clonedContainer = printClone;
+    const headerElements = clonedContainer.querySelectorAll('header');
+    const footerElement = clonedContainer.querySelector('footer');
+    const formElement = clonedContainer.querySelector('#evaluationForm');
+    
+    // Build header HTML from all header elements
+    let headerHTML = '';
+    headerElements.forEach(header => {
+        headerHTML += header.outerHTML;
     });
     
-    // Create a temporary container for printing
-    const printWindow = window.open('', '_blank');
+    // Build footer HTML
+    let footerHTML = footerElement ? footerElement.outerHTML : '';
     
-    if (!printWindow) {
-        alert('Please allow pop-ups to print the document. Check your browser settings.');
-        return;
-    }
+    // Get form HTML
+    let formHTML = formElement ? formElement.outerHTML : '';
     
-    // Write the print document
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Extension Services Evaluation Sheet</title>
-            ${stylesHTML}
-            ${style.outerHTML}
-            <style>
-                input[type="radio"] {
-                    -webkit-appearance: radio !important;
-                    appearance: radio !important;
-                    opacity: 1 !important;
-                    display: inline-block !important;
-                    margin: 0 4px !important;
-                    transform: scale(1.1) !important;
-                    width: 16px !important;
-                    height: 16px !important;
-                    accent-color: #dc2626 !important;
-                    color: #dc2626 !important;
-                }
-                
-                input[type="radio"]::before,
-                input[type="radio"]::after,
-                input[type="radio"]:checked::before,
-                input[type="radio"]:checked::after {
-                    display: none !important;
-                    content: none !important;
-                }
-                
-                input[type="radio"]:checked {
-                    accent-color: #dc2626 !important;
-                }
-                
-                * {
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-            </style>
-        </head>
-        <body>
-            <!-- Repeating Header (extracted from the evaluation-container) -->
-            <div class="print-header">
-                ${headerHTML}
-            </div>
-            
-            <!-- Repeating Footer (extracted from the evaluation-container) -->
-            <div class="print-footer">
-                ${footerHTML}
-            </div>
-            
-            <!-- Main Content (the form without headers and footer) -->
-            <form id="evaluationForm" class="evaluation-container">
-                ${printContent.innerHTML}
-            </form>
-            
-            <script>
-                let printTriggered = false;
-                
-                window.onload = function() {
-                    setTimeout(function() {
-                        if (!printTriggered) {
-                            printTriggered = true;
-                            window.focus();
-                            window.print();
-                        }
-                    }, 500);
-                };
-                
-                window.onafterprint = function() {
-                    setTimeout(function() {
-                        window.close();
-                        if (window.opener) {
-                            window.opener.focus();
-                        }
-                    }, 100);
-                };
-                
-                setTimeout(function() {
-                    if (!printTriggered) {
-                        printTriggered = true;
-                        window.print();
-                        setTimeout(function() {
-                            window.close();
-                        }, 3000);
-                    }
-                }, 1000);
-            <\/script>
-        </body>
-        </html>
-    `);
+    // Create a temporary div to hold the print content
+    const printContainer = document.createElement('div');
+    printContainer.id = 'print-container';
+    printContainer.innerHTML = `
+        <!-- Fixed Header (appears on every page) -->
+        <div class="print-header">
+            ${headerHTML}
+        </div>
+        
+        <!-- HEADER SPACER - Prevents content from hiding behind header -->
+        <div class="header-spacer"></div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="evaluation-container">
+            ${formHTML}
+        </div>
+        
+        <!-- FOOTER SPACER - Prevents content from hiding behind footer -->
+        <div class="footer-spacer"></div>
+        
+        <!-- Fixed Footer (appears on every page) -->
+        <div class="print-footer">
+            ${footerHTML}
+        </div>
+    `;
     
-    printWindow.document.close();
+    // Add print styles to the page
+    const styleElement = document.createElement('style');
+    styleElement.textContent = printStyles;
+    document.head.appendChild(styleElement);
+    
+    // Add print container to body
+    document.body.appendChild(printContainer);
+    
+    // Trigger print
+    window.print();
+    
+    // Clean up after printing to restore original page
+    setTimeout(() => {
+        // Remove print container
+        if (printContainer && printContainer.parentNode) {
+            printContainer.parentNode.removeChild(printContainer);
+        }
+        // Remove print styles
+        if (styleElement && styleElement.parentNode) {
+            styleElement.parentNode.removeChild(styleElement);
+        }
+    }, 500);
 }
 
-// Helper function to preserve radio button states
+// Helper function to preserve radio button and input states
 function fixRadioStatesForPrint(cloneElement) {
+    // Preserve radio button states
     const radios = cloneElement.querySelectorAll('input[type="radio"]');
     radios.forEach(radio => {
         if (radio.checked) {
@@ -643,6 +615,7 @@ function fixRadioStatesForPrint(cloneElement) {
         radio.style.accentColor = '#dc2626';
     });
     
+    // Preserve checkbox states
     const checkboxes = cloneElement.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
@@ -650,6 +623,7 @@ function fixRadioStatesForPrint(cloneElement) {
         }
     });
     
+    // Preserve text input values
     const inputs = cloneElement.querySelectorAll('input[type="text"], input[type="date"], textarea');
     inputs.forEach(input => {
         if (input.value) {

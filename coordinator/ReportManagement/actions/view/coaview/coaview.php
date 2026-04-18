@@ -10,6 +10,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate of Appearance</title>
     <link rel="stylesheet" href="coa.css">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
  <!-- Header -->
@@ -198,5 +199,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
     <script src="./get.js"></script>
     <script src="./print.js"></script>
     <script src="./download.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

@@ -106,6 +106,7 @@ body {
     width: 850px;
     padding: 60px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    
 }
 /* Force all text to normal weight */
 p, span, div, h1, .office-title {

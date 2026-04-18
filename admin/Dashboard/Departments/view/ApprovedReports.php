@@ -372,9 +372,435 @@ function fetchFromPDMain($conn, $department) {
     return $reports;
 }
 
+// Function to fetch reports from program_monitoring_form table
+function fetchFromProgramMonitoringForm($conn, $department) {
+    $reports = [];
+    
+    // Check if table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'program_monitoring_form'");
+    if (!$table_check || $table_check->num_rows === 0) {
+        return $reports;
+    }
+    
+    $columns = getTableColumns($conn, 'program_monitoring_form');
+    
+    // Determine which columns exist
+    $title_col = in_array('program_title', $columns) ? 'program_title' : 
+                (in_array('title', $columns) ? 'title' : 
+                (in_array('activity_name', $columns) ? 'activity_name' : null));
+    $desc_col = in_array('description', $columns) ? 'description' : 
+                (in_array('remarks', $columns) ? 'remarks' : 
+                (in_array('findings', $columns) ? 'findings' : null));
+    $submitted_by_col = in_array('created_by_name', $columns) ? 'created_by_name' : 
+                       (in_array('submitted_by', $columns) ? 'submitted_by' : 
+                       (in_array('monitor_name', $columns) ? 'monitor_name' : null));
+    
+    // Build SELECT clause dynamically
+    $select_fields = [
+        'id',
+        $title_col ? "$title_col as title" : "'Program Monitoring Form' as title",
+        $desc_col ? "$desc_col as description" : "'' as description",
+        $submitted_by_col ? "$submitted_by_col as submitted_by" : "'Unknown' as submitted_by",
+        in_array('created_at', $columns) ? 'created_at' : (in_array('monitoring_date', $columns) ? 'monitoring_date as created_at' : 'NULL as created_at'),
+        in_array('status', $columns) ? 'status' : "'approve' as status",
+        in_array('role', $columns) ? 'role' : "'coordinator' as role",
+        in_array('department', $columns) ? 'department' : "'$department' as department",
+        "'program_monitoring_form' as source_table"
+    ];
+    
+    $select_sql = implode(', ', $select_fields);
+    
+    // Build WHERE clause
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if (in_array('department', $columns)) {
+        $where_conditions[] = "department = ?";
+        $params[] = $department;
+        $types .= "s";
+    }
+    
+    if (in_array('status', $columns)) {
+        $where_conditions[] = "status = 'approve'";
+    }
+    
+    if (in_array('role', $columns)) {
+        $where_conditions[] = "role = 'coordinator'";
+    }
+    
+    $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+    
+    $sql = "SELECT $select_sql FROM `program_monitoring_form` $where_sql";
+    
+    // Add ORDER BY
+    if (in_array('created_at', $columns)) {
+        $sql .= " ORDER BY created_at DESC";
+    } elseif (in_array('monitoring_date', $columns)) {
+        $sql .= " ORDER BY monitoring_date DESC";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $reports;
+}
+
+// Function to fetch reports from cert_appearance table
+function fetchFromCertAppearance($conn, $department) {
+    $reports = [];
+    
+    // Check if table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'cert_appearance'");
+    if (!$table_check || $table_check->num_rows === 0) {
+        return $reports;
+    }
+    
+    $columns = getTableColumns($conn, 'cert_appearance');
+    
+    // Determine which columns exist
+    $title_col = in_array('activity_title', $columns) ? 'activity_title' : 
+                (in_array('title', $columns) ? 'title' : 
+                (in_array('event_name', $columns) ? 'event_name' : null));
+    $desc_col = in_array('purpose', $columns) ? 'purpose' : 
+                (in_array('description', $columns) ? 'description' : 
+                (in_array('remarks', $columns) ? 'remarks' : null));
+    $submitted_by_col = in_array('created_by_name', $columns) ? 'created_by_name' : 
+                       (in_array('submitted_by', $columns) ? 'submitted_by' : 
+                       (in_array('name', $columns) ? 'name' : null));
+    
+    // Build SELECT clause dynamically
+    $select_fields = [
+        'id',
+        $title_col ? "$title_col as title" : "'Certificate of Appearance' as title",
+        $desc_col ? "$desc_col as description" : "'' as description",
+        $submitted_by_col ? "$submitted_by_col as submitted_by" : "'Unknown' as submitted_by",
+        in_array('created_at', $columns) ? 'created_at' : (in_array('date_filed', $columns) ? 'date_filed as created_at' : 'NULL as created_at'),
+        in_array('status', $columns) ? 'status' : "'approve' as status",
+        in_array('role', $columns) ? 'role' : "'coordinator' as role",
+        in_array('department', $columns) ? 'department' : "'$department' as department",
+        "'cert_appearance' as source_table"
+    ];
+    
+    $select_sql = implode(', ', $select_fields);
+    
+    // Build WHERE clause
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if (in_array('department', $columns)) {
+        $where_conditions[] = "department = ?";
+        $params[] = $department;
+        $types .= "s";
+    }
+    
+    if (in_array('status', $columns)) {
+        $where_conditions[] = "status = 'approve'";
+    }
+    
+    if (in_array('role', $columns)) {
+        $where_conditions[] = "role = 'coordinator'";
+    }
+    
+    $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+    
+    $sql = "SELECT $select_sql FROM `cert_appearance` $where_sql";
+    
+    // Add ORDER BY
+    if (in_array('created_at', $columns)) {
+        $sql .= " ORDER BY created_at DESC";
+    } elseif (in_array('date_filed', $columns)) {
+        $sql .= " ORDER BY date_filed DESC";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $reports;
+}
+
+// Function to fetch reports from evaluation_reports table
+function fetchFromEvaluationReports($conn, $department) {
+    $reports = [];
+    
+    // Check if table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'evaluation_reports'");
+    if (!$table_check || $table_check->num_rows === 0) {
+        return $reports;
+    }
+    
+    $columns = getTableColumns($conn, 'evaluation_reports');
+    
+    // Determine which columns exist
+    $title_col = in_array('program_name', $columns) ? 'program_name' : 
+                (in_array('activity_title', $columns) ? 'activity_title' : 
+                (in_array('title', $columns) ? 'title' : null));
+    $desc_col = in_array('feedback', $columns) ? 'feedback' : 
+                (in_array('comments', $columns) ? 'comments' : 
+                (in_array('remarks', $columns) ? 'remarks' : 
+                (in_array('description', $columns) ? 'description' : null)));
+    $submitted_by_col = in_array('evaluator_name', $columns) ? 'evaluator_name' : 
+                       (in_array('created_by_name', $columns) ? 'created_by_name' : 
+                       (in_array('submitted_by', $columns) ? 'submitted_by' : null));
+    
+    // Build SELECT clause dynamically
+    $select_fields = [
+        'id',
+        $title_col ? "$title_col as title" : "'Evaluation Sheet' as title",
+        $desc_col ? "$desc_col as description" : "'' as description",
+        $submitted_by_col ? "$submitted_by_col as submitted_by" : "'Unknown' as submitted_by",
+        in_array('created_at', $columns) ? 'created_at' : (in_array('evaluation_date', $columns) ? 'evaluation_date as created_at' : 'NULL as created_at'),
+        in_array('status', $columns) ? 'status' : "'approve' as status",
+        in_array('role', $columns) ? 'role' : "'coordinator' as role",
+        in_array('department', $columns) ? 'department' : "'$department' as department",
+        "'evaluation_reports' as source_table"
+    ];
+    
+    $select_sql = implode(', ', $select_fields);
+    
+    // Build WHERE clause
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if (in_array('department', $columns)) {
+        $where_conditions[] = "department = ?";
+        $params[] = $department;
+        $types .= "s";
+    }
+    
+    if (in_array('status', $columns)) {
+        $where_conditions[] = "status = 'approve'";
+    }
+    
+    if (in_array('role', $columns)) {
+        $where_conditions[] = "role = 'coordinator'";
+    }
+    
+    $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+    
+    $sql = "SELECT $select_sql FROM `evaluation_reports` $where_sql";
+    
+    // Add ORDER BY
+    if (in_array('created_at', $columns)) {
+        $sql .= " ORDER BY created_at DESC";
+    } elseif (in_array('evaluation_date', $columns)) {
+        $sql .= " ORDER BY evaluation_date DESC";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $reports;
+}
+
+// Function to fetch reports from reflection_paper table
+function fetchFromReflectionPaper($conn, $department) {
+    $reports = [];
+    
+    // Check if table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'reflection_paper'");
+    if (!$table_check || $table_check->num_rows === 0) {
+        return $reports;
+    }
+    
+    $columns = getTableColumns($conn, 'reflection_paper');
+    
+    // Determine which columns exist
+    $title_col = in_array('reflection_title', $columns) ? 'reflection_title' : 
+                (in_array('title', $columns) ? 'title' : 
+                (in_array('activity_name', $columns) ? 'activity_name' : null));
+    $desc_col = in_array('reflection_content', $columns) ? 'reflection_content' : 
+                (in_array('content', $columns) ? 'content' : 
+                (in_array('reflection', $columns) ? 'reflection' : 
+                (in_array('description', $columns) ? 'description' : null)));
+    $submitted_by_col = in_array('author_name', $columns) ? 'author_name' : 
+                       (in_array('created_by_name', $columns) ? 'created_by_name' : 
+                       (in_array('submitted_by', $columns) ? 'submitted_by' : null));
+    
+    // Build SELECT clause dynamically
+    $select_fields = [
+        'id',
+        $title_col ? "$title_col as title" : "'Reflection Paper' as title",
+        $desc_col ? "$desc_col as description" : "'' as description",
+        $submitted_by_col ? "$submitted_by_col as submitted_by" : "'Unknown' as submitted_by",
+        in_array('created_at', $columns) ? 'created_at' : (in_array('date_submitted', $columns) ? 'date_submitted as created_at' : 'NULL as created_at'),
+        in_array('status', $columns) ? 'status' : "'approve' as status",
+        in_array('role', $columns) ? 'role' : "'coordinator' as role",
+        in_array('department', $columns) ? 'department' : "'$department' as department",
+        "'reflection_paper' as source_table"
+    ];
+    
+    $select_sql = implode(', ', $select_fields);
+    
+    // Build WHERE clause
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if (in_array('department', $columns)) {
+        $where_conditions[] = "department = ?";
+        $params[] = $department;
+        $types .= "s";
+    }
+    
+    if (in_array('status', $columns)) {
+        $where_conditions[] = "status = 'approve'";
+    }
+    
+    if (in_array('role', $columns)) {
+        $where_conditions[] = "role = 'coordinator'";
+    }
+    
+    $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+    
+    $sql = "SELECT $select_sql FROM `reflection_paper` $where_sql";
+    
+    // Add ORDER BY
+    if (in_array('created_at', $columns)) {
+        $sql .= " ORDER BY created_at DESC";
+    } elseif (in_array('date_submitted', $columns)) {
+        $sql .= " ORDER BY date_submitted DESC";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $reports;
+}
+
+// Function to fetch reports from narrative_report table
+function fetchFromNarrativeReport($conn, $department) {
+    $reports = [];
+    
+    // Check if table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'narrative_report'");
+    if (!$table_check || $table_check->num_rows === 0) {
+        return $reports;
+    }
+    
+    $columns = getTableColumns($conn, 'narrative_report');
+    
+    // Determine which columns exist
+    $title_col = in_array('report_title', $columns) ? 'report_title' : 
+                (in_array('activity_title', $columns) ? 'activity_title' : 
+                (in_array('title', $columns) ? 'title' : null));
+    $desc_col = in_array('narrative_content', $columns) ? 'narrative_content' : 
+                (in_array('content', $columns) ? 'content' : 
+                (in_array('report_content', $columns) ? 'report_content' : 
+                (in_array('description', $columns) ? 'description' : null)));
+    $submitted_by_col = in_array('reporter_name', $columns) ? 'reporter_name' : 
+                       (in_array('created_by_name', $columns) ? 'created_by_name' : 
+                       (in_array('submitted_by', $columns) ? 'submitted_by' : null));
+    
+    // Build SELECT clause dynamically
+    $select_fields = [
+        'id',
+        $title_col ? "$title_col as title" : "'Narrative Report' as title",
+        $desc_col ? "$desc_col as description" : "'' as description",
+        $submitted_by_col ? "$submitted_by_col as submitted_by" : "'Unknown' as submitted_by",
+        in_array('created_at', $columns) ? 'created_at' : (in_array('report_date', $columns) ? 'report_date as created_at' : 'NULL as created_at'),
+        in_array('status', $columns) ? 'status' : "'approve' as status",
+        in_array('role', $columns) ? 'role' : "'coordinator' as role",
+        in_array('department', $columns) ? 'department' : "'$department' as department",
+        "'narrative_report' as source_table"
+    ];
+    
+    $select_sql = implode(', ', $select_fields);
+    
+    // Build WHERE clause
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if (in_array('department', $columns)) {
+        $where_conditions[] = "department = ?";
+        $params[] = $department;
+        $types .= "s";
+    }
+    
+    if (in_array('status', $columns)) {
+        $where_conditions[] = "status = 'approve'";
+    }
+    
+    if (in_array('role', $columns)) {
+        $where_conditions[] = "role = 'coordinator'";
+    }
+    
+    $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+    
+    $sql = "SELECT $select_sql FROM `narrative_report` $where_sql";
+    
+    // Add ORDER BY
+    if (in_array('created_at', $columns)) {
+        $sql .= " ORDER BY created_at DESC";
+    } elseif (in_array('report_date', $columns)) {
+        $sql .= " ORDER BY report_date DESC";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $reports;
+}
+
 // Function to check if file exists and return proper path
-// Function to get proper file URL
-// Function to get proper file URL
 function getFileUrl($file_path) {
     // Check if it's already a full URL
     if (preg_match('/^https?:\/\//', $file_path)) {
@@ -400,6 +826,7 @@ function getFileUrl($file_path) {
         return $protocol . "://" . $host . '/SYSTEM_VERSION_!/coordinator/Reportmanagement/uploads/report_files/' . $file_path;
     }
 }
+
 // Fetch all reports
 $all_reports = [];
 
@@ -428,6 +855,31 @@ if (in_array('mar_header', $existing_tables)) {
 
 if (in_array('pd_main', $existing_tables)) {
     $reports = fetchFromPDMain($conn, $department);
+    $all_reports = array_merge($all_reports, $reports);
+}
+
+if (in_array('program_monitoring_form', $existing_tables)) {
+    $reports = fetchFromProgramMonitoringForm($conn, $department);
+    $all_reports = array_merge($all_reports, $reports);
+}
+
+if (in_array('cert_appearance', $existing_tables)) {
+    $reports = fetchFromCertAppearance($conn, $department);
+    $all_reports = array_merge($all_reports, $reports);
+}
+
+if (in_array('evaluation_reports', $existing_tables)) {
+    $reports = fetchFromEvaluationReports($conn, $department);
+    $all_reports = array_merge($all_reports, $reports);
+}
+
+if (in_array('reflection_paper', $existing_tables)) {
+    $reports = fetchFromReflectionPaper($conn, $department);
+    $all_reports = array_merge($all_reports, $reports);
+}
+
+if (in_array('narrative_report', $existing_tables)) {
+    $reports = fetchFromNarrativeReport($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
