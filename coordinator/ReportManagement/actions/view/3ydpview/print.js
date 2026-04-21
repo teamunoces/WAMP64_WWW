@@ -1,10 +1,8 @@
 async function printReport() {
-    const reportRoot =
-        document.querySelector('form.report-form') ||
-        document.querySelector('.report-form') ||
-        document.querySelector('.container');
+    const contentBody = document.querySelector('.content-body');
+    const reportForm = document.querySelector('form.report-form');
 
-    if (!reportRoot) {
+    if (!contentBody || !reportForm) {
         alert('Unable to print: report content not found.');
         return;
     }
@@ -23,25 +21,20 @@ async function printReport() {
     }
 
     try {
-        const clonedReport = reportRoot.cloneNode(true);
+        const clonedContent = contentBody.cloneNode(true);
 
-        syncFormValues(reportRoot, clonedReport);
-        removeNonPrintable(clonedReport);
-        removeDuplicateReportHeaderFooter(clonedReport);
+        syncFormValues(contentBody, clonedContent);
+        removeNonPrintable(clonedContent);
+
+        // Uncomment if you want to remove the inner report title block
+        // removeInternalReportTitleBlock(clonedContent);
 
         const iframe = createPrintIframe();
         const doc = iframe.contentDocument || iframe.contentWindow.document;
 
-        const logoLeft =
-            document.querySelector('.logo-left')?.src ||
-            document.querySelector('.header-content img')?.src ||
-            '';
-
-        const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
-            .map(img => img.src)
-            .filter(Boolean);
-
-        const footerLogo =
+        const leftLogoSrc = document.querySelector('.logo-left')?.src || '';
+        const rightLogoSrc = document.querySelector('.logos-right img')?.src || '';
+        const footerLogoSrc =
             document.querySelector('.footer-bottom img')?.src ||
             '../../images/footerlogo.png';
 
@@ -52,23 +45,8 @@ async function printReport() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Program Assessment Plan</title>
+<title>Print Report</title>
 <style>
-    :root {
-        --page-top: 16mm;
-        --page-right: 12mm;
-        --page-bottom: 16mm;
-        --page-left: 12mm;
-
-        --print-header-height: 170px;
-        --print-footer-height: 64px;
-        --print-gap-after-header: 24px;
-        --print-gap-before-footer: 16px;
-
-        --content-top-offset: calc(var(--print-header-height) + var(--print-gap-after-header));
-        --content-bottom-offset: calc(var(--print-footer-height) + var(--print-gap-before-footer));
-    }
-
     * {
         box-sizing: border-box;
         -webkit-print-color-adjust: exact !important;
@@ -77,7 +55,7 @@ async function printReport() {
 
     @page {
         size: A4 portrait;
-        margin: var(--page-top) var(--page-right) var(--page-bottom) var(--page-left);
+        margin: 12mm 12mm 12mm 12mm;
     }
 
     html, body {
@@ -95,133 +73,162 @@ async function printReport() {
         background: #fff !important;
     }
 
-    .print-shell {
+    .print-root,
+    .print-main,
+    .print-content {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+
+    .print-root {
         width: 100%;
-        position: relative;
     }
 
-    .print-header,
-    .print-footer {
-        position: fixed;
-        left: var(--page-left);
-        right: var(--page-right);
+    table.print-layout {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        table-layout: fixed;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .print-layout thead {
+        display: table-header-group;
+    }
+
+    .print-layout tfoot {
+        display: table-footer-group;
+    }
+
+    .print-layout tbody {
+        display: table-row-group;
+    }
+
+    .print-layout tr,
+    .print-layout td,
+    .print-layout th {
+        border: none !important;
+        padding: 0;
+        vertical-align: top;
+    }
+
+    .print-header-wrap {
+        padding: 0 0 14px 0;
         background: #fff;
-        z-index: 9999;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
 
-    .print-header {
-        top: 0;
-        padding: 0 0 12px 0;
-    }
-
-    .print-footer {
-        bottom: 0;
-        padding-top: 6px;
+    .print-footer-wrap {
+        padding: 12px 0 0 0;
         background: #fff;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
 
-    .header-content-print {
+    .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 15px;
         width: 100%;
-        margin-bottom: 10px;
-        gap: 12px;
     }
 
-    .logo-left-print {
+    .logo-left {
         height: 90px;
         width: auto;
-        max-width: 90px;
-        object-fit: contain;
         display: block;
     }
 
-    .logos-right-print {
+    .logos-right {
         display: flex;
-        gap: 12px;
+        gap: 20px;
         align-items: center;
     }
 
-    .logos-right-print img {
-        height: 70px;
+    .logos-right img {
+        padding-right: 10px;
+        height: 80px;
         width: auto;
-        object-fit: contain;
         display: block;
     }
 
-    .college-info-print {
+    .college-info {
         text-align: center;
         flex-grow: 1;
-        padding: 0 10px;
+        padding: 0 20px;
     }
 
-    .college-info-print h1 {
+    .college-info h1 {
         font-family: "Times New Roman", Times, serif;
         color: #4f81bd;
         font-size: 26px;
         margin: 0;
         font-weight: normal;
         line-height: 1.2;
-        text-transform: uppercase;
     }
 
-    .college-info-print p {
+    .college-info p {
         font-size: 11px;
         margin: 2px 0;
         color: #333;
-        line-height: 1.3;
+        line-height: 1.4;
     }
 
-    .office-title-print {
+    .college-info a {
+        font-size: 13px;
+        color: #0000EE;
+        text-decoration: underline;
+    }
+
+    .office-title {
         text-align: center;
         font-size: 18px;
         color: #595959;
         font-weight: bold;
-        margin: 10px 0 5px 0;
+        margin: 20px 0 5px 0;
         letter-spacing: 0.5px;
         text-transform: uppercase;
     }
 
-    .double-line-print {
+    .double-line {
         border-top: 4px double #4f81bd;
         margin-bottom: 0;
     }
 
+    .print-footer-inner {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        width: 100%;
+        padding-bottom: 5px;
+    }
+
+    .print-footer-logo {
+        height: 40px;
+        width: auto;
+        display: block;
+    }
+
     .print-main {
         width: 100%;
-        padding-top: var(--content-top-offset);
-        padding-bottom: var(--content-bottom-offset);
     }
 
-    .print-report-card {
+    .print-content {
         width: 100%;
         max-width: 100%;
-        margin: 0 auto;
-        background: #fff;
-        padding: 0;
-        box-shadow: none;
-        border-radius: 0;
+        overflow: visible !important;
     }
 
-    .print-report-content,
-    .print-report-content * {
+    .print-content,
+    .print-content * {
         max-width: 100%;
-    }
-
-    .print-report-content {
-        overflow: visible !important;
-    }
-
-    .report-form,
-    form.report-form,
-    .container,
-    .table-section,
-    .table-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: visible !important;
-        margin: 0 !important;
     }
 
     #headerFrame,
@@ -238,37 +245,34 @@ async function printReport() {
         display: none !important;
     }
 
-    /* Remove duplicate in-content document header/footer from cloned report */
-    .print-report-content > .header-content,
-    .print-report-content > .office-title,
-    .print-report-content > .double-line,
-    .print-report-content > footer,
-    .print-report-content .footer-bottom {
+    .print-content > footer,
+    .print-content .footer-bottom {
         display: none !important;
     }
 
-    header h1 {
+    header h1,
+    #header h1 {
         text-align: center;
         text-transform: uppercase;
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         color: #2c3e50;
-        margin-bottom: 24px;
+        margin-bottom: 30px;
         border-bottom: 2px solid #eee;
         padding-bottom: 10px;
     }
 
     .form-section {
-        margin-bottom: 24px;
+        margin-bottom: 30px;
     }
 
     .input-group {
-        margin-bottom: 16px;
+        margin-bottom: 20px;
     }
 
     .input-group label {
         display: block;
         font-weight: bold;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         color: #444;
     }
 
@@ -280,47 +284,60 @@ async function printReport() {
         word-break: break-word;
         overflow-wrap: anywhere;
         color: #1e293b;
-        font-size: 0.95rem;
+        font-size: 1rem;
         line-height: 1.45;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
     }
 
     .printable-paper-lines {
-        display: block;
         width: 100%;
-        min-height: 62px;
-        white-space: pre-wrap;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-        color: #1e293b;
-        font-size: 0.95rem;
+        border: none !important;
+        outline: none !important;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
         line-height: 31px;
-        padding: 5px;
-        border: none;
         background-image: linear-gradient(transparent 30px, #000 31px) !important;
         background-size: 100% 31px !important;
         background-attachment: local;
+        display: block;
+        padding: 5px;
+        box-sizing: border-box;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        min-height: 62px;
+        box-shadow: none !important;
     }
 
     .table-section {
-        margin: 30px 0;
+        margin: 40px 0;
         width: 100%;
     }
 
     .table-wrapper {
-        overflow: visible !important;
+        overflow-x: visible !important;
         background: #fff;
-        border: 1px solid #e2e8f0;
-        margin-bottom: 24px;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        margin-bottom: 30px;
         width: 100%;
     }
 
+    /* General tables: no forced outer border */
     table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        table-layout: fixed !important;
-        word-wrap: break-word !important;
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
         page-break-inside: auto;
         break-inside: auto;
+        border: none;
+        outline: none;
+        box-shadow: none;
     }
 
     thead {
@@ -336,44 +353,79 @@ async function printReport() {
         break-inside: avoid !important;
     }
 
-    table thead th {
+    /* ================= PROGRAM PLAN TABLE (MATCH SCREENSHOT) ================= */
+    #programPlanTable {
+        width: 100%;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    #programPlanTable thead th {
+        border: 1px solid #cbd5e1 !important;
+        background-color: #e2e8f0 !important;
+        color: #334155 !important;
         font-weight: bold;
-        background-color: #f8fafc !important;
-        color: #475569;
-        font-size: 0.82rem;
-        padding: 8px 4px;
-        border: 1px solid #cbd5e1;
-        text-transform: uppercase;
+        font-size: 0.85rem;
         text-align: center;
+        padding: 10px 6px;
+        text-transform: uppercase;
         word-wrap: break-word;
     }
 
-    table td {
-        border: 1px solid #cbd5e1;
-        padding: 6px 5px;
+    #programPlanTable td {
+        border: 1px solid #cbd5e1 !important;
         vertical-align: top;
+        padding: 0;
     }
 
-    table td .printable-field,
-    table td .printable-paper-lines {
-        margin: 0;
+    #programPlanTable td .printable-field,
+    #programPlanTable td .printable-paper-lines {
+        padding: 10px 8px !important;
         font-size: 0.85rem;
+        line-height: 1.4;
         color: #1e293b;
+        width: 100%;
+        min-height: 60px;
+        display: block;
+        box-sizing: border-box;
+        margin: 0;
+        background-color: transparent !important;
     }
 
-    table th:nth-child(1), table td:nth-child(1) { width: 12%; }
-    table th:nth-child(3), table td:nth-child(3) { width: 15%; }
+    #programPlanTable th:nth-child(1),
+    #programPlanTable td:nth-child(1) { width: 14%; }
+
+    #programPlanTable th:nth-child(2),
+    #programPlanTable td:nth-child(2) { width: 12%; }
+
+    #programPlanTable th:nth-child(3),
+    #programPlanTable td:nth-child(3) { width: 18%; }
+
+    #programPlanTable th:nth-child(4),
+    #programPlanTable td:nth-child(4) { width: 14%; }
+
+    #programPlanTable th:nth-child(5),
+    #programPlanTable td:nth-child(5) { width: 14%; }
+
+    #programPlanTable th:nth-child(6),
+    #programPlanTable td:nth-child(6) { width: 10%; }
+
+    #programPlanTable th:nth-child(7),
+    #programPlanTable td:nth-child(7) { width: 12%; }
+
+    #programPlanTable th:nth-child(8),
+    #programPlanTable td:nth-child(8) { width: 12%; }
 
     .approvals-container {
         margin-top: 30px;
         font-family: Arial, sans-serif;
         width: 100%;
         max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         color: #000;
-        break-inside: avoid;
         page-break-inside: avoid;
+        break-inside: avoid;
     }
 
     .approval-row {
@@ -436,82 +488,68 @@ async function printReport() {
         min-width: 250px;
     }
 
+    /* ---------------- DOCUMENT INFO ---------------- */
     .document-info {
-        margin-top: 40px;
+        margin-top: 50px;
         width: 30%;
     }
 
     .doc-header {
-        width: auto;
-        margin-right: auto;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
         font-size: 11px;
-        border: 1px solid #d1d1d1;
+        border: none !important;
+        width: auto;
+        margin-right: auto;
         table-layout: auto !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
 
     .doc-header td {
-        border: 1px solid #000;
         padding: 5px 10px;
     }
 
     .doc-header td.label {
         background-color: #002060 !important;
         color: #fff !important;
-        width: 100px;
-        font-size: 11px;
         font-weight: bold;
         padding: 4px 8px;
+        border: 1px solid #d1d1d1 !important;
         text-align: left;
         white-space: nowrap;
+        width: 100px;
     }
 
     .doc-header td:nth-child(2) {
         width: 2%;
         padding: 0 1px;
         font-weight: bold;
+        border-top: 1px solid #d1d1d1 !important;
+        border-bottom: 1px solid #d1d1d1 !important;
     }
 
     .doc-header td.value {
         padding: 4px 10px;
+        border: 1px solid #d1d1d1 !important;
         min-width: 120px;
-        text-align: left;
     }
 
-    .paper-lines {
+    .doc-header td.value .printable-field,
+    .doc-header td.value input,
+    .doc-header td.value p {
+        border: none !important;
+        background: transparent !important;
+        font-family: inherit;
+        font-size: inherit;
+        color: #333;
+        margin: 0;
+        padding: 0;
         width: 100%;
-        border: none;
-        outline: none;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 31px;
-        background-image: linear-gradient(transparent 30px, #000 31px) !important;
-        background-size: 100% 31px !important;
-        background-attachment: local;
-        display: block;
-        padding: 5px;
-        box-sizing: border-box;
-    }
-
-    .print-footer-inner {
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-        width: 100%;
-    }
-
-    .print-footer-image-only {
-        min-height: 40px;
-    }
-
-    .print-footer-logo {
-        display: block;
-        max-width: 100%;
-        width: auto;
-        max-height: 48px;
-        object-fit: contain;
+        min-height: auto;
+        line-height: inherit;
+        box-shadow: none !important;
+        outline: none !important;
     }
 
     @media print {
@@ -524,52 +562,66 @@ async function printReport() {
 </style>
 </head>
 <body>
-    <div class="print-shell">
-        <header class="print-header" id="printHeader">
-            <div class="header-content-print">
-                <div style="width:90px; display:flex; justify-content:flex-start;">
-                    ${logoLeft ? `<img class="logo-left-print" src="${escapeHtml(logoLeft)}" alt="College Logo">` : ''}
-                </div>
+    <div class="print-root">
+        <table class="print-layout" role="presentation">
+            <thead>
+                <tr>
+                    <td>
+                        <div class="print-header-wrap">
+                            <div class="header-content">
+                                ${leftLogoSrc ? `<img src="${escapeHtml(leftLogoSrc)}" alt="SMCC Logo" class="logo-left">` : ''}
+                                <div class="college-info">
+                                    <h1>Saint Michael College of Caraga</h1>
+                                    <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
+                                    <p>District 8, Brgy. Triangulo, Nasipit, Agusan del Norte, Philippines</p>
+                                    <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
+                                    <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
+                                </div>
+                                <div class="logos-right">
+                                    ${rightLogoSrc ? `<img src="${escapeHtml(rightLogoSrc)}" alt="SOCOTEC Logo">` : ''}
+                                </div>
+                            </div>
+                            <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
+                            <div class="double-line"></div>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
 
-                <div class="college-info-print">
-                    <h1>UNIVERSITY OF MINDANAO</h1>
-                    <p>PROGRAM ASSESSMENT PLAN</p>
-                    <p>Academic Year 2025–2026</p>
-                </div>
+            <tfoot>
+                <tr>
+                    <td>
+                        <div class="print-footer-wrap">
+                            <div class="print-footer-inner">
+                                ${footerLogoSrc ? `<img src="${escapeHtml(footerLogoSrc)}" alt="Org Logo" class="print-footer-logo">` : ''}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
 
-                <div class="logos-right-print" style="min-width:90px; justify-content:flex-end;">
-                    ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
-                </div>
-            </div>
-
-            <div class="office-title-print">PROGRAM ASSESSMENT PLAN</div>
-            <div class="double-line-print"></div>
-        </header>
-
-        <footer class="print-footer" id="printFooter">
-            <div class="print-footer-inner print-footer-image-only">
-                <img src="${escapeHtml(footerLogo)}" alt="Footer Logo" class="print-footer-logo">
-            </div>
-        </footer>
-
-        <main class="print-main">
-            <div class="print-report-card">
-                <div class="print-report-content" id="printReportContent"></div>
-            </div>
-        </main>
+            <tbody>
+                <tr>
+                    <td>
+                        <main class="print-main">
+                            <div class="print-content" id="printContent"></div>
+                        </main>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
         `);
         doc.close();
 
-        doc.getElementById('printReportContent').appendChild(clonedReport);
+        const printContent = doc.getElementById('printContent');
+        printContent.appendChild(clonedContent);
 
-        convertFormControlsToPrintable(doc.getElementById('printReportContent'));
+        convertFormControlsToPrintable(printContent);
 
         await waitForImages(doc);
-        applyMeasuredPrintOffsets(doc);
-
         await nextFrame(iframe.contentWindow);
         await nextFrame(iframe.contentWindow);
 
@@ -663,18 +715,11 @@ function removeNonPrintable(root) {
     });
 }
 
-function removeDuplicateReportHeaderFooter(root) {
-    const selectors = [
-        ':scope > .header-content',
-        ':scope > .office-title',
-        ':scope > .double-line',
-        ':scope > footer',
-        '.footer-bottom'
-    ];
-
-    selectors.forEach(selector => {
-        root.querySelectorAll(selector).forEach(el => el.remove());
-    });
+function removeInternalReportTitleBlock(root) {
+    const internalHeader = root.querySelector('#header');
+    if (internalHeader) {
+        internalHeader.remove();
+    }
 }
 
 function convertFormControlsToPrintable(root) {
@@ -688,7 +733,7 @@ function convertFormControlsToPrintable(root) {
 
         const hasPaperLines =
             field.classList.contains('paper-lines') ||
-            (field.closest('.paper-lines') !== null);
+            field.closest('.paper-lines') !== null;
 
         if (tag === 'textarea') {
             replacement.className = hasPaperLines ? 'printable-paper-lines' : 'printable-field';
@@ -709,8 +754,14 @@ function convertFormControlsToPrintable(root) {
         }
 
         if (tag === 'input') {
-            replacement.className = 'printable-field';
             const type = (field.type || 'text').toLowerCase();
+
+            if (['hidden', 'button', 'submit', 'reset', 'file'].includes(type)) {
+                field.remove();
+                return;
+            }
+
+            replacement.className = 'printable-field';
 
             if (type === 'checkbox') {
                 replacement.textContent = field.checked ? '✓ Checked' : '□ Unchecked';
@@ -721,11 +772,6 @@ function convertFormControlsToPrintable(root) {
             if (type === 'radio') {
                 replacement.textContent = field.checked ? '◉ Selected' : '○';
                 field.replaceWith(replacement);
-                return;
-            }
-
-            if (['hidden', 'button', 'submit', 'reset', 'file'].includes(type)) {
-                field.remove();
                 return;
             }
 
@@ -760,22 +806,6 @@ function waitForImages(doc) {
     );
 }
 
-function applyMeasuredPrintOffsets(doc) {
-    const root = doc.documentElement;
-    const header = doc.getElementById('printHeader');
-    const footer = doc.getElementById('printFooter');
-
-    if (!header || !footer) return;
-
-    const headerHeight = Math.ceil(header.getBoundingClientRect().height);
-    const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
-
-    root.style.setProperty('--print-header-height', (headerHeight + 6) + 'px');
-    root.style.setProperty('--print-footer-height', (footerHeight + 4) + 'px');
-    root.style.setProperty('--print-gap-after-header', '26px');
-    root.style.setProperty('--print-gap-before-footer', '16px');
-}
-
 function nextFrame(win) {
     return new Promise(resolve => win.requestAnimationFrame(() => resolve()));
 }
@@ -802,11 +832,11 @@ function printIframeAndCleanup(iframe, printButton, state) {
                 }
 
                 resolve();
-            }, 150);
+            }, 200);
         };
 
         win.onafterprint = cleanup;
-        setTimeout(cleanup, 4000);
+        setTimeout(cleanup, 5000);
 
         win.focus();
         win.print();

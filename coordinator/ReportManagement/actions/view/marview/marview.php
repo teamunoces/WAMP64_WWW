@@ -73,6 +73,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
                     <h1>MONTHLY ACCOMPLISHMENT REPORT</h1>
 
+<form id="main_content">
                 <table class="header-table">
                         <tr>
                             <td class="label">Department</td>
@@ -205,7 +206,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
           </table>
         </section>
 
-
+</form>
 
 
                     
