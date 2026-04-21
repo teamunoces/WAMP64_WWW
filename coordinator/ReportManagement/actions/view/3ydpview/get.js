@@ -94,14 +94,14 @@ function autoExpand(element) {
 function addProgramRow(tableBody, programData = {}) {
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td><textarea class="program-field" rows="5" placeholder="Enter program...">${escapeHtml(programData.program || '')}</textarea></td>
-        <td><textarea class="objectives-field" rows="5" placeholder="Enter objectives...">${escapeHtml(programData.objectives || '')}</textarea></td>
-        <td><textarea class="strategies-field" rows="5" placeholder="Enter strategies...">${escapeHtml(programData.strategies || '')}</textarea></td>
-        <td><textarea class="persons-field" rows="5" placeholder="Enter persons/agencies...">${escapeHtml(programData.persons_agencies_involved || '')}</textarea></td>
-        <td><textarea class="resources-field" rows="5" placeholder="Enter resources needed...">${escapeHtml(programData.resources_needed || '')}</textarea></td>
-        <td><textarea class="budget-field" rows="5" placeholder="Enter budget...">${escapeHtml(programData.budget || '')}</textarea></td>
-        <td><textarea class="means-field" rows="5" placeholder="Enter means of verification...">${escapeHtml(programData.means_of_verification || '')}</textarea></td>
-        <td><textarea class="timeframe-field" rows="5" placeholder="Enter time frame...">${escapeHtml(programData.time_frame || '')}</textarea></td>
+        <td><textarea class="program-field" rows="5" >${escapeHtml(programData.program || '')}</textarea></td>
+        <td><textarea class="objectives-field" rows="5" >${escapeHtml(programData.objectives || '')}</textarea></td>
+        <td><textarea class="strategies-field" rows="5" >${escapeHtml(programData.strategies || '')}</textarea></td>
+        <td><textarea class="persons-field" rows="5" >${escapeHtml(programData.persons_agencies_involved || '')}</textarea></td>
+        <td><textarea class="resources-field" rows="5" >${escapeHtml(programData.resources_needed || '')}</textarea></td>
+        <td><textarea class="budget-field" rows="5" >${escapeHtml(programData.budget || '')}</textarea></td>
+        <td><textarea class="means-field" rows="5" >${escapeHtml(programData.means_of_verification || '')}</textarea></td>
+        <td><textarea class="timeframe-field" rows="5" >${escapeHtml(programData.time_frame || '')}</textarea></td>
     `;
     tableBody.appendChild(row);
     

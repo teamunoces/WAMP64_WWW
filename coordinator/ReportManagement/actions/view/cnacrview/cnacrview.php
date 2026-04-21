@@ -74,6 +74,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
         <h1>COMMUNITY NEEDS ASSESSMENT CONSOLIDATED REPORT</h1>
 
+        <form id="need_assessment_form">
         <div class="header-grid">
             <div class="label-box bg-gray">Department</div>
             <input type="text" name="department" id="department" readonly placeholder="Type here..." >
@@ -282,7 +283,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
             </tr>
           </table>
         </section>
-
+</form>
          
         
 
