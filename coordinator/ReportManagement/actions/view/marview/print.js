@@ -1,6 +1,6 @@
 /**
  * print.js - Monthly Accomplishment Report
- * Repeats header/footer on every page, avoids overlap, and keeps content inside page width.
+ * Uses a print table shell so header/footer repeat without overlapping #main_content.
  */
 
 async function printReport() {
@@ -18,8 +18,8 @@ async function printReport() {
         const printFrame = createPrintIframe();
         const printDoc = printFrame.contentDocument || printFrame.contentWindow.document;
 
-        const headerHtml = buildPrintHeaderHtml();
-        const footerHtml = buildPrintFooterHtml();
+        const headerHTML = buildPrintHeaderHtml();
+        const footerHTML = buildPrintFooterHtml();
         const printableBody = buildPrintableBody(mainContent);
 
         printDoc.open();
@@ -31,15 +31,6 @@ async function printReport() {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Monthly_Accomplishment_Report</title>
 <style>
-    :root {
-        --page-top: 8mm;
-        --page-right: 10mm;
-        --page-bottom: 8mm;
-        --page-left: 10mm;
-        --header-height: 82px;
-        --footer-height: 30px;
-    }
-
     * {
         box-sizing: border-box;
         -webkit-print-color-adjust: exact !important;
@@ -49,12 +40,12 @@ async function printReport() {
 
     @page {
         size: A4 portrait;
-        margin: var(--page-top) var(--page-right) var(--page-bottom) var(--page-left);
+        margin: 12mm 10mm 12mm 10mm;
     }
 
     html, body {
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
         width: 100%;
         background: #fff !important;
         color: #1a202c;
@@ -68,38 +59,81 @@ async function printReport() {
         background: #fff !important;
     }
 
+    #print-container {
+        display: block !important;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        outline: none !important;
+        background: #fff !important;
+    }
+
     .print-shell {
         width: 100%;
-        position: relative;
-        background: #fff;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        table-layout: fixed !important;
+        border: none !important;
+        outline: none !important;
+        background: #fff !important;
+    }
+
+    .print-shell thead {
+        display: table-header-group;
+    }
+
+    .print-shell tfoot {
+        display: table-footer-group;
+    }
+
+    .print-shell tbody {
+        display: table-row-group;
+    }
+
+    .print-shell > thead > tr,
+    .print-shell > tbody > tr,
+    .print-shell > tfoot > tr,
+    .print-shell > thead > tr > td,
+    .print-shell > tbody > tr > td,
+    .print-shell > tfoot > tr > td {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        outline: none !important;
+        vertical-align: top !important;
+        background: #fff !important;
     }
 
     .print-header,
-    .print-footer {
-        position: fixed;
-        left: var(--page-left);
-        right: var(--page-right);
-        background: #fff;
-        z-index: 9999;
+    .print-footer,
+    .print-body {
+        width: 100%;
+        margin: 0 !important;
+        background: #fff !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
 
     .print-header {
-        top: 0;
-        margin: 0;
-        padding: 0;
+        padding: 0 0 8px 0 !important;
     }
 
     .print-footer {
-        bottom: 0;
-        margin: 0;
-        padding: 0;
+        padding: 8px 0 0 0 !important;
     }
 
-    .print-main {
-        width: 100%;
-        margin: 0;
-        padding-top: 84px;   /* light fallback only */
-        padding-bottom: 34px;
+    .print-body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .print-content,
+    .print-content * {
+        max-width: 100%;
     }
 
     .print-content {
@@ -114,9 +148,29 @@ async function printReport() {
         overflow: visible !important;
     }
 
-    .print-content,
-    .print-content * {
-        max-width: 100%;
+    .print-body-wrapper,
+    #main_content,
+    .print-approval-section,
+    .print-document-info-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        overflow: visible !important;
+    }
+
+    #printContent,
+    #printContent > .print-body-wrapper,
+    #printContent > .print-body-wrapper > #main_content,
+    #main_content,
+    #main_content > *:first-child,
+    .print-body-wrapper > *:first-child,
+    .print-body-wrapper > *:first-child *:first-child {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
 
     #headerFrame,
@@ -126,6 +180,8 @@ async function printReport() {
     .admin-comment,
     .no-print,
     .print-hide,
+    .action-buttons,
+    .wrapper,
     [data-no-print="true"],
     button,
     script,
@@ -144,7 +200,9 @@ async function printReport() {
         justify-content: space-between;
         width: 100%;
         gap: 10px;
-        margin: 0 0 2px 0;
+        flex-wrap: nowrap;
+        margin: 0 0 4px 0 !important;
+        padding: 0 !important;
     }
 
     .logo-left {
@@ -194,6 +252,7 @@ async function printReport() {
         font-size: 10px;
         color: #0000EE !important;
         text-decoration: underline;
+        word-break: break-all;
     }
 
     .office-title {
@@ -208,7 +267,7 @@ async function printReport() {
 
     .double-line {
         border-top: 3px double #4f81bd !important;
-        margin: 0;
+        margin: 0 0 8px 0 !important;
     }
 
     .print-footer-inner {
@@ -217,40 +276,23 @@ async function printReport() {
         justify-content: flex-end;
         width: 100%;
         min-height: 24px;
-        padding-top: 2px;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .print-footer-logo {
-        height: 24px;
-        width: auto;
         display: block;
+        width: 100%;
         max-width: 100%;
-    }
-
-    .print-body-wrapper,
-    #main_content,
-    .print-approval-section,
-    .print-document-info-section {
-        width: 100% !important;
-        max-width: 100% !important;
+        height: auto;
         margin: 0 !important;
         padding: 0 !important;
         border: none !important;
+        outline: none !important;
         box-shadow: none !important;
-        background: transparent !important;
-        overflow: visible !important;
-    }
-
-    .print-body-wrapper > *:first-child {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* remove unexpected top space from first form/table block */
-    .print-body-wrapper > *:first-child,
-    .print-body-wrapper > *:first-child *:first-child,
-    #main_content > *:first-child {
-        margin-top: 0 !important;
+        object-fit: contain;
+        page-break-inside: avoid;
+        break-inside: avoid;
     }
 
     header h1,
@@ -346,7 +388,6 @@ async function printReport() {
         white-space: normal !important;
     }
 
-    /* approval section */
     .print-approval-section {
         margin-top: 8px !important;
         padding-top: 0 !important;
@@ -402,7 +443,6 @@ async function printReport() {
         text-decoration: underline !important;
     }
 
-    /* document info stays left and below approval cleanly */
     .print-document-info-section {
         margin-top: 8px !important;
         width: 100% !important;
@@ -455,7 +495,8 @@ async function printReport() {
     }
 
     .document-info,
-    footer {
+    footer,
+    img {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
@@ -488,18 +529,38 @@ async function printReport() {
 </style>
 </head>
 <body>
-    <div class="print-shell">
-        <header class="print-header" id="printHeader">
-            ${headerHtml}
-        </header>
+    <div id="print-container">
+        <table class="print-shell" role="presentation" aria-hidden="true">
+            <thead>
+                <tr>
+                    <td>
+                        <div class="print-header">
+                            ${headerHTML}
+                        </div>
+                    </td>
+                </tr>
+            </thead>
 
-        <footer class="print-footer" id="printFooter">
-            ${footerHtml}
-        </footer>
+            <tfoot>
+                <tr>
+                    <td>
+                        <div class="print-footer">
+                            ${footerHTML}
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
 
-        <main class="print-main">
-            <div class="print-content" id="printContent"></div>
-        </main>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="print-body">
+                            <div class="print-content" id="printContent"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
@@ -513,7 +574,8 @@ async function printReport() {
 
         await waitForImages(printDoc);
         await waitForFonts(printDoc);
-        applyMeasuredPrintLayout(printDoc);
+
+        forceTopSpacingReset(printDoc);
 
         await nextFrame(printFrame.contentWindow);
         await nextFrame(printFrame.contentWindow);
@@ -639,6 +701,8 @@ function removeNonPrintable(root) {
         '.admin-comment',
         '.no-print',
         '.print-hide',
+        '.action-buttons',
+        '.wrapper',
         '[data-no-print="true"]',
         'button',
         'script',
@@ -778,24 +842,26 @@ async function waitForFonts(doc) {
     } catch (_) {}
 }
 
-function applyMeasuredPrintLayout(doc) {
-    const root = doc.documentElement;
-    const header = doc.getElementById('printHeader');
-    const footer = doc.getElementById('printFooter');
-    const printMain = doc.querySelector('.print-main');
+function forceTopSpacingReset(doc) {
+    const printContent = doc.getElementById('printContent');
+    const bodyWrapper = doc.querySelector('.print-body-wrapper');
+    const mainContent = doc.querySelector('#main_content');
     const firstBlock = doc.querySelector('#printContent > .print-body-wrapper > *:first-child');
 
-    if (!header || !footer || !printMain) return;
+    if (printContent) {
+        printContent.style.marginTop = '0';
+        printContent.style.paddingTop = '0';
+    }
 
-    const headerHeight = Math.ceil(header.getBoundingClientRect().height);
-    const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
+    if (bodyWrapper) {
+        bodyWrapper.style.marginTop = '0';
+        bodyWrapper.style.paddingTop = '0';
+    }
 
-    root.style.setProperty('--header-height', `${headerHeight}px`);
-    root.style.setProperty('--footer-height', `${footerHeight}px`);
-
-    // keep content tight to header/footer
-    printMain.style.paddingTop = `${Math.max(headerHeight - 4, 72)}px`;
-    printMain.style.paddingBottom = `${footerHeight + 6}px`;
+    if (mainContent) {
+        mainContent.style.marginTop = '0';
+        mainContent.style.paddingTop = '0';
+    }
 
     if (firstBlock) {
         firstBlock.style.marginTop = '0';

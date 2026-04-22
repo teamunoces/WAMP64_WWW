@@ -49275,3 +49275,152 @@
 
 [21-Apr-2026 12:58:08 UTC] Found 0 records in narrative_report
 [21-Apr-2026 12:58:08 UTC] Sending response with 10 tables
+[21-Apr-2026 23:17:00 UTC] Current User ID: 7
+[21-Apr-2026 23:17:00 UTC] Database connected successfully
+[21-Apr-2026 23:17:00 UTC] Status filter: pending
+[21-Apr-2026 23:17:00 UTC] Status array: Array
+(
+    [0] => pending
+)
+
+[21-Apr-2026 23:17:00 UTC] Processing table: 3ydp
+[21-Apr-2026 23:17:00 UTC] Query for 3ydp: 
+        SELECT id, type, title_of_project AS title, created_by_name AS name, department, created_at AS date, status
+        FROM 3ydp
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 3 records in 3ydp
+[21-Apr-2026 23:17:00 UTC] Processing table: pd_main
+[21-Apr-2026 23:17:00 UTC] Query for pd_main: 
+        SELECT id, type, title_of_activity AS title, created_by_name AS name, department, created_at AS date, status
+        FROM pd_main
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 3 records in pd_main
+[21-Apr-2026 23:17:00 UTC] Processing table: dpir
+[21-Apr-2026 23:17:00 UTC] Query for dpir: 
+        SELECT id, type, title_of_program AS title, created_by_name AS name, department, created_at AS date, status
+        FROM dpir
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in dpir
+[21-Apr-2026 23:17:00 UTC] Processing table: mar_header
+[21-Apr-2026 23:17:00 UTC] Query for mar_header: 
+        SELECT id, type, title_act AS title, created_by_name AS name, department, created_at AS date, status
+        FROM mar_header
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in mar_header
+[21-Apr-2026 23:17:00 UTC] Processing table: coordinator_cnacr
+[21-Apr-2026 23:17:00 UTC] Query for coordinator_cnacr: 
+        SELECT id, type, title_of_program AS title, created_by_name AS name, department, created_at AS date, status
+        FROM coordinator_cnacr
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 1 records in coordinator_cnacr
+[21-Apr-2026 23:17:00 UTC] Processing table: program_monitoring_form
+[21-Apr-2026 23:17:00 UTC] Query for program_monitoring_form: 
+        SELECT id, type, program_title AS title, created_by_name AS name, department, created_at AS date, status
+        FROM program_monitoring_form
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in program_monitoring_form
+[21-Apr-2026 23:17:00 UTC] Processing table: evaluation_reports
+[21-Apr-2026 23:17:00 UTC] Query for evaluation_reports: 
+        SELECT id, type, implementing_department AS title, created_by_name AS name, department, created_at AS date, status
+        FROM evaluation_reports
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in evaluation_reports
+[21-Apr-2026 23:17:00 UTC] Processing table: cert_appearance
+[21-Apr-2026 23:17:00 UTC] Query for cert_appearance: 
+        SELECT id, type, activity_name AS title, created_by_name AS name, department, created_at AS date, status
+        FROM cert_appearance
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 3 records in cert_appearance
+[21-Apr-2026 23:17:00 UTC] Processing table: reflection_paper
+[21-Apr-2026 23:17:00 UTC] Query for reflection_paper: 
+        SELECT id, type, beneficiary_name AS title, created_by_name AS name, department, created_at AS date, status
+        FROM reflection_paper
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in reflection_paper
+[21-Apr-2026 23:17:00 UTC] Processing table: narrative_report
+[21-Apr-2026 23:17:00 UTC] Query for narrative_report: 
+        SELECT id, type, department AS title, created_by_name AS name, department, created_at AS date, status
+        FROM narrative_report
+        WHERE status IN (?)
+        AND user_id = ?
+        
+[21-Apr-2026 23:17:00 UTC] Binding parameters - types: ss, params: Array
+(
+    [0] => pending
+    [1] => 7
+)
+
+[21-Apr-2026 23:17:00 UTC] Found 0 records in narrative_report
+[21-Apr-2026 23:17:00 UTC] Sending response with 10 tables

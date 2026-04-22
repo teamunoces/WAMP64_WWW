@@ -400,3 +400,30 @@ header h1 {
     padding: 0;
     width: 100%;
 }
+
+/* Footer Section */
+footer {
+    margin-top: 50px;
+    width: 100%;
+}
+
+.footer-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.footer-logos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 30px;
+}
+
+.footer-logos img {
+    height: 40px;
+    width: auto;
+}
+

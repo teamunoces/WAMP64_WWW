@@ -1,453 +1,828 @@
 // print.js - Handles printing of the monthly accomplishment report - narrative report
 
-function printReport() {
-    // Get all current form values
+async function printReport() {
     const narrateSuccess = document.getElementById('narrate_success')?.value || '';
     const provideData = document.getElementById('provide_data')?.value || '';
     const identifyProblems = document.getElementById('identify_problems')?.value || '';
     const proposeSolutions = document.getElementById('propose_solutions')?.value || '';
-    
-    // Get signature/approval values
-    const createdByName = document.getElementById('created_by_name')?.textContent || '';
-    const dean = document.getElementById('dean')?.textContent || '';
-    const cesHead = document.getElementById('ces_head')?.textContent || '';
-    const vpAcad = document.getElementById('vp_acad')?.textContent || '';
-    const vpAdmin = document.getElementById('vp_admin')?.textContent || '';
-    const schoolPresident = document.getElementById('school_president')?.textContent || '';
-    
-    // Get document info values
+
+    const createdByName = document.getElementById('created_by_name')?.textContent?.trim() || '';
+    const dean = document.getElementById('dean')?.textContent?.trim() || '';
+    const cesHead = document.getElementById('ces_head')?.textContent?.trim() || '';
+    const vpAcad = document.getElementById('vp_acad')?.textContent?.trim() || '';
+    const vpAdmin = document.getElementById('vp_admin')?.textContent?.trim() || '';
+    const schoolPresident = document.getElementById('school_president')?.textContent?.trim() || '';
+
     const issueStatus = document.querySelector('input[name="issue_status"]')?.value || '';
     const revisionNumber = document.querySelector('input[name="revision_number"]')?.value || '';
     const dateEffective = document.querySelector('input[name="date_effective"]')?.value || '';
     const approvedBy = document.querySelector('input[name="approved_by"]')?.value || '';
-    const documentType = document.querySelector('.document_type')?.textContent || 'FM-DPM-SMCC-CES-05A';
-    
-    // Create print iframe
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.top = '-9999px';
-    iframe.style.left = '-9999px';
-    iframe.style.width = '850px';
-    iframe.style.height = '1200px';
-    iframe.style.border = 'none';
-    document.body.appendChild(iframe);
-    
-    const doc = iframe.contentWindow.document;
-    
-    // Write content to iframe
-    doc.open();
-    doc.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Monthly Accomplishment Report - Narrative Report</title>
-            <style>
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                }
-                
-                body {
-                    font-family: 'Segoe UI', Arial, sans-serif;
-                    line-height: 1.4;
-                    color: #000;
-                    background: white;
-                    padding: 40px;
-                }
-                
-                .report-container {
-                    max-width: 850px;
-                    width: 100%;
-                    margin: 0 auto;
-                    background: white;
-                    padding: 50px;
-                    box-shadow: none;
-                }
-                
-                /* Header styles */
-                .header-content {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 15px;
-                    width: 100%;
-                }
-                
-                .logo-left {
-                    height: 90px;
-                    width: auto;
-                }
-                
-                .logos-right {
-                    display: flex;
-                    gap: 20px;
-                }
-                
-                .logos-right img {
-                    height: 80px;
-                    width: auto;
-                }
-                
-                .college-info {
-                    text-align: center;
-                    flex: 1;
-                    padding: 0 20px;
-                }
-                
-                .college-info h1 {
-                    font-family: "Times New Roman", Times, serif;
-                    color: #4f81bd;
-                    font-size: 26px;
-                    margin: 0;
-                    font-weight: normal;
-                }
-                
-                .college-info p {
-                    font-size: 11px;
-                    margin: 2px 0;
-                    color: #333;
-                }
-                
-                .college-info a {
-                    font-size: 13px;
-                    color: #0000EE;
-                    text-decoration: underline;
-                }
-                
-                .office-title {
-                    text-align: center;
-                    font-size: 18px;
-                    color: #595959;
-                    font-weight: bold;
-                    margin: 20px 0 5px;
-                    text-transform: uppercase;
-                }
-                
-                .double-line {
-                    border-top: 4px double #4f81bd;
-                    margin-bottom: 25px;
-                }
-                
-                .main-title {
-                    text-align: center;
-                    font-size: 1.25rem;
-                    text-decoration: underline;
-                    margin-bottom: 40px;
-                    text-transform: uppercase;
-                }
-                
-                /* Report list styles */
-                .report-list {
-                    list-style-type: upper-roman;
-                    padding-left: 40px;
-                }
-                
-                .report-list li {
-                    margin-bottom: 30px;
-                }
-                
-                .label {
-                    display: block;
-                    font-weight: bold;
-                    margin-bottom: 5px;
-                    font-size: 1.1rem;
-                }
-                
-                .line-input {
-                    width: 100%;
-                    border: none;
-                    background: white;
-                    font-family: inherit;
-                    font-size: 1rem;
-                    padding: 12px 0;
-                    line-height: 1.5;
-                    white-space: pre-wrap;
-                    word-wrap: break-word;
-                    min-height: 60px;
-                }
-                
-                /* Approvals Section */
-                .approvals-container {
-                    font-family: Arial, sans-serif;
-                    width: 100%;
-                    max-width: 900px;
-                    margin: 80px auto 0;
-                    color: #000;
-                }
-                
-                .approval-row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 20px;
-                }
-                
-                .signature-group {
-                    width: 35%;
-                }
-                
-                .signature-line {
-                    border-bottom: 1.5px solid black;
-                    margin-bottom: 5px;
-                    min-height: 30px;
-                }
-                
-                .title {
-                    font-size: 14px;
-                }
-                
-                .bold {
-                    font-weight: bold;
-                }
-                
-                .left-align {
-                    text-align: left;
-                    width: 100%;
-                }
-                
-                .approval-centered {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                .admin-block {
-                    text-align: center;
-                    margin-top: 30px;
-                    margin-bottom: 10px;
-                }
-                
-                .name-underlined {
-                    font-weight: bold;
-                    text-decoration: underline;
-                    text-transform: uppercase;
-                    font-size: 16px;
-                    display: inline-block;
-                    margin-bottom: 2px;
-                }
-                
-                /* Document Info Table - Navy Blue Style */
-                .document-info {
-                    margin-top: 50px;
-                    width: 32%;
-                }
-                
-                .doc-header {
-                    border-collapse: collapse;
-                    font-family: Arial, sans-serif;
-                    font-size: 11px;
-                    border: 1px solid #d1d1d1;
-                    width: auto;
-                    margin-right: auto;
-                }
-                
-                .doc-header td {
-                    border: 1px solid #d1d1d1;
-                    padding: 5px 10px;
-                }
-                
-                .doc-header td.label {
-                    background-color: #002060;
-                    color: white;
-                    font-weight: bold;
-                    padding: 4px 8px;
-                    text-align: left;
-                    white-space: nowrap;
-                    width: 100px;
-                    font-size: 11px;
-                }
-                
-                .doc-header td:nth-child(2) {
-                    width: 2%;
-                    padding: 0 1px;
-                    font-weight: bold;
-                    border-top: 1px solid #d1d1d1;
-                    border-bottom: 1px solid #d1d1d1;
-                    text-align: center;
-                }
-                
-                .doc-header td.value {
-                    padding: 4px 10px;
-                    min-width: 120px;
-                    text-align: left;
-                }
-                
-                .doc-header td.value input {
-                    border: none;
-                    background: transparent;
-                    font-family: inherit;
-                    font-size: inherit;
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    width: 100%;
-                }
-                
-                /* Print styles */
-                @media print {
-                    body {
-                        padding: 0;
-                        margin: 0;
-                    }
-                    .report-container {
-                        padding: 20px;
-                        margin: 0;
-                    }
-                    .doc-header td.label {
-                        background-color: #002060 !important;
-                        color: white !important;
-                        -webkit-print-color-adjust: exact;
-                        print-color-adjust: exact;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="report-container">
-                <!-- Header -->
-                <header>
-                    <div class="header-content">
-                        <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
-                        <div class="college-info">
-                            <h1>Saint Michael College of Caraga</h1>
-                            <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
-                            <p>District 8, Brgy. Triangulo, Nasipit, Agusan del Norte, Philippines</p>
-                            <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
-                            <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
+    const documentType = document.querySelector('.document_type')?.textContent?.trim() || 'FM-DPM-SMCC-CES-05A';
+
+    const originalTitle = document.title;
+    document.title = 'Monthly_Accomplishment_Report_Narrative_Report';
+
+    try {
+        const iframe = createPrintIframe();
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+        const headerHTML = buildPrintHeaderHtml();
+        const footerHTML = buildPrintFooterHtml();
+        const bodyHTML = buildNarrativeBodyHtml({
+            narrateSuccess,
+            provideData,
+            identifyProblems,
+            proposeSolutions,
+            createdByName,
+            dean,
+            cesHead,
+            vpAcad,
+            vpAdmin,
+            schoolPresident,
+            issueStatus,
+            revisionNumber,
+            dateEffective,
+            approvedBy,
+            documentType
+        });
+
+        doc.open();
+        doc.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Accomplishment Report - Narrative Report</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 12mm 10mm 12mm 10mm;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background: #fff !important;
+            color: #000;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow: visible !important;
+        }
+
+        body {
+            background: #fff !important;
+        }
+
+        #print-container {
+            display: block !important;
+            width: 100%;
+            min-height: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            background: #fff !important;
+        }
+
+        .print-shell {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            table-layout: fixed !important;
+            border: none !important;
+            outline: none !important;
+            background: #fff !important;
+        }
+
+        .print-shell thead {
+            display: table-header-group;
+        }
+
+        .print-shell tfoot {
+            display: table-footer-group;
+        }
+
+        .print-shell tbody {
+            display: table-row-group;
+            height: 100%;
+        }
+
+        .print-shell > thead > tr,
+        .print-shell > tbody > tr,
+        .print-shell > tfoot > tr,
+        .print-shell > thead > tr > td,
+        .print-shell > tbody > tr > td,
+        .print-shell > tfoot > tr > td {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            vertical-align: top !important;
+            background: #fff !important;
+        }
+
+        .print-shell > tbody > tr {
+            height: 100%;
+        }
+
+        .print-header,
+        .print-footer,
+        .print-body {
+            width: 100%;
+            margin: 0 !important;
+            background: #fff !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .print-header {
+            padding: 0 0 8px 0 !important;
+        }
+
+        .print-footer {
+            padding: 8px 0 0 0 !important;
+            vertical-align: bottom !important;
+        }
+
+        .print-body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .print-content {
+            flex: 1 1 auto;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: #fff !important;
+            overflow: visible !important;
+        }
+
+        .report-container,
+        .approvals-container,
+        .document-info-wrap {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: #fff !important;
+        }
+
+        .print-page-header {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 12px;
+            flex-wrap: nowrap;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+        }
+
+        .logo-left {
+            height: 90px;
+            width: auto;
+            flex: 0 0 auto;
+        }
+
+        .logos-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .logos-right img {
+            height: 80px;
+            width: auto;
+        }
+
+        .college-info {
+            text-align: center;
+            flex: 1 1 auto;
+            padding: 0 10px;
+        }
+
+        .college-info h1 {
+            font-family: "Times New Roman", Times, serif;
+            color: #4f81bd !important;
+            font-size: 26px;
+            margin: 0;
+            font-weight: normal;
+            line-height: 1.2;
+        }
+
+        .college-info p {
+            font-size: 11px;
+            margin: 2px 0;
+            color: #333 !important;
+            line-height: 1.3;
+        }
+
+        .college-info a {
+            font-size: 13px;
+            color: #0000EE !important;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .office-title {
+            text-align: center;
+            font-size: 18px;
+            color: #595959 !important;
+            font-weight: bold;
+            margin: 5px 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .double-line {
+            border-top: 4px double #4f81bd !important;
+            margin-bottom: 15px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 18px;
+            text-decoration: underline;
+            margin: 15px 0 30px 0;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .report-list {
+            list-style-type: upper-roman;
+            padding-left: 36px;
+            margin: 0;
+        }
+
+        .report-list li {
+            margin-bottom: 24px;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .line-input {
+            width: 100%;
+            border: none !important;
+            background: #fff !important;
+            font-family: inherit;
+            font-size: 14px;
+            padding: 0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            min-height: 60px;
+        }
+
+        .approvals-container {
+            margin-top: 60px !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
+
+        .approval-row {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            gap: 16px;
+            margin-bottom: 20px;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .signature-group {
+            width: 35% !important;
+        }
+
+        .signature-line {
+            border-bottom: 1.5px solid black !important;
+            margin-bottom: 5px !important;
+            min-height: 30px !important;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .title {
+            font-size: 14px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .left-align {
+            text-align: left;
+            width: 100%;
+        }
+
+        .approval-centered {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .admin-block {
+            text-align: center !important;
+            margin-top: 26px;
+            margin-bottom: 8px;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .name-underlined {
+            font-weight: bold;
+            text-decoration: underline;
+            text-transform: uppercase;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 2px;
+        }
+
+        .document-info-wrap {
+            margin-top: 40px !important;
+            display: block !important;
+            clear: both !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .document-info {
+            margin: 0 !important;
+            width: 305px !important;
+            max-width: 305px !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .doc-header {
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            border: 1px solid #bfbfbf !important;
+            width: 100% !important;
+            table-layout: fixed !important;
+            margin: 0 !important;
+        }
+
+        .doc-header td {
+            border: 1px solid #bfbfbf !important;
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+
+        .doc-header td.label {
+            background-color: #002060 !important;
+            color: white !important;
+            font-weight: bold;
+            padding: 6px 8px !important;
+            text-align: left;
+            white-space: nowrap;
+            width: 95px !important;
+            font-size: 11px;
+            display: table-cell !important;
+        }
+
+        .doc-header td.colon {
+            width: 12px !important;
+            padding: 0 2px !important;
+            text-align: center !important;
+            font-weight: bold !important;
+            background: #ffffff !important;
+            color: #000 !important;
+        }
+
+        .doc-header td.value {
+            padding: 6px 10px !important;
+            width: auto !important;
+            text-align: left;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            background: #ffffff !important;
+            color: #000 !important;
+        }
+
+        .print-footer-inner,
+        footer {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            background: #fff !important;
+        }
+
+        .footer-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .footer-logos {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            gap: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .footer-logos img,
+        .print-footer-logo {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 32px;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            object-fit: contain;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        @media print {
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                min-height: 100% !important;
+                height: 100% !important;
+                background: white !important;
+            }
+
+            #print-container {
+                min-height: 100% !important;
+                height: 100% !important;
+            }
+
+            .print-shell {
+                min-height: calc(297mm - 24mm) !important;
+            }
+
+            .print-shell tbody {
+                height: 100% !important;
+            }
+
+            .print-shell tbody > tr {
+                height: 100% !important;
+            }
+
+            .print-body {
+                min-height: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="print-container">
+        <table class="print-shell" role="presentation" aria-hidden="true">
+            <thead>
+                <tr>
+                    <td>
+                        <div class="print-header">
+                            ${headerHTML}
                         </div>
-                        <div class="logos-right">
-                            <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
+                    </td>
+                </tr>
+            </thead>
+
+            <tfoot>
+                <tr>
+                    <td>
+                        <div class="print-footer">
+                            ${footerHTML}
                         </div>
-                    </div>
-                    <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
-                    <div class="double-line"></div>
-                </header>
-                
-                <h1 class="main-title">MONTHLY ACCOMPLISHMENT REPORT - NARRATIVE REPORT</h1>
-                
-                <!-- Narrative Report Content -->
-                <ol class="report-list">
-                    <li>
-                        <div class="label">Narrate Success</div>
-                        <div class="line-input">${escapeHtml(narrateSuccess) || '_________________________'}</div>
-                    </li>
-                    <li>
-                        <div class="label">Provide Data</div>
-                        <div class="line-input">${escapeHtml(provideData) || '_________________________'}</div>
-                    </li>
-                    <li>
-                        <div class="label">Identify Problems</div>
-                        <div class="line-input">${escapeHtml(identifyProblems) || '_________________________'}</div>
-                    </li>
-                    <li>
-                        <div class="label">Propose Solutions</div>
-                        <div class="line-input">${escapeHtml(proposeSolutions) || '_________________________'}</div>
-                    </li>
-                </ol>
+                    </td>
+                </tr>
+            </tfoot>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="print-body">
+                            <div class="print-content">
+                                ${bodyHTML}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+        `);
+        doc.close();
+
+        await waitForImages(doc);
+        await waitForFonts(doc);
+
+        await nextFrame(iframe.contentWindow);
+        await nextFrame(iframe.contentWindow);
+
+        await runPrintAndCleanup(iframe);
+    } catch (error) {
+        console.error('Print failed:', error);
+        alert('Printing failed. Please try again.');
+    } finally {
+        document.title = originalTitle;
+    }
+}
+
+function buildNarrativeBodyHtml(data) {
+    return `
+        <div class="report-container">
+            <h1 class="main-title">MONTHLY ACCOMPLISHMENT REPORT - NARRATIVE REPORT</h1>
+
+            <ol class="report-list">
+                <li>
+                    <div class="label">Narrate Success</div>
+                    <div class="line-input">${escapeHtml(data.narrateSuccess) || '_________________________'}</div>
+                </li>
+                <li>
+                    <div class="label">Provide Data</div>
+                    <div class="line-input">${escapeHtml(data.provideData) || '_________________________'}</div>
+                </li>
+                <li>
+                    <div class="label">Identify Problems</div>
+                    <div class="line-input">${escapeHtml(data.identifyProblems) || '_________________________'}</div>
+                </li>
+                <li>
+                    <div class="label">Propose Solutions</div>
+                    <div class="line-input">${escapeHtml(data.proposeSolutions) || '_________________________'}</div>
+                </li>
+            </ol>
+        </div>
+
+        <div class="approvals-container">
+            <div class="approval-row">
+                <div class="signature-group">
+                    <div class="label">Prepared by:</div>
+                    <div class="signature-line">${escapeHtml(data.createdByName)}</div>
+                    <div class="title bold">CES Coordinator</div>
+                </div>
             </div>
-            
-            <!-- Approvals Section -->
-            <div class="approvals-container">
-                <div class="approval-row">
-                    <div class="signature-group">
-                        <div class="label">Prepared by:</div>
-                        <div class="signature-line">${escapeHtml(createdByName)}</div>
-                        <div class="title bold">CES Coordinator</div>
-                    </div>
+
+            <div class="label" style="margin-top: 20px;">Noted by:</div>
+            <div class="approval-row">
+                <div class="signature-group">
+                    <div class="signature-line">${escapeHtml(data.dean)}</div>
+                    <div class="title bold">Dean</div>
                 </div>
-                
-                <div class="label" style="margin-top: 20px;">Noted by:</div>
-                <div class="approval-row">
-                    <div class="signature-group">
-                        <div class="signature-line">${escapeHtml(dean)}</div>
-                        <div class="title bold">Dean</div>
-                    </div>
-                    <div class="signature-group">
-                        <div class="signature-line">${escapeHtml(cesHead)}</div>
-                        <div class="title bold">CES Head</div>
-                    </div>
-                </div>
-                
-                <div class="approval-centered" style="margin-top: 40px;">
-                    <div class="label left-align">Recommending Approval:</div>
-                    <div class="admin-block">
-                        <div class="name-underlined">${escapeHtml(vpAcad)}</div>
-                        <div class="title bold">Vice-President for Academic Affairs and Research</div>
-                    </div>
-                    <div class="admin-block">
-                        <div class="name-underlined">${escapeHtml(vpAdmin)}</div>
-                        <div class="title bold">Vice-President for Administrative Affairs</div>
-                    </div>
-                </div>
-                
-                <div class="approval-centered">
-                    <div class="label left-align">Approved by:</div>
-                    <div class="admin-block">
-                        <div class="name-underlined">${escapeHtml(schoolPresident)}</div>
-                        <div class="title bold">School President</div>
-                    </div>
+                <div class="signature-group">
+                    <div class="signature-line">${escapeHtml(data.cesHead)}</div>
+                    <div class="title bold">CES Head</div>
                 </div>
             </div>
-            
-            <!-- Document Info Table -->
+
+            <div class="approval-centered" style="margin-top: 40px;">
+                <div class="label left-align">Recommending Approval:</div>
+                <div class="admin-block">
+                    <div class="name-underlined">${escapeHtml(data.vpAcad)}</div>
+                    <div class="title bold">Vice-President for Academic Affairs and Research</div>
+                </div>
+                <div class="admin-block">
+                    <div class="name-underlined">${escapeHtml(data.vpAdmin)}</div>
+                    <div class="title bold">Vice-President for Administrative Affairs</div>
+                </div>
+            </div>
+
+            <div class="approval-centered">
+                <div class="label left-align">Approved by:</div>
+                <div class="admin-block">
+                    <div class="name-underlined">${escapeHtml(data.schoolPresident)}</div>
+                    <div class="title bold">School President</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-info-wrap">
             <div class="document-info">
                 <table class="doc-header">
                     <tr>
                         <td class="label">Form Code No.</td>
-                        <td>:</td>
-                        <td class="value">${escapeHtml(documentType)}</td>
+                        <td class="colon">:</td>
+                        <td class="value">${escapeHtml(data.documentType)}</td>
                     </tr>
                     <tr>
                         <td class="label">Issue Status</td>
-                        <td>:</td>
-                        <td class="value"><input type="text" value="${escapeHtml(issueStatus)}"></td>
+                        <td class="colon">:</td>
+                        <td class="value">${escapeHtml(data.issueStatus)}</td>
                     </tr>
                     <tr>
                         <td class="label">Revision No.</td>
-                        <td>:</td>
-                        <td class="value"><input type="text" value="${escapeHtml(revisionNumber)}"></td>
+                        <td class="colon">:</td>
+                        <td class="value">${escapeHtml(data.revisionNumber)}</td>
                     </tr>
                     <tr>
                         <td class="label">Date Effective</td>
-                        <td>:</td>
-                        <td class="value"><input type="text" value="${escapeHtml(dateEffective)}"></td>
+                        <td class="colon">:</td>
+                        <td class="value">${escapeHtml(data.dateEffective)}</td>
                     </tr>
                     <tr>
                         <td class="label">Approved By</td>
-                        <td>:</td>
-                        <td class="value"><input type="text" value="${escapeHtml(approvedBy)}"></td>
+                        <td class="colon">:</td>
+                        <td class="value">${escapeHtml(data.approvedBy)}</td>
                     </tr>
                 </table>
             </div>
-        </body>
-        </html>
-    `);
-    doc.close();
-    
-    // Wait for content to load then print
-    iframe.onload = function() {
-        setTimeout(function() {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-            
-            // Remove iframe after print dialog closes
-            const removeIframe = function() {
-                if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe);
-                }
-            };
-            
-            window.onafterprint = removeIframe;
-            setTimeout(removeIframe, 1000);
-        }, 100);
-    };
+        </div>
+    `;
 }
 
-// Helper function to escape HTML
+function buildPrintHeaderHtml() {
+    const leftLogo = document.querySelector('.logo-left')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
+
+    const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
+        .map(img => img.src)
+        .filter(Boolean);
+
+    const officeTitle =
+        document.querySelector('.office-title')?.textContent?.trim() ||
+        'OFFICE OF THE COMMUNITY EXTENSION SERVICES';
+
+    const collegeInfoNode = document.querySelector('.college-info');
+    const collegeInfoHtml = collegeInfoNode
+        ? collegeInfoNode.innerHTML
+        : `
+            <h1>Saint Michael College of Caraga</h1>
+            <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
+            <p>District 8, Brgy. Triangulo, Nasipit, Agusan del Norte, Philippines</p>
+            <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
+            <p><a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a></p>
+        `;
+
+    const rightLogoHtml = rightLogos.length
+        ? rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')
+        : `<img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">`;
+
+    return `
+        <div class="print-page-header">
+            <div class="header-content">
+                <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <div class="college-info">${collegeInfoHtml}</div>
+                <div class="logos-right">${rightLogoHtml}</div>
+            </div>
+            <div class="office-title">${escapeHtml(officeTitle)}</div>
+            <div class="double-line"></div>
+        </div>
+    `;
+}
+
+function buildPrintFooterHtml() {
+    const footerImg =
+        document.querySelector('.footer-bottom img')?.src ||
+        document.querySelector('.footer-logos img')?.src ||
+        document.querySelector('footer img')?.src ||
+        '';
+
+    return `
+        <div class="print-footer-inner">
+            ${footerImg ? `<img src="${escapeHtml(footerImg)}" alt="Footer Logo" class="print-footer-logo">` : '&nbsp;'}
+        </div>
+    `;
+}
+
+function createPrintIframe() {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+    document.body.appendChild(iframe);
+    return iframe;
+}
+
+function waitForImages(docOrRoot) {
+    const root = docOrRoot.querySelectorAll ? docOrRoot : docOrRoot.documentElement;
+    const images = Array.from(root.querySelectorAll('img'));
+
+    if (!images.length) return Promise.resolve();
+
+    return Promise.all(
+        images.map(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+
+            return new Promise(resolve => {
+                const done = () => {
+                    img.removeEventListener('load', done);
+                    img.removeEventListener('error', done);
+                    resolve();
+                };
+
+                img.addEventListener('load', done, { once: true });
+                img.addEventListener('error', done, { once: true });
+                setTimeout(done, 3000);
+            });
+        })
+    );
+}
+
+async function waitForFonts(doc) {
+    try {
+        if (doc.fonts && doc.fonts.ready) {
+            await doc.fonts.ready;
+        }
+    } catch (_) {}
+}
+
+function nextFrame(win) {
+    return new Promise(resolve => win.requestAnimationFrame(() => resolve()));
+}
+
+function runPrintAndCleanup(iframe) {
+    return new Promise(resolve => {
+        const win = iframe.contentWindow;
+        let cleaned = false;
+
+        const cleanup = () => {
+            if (cleaned) return;
+            cleaned = true;
+
+            try {
+                win.onafterprint = null;
+            } catch (_) {}
+
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
+                resolve();
+            }, 150);
+        };
+
+        win.onafterprint = cleanup;
+        setTimeout(cleanup, 5000);
+
+        win.focus();
+        win.print();
+    });
+}
+
 function escapeHtml(str) {
     if (!str) return '';
-    return str
+    return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')

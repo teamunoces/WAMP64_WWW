@@ -158,6 +158,14 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
                         </table>
                       </section>
 
+        <footer>
+            <div class="footer-bottom">
+                <div class="footer-logos">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
+                </div>
+            </div>
+        </footer>
+
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
      <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
