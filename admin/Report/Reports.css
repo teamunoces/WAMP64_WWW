@@ -423,6 +423,35 @@ body.dark-mode .filter-row select {
     border-color: #c2410c;
 }
 
+/* Card Color Themes */
+.olive {
+    background: linear-gradient(135deg, #6b8e23, #556b2f);
+}
+.red {
+    background: linear-gradient(135deg, #b22234, #8b1a1a);
+}
+.purple {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+}
+.orange {
+    background: linear-gradient(135deg, #f97316, #c2410c);
+}
+.navy {
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+}
+.green {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+.teal {
+    background: linear-gradient(135deg, #0d9488, #0f766e);
+}
+.indigo {
+    background: linear-gradient(135deg, #4338ca, #3730a3);
+}
+.cyan {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
 .card p {
     margin-top: 12px;
     font-size: 12px;

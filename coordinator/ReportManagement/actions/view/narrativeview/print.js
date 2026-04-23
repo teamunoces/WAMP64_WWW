@@ -71,7 +71,6 @@ async function printReport() {
             margin: 0 !important;
             padding: 0 !important;
             width: 100%;
-            min-height: 100%;
             background: #fff !important;
             color: #000;
             font-family: Arial, sans-serif;
@@ -87,7 +86,6 @@ async function printReport() {
         #print-container {
             display: block !important;
             width: 100%;
-            min-height: 100%;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -97,8 +95,6 @@ async function printReport() {
 
         .print-shell {
             width: 100%;
-            height: 100%;
-            min-height: 100%;
             margin: 0 !important;
             padding: 0 !important;
             border-collapse: collapse !important;
@@ -119,7 +115,6 @@ async function printReport() {
 
         .print-shell tbody {
             display: table-row-group;
-            height: 100%;
         }
 
         .print-shell > thead > tr,
@@ -134,10 +129,6 @@ async function printReport() {
             outline: none !important;
             vertical-align: top !important;
             background: #fff !important;
-        }
-
-        .print-shell > tbody > tr {
-            height: 100%;
         }
 
         .print-header,
@@ -157,19 +148,14 @@ async function printReport() {
 
         .print-footer {
             padding: 8px 0 0 0 !important;
-            vertical-align: bottom !important;
         }
 
         .print-body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100%;
             padding: 0 !important;
             margin: 0 !important;
         }
 
         .print-content {
-            flex: 1 1 auto;
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
@@ -387,9 +373,11 @@ async function printReport() {
             clear: both !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+            page-break-before: auto !important;
         }
 
         .document-info {
+            display: block !important;
             margin: 0 !important;
             width: 305px !important;
             max-width: 305px !important;
@@ -405,6 +393,11 @@ async function printReport() {
             width: 100% !important;
             table-layout: fixed !important;
             margin: 0 !important;
+        }
+
+        .doc-header tr {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .doc-header td {
@@ -478,7 +471,7 @@ async function printReport() {
             width: 100%;
             max-width: 100%;
             height: auto;
-            max-height: 32px;
+            max-height: 26px;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -498,30 +491,16 @@ async function printReport() {
             html, body {
                 margin: 0 !important;
                 padding: 0 !important;
-                min-height: 100% !important;
-                height: 100% !important;
                 background: white !important;
             }
 
-            #print-container {
-                min-height: 100% !important;
-                height: 100% !important;
-            }
-
-            .print-shell {
-                min-height: calc(297mm - 24mm) !important;
-            }
-
-            .print-shell tbody {
-                height: 100% !important;
-            }
-
-            .print-shell tbody > tr {
-                height: 100% !important;
-            }
-
+            #print-container,
+            .print-shell,
+            .print-shell tbody,
+            .print-shell tbody > tr,
             .print-body {
-                min-height: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
             }
         }
     </style>

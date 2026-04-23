@@ -10,12 +10,13 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluation Sheet for Extension Services</title>
     <link rel="stylesheet" href="evaluation.css">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
 
     <!-- Header -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
+        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -24,7 +25,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
 
     <!-- Sidebar -->
     <iframe 
-       src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
+       src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
@@ -303,5 +304,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
     <script src="./get.js"></script>
     <script src="./print.js"></script>
     <script src="./download.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

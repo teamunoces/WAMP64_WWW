@@ -17,7 +17,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
   <!-- Header -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
+        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -26,7 +26,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
     <!-- Sidebar -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
+        src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"

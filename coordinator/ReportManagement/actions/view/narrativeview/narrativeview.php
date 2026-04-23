@@ -86,7 +86,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
                     <textarea class="line-input dynamic-textarea" id="propose_solutions"></textarea>
                 </li>
             </ol>
-        </form>
+        
 
                                 <!-- APPROVAL SECTIONS -->
                     <section class="approvals-container">
@@ -157,6 +157,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
                           </tr>
                         </table>
                       </section>
+
+                      </form>
 
         <footer>
             <div class="footer-bottom">

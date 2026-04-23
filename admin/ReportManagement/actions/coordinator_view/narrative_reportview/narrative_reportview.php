@@ -10,6 +10,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Accomplishment Report Form</title>
     <link rel="stylesheet" href="narrative.css">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
     <!-- Header -->
@@ -157,6 +158,14 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
                         </table>
                       </section>
 
+ <footer>
+            <div class="footer-bottom">
+                <div class="footer-logos">
+                    <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
+                </div>
+            </div>
+        </footer>
+                      
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
      <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
@@ -164,5 +173,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     <script src="./get.js"></script>
     <script src="./print.js"></script>
     <script src="./download.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

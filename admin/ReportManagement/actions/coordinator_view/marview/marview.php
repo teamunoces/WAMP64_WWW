@@ -48,7 +48,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 
 
     <div class="report-container">
-
+<form id="main_content">
 
                     <header>
                         <div class="header-content">
@@ -206,7 +206,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         </section>
 
 
-
+</form>
 
                     
                     <footer>
