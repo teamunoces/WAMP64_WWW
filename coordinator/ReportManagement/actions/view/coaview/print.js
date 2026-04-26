@@ -1,6 +1,6 @@
 // print.js - Handles printing of Certificate of Appearance
+
 function printReport() {
-    // Get all current form values from the main page
     const participant = document.getElementById('participant')?.value || '';
     const certDepartment = document.getElementById('cert_department')?.value || '';
     const activityName = document.getElementById('activity_name')?.value || '';
@@ -12,7 +12,6 @@ function printReport() {
     const monitoredBy = document.getElementById('monitored_by')?.value || '';
     const verifiedBy = document.getElementById('verified_by')?.value || '';
 
-    // Get approval section values
     const createdByName = document.getElementById('created_by_name')?.textContent || '';
     const dean = document.getElementById('dean')?.textContent || '';
     const cesHead = document.getElementById('ces_head')?.textContent || '';
@@ -20,13 +19,11 @@ function printReport() {
     const vpAdmin = document.getElementById('vp_admin')?.textContent || '';
     const schoolPresident = document.getElementById('school_president')?.textContent || '';
 
-    // Get document info values
     const issueStatus = document.querySelector('input[name="issue_status"]')?.value || '';
     const revisionNumber = document.querySelector('input[name="revision_number"]')?.value || '';
     const dateEffective = document.querySelector('input[name="date_effective"]')?.value || '';
     const approvedBy = document.querySelector('input[name="approved_by"]')?.value || '';
 
-    // Create print iframe
     const iframe = document.createElement('iframe');
     iframe.style.position = 'fixed';
     iframe.style.right = '0';
@@ -34,6 +31,9 @@ function printReport() {
     iframe.style.width = '0';
     iframe.style.height = '0';
     iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+
     document.body.appendChild(iframe);
 
     const doc = iframe.contentWindow.document;
@@ -52,7 +52,8 @@ function printReport() {
                     box-sizing: border-box;
                 }
 
-                html, body {
+                html,
+                body {
                     background: white;
                     font-family: Arial, sans-serif;
                     color: #000;
@@ -68,7 +69,6 @@ function printReport() {
                     background: white;
                 }
 
-                /* Use a print table shell so header/footer repeat without overlap */
                 .print-shell {
                     width: 100%;
                     border-collapse: collapse;
@@ -129,7 +129,6 @@ function printReport() {
                     padding: 0.1in 0.55in 0.1in 0.55in;
                 }
 
-                /* Header */
                 .header-content {
                     display: flex;
                     align-items: center;
@@ -203,13 +202,14 @@ function printReport() {
 
                 .certificate-title {
                     text-align: center;
-                    font-size: 1.4rem;
+                    font-family: "Century Gothic", Arial, sans-serif;
+                    font-size: 11px;
+                    font-weight: bold;
                     letter-spacing: 2px;
                     margin-bottom: 38px;
                     text-transform: uppercase;
                 }
 
-                /* Content */
                 .content p {
                     margin: 20px 0;
                     line-height: 2;
@@ -272,7 +272,6 @@ function printReport() {
                     min-width: 220px;
                 }
 
-                /* Signatures */
                 .signatures {
                     margin-top: 50px;
                     display: flex;
@@ -297,7 +296,6 @@ function printReport() {
                     width: 100%;
                 }
 
-                /* Approvals */
                 .approvals-container {
                     width: 100%;
                     max-width: 900px;
@@ -365,10 +363,10 @@ function printReport() {
                     margin-bottom: 2px;
                 }
 
-                /* Document info */
                 .document-info {
                     margin-top: 50px;
-                    width: 32%;
+                    width: 305px;
+                    max-width: 305px;
                     page-break-inside: avoid;
                     break-inside: avoid;
                 }
@@ -377,40 +375,44 @@ function printReport() {
                     border-collapse: collapse;
                     font-family: Arial, sans-serif;
                     font-size: 11px;
-                    width: auto;
+                    width: 305px;
+                    max-width: 305px;
                     margin-right: auto;
                     background: white;
                 }
 
                 .doc-header td {
                     border: 1px solid #d1d1d1;
-                    padding: 5px 10px;
+                    padding: 4px 8px;
+                    vertical-align: middle;
+                    font-size: 11px;
+                    line-height: 1.2;
                 }
 
                 .doc-header td.label {
                     background-color: #002060;
                     color: white;
                     font-weight: bold;
-                    padding: 4px 8px;
                     text-align: left;
                     white-space: nowrap;
                     width: 100px;
                 }
 
                 .doc-header td:nth-child(2) {
-                    width: 2%;
-                    padding: 0 1px;
+                    width: 10px;
+                    padding: 0 2px;
                     font-weight: bold;
                     text-align: center;
                 }
 
                 .doc-header td.value {
-                    padding: 4px 10px;
-                    min-width: 120px;
+                    width: 170px;
+                    min-width: 170px;
                     text-align: left;
+                    color: #333;
+                    background: #fff;
                 }
 
-                /* Footer */
                 footer {
                     width: 100%;
                     margin: 0;
@@ -452,7 +454,8 @@ function printReport() {
                 }
 
                 @media print {
-                    html, body {
+                    html,
+                    body {
                         margin: 0 !important;
                         padding: 0 !important;
                         background: white !important;
@@ -501,6 +504,7 @@ function printReport() {
                 }
             </style>
         </head>
+
         <body>
             <div class="print-root">
                 <table class="print-shell" role="presentation">
@@ -511,6 +515,7 @@ function printReport() {
                                     <header>
                                         <div class="header-content">
                                             <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+
                                             <div class="college-info">
                                                 <h1>Saint Michael College of Caraga</h1>
                                                 <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -518,10 +523,12 @@ function printReport() {
                                                 <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
                                                 <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                                             </div>
+
                                             <div class="logos-right">
                                                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">
                                             </div>
                                         </div>
+
                                         <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
                                         <div class="double-line"></div>
                                     </header>
@@ -537,7 +544,7 @@ function printReport() {
                                     <footer>
                                         <div class="footer-bottom">
                                             <div class="footer-logos">
-                                                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo 1">
+                                                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/footerlogo.png" alt="Org Logo">
                                             </div>
                                         </div>
                                     </footer>
@@ -590,7 +597,7 @@ function printReport() {
                                         <div class="signature-block">
                                             <p><strong>Monitored by:</strong></p>
                                             <div class="sig-line">
-                                                <span class="display-value" style="width:100%;">${escapeHtml(monitoredBy)}</span>
+                                                <span class="display-value">${escapeHtml(monitoredBy)}</span>
                                                 <span class="sub-label">Signature over printed name</span>
                                             </div>
                                         </div>
@@ -598,7 +605,7 @@ function printReport() {
                                         <div class="signature-block">
                                             <p><strong>Verified by the Barangay Official/Community Head/Beneficiary:</strong></p>
                                             <div class="sig-line">
-                                                <span class="display-value" style="width:100%;">${escapeHtml(verifiedBy)}</span>
+                                                <span class="display-value">${escapeHtml(verifiedBy)}</span>
                                                 <span class="sub-label">Signature over printed name</span>
                                             </div>
                                         </div>
@@ -614,11 +621,13 @@ function printReport() {
                                         </div>
 
                                         <div class="label" style="margin-top: 20px;">Noted by:</div>
+
                                         <div class="approval-row">
                                             <div class="signature-group">
                                                 <div class="signature-line">${escapeHtml(dean)}</div>
                                                 <div class="title bold">Dean</div>
                                             </div>
+
                                             <div class="signature-group">
                                                 <div class="signature-line">${escapeHtml(cesHead)}</div>
                                                 <div class="title bold">CES Head</div>
@@ -627,10 +636,12 @@ function printReport() {
 
                                         <div class="approval-centered" style="margin-top: 40px;">
                                             <div class="label left-align">Recommending Approval:</div>
+
                                             <div class="admin-block">
                                                 <div class="name-underlined">${escapeHtml(vpAcad)}</div>
                                                 <div class="title bold">Vice-President for Academic Affairs and Research</div>
                                             </div>
+
                                             <div class="admin-block">
                                                 <div class="name-underlined">${escapeHtml(vpAdmin)}</div>
                                                 <div class="title bold">Vice-President for Administrative Affairs</div>
@@ -639,6 +650,7 @@ function printReport() {
 
                                         <div class="approval-centered">
                                             <div class="label left-align">Approved by:</div>
+
                                             <div class="admin-block">
                                                 <div class="name-underlined">${escapeHtml(schoolPresident)}</div>
                                                 <div class="title bold">School President</div>
@@ -686,31 +698,39 @@ function printReport() {
     `);
     doc.close();
 
+    let hasPrinted = false;
+
+    const cleanup = () => {
+        if (iframe && iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+        }
+    };
+
     const runPrint = () => {
+        if (hasPrinted) return;
+        hasPrinted = true;
+
         setTimeout(() => {
             iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-
-            const cleanup = () => {
-                if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe);
-                }
-            };
 
             iframe.contentWindow.addEventListener('afterprint', cleanup, { once: true });
+
+            iframe.contentWindow.print();
+
             setTimeout(cleanup, 1500);
         }, 400);
     };
 
     iframe.onload = runPrint;
 
-    // Fallback in case onload does not fire reliably
-    setTimeout(runPrint, 700);
+    if (doc.readyState === 'complete') {
+        runPrint();
+    }
 }
 
-// Helper function to escape HTML
 function escapeHtml(str) {
     if (!str) return '';
+
     return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')

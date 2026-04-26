@@ -1,41 +1,55 @@
 /**
- * download.js - Handles PDF download functionality
- * Generates a multi-page PDF with header and footer repeated on every page.
- * Automatically loads html2canvas and jsPDF if they are not already available.
+ * download.js - Program Monitoring Form
+ * Generates a multi-page PDF with repeated header/footer on every page
+ * and keeps the main content from overlapping them.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
     const downloadBtn = document.getElementById('downloadPDF');
     if (downloadBtn) {
-        downloadBtn.addEventListener('click', downloadAsPDF);
+        downloadBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            downloadPDF();
+        });
     }
 });
 
 let __pdfWorkspace = null;
 let __pdfStyleEl = null;
-let __pdfHiddenState = null;
 let __pdfLibrariesPromise = null;
+let __pdfHiddenState = null;
 
-async function downloadAsPDF() {
+async function downloadPDF() {
+    const downloadBtn = document.getElementById('downloadPDF');
+    const originalText = downloadBtn ? downloadBtn.textContent : 'Download PDF';
+
     try {
-        showLoadingIndicator('Loading PDF tools...');
+        if (downloadBtn) {
+            downloadBtn.textContent = 'Generating PDF...';
+            downloadBtn.disabled = true;
+        }
 
         await ensurePdfLibraries();
 
         const html2canvasLib = window.html2canvas;
         const jsPDFCtor = getJsPDFConstructor();
 
-        if (!html2canvasLib) throw new Error('html2canvas failed to load.');
-        if (!jsPDFCtor) throw new Error('jsPDF failed to load.');
+        if (!html2canvasLib) {
+            throw new Error('html2canvas is not available.');
+        }
+        if (!jsPDFCtor) {
+            throw new Error('jsPDF is not available.');
+        }
 
-        showLoadingIndicator('Preparing PDF...');
-
-        const mainContent =
-            document.querySelector('#main_content') ||
+        const formContainer =
             document.querySelector('.form-container') ||
+            document.querySelector('#main_content') ||
             document.querySelector('form');
 
-        if (!mainContent) throw new Error('Main content not found.');
+        if (!formContainer) {
+            console.error('Program Monitoring Form container not found');
+            throw new Error('Could not find form content to download');
+        }
 
         __pdfHiddenState = hideScreenOnlyElements();
 
@@ -62,7 +76,7 @@ async function downloadAsPDF() {
         const renderPageHeightPx = Math.round(printableHeightMm * pxPerMm);
 
         createPdfWorkspace(renderWidthPx);
-        buildWorkspaceContent(mainContent);
+        buildWorkspaceContent(formContainer);
 
         await waitForImages(__pdfWorkspace);
         await waitForFonts(document);
@@ -72,10 +86,8 @@ async function downloadAsPDF() {
         const bodyNode = __pdfWorkspace.querySelector('#pdf-body');
 
         if (!headerNode || !footerNode || !bodyNode) {
-            throw new Error('Failed to build PDF header, body, or footer.');
+            throw new Error('Failed to build PDF layout.');
         }
-
-        showLoadingIndicator('Rendering PDF pages...');
 
         const canvasScale = 2;
 
@@ -95,8 +107,8 @@ async function downloadAsPDF() {
 
         const headerHeightPx = Math.ceil(headerNode.getBoundingClientRect().height);
         const footerHeightPx = Math.ceil(footerNode.getBoundingClientRect().height);
-        const usableBodyHeightPx = renderPageHeightPx - headerHeightPx - footerHeightPx;
 
+        const usableBodyHeightPx = renderPageHeightPx - headerHeightPx - footerHeightPx;
         if (usableBodyHeightPx <= 0) {
             throw new Error('Header/footer are too large for the page.');
         }
@@ -137,7 +149,9 @@ async function downloadAsPDF() {
             sliceCanvas.height = currentSliceHeightPx;
 
             const ctx = sliceCanvas.getContext('2d');
-            if (!ctx) throw new Error('Unable to create PDF canvas context.');
+            if (!ctx) {
+                throw new Error('Unable to create PDF canvas context.');
+            }
 
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
@@ -157,9 +171,20 @@ async function downloadAsPDF() {
             const sliceImage = sliceCanvas.toDataURL('image/jpeg', 1.0);
             const sliceHeightMm = printableWidthMm * (currentSliceHeightPx / sliceCanvas.width);
 
-            if (pageIndex > 0) pdf.addPage();
+            if (pageIndex > 0) {
+                pdf.addPage();
+            }
 
-            pdf.addImage(headerImage, 'JPEG', marginLeftMm, marginTopMm, printableWidthMm, headerHeightMm, undefined, 'FAST');
+            pdf.addImage(
+                headerImage,
+                'JPEG',
+                marginLeftMm,
+                marginTopMm,
+                printableWidthMm,
+                headerHeightMm,
+                undefined,
+                'FAST'
+            );
 
             pdf.addImage(
                 sliceImage,
@@ -191,32 +216,41 @@ async function downloadAsPDF() {
 
         cleanupPdfWorkspace();
         restoreHiddenElements();
-        hideLoadingIndicator();
-
     } catch (error) {
         console.error('PDF generation failed:', error);
         cleanupPdfWorkspace();
         restoreHiddenElements();
-        hideLoadingIndicator();
-        alert('Failed to generate PDF. Please try again.');
+        alert(error.message || 'Failed to generate PDF. Please try again.');
+    } finally {
+        if (downloadBtn) {
+            downloadBtn.textContent = originalText;
+            downloadBtn.disabled = false;
+        }
     }
 }
 
 async function ensurePdfLibraries() {
-    if (window.html2canvas && getJsPDFConstructor()) return;
+    if (window.html2canvas && getJsPDFConstructor()) {
+        return;
+    }
 
     if (!__pdfLibrariesPromise) {
         __pdfLibrariesPromise = (async () => {
             if (!window.html2canvas) {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+                await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
             }
 
             if (!getJsPDFConstructor()) {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
             }
 
-            if (!window.html2canvas) throw new Error('html2canvas is still unavailable after loading.');
-            if (!getJsPDFConstructor()) throw new Error('jsPDF is still unavailable after loading.');
+            if (!window.html2canvas) {
+                throw new Error('html2canvas is not available.');
+            }
+
+            if (!getJsPDFConstructor()) {
+                throw new Error('jsPDF is not available.');
+            }
         })().catch(error => {
             __pdfLibrariesPromise = null;
             throw error;
@@ -227,12 +261,16 @@ async function ensurePdfLibraries() {
 }
 
 function getJsPDFConstructor() {
-    if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
-    if (window.jsPDF) return window.jsPDF;
+    if (window.jspdf && window.jspdf.jsPDF) {
+        return window.jspdf.jsPDF;
+    }
+    if (window.jsPDF) {
+        return window.jsPDF;
+    }
     return null;
 }
 
-function loadScript(src) {
+function loadScriptOnce(src) {
     return new Promise((resolve, reject) => {
         const existing = document.querySelector(`script[data-pdf-lib="${src}"], script[src="${src}"]`);
 
@@ -283,10 +321,8 @@ function createPdfWorkspace(renderWidthPx) {
 
     __pdfStyleEl = document.createElement('style');
     __pdfStyleEl.setAttribute('data-pdf-runtime', 'true');
-
     __pdfStyleEl.textContent = `
-        #pdf-workspace,
-        #pdf-workspace * {
+        #pdf-workspace, #pdf-workspace * {
             box-sizing: border-box;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -294,9 +330,9 @@ function createPdfWorkspace(renderWidthPx) {
         }
 
         #pdf-workspace {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            line-height: 1.35;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.4;
             color: #000;
             background: #fff;
         }
@@ -313,88 +349,64 @@ function createPdfWorkspace(renderWidthPx) {
             box-shadow: none !important;
         }
 
-        #pdf-workspace .report-container,
-        #pdf-workspace .evaluation-container,
-        #pdf-workspace #main_content,
-        #pdf-workspace .form-container,
         #pdf-workspace .pdf-body-wrapper,
-        #pdf-workspace .print-approval-section,
-        #pdf-workspace .print-document-info-section {
+        #pdf-workspace .form-container,
+        #pdf-workspace #main_content,
+        #pdf-workspace .approvals-container,
+        #pdf-workspace .document-info {
             width: 100% !important;
-            max-width: none !important;
+            max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
-            background: #fff !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
+            background: #fff !important;
             overflow: visible !important;
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
+            pointer-events: none !important;
+            user-select: text !important;
         }
 
-        #pdf-workspace #main_content,
-        #pdf-workspace #main_content > *:first-child,
-        #pdf-workspace .pdf-body-wrapper > *:first-child {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        #pdf-workspace #main_content h1,
-        #pdf-workspace .pdf-body-wrapper h1 {
-            font-family: "Century Gothic", Arial, sans-serif !important;
-            font-size: 13pt !important;
-            font-weight: normal !important;
-            text-align: center !important;
-            text-transform: uppercase !important;
-            color: #000 !important;
-            margin: 0 0 12px 0 !important;
-        }
-
-        #pdf-workspace #headerFrame,
         #pdf-workspace #sidebarFrame,
+        #pdf-workspace #headerFrame,
         #pdf-workspace .buttons,
-        #pdf-workspace #downloadPDF,
         #pdf-workspace .admin-comment,
         #pdf-workspace .no-print,
         #pdf-workspace .print-hide,
-        #pdf-workspace .action-buttons,
-        #pdf-workspace .wrapper,
         #pdf-workspace [data-no-print="true"],
         #pdf-workspace button,
         #pdf-workspace script,
-        #pdf-workspace noscript {
+        #pdf-workspace noscript,
+        #pdf-workspace .print-header,
+        #pdf-workspace .print-footer,
+        #pdf-workspace footer,
+        #pdf-workspace .footer-bottom,
+        #pdf-workspace .footer-logos {
             display: none !important;
         }
 
         #pdf-workspace .print-page-header {
-            width: 100%;
             margin: 0 !important;
-            padding: 0 0 10px 0 !important;
-            background: #fff !important;
+            padding: 0 !important;
         }
 
         #pdf-workspace .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             width: 100%;
-            gap: 12px;
-            flex-wrap: nowrap;
         }
 
         #pdf-workspace .logo-left {
             height: 90px;
             width: auto;
-            flex: 0 0 auto;
         }
 
         #pdf-workspace .logos-right {
             display: flex;
             gap: 20px;
             align-items: center;
-            flex: 0 0 auto;
         }
 
         #pdf-workspace .logos-right img {
@@ -404,339 +416,402 @@ function createPdfWorkspace(renderWidthPx) {
 
         #pdf-workspace .college-info {
             text-align: center;
-            flex: 1 1 auto;
-            padding: 0 10px;
+            flex-grow: 1;
+            padding: 0 20px;
         }
 
         #pdf-workspace .college-info h1 {
-            font-family: "Times New Roman", Times, serif !important;
+            font-family: "Times New Roman", Times, serif;
             color: #4f81bd !important;
-            font-size: 26px !important;
+            font-size: 26px;
             margin: 0;
             font-weight: normal;
             line-height: 1.2;
         }
 
         #pdf-workspace .college-info p {
-            font-family: Arial, sans-serif !important;
             font-size: 11px;
             margin: 2px 0;
             color: #333;
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
         #pdf-workspace .college-info a {
-            font-family: Arial, sans-serif !important;
             font-size: 13px;
             color: #0000EE !important;
             text-decoration: underline;
-            word-break: break-all;
         }
 
         #pdf-workspace .office-title {
-            font-family: Arial, sans-serif !important;
             text-align: center;
             font-size: 18px;
             color: #595959 !important;
             font-weight: bold;
-            margin: 5px 0;
+            margin: 20px 0 5px 0;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
         #pdf-workspace .double-line {
             border-top: 4px double #4f81bd !important;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
-        #pdf-workspace .form-type {
-            font-family: "Courier New", Courier, monospace !important;
-            text-align: center !important;
+        #pdf-workspace .form-container {
+            background: #fff !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+
+        #pdf-workspace h2 {
+            text-align: center;
             margin: 0 0 30px 0 !important;
-            font-size: 13pt !important;
-            font-weight: bold !important;
-            letter-spacing: 2px !important;
-            text-transform: uppercase !important;
-            color: #000 !important;
+            text-transform: capitalize;
+            font-size: 16px !important;
         }
 
-        #pdf-workspace .input-fields,
+        #pdf-workspace h3 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
         #pdf-workspace .header-info {
-            width: 100% !important;
-            margin-top: 0 !important;
-            margin-bottom: 48px !important;
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
+            margin-bottom: 20px;
         }
 
-        #pdf-workspace .input-fields .field,
         #pdf-workspace .input-group {
-            display: grid !important;
-            grid-template-columns: 150px 1fr !important;
-            align-items: center !important;
-            column-gap: 10px !important;
-            margin-bottom: 14px !important;
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-end;
         }
 
-        #pdf-workspace .input-fields .field label,
         #pdf-workspace .input-group label {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            color: #000 !important;
-            white-space: nowrap !important;
-            text-align: left !important;
+            font-weight: bold;
+            white-space: nowrap;
+            margin-right: 10px;
         }
 
-        #pdf-workspace .input-fields .field input,
-        #pdf-workspace .input-fields .field textarea,
-        #pdf-workspace .input-fields .field select,
-        #pdf-workspace .input-fields .field .printable-field,
         #pdf-workspace .input-group input,
-        #pdf-workspace .input-group textarea,
-        #pdf-workspace .input-group select,
         #pdf-workspace .input-group .printable-field {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            width: 100% !important;
-            min-height: 20px !important;
             border: none !important;
-            border-bottom: 1px solid #cfcfcf !important;
-            padding: 2px 10px 3px 10px !important;
+            border-bottom: 1px solid black !important;
+            width: 100% !important;
+            outline: none !important;
             background: transparent !important;
             color: #000 !important;
-            text-align: left !important;
-            line-height: 1.2 !important;
+            padding: 2px 4px !important;
+            min-height: 18px !important;
         }
 
-        #pdf-workspace .table_form,
-        #pdf-workspace .program-table {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
+        #pdf-workspace table {
             width: 100% !important;
-            max-width: 100% !important;
             border-collapse: collapse !important;
-            table-layout: fixed !important;
-            margin-top: 0 !important;
-            margin-bottom: 20px !important;
-            color: #000 !important;
+            margin-bottom: 20px;
         }
 
-        #pdf-workspace .table_form {
-            display: block !important;
-            overflow: visible !important;
-        }
-
-        #pdf-workspace .table_form table,
-        #pdf-workspace .program-table {
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-
-        #pdf-workspace .table_form th,
-        #pdf-workspace .table_form td,
-        #pdf-workspace .program-table th,
-        #pdf-workspace .program-table td {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            border: 1px solid #9e9e9e !important;
-            padding: 7px 6px !important;
-            font-weight: normal !important;
-            text-align: center !important;
+        #pdf-workspace th,
+        #pdf-workspace td {
+            border: 1px solid black !important;
+            padding: 8px !important;
+            font-size: 0.9em !important;
             vertical-align: top !important;
             color: #000 !important;
-            word-break: normal !important;
-            overflow-wrap: break-word !important;
-            line-height: 1.25 !important;
         }
 
-        #pdf-workspace .table_form th,
-        #pdf-workspace .program-table th {
-            background-color: #d9d9d9 !important;
-            font-weight: normal !important;
+        #pdf-workspace th {
+            background-color: #ffffff !important;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        #pdf-workspace .center-text {
+            text-align: center !important;
+        }
+
+        #pdf-workspace tbody tr {
+            height: 30px;
+        }
+
+        #pdf-workspace .checkbox-cell {
+            text-align: center !important;
             vertical-align: middle !important;
         }
 
-        #pdf-workspace .table_form td,
-        #pdf-workspace .program-table td {
-            background-color: #fff !important;
-            min-height: 28px !important;
-        }
-
-        #pdf-workspace .header-table,
-        #pdf-workspace .main-table,
-        #pdf-workspace table {
-            width: 100% !important;
-            max-width: 100% !important;
-            border-collapse: collapse !important;
-            table-layout: fixed !important;
-            background: #fff;
-        }
-
-        #pdf-workspace .main-table th,
-        #pdf-workspace .main-table td,
-        #pdf-workspace .header-table td {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            word-break: break-word !important;
-            overflow-wrap: anywhere !important;
-            white-space: normal !important;
-        }
-
-        #pdf-workspace .main-table th {
-            background-color: #e0e0e0 !important;
-            color: #333 !important;
-            border: 1px solid #000 !important;
-            padding: 6px 4px !important;
-            text-align: center;
-            font-weight: normal;
-        }
-
-        #pdf-workspace .main-table td {
-            border: 1px solid #000 !important;
-            padding: 6px 4px !important;
-            vertical-align: top;
-        }
-
-        #pdf-workspace .print-approval-section {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        #pdf-workspace .approvals-container,
-        #pdf-workspace .approval-section,
-        #pdf-workspace .prepared-block,
-        #pdf-workspace .signature-block {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
+        #pdf-workspace .followUp {
+            width: 70px !important;
+            padding: 4px !important;
+            text-align: center !important;
+            border: none !important;
+            background: transparent !important;
             color: #000 !important;
+        }
+
+        #pdf-workspace textarea {
+            width: 100% !important;
+            border: 1px solid #ccc !important;
+            padding: 4px !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 0.9em !important;
+            resize: none !important;
+            background: transparent !important;
+            color: #000 !important;
+        }
+
+        #pdf-workspace .paper-lines,
+        #pdf-workspace #other_recommendations {
+            width: 100% !important;
+            border: none !important;
+            outline: none !important;
+            font-size: 0.9em !important;
+            line-height: 30px !important;
+            padding: 0 !important;
+            background-attachment: local !important;
+            background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
+            background-size: 100% 30px !important;
+            background-color: transparent !important;
+            font-family: Arial, sans-serif !important;
+            overflow: hidden !important;
+            margin-top: 8px !important;
+        }
+
+        #pdf-workspace .footer-notes {
+            margin-top: 20px;
+        }
+
+        #pdf-workspace #feedbackTable {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        #pdf-workspace #feedbackTable th,
+        #pdf-workspace #feedbackTable td {
+            border: 1px solid #000 !important;
+            padding: 10px !important;
+        }
+
+        #pdf-workspace .feedbackSummary,
+        #pdf-workspace .feedbackAction {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border: none !important;
+            padding: 8px !important;
+            font-family: inherit !important;
+            font-size: 0.9em !important;
+            display: block !important;
+            overflow: hidden !important;
+            min-height: 50px !important;
+            background: transparent !important;
+        }
+
+        #pdf-workspace #otherIssues {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border: none !important;
+            padding: 8px !important;
+            font-family: inherit !important;
+            font-size: 13px !important;
+            display: block !important;
+            overflow: hidden !important;
+            min-height: 38px !important;
+            background: transparent !important;
+        }
+
+        #pdf-workspace .printable-field {
+            display: block;
+            width: 100%;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            border: none !important;
+            background: transparent !important;
+            color: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        #pdf-workspace .printable-checkbox {
+            display: inline-block;
+        }
+
+        #pdf-workspace #recommendationsTable td:first-child {
+            width: 120px !important;
+            white-space: nowrap !important;
+            text-align: left !important;
+            vertical-align: middle !important;
+            padding: 8px 10px !important;
+        }
+
+        #pdf-workspace #recommendationsTable td:first-child .printable-choice {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            margin-right: 10px !important;
+            vertical-align: middle !important;
+        }
+
+        #pdf-workspace #recommendationsTable td:first-child .choice-label {
+            font-size: 0.9em !important;
+            color: #000 !important;
+            line-height: 1 !important;
+        }
+
+        #pdf-workspace .printable-box {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 13px !important;
+            height: 13px !important;
+            border: 1px solid #666 !important;
+            border-radius: 2px !important;
+            background: #fff !important;
+            color: transparent !important;
+            font-size: 10px !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+
+        #pdf-workspace .printable-box.checked {
+            background: #e1251b !important;
+            border-color: #e1251b !important;
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+
+        #pdf-workspace .printable-box.checked::before {
+            content: "✓";
+            transform: translateY(-0.5px);
+        }
+
+        #pdf-workspace #recommendationsTable td:last-child {
+            vertical-align: middle !important;
+            line-height: 1.35 !important;
         }
 
         #pdf-workspace .approvals-container {
+            font-family: Arial, sans-serif;
             width: 100% !important;
-            margin-top: 70px !important;
+            max-width: 900px !important;
+            margin: 0 auto !important;
+            color: #000;
         }
 
-        #pdf-workspace .prepared-block {
-            width: 200px !important;
-            margin-bottom: 38px !important;
+        #pdf-workspace .approval-row {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin-bottom: 20px !important;
         }
 
-        #pdf-workspace .approvals-container .label,
-        #pdf-workspace .approval-section .label,
-        #pdf-workspace .prepared-name,
-        #pdf-workspace .prepared-title,
-        #pdf-workspace .signature-block .name,
-        #pdf-workspace .signature-block .title {
-            font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-            font-size: 10pt !important;
-            color: #000 !important;
+        #pdf-workspace .signature-group {
+            width: 35% !important;
         }
 
-        #pdf-workspace .approvals-container .label,
-        #pdf-workspace .approval-section .label {
-            font-weight: normal !important;
-            margin-bottom: 2px !important;
-            text-align: left !important;
-        }
-
-        #pdf-workspace .prepared-name {
-            width: 200px !important;
-            border-bottom: 1px solid #000 !important;
-            text-transform: uppercase !important;
-            min-height: 20px !important;
-            line-height: 20px !important;
-            text-align: left !important;
-        }
-
-        #pdf-workspace .prepared-title {
+        #pdf-workspace .label {
             font-weight: bold !important;
+            margin-bottom: 35px !important;
+        }
+
+        #pdf-workspace .signature-line {
+            border-bottom: 1.5px solid black !important;
+            margin-bottom: 5px !important;
+        }
+
+        #pdf-workspace .title {
+            font-size: 14px !important;
+        }
+
+        #pdf-workspace .bold {
+            font-weight: bold !important;
+        }
+
+        #pdf-workspace .left-align {
             text-align: left !important;
-        }
-
-        #pdf-workspace .approval-section {
             width: 100% !important;
-            margin-top: 38px !important;
         }
 
-        #pdf-workspace .approval-section.recommending .label,
-        #pdf-workspace .approval-section.approved-section .label {
-            margin-bottom: 65px !important;
+        #pdf-workspace .approval-centered {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
         }
 
-        #pdf-workspace .approval-section.approved-section {
-            margin-top: 15px !important;
-        }
-
-        #pdf-workspace .signature-block {
-            width: 420px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+        #pdf-workspace .admin-block {
             text-align: center !important;
+            margin-top: 30px !important;
+            margin-bottom: 10px !important;
         }
 
-        #pdf-workspace .signature-block .name {
-            display: block !important;
-            width: 100% !important;
-            border-bottom: 1px solid #000 !important;
+        #pdf-workspace .name-underlined {
+            font-weight: bold !important;
+            text-decoration: underline !important;
             text-transform: uppercase !important;
-            text-align: center !important;
-            min-height: 20px !important;
-            line-height: 20px !important;
-        }
-
-        #pdf-workspace .signature-block .title {
-            display: block !important;
-            text-align: center !important;
-            margin-top: 3px !important;
-        }
-
-        #pdf-workspace .print-document-info-section {
-            margin-top: 8px !important;
-            width: 100% !important;
-            display: block !important;
-            clear: both !important;
+            font-size: 16px !important;
+            display: inline-block !important;
+            margin-bottom: 2px !important;
         }
 
         #pdf-workspace .document-info {
-            width: 34% !important;
-            max-width: 34% !important;
-            margin: 0 !important;
+            margin-top: 50px !important;
+            width: 30% !important;
         }
 
         #pdf-workspace .doc-header {
-            width: 100% !important;
-            border-collapse: collapse;
-            table-layout: fixed !important;
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            border: none !important;
+            width: auto !important;
+            margin-right: auto !important;
+            border-collapse: collapse !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 11px !important;
+            border: 1px solid #d1d1d1 !important;
+        }
+
+        #pdf-workspace .doc-header td {
+            border: 1px solid #000 !important;
+            padding: 5px 10px !important;
         }
 
         #pdf-workspace .doc-header td.label {
-            width: 38% !important;
-            padding: 4px 6px !important;
             background-color: #002060 !important;
-            color: white !important;
+            color: #fff !important;
+            width: 100px !important;
+            font-size: 11px !important;
             font-weight: bold !important;
+            padding: 4px 8px !important;
             border: 1px solid #d1d1d1 !important;
             text-align: left !important;
             white-space: nowrap !important;
         }
 
         #pdf-workspace .doc-header td:nth-child(2) {
-            width: 4% !important;
+            width: 2% !important;
             padding: 0 1px !important;
             font-weight: bold !important;
             border-top: 1px solid #d1d1d1 !important;
             border-bottom: 1px solid #d1d1d1 !important;
+            text-align: center !important;
         }
 
         #pdf-workspace .doc-header td.value {
-            width: 58% !important;
-            padding: 4px 8px !important;
+            width: 70% !important;
+            font-size: 11px !important;
+            text-align: left !important;
+            padding: 4px 10px !important;
             border: 1px solid #d1d1d1 !important;
+            min-width: 120px !important;
+        }
+
+        #pdf-workspace .doc-header td.value input,
+        #pdf-workspace .doc-header td.value p {
+            border: none !important;
+            background: transparent !important;
+            font-family: inherit !important;
+            font-size: inherit !important;
+            color: #333 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
         }
 
         #pdf-workspace .print-footer-inner,
@@ -748,12 +823,21 @@ function createPdfWorkspace(renderWidthPx) {
             background: #fff !important;
         }
 
-        #pdf-workspace .footer-bottom,
-        #pdf-workspace .footer-logos {
+        #pdf-workspace .footer-bottom {
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
             width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #pdf-workspace .footer-logos {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            gap: 0;
             margin: 0 !important;
             padding: 0 !important;
         }
@@ -764,6 +848,7 @@ function createPdfWorkspace(renderWidthPx) {
             width: 100%;
             max-width: 100%;
             height: auto;
+            max-height: 26px;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -772,97 +857,55 @@ function createPdfWorkspace(renderWidthPx) {
             object-fit: contain;
         }
 
-        #pdf-workspace input,
-        #pdf-workspace textarea,
-        #pdf-workspace select {
-            border: none !important;
-            background: transparent !important;
-            color: inherit !important;
-            font-family: inherit !important;
-            font-size: inherit !important;
-        }
-
-        #pdf-workspace .printable-field {
-            display: block;
-            width: 100%;
-            min-height: 1em;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            border: none !important;
-            background: transparent !important;
-            color: inherit;
-            font-size: inherit;
-            line-height: inherit;
-        }
-
-        #pdf-workspace .table_form .printable-field,
-        #pdf-workspace .program-table .printable-field {
-            text-align: center !important;
-        }
-
-        #pdf-workspace .printable-checkbox {
-            display: inline-block;
-        }
-
         #pdf-workspace img {
             max-width: 100%;
             height: auto;
         }
     `;
-
     document.head.appendChild(__pdfStyleEl);
 }
 
-function buildWorkspaceContent(mainContent) {
+function buildWorkspaceContent(formContainer) {
     const header = document.createElement('div');
     header.id = 'pdf-header';
-    header.className = 'pdf-header pdf-render-page';
+    header.className = 'pdf-header';
     header.innerHTML = buildPrintHeaderHtml();
 
     const footer = document.createElement('div');
     footer.id = 'pdf-footer';
-    footer.className = 'pdf-footer pdf-render-page';
+    footer.className = 'pdf-footer';
     footer.innerHTML = buildPrintFooterHtml();
 
     const body = document.createElement('div');
     body.id = 'pdf-body';
-    body.className = 'pdf-render-body pdf-render-body-only';
+    body.className = 'pdf-render-body';
 
     const bodyWrapper = document.createElement('div');
     bodyWrapper.className = 'pdf-body-wrapper';
 
-    const mainClone = mainContent.cloneNode(true);
+    const clone = formContainer.cloneNode(true);
+    removeNonPrintable(clone);
 
-    mainClone.querySelectorAll(
-        'header, .print-page-header, .header-content, .office-title, .double-line, footer, .footer-bottom, .footer-logos'
-    ).forEach(el => el.remove());
+    const firstHeader = clone.querySelector('header');
+    if (firstHeader) firstHeader.remove();
 
-    removeNonPrintable(mainClone);
-    syncFormValues(mainContent, mainClone);
-    syncEditableCells(mainContent, mainClone);
-    convertFormControlsToPrintable(mainClone);
-    convertEditableCellsToPrintable(mainClone);
-    bodyWrapper.appendChild(mainClone);
+    clone.querySelectorAll('footer, .footer-bottom, .footer-logos')
+        .forEach(el => el.remove());
+
+    syncFormValues(formContainer, clone);
+    convertFormControlsToPrintable(clone);
+    bodyWrapper.appendChild(clone);
 
     const approvalSource =
         document.querySelector('.approvals-container') ||
-        document.querySelector('.approvals') ||
         document.querySelector('.approval-row')?.closest('section, div');
 
-    if (approvalSource && !bodyWrapper.querySelector('.approvals-container, .approvals')) {
+    if (approvalSource && !bodyWrapper.querySelector('.approvals-container')) {
         const approvalClone = approvalSource.cloneNode(true);
-
         removeNonPrintable(approvalClone);
         syncFormValues(approvalSource, approvalClone);
-        syncEditableCells(approvalSource, approvalClone);
         convertFormControlsToPrintable(approvalClone);
-        convertEditableCellsToPrintable(approvalClone);
-
-        const approvalWrap = document.createElement('div');
-        approvalWrap.className = 'print-approval-section';
-        approvalWrap.appendChild(approvalClone);
-        bodyWrapper.appendChild(approvalWrap);
+        bodyWrapper.appendChild(approvalClone);
     }
 
     const documentInfoSource =
@@ -871,17 +914,10 @@ function buildWorkspaceContent(mainContent) {
 
     if (documentInfoSource && !bodyWrapper.querySelector('.document-info')) {
         const docInfoClone = documentInfoSource.cloneNode(true);
-
         removeNonPrintable(docInfoClone);
         syncFormValues(documentInfoSource, docInfoClone);
-        syncEditableCells(documentInfoSource, docInfoClone);
         convertFormControlsToPrintable(docInfoClone);
-        convertEditableCellsToPrintable(docInfoClone);
-
-        const docInfoWrap = document.createElement('div');
-        docInfoWrap.className = 'print-document-info-section';
-        docInfoWrap.appendChild(docInfoClone);
-        bodyWrapper.appendChild(docInfoWrap);
+        bodyWrapper.appendChild(docInfoClone);
     }
 
     body.appendChild(bodyWrapper);
@@ -905,17 +941,15 @@ function cleanupPdfWorkspace() {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
-
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
 
     const officeTitle =
         document.querySelector('.office-title')?.textContent?.trim() ||
-        'Monthly Accomplishment Report';
+        'PROGRAM MONITORING FORM';
 
     const collegeInfoNode = document.querySelector('.college-info');
-
     const collegeInfoHtml = collegeInfoNode
         ? collegeInfoNode.innerHTML
         : `
@@ -950,9 +984,14 @@ function buildPrintFooterHtml() {
 
     return `
         <div class="print-footer-inner">
-            ${footerImg ? `<img src="${escapeHtml(footerImg)}" alt="Footer Logo" class="print-footer-logo">` : ''}
+            ${footerImg ? `<img src="${escapeHtml(footerImg)}" alt="Footer Logo" class="print-footer-logo">` : '&nbsp;'}
         </div>
     `;
+}
+
+function generateFileName() {
+    const now = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    return `Program_Monitoring_Form_${now}.pdf`;
 }
 
 function hideScreenOnlyElements() {
@@ -963,11 +1002,16 @@ function hideScreenOnlyElements() {
         document.querySelector('.admin-comment')
     ].filter(Boolean);
 
+    const formContainer = document.querySelector('.form-container');
+
     __pdfHiddenState = {
         targets: targets.map(node => ({
             node,
             display: node.style.display
         })),
+        formMarginTop: formContainer?.style.marginTop || '',
+        formMarginLeft: formContainer?.style.marginLeft || '',
+        formWidth: formContainer?.style.width || '',
         bodyMarginLeft: document.body.style.marginLeft,
         bodyBackgroundColor: document.body.style.backgroundColor
     };
@@ -975,6 +1019,12 @@ function hideScreenOnlyElements() {
     targets.forEach(node => {
         node.style.display = 'none';
     });
+
+    if (formContainer) {
+        formContainer.style.marginTop = '0';
+        formContainer.style.marginLeft = '0';
+        formContainer.style.width = '100%';
+    }
 
     document.body.style.marginLeft = '0';
     document.body.style.backgroundColor = 'white';
@@ -985,8 +1035,17 @@ function hideScreenOnlyElements() {
 function restoreHiddenElements() {
     if (__pdfHiddenState) {
         __pdfHiddenState.targets.forEach(item => {
-            if (item.node) item.node.style.display = item.display;
+            if (item.node) {
+                item.node.style.display = item.display;
+            }
         });
+
+        const formContainer = document.querySelector('.form-container');
+        if (formContainer) {
+            formContainer.style.marginTop = __pdfHiddenState.formMarginTop;
+            formContainer.style.marginLeft = __pdfHiddenState.formMarginLeft;
+            formContainer.style.width = __pdfHiddenState.formWidth;
+        }
 
         document.body.style.marginLeft = __pdfHiddenState.bodyMarginLeft;
         document.body.style.backgroundColor = __pdfHiddenState.bodyBackgroundColor;
@@ -997,19 +1056,18 @@ function restoreHiddenElements() {
 
 function removeNonPrintable(root) {
     const selectors = [
-        '#headerFrame',
         '#sidebarFrame',
+        '#headerFrame',
         '.buttons',
-        '#downloadPDF',
         '.admin-comment',
         '.no-print',
         '.print-hide',
-        '.action-buttons',
-        '.wrapper',
         '[data-no-print="true"]',
         'button',
         'script',
-        'noscript'
+        'noscript',
+        '.print-header',
+        '.print-footer'
     ];
 
     selectors.forEach(selector => {
@@ -1035,11 +1093,9 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
         if (tag === 'select') {
             clonedField.value = sourceField.value;
-
             Array.from(clonedField.options).forEach(opt => {
                 opt.selected = opt.value === sourceField.value;
             });
-
             return;
         }
 
@@ -1048,7 +1104,6 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
             if (type === 'checkbox' || type === 'radio') {
                 clonedField.checked = sourceField.checked;
-
                 if (sourceField.checked) {
                     clonedField.setAttribute('checked', 'checked');
                 } else {
@@ -1062,50 +1117,56 @@ function syncFormValues(sourceRoot, clonedRoot) {
     });
 }
 
-function syncEditableCells(sourceRoot, clonedRoot) {
-    const sourceCells = sourceRoot.querySelectorAll('[contenteditable="true"]');
-    const clonedCells = clonedRoot.querySelectorAll('[contenteditable="true"]');
-
-    sourceCells.forEach((sourceCell, index) => {
-        const clonedCell = clonedCells[index];
-        if (!clonedCell) return;
-
-        clonedCell.innerHTML = sourceCell.innerHTML;
-        clonedCell.textContent = sourceCell.textContent;
-    });
-}
-
-function convertEditableCellsToPrintable(root) {
-    if (!root) return;
-
-    root.querySelectorAll('[contenteditable="true"]').forEach(cell => {
-        cell.removeAttribute('contenteditable');
-        cell.style.outline = 'none';
-        cell.style.background = '#fff';
-    });
-}
-
 function convertFormControlsToPrintable(root) {
     if (!root) return;
+
+    const recommendationRows = root.querySelectorAll('#recommendationsTable tbody tr');
+
+    recommendationRows.forEach(row => {
+        const firstCell = row.querySelector('td:first-child');
+        if (!firstCell) return;
+
+        const yesInput = firstCell.querySelector('.recYes');
+        const naInput = firstCell.querySelector('.recNa');
+
+        if (yesInput || naInput) {
+            const yesChecked = !!yesInput && yesInput.checked;
+            const naChecked = !!naInput && naInput.checked;
+
+            firstCell.innerHTML = `
+                <span class="printable-choice">
+                    <span class="printable-box ${yesChecked ? 'checked' : ''}"></span>
+                    <span class="choice-label">yes</span>
+                </span>
+                <span class="printable-choice">
+                    <span class="printable-box ${naChecked ? 'checked' : ''}"></span>
+                    <span class="choice-label">N/A</span>
+                </span>
+            `;
+        }
+    });
 
     const fields = root.querySelectorAll('input, textarea, select');
 
     fields.forEach(field => {
         const tag = field.tagName.toLowerCase();
-        const replacement = document.createElement('div');
-        replacement.className = 'printable-field';
 
         if (tag === 'textarea') {
+            const replacement = document.createElement('div');
+            replacement.className = field.classList.contains('paper-lines')
+                ? 'printable-field paper-lines'
+                : 'printable-field';
             replacement.textContent = field.value || '';
             field.replaceWith(replacement);
             return;
         }
 
         if (tag === 'select') {
+            const replacement = document.createElement('div');
+            replacement.className = 'printable-field';
             const selectedText = field.options[field.selectedIndex]
                 ? field.options[field.selectedIndex].text
                 : (field.value || '');
-
             replacement.textContent = selectedText;
             field.replaceWith(replacement);
             return;
@@ -1119,18 +1180,26 @@ function convertFormControlsToPrintable(root) {
                 return;
             }
 
+            if (field.classList.contains('recYes') || field.classList.contains('recNa')) {
+                return;
+            }
+
             if (type === 'checkbox') {
-                replacement.innerHTML = `<span class="printable-checkbox">${field.checked ? '&#10003;' : '&#9633;'}</span>`;
+                const replacement = document.createElement('span');
+                replacement.className = `printable-box ${field.checked ? 'checked' : ''}`;
                 field.replaceWith(replacement);
                 return;
             }
 
             if (type === 'radio') {
-                replacement.innerHTML = `<span class="printable-checkbox">${field.checked ? '&#9679;' : '&#9675;'}</span>`;
+                const replacement = document.createElement('span');
+                replacement.className = `printable-box ${field.checked ? 'checked' : ''}`;
                 field.replaceWith(replacement);
                 return;
             }
 
+            const replacement = document.createElement('div');
+            replacement.className = 'printable-field';
             replacement.textContent = field.value || '';
             field.replaceWith(replacement);
         }
@@ -1139,12 +1208,13 @@ function convertFormControlsToPrintable(root) {
 
 function waitForImages(root) {
     const images = Array.from(root.querySelectorAll('img'));
-
     if (!images.length) return Promise.resolve();
 
     return Promise.all(
         images.map(img => {
-            if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+            if (img.complete && img.naturalWidth > 0) {
+                return Promise.resolve();
+            }
 
             return new Promise(resolve => {
                 const done = () => {
@@ -1155,7 +1225,6 @@ function waitForImages(root) {
 
                 img.addEventListener('load', done, { once: true });
                 img.addEventListener('error', done, { once: true });
-
                 setTimeout(done, 4000);
             });
         })
@@ -1164,87 +1233,17 @@ function waitForImages(root) {
 
 async function waitForFonts(doc) {
     try {
-        if (doc.fonts && doc.fonts.ready) await doc.fonts.ready;
+        if (doc.fonts && doc.fonts.ready) {
+            await doc.fonts.ready;
+        }
     } catch (_) {}
 
     await new Promise(resolve => requestAnimationFrame(() => resolve()));
     await new Promise(resolve => requestAnimationFrame(() => resolve()));
 }
 
-function generateFileName() {
-    const date = new Date();
-    const formattedDate = date.toISOString().slice(0, 10);
-
-    const month =
-        document.getElementById('month')?.value ||
-        document.getElementById('program_month')?.value ||
-        'Month';
-
-    const department =
-        document.getElementById('department')?.value ||
-        document.querySelector('.department')?.value ||
-        'Department';
-
-    const cleanMonth = String(month).replace(/[^a-zA-Z0-9]/g, '_');
-    const cleanDept = String(department).replace(/[^a-zA-Z0-9]/g, '_');
-
-    return `REPORT_${cleanDept}_${cleanMonth}_${formattedDate}.pdf`;
-}
-
-function showLoadingIndicator(message = 'Generating PDF...') {
-    let overlay = document.getElementById('pdf-loading-overlay');
-
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'pdf-loading-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        `;
-
-        const loader = document.createElement('div');
-        loader.id = 'pdf-loading-text';
-        loader.style.cssText = `
-            background: white;
-            padding: 20px 40px;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            color: #002060;
-            border-left: 4px solid #002060;
-        `;
-
-        overlay.appendChild(loader);
-        document.body.appendChild(overlay);
-    }
-
-    const loaderText = document.getElementById('pdf-loading-text');
-
-    if (loaderText) {
-        loaderText.textContent = message;
-    }
-}
-
-function hideLoadingIndicator() {
-    const overlay = document.getElementById('pdf-loading-overlay');
-
-    if (overlay) {
-        overlay.remove();
-    }
-}
-
 function escapeHtml(value) {
-    return String(value || '')
+    return String(value)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -1252,4 +1251,4 @@ function escapeHtml(value) {
         .replace(/'/g, '&#039;');
 }
 
-window.downloadAsPDF = downloadAsPDF;
+window.downloadPDF = downloadPDF;

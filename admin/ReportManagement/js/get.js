@@ -697,7 +697,7 @@ function getViewPath(report, row) {
             "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
             "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
             "evaluation_reports": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
-            "cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/cert_appearenceview/cert_appearenceview.php",
+            "cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coaview/coaview.php",
             "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
             "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
             "default": "/admin/ReportManagement/actions/admin_view/defaultview/view.php"

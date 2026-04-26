@@ -19,6 +19,7 @@ async function downloadCertificatePDF() {
         await loadPdfDependencies();
 
         const certificateContainer = document.querySelector('.certificate-container');
+
         if (!certificateContainer) {
             throw new Error('Certificate container not found');
         }
@@ -42,16 +43,15 @@ async function downloadCertificatePDF() {
         const contentWidthMm = pageWidthMm - marginLeftMm - marginRightMm;
         const contentHeightMm = pageHeightMm - marginTopMm - marginBottomMm;
 
-        // Fixed render width prevents right-side overflow
         const renderWidthPx = 1000;
+        const scale = 2;
+
         const pxPerMm = renderWidthPx / contentWidthMm;
         const pageInnerHeightPx = Math.floor(contentHeightMm * pxPerMm);
 
-        // Clone and sync values
         const sourceClone = certificateContainer.cloneNode(true);
         syncCertificateValues(certificateContainer, sourceClone);
 
-        // Hidden workspace
         workspace = document.createElement('div');
         workspace.id = 'pdf-workspace';
         workspace.style.cssText = `
@@ -59,7 +59,7 @@ async function downloadCertificatePDF() {
             left: -20000px;
             top: 0;
             width: ${renderWidthPx}px;
-            background: #fff;
+            background: #ffffff;
             z-index: -1;
             opacity: 0;
             pointer-events: none;
@@ -69,43 +69,37 @@ async function downloadCertificatePDF() {
         runtimeStyle = document.createElement('style');
         runtimeStyle.setAttribute('data-pdf-runtime', 'true');
         runtimeStyle.textContent = `
-            #pdf-workspace, #pdf-workspace * {
-                box-sizing: border-box;
+            #pdf-workspace,
+            #pdf-workspace * {
+                box-sizing: border-box !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
             #pdf-workspace {
-                font-family: Arial, sans-serif;
-                color: #000;
-                background: #fff;
-            }
-
-            #pdf-workspace .pdf-measure-page,
-            #pdf-workspace .pdf-render-body-only {
-                width: ${renderWidthPx}px;
-                background: #fff;
-                overflow: hidden;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
+                width: ${renderWidthPx}px !important;
+                font-family: Arial, sans-serif !important;
+                color: #000 !important;
+                background: #fff !important;
             }
 
             #pdf-workspace .pdf-header,
             #pdf-workspace .pdf-footer,
-            #pdf-workspace .pdf-render-body {
-                width: 100%;
+            #pdf-workspace .pdf-body-full {
+                width: ${renderWidthPx}px !important;
+                max-width: ${renderWidthPx}px !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #fff !important;
                 border: none !important;
                 outline: none !important;
                 box-shadow: none !important;
+                overflow: visible !important;
             }
 
             #pdf-workspace .certificate-container {
-                width: 100% !important;
-                max-width: none !important;
+                width: ${renderWidthPx}px !important;
+                max-width: ${renderWidthPx}px !important;
                 min-height: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -113,6 +107,7 @@ async function downloadCertificatePDF() {
                 border: none !important;
                 outline: none !important;
                 box-shadow: none !important;
+                overflow: visible !important;
             }
 
             #pdf-workspace header,
@@ -125,110 +120,96 @@ async function downloadCertificatePDF() {
                 box-shadow: none !important;
             }
 
-            /* Force content to fit A4 width cleanly */
-            #pdf-workspace .certificate-container > * {
-                max-width: 100% !important;
-            }
-
             #pdf-workspace .header-content {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 12px;
-                width: 100%;
-                gap: 12px;
-                flex-wrap: nowrap;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                margin-bottom: 12px !important;
+                width: 100% !important;
+                gap: 12px !important;
+                flex-wrap: nowrap !important;
             }
 
             #pdf-workspace .logo-left {
-                height: 90px;
-                width: auto;
-                flex: 0 0 auto;
+                height: 90px !important;
+                width: auto !important;
+                flex: 0 0 auto !important;
             }
 
             #pdf-workspace .logos-right {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-                flex: 0 0 auto;
+                display: flex !important;
+                gap: 20px !important;
+                align-items: center !important;
+                flex: 0 0 auto !important;
             }
 
             #pdf-workspace .logos-right img {
-                height: 80px;
-                width: auto;
-                max-width: 100%;
+                height: 80px !important;
+                width: auto !important;
+                max-width: 100% !important;
             }
 
             #pdf-workspace .college-info {
-                text-align: center;
-                flex: 1 1 auto;
-                padding: 0 10px;
-                min-width: 0;
+                text-align: center !important;
+                flex: 1 1 auto !important;
+                padding: 0 10px !important;
+                min-width: 0 !important;
             }
 
             #pdf-workspace .college-info h1 {
-                font-family: "Times New Roman", Times, serif;
+                font-family: "Times New Roman", Times, serif !important;
                 color: #4f81bd !important;
-                font-size: 26px;
-                margin: 0;
-                font-weight: normal;
-                line-height: 1.2;
+                font-size: 26px !important;
+                margin: 0 !important;
+                font-weight: normal !important;
+                line-height: 1.2 !important;
             }
 
             #pdf-workspace .college-info p {
-                font-size: 11px;
-                margin: 2px 0;
-                color: #333;
-                line-height: 1.3;
+                font-size: 11px !important;
+                margin: 2px 0 !important;
+                color: #333 !important;
+                line-height: 1.3 !important;
             }
 
             #pdf-workspace .college-info a {
-                font-size: 13px;
+                font-size: 13px !important;
                 color: #0000EE !important;
-                text-decoration: underline;
-                word-break: break-all;
+                text-decoration: underline !important;
+                word-break: break-all !important;
             }
 
             #pdf-workspace .office-title {
-                text-align: center;
-                font-size: 18px;
+                text-align: center !important;
+                font-size: 18px !important;
                 color: #595959 !important;
-                font-weight: bold;
-                margin: 8px 0 4px 0;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
+                font-weight: bold !important;
+                margin: 8px 0 4px 0 !important;
+                letter-spacing: 0.5px !important;
+                text-transform: uppercase !important;
             }
 
             #pdf-workspace .double-line {
                 border-top: 4px double #4f81bd !important;
-                margin-bottom: 18px;
+                margin-bottom: 18px !important;
             }
 
-            #pdf-workspace h1,
-            #pdf-workspace h2,
-            #pdf-workspace h3,
-            #pdf-workspace h4,
-            #pdf-workspace h5,
-            #pdf-workspace h6,
-            #pdf-workspace p,
-            #pdf-workspace section,
-            #pdf-workspace table,
-            #pdf-workspace .signatures,
-            #pdf-workspace .signature-block,
-            #pdf-workspace .approvals-container,
-            #pdf-workspace .admin-block,
-            #pdf-workspace .document-info {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
+            #pdf-workspace h1 {
+                font-family: "Century Gothic", Arial, sans-serif !important;
+                font-size: 11px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                letter-spacing: 4px !important;
+                margin: 15px 0 !important;
+            }
+
+            #pdf-workspace img {
+                max-width: 100% !important;
+                height: auto !important;
             }
 
             #pdf-workspace table {
                 max-width: 100% !important;
-            }
-
-            #pdf-workspace img {
-                max-width: 100%;
-                height: auto;
             }
 
             #pdf-workspace .footer-bottom {
@@ -260,69 +241,175 @@ async function downloadCertificatePDF() {
                 object-fit: contain !important;
             }
 
+            /* ===== DOCUMENT INFO TABLE FIX ===== */
+            #pdf-workspace .document-info {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: 305px !important;
+                max-width: 305px !important;
+                margin-top: 50px !important;
+                margin-left: 0 !important;
+                margin-right: auto !important;
+                clear: both !important;
+                background: #fff !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            #pdf-workspace .doc-header {
+                display: table !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: 305px !important;
+                max-width: 305px !important;
+                border-collapse: collapse !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 11px !important;
+                color: #000 !important;
+                background: #fff !important;
+                border: 1px solid #d1d1d1 !important;
+                margin-left: 0 !important;
+                margin-right: auto !important;
+            }
+
+            #pdf-workspace .doc-header tbody {
+                display: table-row-group !important;
+            }
+
+            #pdf-workspace .doc-header tr {
+                display: table-row !important;
+            }
+
+            #pdf-workspace .doc-header td {
+                display: table-cell !important;
+                border: 1px solid #d1d1d1 !important;
+                padding: 4px 8px !important;
+                vertical-align: middle !important;
+                font-size: 11px !important;
+                line-height: 1.2 !important;
+            }
+
             #pdf-workspace .doc-header td.label {
+                width: 100px !important;
                 background-color: #002060 !important;
-                color: white !important;
+                color: #ffffff !important;
+                font-weight: bold !important;
+                text-align: left !important;
+                white-space: nowrap !important;
+            }
+
+            #pdf-workspace .doc-header td:nth-child(2) {
+                width: 10px !important;
+                padding: 0 2px !important;
+                text-align: center !important;
+                font-weight: bold !important;
+                color: #000 !important;
+                background: #fff !important;
+            }
+
+            #pdf-workspace .doc-header td.value {
+                width: 170px !important;
+                min-width: 170px !important;
+                text-align: left !important;
+                color: #333 !important;
+                background: #fff !important;
+            }
+
+            #pdf-workspace .doc-header td.value input,
+            #pdf-workspace .doc-header td.value p {
+                display: block !important;
+                width: 100% !important;
+                min-height: 12px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                outline: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 11px !important;
+                color: #333 !important;
+                line-height: 1.2 !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
             }
         `;
         document.head.appendChild(runtimeStyle);
 
         await waitForImages(sourceClone);
 
-        // Extract header/footer/body from the cloned layout
         const headers = [...sourceClone.querySelectorAll('header')];
         const footer = sourceClone.querySelector('footer');
 
-        const headerHTML = headers.map(h => h.outerHTML).join('');
+        const headerHTML = headers.map(header => header.outerHTML).join('');
         const footerHTML = footer ? footer.outerHTML : '';
 
-        // Remove header/footer from the body clone so they do not duplicate
-        headers.forEach(h => h.remove());
+        headers.forEach(header => header.remove());
         if (footer) footer.remove();
 
-        // Measure header/footer heights
-        const measurePage = document.createElement('div');
-        measurePage.className = 'pdf-measure-page';
+        const pdfHeader = document.createElement('div');
+        pdfHeader.className = 'pdf-header';
+        pdfHeader.innerHTML = headerHTML;
 
-        const measureHeader = document.createElement('div');
-        measureHeader.className = 'pdf-header';
-        measureHeader.innerHTML = headerHTML;
+        const pdfFooter = document.createElement('div');
+        pdfFooter.className = 'pdf-footer';
+        pdfFooter.innerHTML = footerHTML;
 
-        const measureFooter = document.createElement('div');
-        measureFooter.className = 'pdf-footer';
-        measureFooter.innerHTML = footerHTML;
+        const pdfBodyFull = document.createElement('div');
+        pdfBodyFull.className = 'pdf-body-full';
+        pdfBodyFull.appendChild(sourceClone);
 
-        measurePage.appendChild(measureHeader);
-        measurePage.appendChild(measureFooter);
-        workspace.appendChild(measurePage);
+        workspace.appendChild(pdfHeader);
+        workspace.appendChild(pdfFooter);
+        workspace.appendChild(pdfBodyFull);
 
-        const headerHeightPx = Math.ceil(measureHeader.offsetHeight);
-        const footerHeightPx = Math.ceil(measureFooter.offsetHeight);
+        await waitForImages(workspace);
+        await delay(300);
+
+        const headerHeightPx = Math.ceil(pdfHeader.offsetHeight);
+        const footerHeightPx = Math.ceil(pdfFooter.offsetHeight);
         const bodyAvailablePx = pageInnerHeightPx - headerHeightPx - footerHeightPx;
 
         if (bodyAvailablePx <= 120) {
             throw new Error('Header/footer are too large for the page.');
         }
 
-        // Render header/footer once
-        const headerCanvas = await html2canvas(measureHeader, {
-            scale: 2,
+        const headerCanvas = await html2canvas(pdfHeader, {
+            scale,
             useCORS: true,
+            allowTaint: true,
             backgroundColor: '#ffffff',
-            width: measureHeader.scrollWidth,
-            height: measureHeader.scrollHeight,
+            width: renderWidthPx,
+            height: pdfHeader.scrollHeight,
             scrollX: 0,
-            scrollY: 0
+            scrollY: 0,
+            windowWidth: renderWidthPx
         });
 
-        const footerCanvas = await html2canvas(measureFooter, {
-            scale: 2,
+        const footerCanvas = await html2canvas(pdfFooter, {
+            scale,
             useCORS: true,
+            allowTaint: true,
             backgroundColor: '#ffffff',
-            width: measureFooter.scrollWidth,
-            height: measureFooter.scrollHeight,
+            width: renderWidthPx,
+            height: pdfFooter.scrollHeight,
             scrollX: 0,
-            scrollY: 0
+            scrollY: 0,
+            windowWidth: renderWidthPx
+        });
+
+        const bodyCanvas = await html2canvas(pdfBodyFull, {
+            scale,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            width: renderWidthPx,
+            height: pdfBodyFull.scrollHeight,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: renderWidthPx,
+            windowHeight: pdfBodyFull.scrollHeight
         });
 
         const headerImg = headerCanvas.toDataURL('image/jpeg', 1.0);
@@ -330,43 +417,48 @@ async function downloadCertificatePDF() {
 
         const headerHeightMm = headerHeightPx / pxPerMm;
         const footerHeightMm = footerHeightPx / pxPerMm;
-        const bodyHeightMm = bodyAvailablePx / pxPerMm;
 
-        // Split body into PDF pages
-        const pageSegments = buildPageSegments(sourceClone, bodyAvailablePx, workspace);
+        const scaledBodyAvailablePx = Math.floor(bodyAvailablePx * scale);
+        const totalBodyHeightPx = bodyCanvas.height;
 
-        for (let i = 0; i < pageSegments.length; i++) {
-            const bodyPage = document.createElement('div');
-            bodyPage.className = 'pdf-render-body-only';
-            bodyPage.style.height = `${bodyAvailablePx}px`;
+        let sourceY = 0;
+        let pageIndex = 0;
 
-            const bodyWrap = document.createElement('div');
-            bodyWrap.className = 'pdf-render-body';
+        while (sourceY < totalBodyHeightPx) {
+            const sliceHeight = Math.min(
+                scaledBodyAvailablePx,
+                totalBodyHeightPx - sourceY
+            );
 
-            pageSegments[i].forEach(node => {
-                bodyWrap.appendChild(node.cloneNode(true));
-            });
+            const sliceCanvas = document.createElement('canvas');
+            sliceCanvas.width = bodyCanvas.width;
+            sliceCanvas.height = sliceHeight;
 
-            bodyPage.appendChild(bodyWrap);
-            workspace.appendChild(bodyPage);
+            const ctx = sliceCanvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
 
-            const bodyCanvas = await html2canvas(bodyPage, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                width: bodyPage.scrollWidth,
-                height: bodyPage.scrollHeight,
-                scrollX: 0,
-                scrollY: 0
-            });
+            ctx.drawImage(
+                bodyCanvas,
+                0,
+                sourceY,
+                bodyCanvas.width,
+                sliceHeight,
+                0,
+                0,
+                bodyCanvas.width,
+                sliceHeight
+            );
 
-            const bodyImg = bodyCanvas.toDataURL('image/jpeg', 1.0);
+            const sliceImg = sliceCanvas.toDataURL('image/jpeg', 1.0);
 
-            if (i > 0) {
+            const actualSliceHeightPx = sliceHeight / scale;
+            const actualSliceHeightMm = actualSliceHeightPx / pxPerMm;
+
+            if (pageIndex > 0) {
                 pdf.addPage();
             }
 
-            // Header
             pdf.addImage(
                 headerImg,
                 'JPEG',
@@ -376,17 +468,15 @@ async function downloadCertificatePDF() {
                 headerHeightMm
             );
 
-            // Body
             pdf.addImage(
-                bodyImg,
+                sliceImg,
                 'JPEG',
                 marginLeftMm,
                 marginTopMm + headerHeightMm,
                 contentWidthMm,
-                bodyHeightMm
+                actualSliceHeightMm
             );
 
-            // Footer pinned to the bottom on every page
             pdf.addImage(
                 footerImg,
                 'JPEG',
@@ -396,11 +486,17 @@ async function downloadCertificatePDF() {
                 footerHeightMm
             );
 
-            workspace.removeChild(bodyPage);
+            sourceY += scaledBodyAvailablePx;
+            pageIndex++;
         }
 
-        const filename = `Certificate_of_Appearance_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`;
+        const filename = `Certificate_of_Appearance_${new Date()
+            .toISOString()
+            .slice(0, 19)
+            .replace(/:/g, '-')}.pdf`;
+
         pdf.save(filename);
+
     } catch (error) {
         console.error('PDF generation error:', error);
         alert('Error generating PDF. Please try again.');
@@ -420,92 +516,61 @@ async function downloadCertificatePDF() {
     }
 }
 
-function buildPageSegments(bodyRoot, bodyAvailablePx, workspace) {
-    const children = [...bodyRoot.children];
-    const pages = [];
-    let currentPageNodes = [];
-    let currentHeight = 0;
-
-    const measureHost = document.createElement('div');
-    measureHost.className = 'pdf-render-body';
-    workspace.appendChild(measureHost);
-
-    const measureNodeHeight = (node) => {
-        measureHost.innerHTML = '';
-        measureHost.appendChild(node.cloneNode(true));
-        return Math.ceil(measureHost.offsetHeight);
-    };
-
-    const pushCurrentPage = () => {
-        if (currentPageNodes.length) {
-            pages.push(currentPageNodes);
-            currentPageNodes = [];
-            currentHeight = 0;
-        }
-    };
-
-    const addNode = (node, nodeHeight) => {
-        currentPageNodes.push(node.cloneNode(true));
-        currentHeight += nodeHeight;
-    };
-
-    for (const child of children) {
-        const nodeHeight = measureNodeHeight(child);
-
-        if (currentHeight > 0 && currentHeight + nodeHeight > bodyAvailablePx) {
-            pushCurrentPage();
-        }
-
-        addNode(child, nodeHeight);
-    }
-
-    if (currentPageNodes.length) {
-        pages.push(currentPageNodes);
-    }
-
-    if (!pages.length) {
-        pages.push([]);
-    }
-
-    if (measureHost.parentNode) {
-        measureHost.parentNode.removeChild(measureHost);
-    }
-
-    return pages;
-}
-
 function syncCertificateValues(source, clone) {
-    const originalInputs = source.querySelectorAll('input[type="text"], input[type="date"], input:not([type]), textarea');
-    const clonedInputs = clone.querySelectorAll('input[type="text"], input[type="date"], input:not([type]), textarea');
+    const originalFields = source.querySelectorAll('input, textarea, select');
+    const clonedFields = clone.querySelectorAll('input, textarea, select');
 
-    originalInputs.forEach((original, index) => {
-        const target = clonedInputs[index];
+    originalFields.forEach((original, index) => {
+        const target = clonedFields[index];
+
         if (!target) return;
 
-        if (target.tagName.toLowerCase() === 'textarea') {
-            target.value = original.value;
-            target.textContent = original.value;
+        const tag = target.tagName.toLowerCase();
+
+        if (tag === 'textarea') {
+            target.value = original.value || '';
+            target.textContent = original.value || '';
+        } else if (tag === 'select') {
+            target.value = original.value || '';
+
+            [...target.options].forEach(option => {
+                option.selected = option.value === original.value;
+            });
+        } else if (target.type === 'checkbox' || target.type === 'radio') {
+            target.checked = original.checked;
+
+            if (original.checked) {
+                target.setAttribute('checked', 'checked');
+            } else {
+                target.removeAttribute('checked');
+            }
         } else {
-            target.value = original.value;
+            target.value = original.value || '';
             target.setAttribute('value', original.value || '');
         }
     });
 
-    const contentSelectors = [
+    const textSelectors = [
         '#created_by_name',
         '#dean',
         '#ces_head',
         '#vp_acad',
         '#vp_admin',
-        '#school_president'
+        '#school_president',
+        '.document_type'
     ];
 
-    contentSelectors.forEach((selector) => {
-        const original = source.querySelector(selector);
-        const target = clone.querySelector(selector);
-        if (original && target) {
-            target.textContent = original.textContent;
-        }
+    textSelectors.forEach(selector => {
+        const originals = source.querySelectorAll(selector);
+        const targets = clone.querySelectorAll(selector);
+
+        originals.forEach((original, index) => {
+            const target = targets[index];
+
+            if (target) {
+                target.textContent = original.textContent || '';
+            }
+        });
     });
 }
 
@@ -517,17 +582,21 @@ function waitForImages(root) {
     }
 
     return Promise.all(
-        images.map((img) => {
-            if (img.complete) {
+        images.map(img => {
+            if (img.complete && img.naturalWidth !== 0) {
                 return Promise.resolve();
             }
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 img.addEventListener('load', resolve, { once: true });
                 img.addEventListener('error', resolve, { once: true });
             });
         })
     );
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function loadPdfDependencies() {
@@ -559,7 +628,11 @@ function loadScript(src) {
             }
 
             existing.addEventListener('load', () => resolve(), { once: true });
-            existing.addEventListener('error', () => reject(new Error(`Failed to load: ${src}`)), { once: true });
+            existing.addEventListener(
+                'error',
+                () => reject(new Error(`Failed to load: ${src}`)),
+                { once: true }
+            );
             return;
         }
 
