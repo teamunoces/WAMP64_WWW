@@ -94,7 +94,11 @@ body {
     width: 100%;
 }
 
-.logo-left {
+.logo-left  {
+    height: 90px;
+    width: auto;
+}
+.logo-left2  {
     height: 90px;
     width: auto;
 }

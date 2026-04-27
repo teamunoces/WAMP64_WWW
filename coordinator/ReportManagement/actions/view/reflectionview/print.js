@@ -182,6 +182,11 @@ async function printReport() {
             height: 90px;
             width: auto;
         }
+        .logo-left2 {
+            height: 80px;
+            width: auto;
+        }
+
 
         .logos-right {
             display: flex;
@@ -794,6 +799,9 @@ function buildPrintHeaderHtml() {
     const leftLogo =
         document.querySelector('.logo-left')?.src ||
         '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
+    const left2Logo =
+        document.querySelector('.logo-left2')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png';
 
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
@@ -822,6 +830,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <img src="${escapeHtml(left2Logo)}" alt="CES logo" class="logo-left2">
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">${rightLogoHtml}</div>
             </div>

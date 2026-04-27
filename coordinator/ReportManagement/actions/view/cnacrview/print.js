@@ -217,9 +217,15 @@ function printReport() {
                 flex: 0 0 auto;
             }
 
+            .logo-left2 {
+                height: 80px;
+                width: auto;
+                flex: 0 0 auto;
+            }
+
             .logos-right {
                 display: flex;
-                gap: 20px;
+                gap: 15px;
                 align-items: center;
                 flex: 0 0 auto;
             }

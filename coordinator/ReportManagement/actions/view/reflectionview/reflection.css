@@ -57,6 +57,11 @@ body {
         width: auto;
     }
 
+    .logo-left2 {
+        height: 80px;
+        width: auto;
+    }
+
     .logos-right {
         display: flex;
         gap: 20px;

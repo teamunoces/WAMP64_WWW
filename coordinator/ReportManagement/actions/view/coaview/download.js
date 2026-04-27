@@ -135,6 +135,11 @@ async function downloadCertificatePDF() {
                 width: auto !important;
                 flex: 0 0 auto !important;
             }
+            #pdf-workspace .logo-left2 {
+                height: 80px !important;
+                width: auto !important;
+                flex: 0 0 auto !important;
+            }
 
             #pdf-workspace .logos-right {
                 display: flex !important;
@@ -196,11 +201,11 @@ async function downloadCertificatePDF() {
 
             #pdf-workspace h1 {
                 font-family: "Century Gothic", Arial, sans-serif !important;
-                font-size: 11px !important;
+                font-size: 25px !important;
                 font-weight: bold !important;
                 text-align: center !important;
                 letter-spacing: 4px !important;
-                margin: 15px 0 !important;
+                margin: 15px 30px !important;
             }
 
             #pdf-workspace img {

@@ -29,11 +29,9 @@ async function downloadAsPDF() {
             format: 'a4'
         });
 
-        // A4 size
         const pageWidthMm = 210;
         const pageHeightMm = 297;
 
-        // PDF margins
         const marginTopMm = 10;
         const marginBottomMm = 10;
         const marginLeftMm = 8;
@@ -42,16 +40,13 @@ async function downloadAsPDF() {
         const contentWidthMm = pageWidthMm - marginLeftMm - marginRightMm;
         const contentHeightMm = pageHeightMm - marginTopMm - marginBottomMm;
 
-        // Render width used for DOM measurement and html2canvas
         const renderWidthPx = 1000;
         const pxPerMm = renderWidthPx / contentWidthMm;
         const pageInnerHeightPx = Math.floor(contentHeightMm * pxPerMm);
 
-        // Clone layout
         const sourceClone = evaluationContainer.cloneNode(true);
         fixFormStatesForPDF(sourceClone);
 
-        // Extract header, form, and footer from the layout
         const headerElements = [...sourceClone.querySelectorAll('header')];
         const footerElement = sourceClone.querySelector('footer');
         const formElement = sourceClone.querySelector('#evaluationForm');
@@ -63,7 +58,6 @@ async function downloadAsPDF() {
         const headerHTML = headerElements.map(header => header.outerHTML).join('');
         const footerHTML = footerElement ? footerElement.outerHTML : '';
 
-        // Hidden workspace for measurement/rendering
         workspace = document.createElement('div');
         workspace.id = 'pdf-workspace';
         workspace.style.cssText = `
@@ -80,8 +74,10 @@ async function downloadAsPDF() {
 
         styleEl = document.createElement('style');
         styleEl.setAttribute('data-pdf-runtime', 'true');
+
         styleEl.textContent = `
-            #pdf-workspace, #pdf-workspace * {
+            #pdf-workspace,
+            #pdf-workspace * {
                 box-sizing: border-box;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -110,6 +106,7 @@ async function downloadAsPDF() {
             #pdf-workspace .pdf-footer,
             #pdf-workspace .pdf-render-body {
                 width: 100%;
+                max-width: 100%;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #fff !important;
@@ -118,19 +115,11 @@ async function downloadAsPDF() {
                 box-shadow: none !important;
             }
 
-            #pdf-workspace .evaluation-container {
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: #fff !important;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
+            #pdf-workspace .evaluation-container,
             #pdf-workspace #evaluationForm {
                 width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #fff !important;
@@ -138,6 +127,7 @@ async function downloadAsPDF() {
                 outline: none !important;
                 box-shadow: none !important;
                 pointer-events: none;
+                overflow: hidden !important;
             }
 
             #pdf-workspace header,
@@ -145,9 +135,12 @@ async function downloadAsPDF() {
             #pdf-workspace .header-content,
             #pdf-workspace .footer-bottom,
             #pdf-workspace .footer-logos {
+                width: 100% !important;
+                max-width: 100% !important;
                 border: none !important;
                 outline: none !important;
                 box-shadow: none !important;
+                overflow: hidden !important;
             }
 
             #pdf-workspace .header-content {
@@ -163,7 +156,17 @@ async function downloadAsPDF() {
             #pdf-workspace .logo-left {
                 height: 90px;
                 width: auto;
+                max-width: 18%;
                 flex: 0 0 auto;
+                object-fit: contain;
+            }
+
+             #pdf-workspace .logo-left2 {
+                height: 80px;
+                width: auto;
+                max-width: 18%;
+                flex: 0 0 auto;
+                object-fit: contain;
             }
 
             #pdf-workspace .logos-right {
@@ -171,17 +174,23 @@ async function downloadAsPDF() {
                 gap: 20px;
                 align-items: center;
                 flex: 0 0 auto;
+                max-width: 25%;
             }
 
             #pdf-workspace .logos-right img {
                 height: 80px;
                 width: auto;
+                max-width: 100%;
+                object-fit: contain;
             }
 
             #pdf-workspace .college-info {
                 text-align: center;
                 flex: 1 1 auto;
+                min-width: 0;
                 padding: 0 10px;
+                word-break: break-word;
+                overflow-wrap: break-word;
             }
 
             #pdf-workspace .college-info h1 {
@@ -204,7 +213,8 @@ async function downloadAsPDF() {
                 font-size: 13px;
                 color: #0000EE !important;
                 text-decoration: underline;
-                word-break: break-all;
+                word-break: break-word;
+                overflow-wrap: break-word;
             }
 
             #pdf-workspace .office-title {
@@ -246,6 +256,7 @@ async function downloadAsPDF() {
                 border: none !important;
                 border-bottom: 1px solid #000 !important;
                 flex-grow: 1;
+                min-width: 0;
                 background: transparent !important;
                 font-family: inherit;
                 font-size: inherit;
@@ -257,24 +268,42 @@ async function downloadAsPDF() {
                 justify-content: space-between;
                 margin: 20px 0;
                 flex-wrap: wrap;
+                width: 100%;
             }
 
             #pdf-workspace .checkbox-grid .column {
                 width: 48%;
+                min-width: 0;
             }
 
             #pdf-workspace .checkbox-grid label {
                 display: block;
                 margin-bottom: 5px;
+                word-break: break-word;
+                overflow-wrap: break-word;
             }
 
+            #pdf-workspace table,
             #pdf-workspace .legend-table,
             #pdf-workspace .evaluation-table,
             #pdf-workspace .doc-header {
-                width: 100%;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
                 border-collapse: collapse;
+                table-layout: fixed !important;
                 margin-bottom: 20px;
                 background: #fff;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+
+            #pdf-workspace th,
+            #pdf-workspace td {
+                max-width: 100% !important;
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: normal !important;
             }
 
             #pdf-workspace .legend-table th,
@@ -294,7 +323,7 @@ async function downloadAsPDF() {
             }
 
             #pdf-workspace .legend-table td.score-cell {
-                width: 40px;
+                width: 40px !important;
                 text-align: center;
                 font-weight: bold;
                 vertical-align: middle;
@@ -305,7 +334,7 @@ async function downloadAsPDF() {
             }
 
             #pdf-workspace .evaluation-table .num-col {
-                width: 40px;
+                width: 40px !important;
                 text-align: center;
             }
 
@@ -321,25 +350,65 @@ async function downloadAsPDF() {
             }
 
             #pdf-workspace .radio-cell {
+                width: 43px !important;
+                max-width: 43px !important;
                 text-align: center;
                 vertical-align: middle;
             }
 
-            #pdf-workspace input[type="radio"] {
-                -webkit-appearance: radio !important;
-                appearance: radio !important;
-                opacity: 1 !important;
-                display: inline-block !important;
-                transform: scale(1.1) !important;
-                margin: 0 4px !important;
+            /* RED RADIO AND CHECKBOX MARKS */
+            #pdf-workspace input[type="radio"],
+            #pdf-workspace input[type="checkbox"] {
+                -webkit-appearance: none !important;
+                appearance: none !important;
                 width: 16px !important;
                 height: 16px !important;
-                accent-color: #dc2626 !important;
+                min-width: 16px !important;
+                min-height: 16px !important;
+                border: 2px solid #dc2626 !important;
+                display: inline-block !important;
+                position: relative !important;
+                background: #ffffff !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                vertical-align: middle !important;
                 color: #dc2626 !important;
+                accent-color: #dc2626 !important;
+            }
+
+            #pdf-workspace input[type="radio"] {
+                border-radius: 50% !important;
             }
 
             #pdf-workspace input[type="checkbox"] {
-                accent-color: #dc2626 !important;
+                border-radius: 3px !important;
+            }
+
+            #pdf-workspace input[type="radio"]:checked::after,
+            #pdf-workspace input[type="radio"][checked]::after,
+            #pdf-workspace input[type="radio"][data-checked="true"]::after {
+                content: "";
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 6px;
+                height: 6px;
+                background: #dc2626 !important;
+                border: 1px solid #dc2626 !important;
+                border-radius: 50%;
+            }
+
+            #pdf-workspace input[type="checkbox"]:checked::after,
+            #pdf-workspace input[type="checkbox"][checked]::after,
+            #pdf-workspace input[type="checkbox"][data-checked="true"]::after {
+                content: "✓";
+                position: absolute;
+                top: -5px;
+                left: 1px;
+                font-size: 18px;
+                line-height: 18px;
+                font-weight: bold;
+                color: #dc2626 !important;
             }
 
             #pdf-workspace .signature-section {
@@ -359,6 +428,7 @@ async function downloadAsPDF() {
                 border-bottom: 1px solid #000 !important;
                 background: transparent !important;
                 width: 280px;
+                max-width: 100%;
                 font-family: inherit;
                 font-size: inherit;
                 margin-left: 10px;
@@ -368,10 +438,11 @@ async function downloadAsPDF() {
             #pdf-workspace .document-info {
                 margin-top: 50px;
                 width: 30%;
+                max-width: 305px;
             }
 
             #pdf-workspace .doc-header {
-                width: auto;
+                width: auto !important;
                 margin-right: auto;
                 font-family: Arial, sans-serif;
                 font-size: 11px;
@@ -385,7 +456,7 @@ async function downloadAsPDF() {
                 font-weight: bold;
                 padding: 4px 8px;
                 text-align: left;
-                white-space: nowrap;
+                white-space: nowrap !important;
             }
 
             #pdf-workspace .doc-header td.value {
@@ -433,9 +504,10 @@ async function downloadAsPDF() {
                 padding: 0 !important;
             }
 
-            #pdf-workspace .footer-logos img {
+            #pdf-workspace .footer-logos img,
+            #pdf-workspace img {
                 display: block;
-                width: 100%;
+                width: auto;
                 max-width: 100%;
                 height: auto;
                 margin: 0 !important;
@@ -445,10 +517,14 @@ async function downloadAsPDF() {
                 box-shadow: none !important;
                 object-fit: contain;
             }
+
+            #pdf-workspace .footer-logos img {
+                width: 100% !important;
+            }
         `;
+
         document.head.appendChild(styleEl);
 
-        // Measure header and footer once
         const measurePage = document.createElement('div');
         measurePage.className = 'pdf-measure-page';
 
@@ -464,6 +540,8 @@ async function downloadAsPDF() {
         measurePage.appendChild(measureFooter);
         workspace.appendChild(measurePage);
 
+        await waitForImages(measurePage);
+
         const headerHeightPx = Math.ceil(measureHeader.offsetHeight);
         const footerHeightPx = Math.ceil(measureFooter.offsetHeight);
         const bodyAvailablePx = pageInnerHeightPx - headerHeightPx - footerHeightPx;
@@ -472,7 +550,6 @@ async function downloadAsPDF() {
             throw new Error('Header/footer are too large for the page.');
         }
 
-        // Render header/footer to images once
         const headerCanvas = await html2canvas(measureHeader, {
             scale: 2,
             useCORS: true,
@@ -499,10 +576,8 @@ async function downloadAsPDF() {
         const headerHeightMm = headerHeightPx / pxPerMm;
         const footerHeightMm = footerHeightPx / pxPerMm;
 
-        // Build body segments only
         const pageSegments = buildPageSegments(formElement, bodyAvailablePx, workspace);
 
-        // Render body page by page, then overlay header/footer once
         for (let i = 0; i < pageSegments.length; i++) {
             const bodyPage = document.createElement('div');
             bodyPage.className = 'pdf-render-body-only';
@@ -517,6 +592,8 @@ async function downloadAsPDF() {
 
             bodyPage.appendChild(bodyWrap);
             workspace.appendChild(bodyPage);
+
+            await waitForImages(bodyPage);
 
             const bodyCanvas = await html2canvas(bodyPage, {
                 scale: 2,
@@ -535,7 +612,6 @@ async function downloadAsPDF() {
                 pdf.addPage();
             }
 
-            // Body only
             pdf.addImage(
                 bodyImg,
                 'JPEG',
@@ -545,7 +621,6 @@ async function downloadAsPDF() {
                 bodyHeightMm
             );
 
-            // Fixed header at top
             pdf.addImage(
                 headerImg,
                 'JPEG',
@@ -555,7 +630,6 @@ async function downloadAsPDF() {
                 headerHeightMm
             );
 
-            // Fixed footer at bottom
             pdf.addImage(
                 footerImg,
                 'JPEG',
@@ -580,9 +654,11 @@ async function downloadAsPDF() {
         if (workspace && workspace.parentNode) {
             workspace.parentNode.removeChild(workspace);
         }
+
         if (styleEl && styleEl.parentNode) {
             styleEl.parentNode.removeChild(styleEl);
         }
+
         if (loadingMsg.parentNode) {
             loadingMsg.parentNode.removeChild(loadingMsg);
         }
@@ -699,6 +775,7 @@ function splitEvaluationTable(table, bodyAvailablePx, workspace) {
         if (currentTbody.children.length > 0) {
             chunks.push(currentTable.cloneNode(true));
         }
+
         currentTable = createTableSkeleton();
         currentTbody = currentTable.querySelector('tbody');
     };
@@ -766,11 +843,14 @@ function splitEvaluationTable(table, bodyAvailablePx, workspace) {
 
 function fixFormStatesForPDF(cloneElement) {
     const radios = cloneElement.querySelectorAll('input[type="radio"]');
+
     radios.forEach((radio) => {
         if (radio.checked) {
             radio.setAttribute('checked', 'checked');
+            radio.setAttribute('data-checked', 'true');
         } else {
             radio.removeAttribute('checked');
+            radio.removeAttribute('data-checked');
         }
 
         if (radio.name) {
@@ -779,21 +859,27 @@ function fixFormStatesForPDF(cloneElement) {
 
         radio.style.accentColor = '#dc2626';
         radio.style.color = '#dc2626';
+        radio.style.borderColor = '#dc2626';
     });
 
     const checkboxes = cloneElement.querySelectorAll('input[type="checkbox"]');
+
     checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
             checkbox.setAttribute('checked', 'checked');
+            checkbox.setAttribute('data-checked', 'true');
         } else {
             checkbox.removeAttribute('checked');
+            checkbox.removeAttribute('data-checked');
         }
 
         checkbox.style.accentColor = '#dc2626';
         checkbox.style.color = '#dc2626';
+        checkbox.style.borderColor = '#dc2626';
     });
 
     const inputs = cloneElement.querySelectorAll('input, textarea, select');
+
     inputs.forEach((input) => {
         const tag = input.tagName.toLowerCase();
 
@@ -880,6 +966,27 @@ function loadScript(src) {
     });
 }
 
+function waitForImages(container) {
+    const images = [...container.querySelectorAll('img')];
+
+    if (!images.length) {
+        return Promise.resolve();
+    }
+
+    return Promise.all(
+        images.map((img) => {
+            if (img.complete && img.naturalWidth !== 0) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        })
+    );
+}
+
 function createLoadingMessage() {
     const loadingMsg = document.createElement('div');
     loadingMsg.innerHTML = '<b>Generating PDF...</b>';
@@ -896,6 +1003,7 @@ function createLoadingMessage() {
         text-align: center;
         font-family: Arial, sans-serif;
     `;
+
     return loadingMsg;
 }
 

@@ -243,6 +243,14 @@ async function downloadPDF() {
                 display: block !important;
             }
 
+            .logo-left2 {
+                width: 110px !important;
+                height: auto !important;
+                object-fit: contain !important;
+                flex: 0 0 110px !important;
+                display: block !important;
+            }
+
             .logos-right {
                 display: flex !important;
                 align-items: center !important;

@@ -33,6 +33,7 @@ async function printReport() {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
 
         const leftLogoSrc = document.querySelector('.logo-left')?.src || '';
+         const left2LogoSrc = document.querySelector('.logo-left2')?.src || '';
         const rightLogoSrc = document.querySelector('.logos-right img')?.src || '';
         const footerLogoSrc =
             document.querySelector('.footer-bottom img')?.src ||
@@ -141,6 +142,11 @@ async function printReport() {
     }
 
     .logo-left {
+        height: 90px;
+        width: auto;
+        display: block;
+    }
+    .logo-left2 {
         height: 90px;
         width: auto;
         display: block;
@@ -570,6 +576,7 @@ async function printReport() {
                         <div class="print-header-wrap">
                             <div class="header-content">
                                 ${leftLogoSrc ? `<img src="${escapeHtml(leftLogoSrc)}" alt="SMCC Logo" class="logo-left">` : ''}
+                                ${left2LogoSrc ? `<img src="${escapeHtml(left2LogoSrc)}" alt="CES logo" class="logo-left2">` : ''}
                                 <div class="college-info">
                                     <h1>Saint Michael College of Caraga</h1>
                                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>

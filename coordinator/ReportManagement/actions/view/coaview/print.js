@@ -143,6 +143,11 @@ function printReport() {
                     width: auto;
                     flex: 0 0 auto;
                 }
+                .logo-left2 {
+                    height: 80px;
+                    width: auto;
+                    flex: 0 0 auto;
+                }
 
                 .logos-right {
                     display: flex;
@@ -515,6 +520,7 @@ function printReport() {
                                     <header>
                                         <div class="header-content">
                                             <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                                            <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES logo" class="logo-left2">
 
                                             <div class="college-info">
                                                 <h1>Saint Michael College of Caraga</h1>

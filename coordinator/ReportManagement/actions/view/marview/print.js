@@ -1,6 +1,9 @@
 /**
  * print.js - Monthly Accomplishment Report
- * Uses a print table shell so header/footer repeat without overlapping #main_content.
+ * FIXED:
+ * 1. Adds missing MONTHLY ACCOMPLISHMENT REPORT title.
+ * 2. Prevents table/content from overlapping to the right.
+ * 3. Keeps header/footer on every printed page.
  */
 
 async function printReport() {
@@ -28,11 +31,11 @@ async function printReport() {
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Monthly_Accomplishment_Report</title>
+<title>Monthly Accomplishment Report</title>
+
 <style>
     * {
-        box-sizing: border-box;
+        box-sizing: border-box !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
@@ -40,137 +43,96 @@ async function printReport() {
 
     @page {
         size: A4 portrait;
-        margin: 12mm 10mm 12mm 10mm;
+        margin: 10mm 8mm 10mm 8mm;
     }
 
-    html, body {
+    html,
+    body {
         margin: 0 !important;
         padding: 0 !important;
-        width: 100%;
+        width: 100% !important;
         background: #fff !important;
-        color: #1a202c;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-        font-size: 11px;
-        line-height: 1.35;
+        color: #000 !important;
+        font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
+        font-size: 9px !important;
+        line-height: 1.25 !important;
         overflow: visible !important;
     }
 
-    body {
-        background: #fff !important;
-    }
-
     #print-container {
-        display: block !important;
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
-        border: none !important;
-        outline: none !important;
+        overflow: visible !important;
         background: #fff !important;
     }
 
     .print-shell {
-        width: 100%;
-        margin: 0 !important;
-        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
         border-collapse: collapse !important;
         border-spacing: 0 !important;
         table-layout: fixed !important;
-        border: none !important;
-        outline: none !important;
-        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .print-shell thead {
-        display: table-header-group;
+        display: table-header-group !important;
     }
 
     .print-shell tfoot {
-        display: table-footer-group;
+        display: table-footer-group !important;
     }
 
     .print-shell tbody {
-        display: table-row-group;
+        display: table-row-group !important;
     }
 
-    .print-shell > thead > tr,
-    .print-shell > tbody > tr,
-    .print-shell > tfoot > tr,
-    .print-shell > thead > tr > td,
-    .print-shell > tbody > tr > td,
-    .print-shell > tfoot > tr > td {
+    .print-shell tr,
+    .print-shell td {
         margin: 0 !important;
         padding: 0 !important;
         border: none !important;
-        outline: none !important;
         vertical-align: top !important;
-        background: #fff !important;
-    }
-
-    .print-header,
-    .print-footer,
-    .print-body {
-        width: 100%;
-        margin: 0 !important;
-        background: #fff !important;
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
     }
 
     .print-header {
-        padding: 0 0 8px 0 !important;
-    }
-
-    .print-footer {
-        padding: 8px 0 0 0 !important;
+        width: 100% !important;
+        padding: 0 0 6px 0 !important;
+        margin: 0 !important;
+        background: #fff !important;
     }
 
     .print-body {
+        width: 100% !important;
+        max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+    }
+
+    .print-footer {
+        width: 100% !important;
+        padding: 6px 0 0 0 !important;
+        margin: 0 !important;
+        background: #fff !important;
     }
 
     .print-content,
-    .print-content * {
-        max-width: 100%;
-    }
-
-    .print-content {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: #fff !important;
-        overflow: visible !important;
-    }
-
     .print-body-wrapper,
-    #main_content,
-    .print-approval-section,
-    .print-document-info-section {
+    #main_content {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
         border: none !important;
         box-shadow: none !important;
-        background: transparent !important;
         overflow: visible !important;
-    }
-
-    #printContent,
-    #printContent > .print-body-wrapper,
-    #printContent > .print-body-wrapper > #main_content,
-    #main_content,
-    #main_content > *:first-child,
-    .print-body-wrapper > *:first-child,
-    .print-body-wrapper > *:first-child *:first-child {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
+        background: #fff !important;
     }
 
     #headerFrame,
@@ -190,347 +152,473 @@ async function printReport() {
     }
 
     .print-page-header {
+        width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
     .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        gap: 10px;
-        flex-wrap: nowrap;
-        margin: 0 0 4px 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin: 0 0 3px 0 !important;
         padding: 0 !important;
     }
 
     .logo-left {
-        height: 56px;
-        width: auto;
-        display: block;
-        flex: 0 0 auto;
+        height: 50px !important;
+        width: auto !important;
+        display: block !important;
+        flex: 0 0 auto !important;
     }
 
     .logos-right {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-        flex: 0 0 auto;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 5px !important;
+        flex: 0 0 auto !important;
     }
 
     .logos-right img {
-        height: 48px;
-        width: auto;
-        display: block;
+        height: 42px !important;
+        width: auto !important;
+        display: block !important;
     }
 
     .college-info {
-        flex: 1 1 auto;
-        text-align: center;
-        padding: 0 6px;
+        flex: 1 1 auto !important;
+        text-align: center !important;
+        padding: 0 5px !important;
     }
 
     .college-info h1 {
-        margin: 0;
-        font-family: "Times New Roman", Times, serif;
-        font-size: 18px;
-        line-height: 1.05;
-        font-weight: normal;
+        margin: 0 !important;
+        font-family: "Times New Roman", Times, serif !important;
+        font-size: 16px !important;
+        line-height: 1.05 !important;
+        font-weight: normal !important;
         color: #4f81bd !important;
+        text-transform: none !important;
+        letter-spacing: 0 !important;
     }
 
     .college-info p {
-        margin: 1px 0;
-        font-size: 10px;
-        line-height: 1.1;
+        margin: 1px 0 !important;
+        font-size: 8.5px !important;
+        line-height: 1.1 !important;
         color: #333 !important;
     }
 
     .college-info a {
-        font-size: 10px;
-        color: #0000EE !important;
-        text-decoration: underline;
-        word-break: break-all;
+        font-size: 8.5px !important;
+        color: #0000ee !important;
+        text-decoration: underline !important;
     }
 
     .office-title {
-        text-align: center;
-        font-size: 14px;
-        font-weight: bold;
+        text-align: center !important;
+        font-size: 11px !important;
+        font-weight: bold !important;
         color: #595959 !important;
-        margin: 1px 0;
-        text-transform: uppercase;
-        letter-spacing: 0.2px;
+        margin: 2px 0 3px 0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+    }
+
+    .report-title {
+        display: block !important;
+        visibility: visible !important;
+        text-align: center !important;
+        font-family: "Century Gothic", Arial, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+        letter-spacing: 1px !important;
+        margin: 5px 0 7px 0 !important;
+        padding: 0 !important;
+        text-transform: uppercase !important;
+        color: #000 !important;
+        line-height: 1.2 !important;
     }
 
     .double-line {
         border-top: 3px double #4f81bd !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 0 6px 0 !important;
+        width: 100% !important;
     }
 
     .print-footer-inner {
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-        width: 100%;
-        min-height: 24px;
+        width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
     .print-footer-logo {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        height: auto;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
         border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        object-fit: contain;
-        page-break-inside: avoid;
-        break-inside: avoid;
+        object-fit: contain !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
-    header h1,
-    #header h1 {
-        text-align: center;
-        text-transform: uppercase;
-        font-size: 1.45rem;
-        color: #2c3e50 !important;
-        margin: 0 0 10px 0;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 6px;
+    table {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
     }
 
     .header-table {
         width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 0 0 12px 0 !important;
-        table-layout: fixed !important;
-    }
-
-    .header-table td.label {
-        width: 30% !important;
-        padding: 6px !important;
-        border: 1px solid #000 !important;
-        font-weight: bold !important;
-        background-color: #ffffff !important;
-        word-break: break-word;
-    }
-
-    .header-table td.input_cell {
-        width: 70% !important;
-        padding: 6px !important;
-        border: 1px solid #000 !important;
-        word-break: break-word;
-    }
-
-    .main-table,
-    table {
-        width: 100% !important;
         max-width: 100% !important;
         border-collapse: collapse !important;
         table-layout: fixed !important;
-        page-break-inside: auto;
-        break-inside: auto;
+        margin: 0 0 10px 0 !important;
     }
 
-    .main-table {
-        margin-top: 0 !important;
-    }
-
-    .main-table th {
-        background-color: #e0e0e0 !important;
-        color: #333 !important;
+    .header-table td {
         border: 1px solid #000 !important;
-        padding: 6px 4px !important;
-        text-align: center;
-        font-weight: bold;
-        font-size: 10px !important;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-    }
-
-    .main-table td {
-        border: 1px solid #000 !important;
-        padding: 6px 4px !important;
-        vertical-align: top;
-        font-size: 10px !important;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-    }
-
-    tr {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        page-break-after: auto;
-    }
-
-    thead {
-        display: table-header-group;
-    }
-
-    tfoot {
-        display: table-footer-group;
-    }
-
-    .main-table td,
-    .main-table th,
-    .header-table td,
-    .document-info td,
-    .doc-header td {
+        padding: 5px !important;
+        font-size: 15px !important;
         word-break: break-word !important;
         overflow-wrap: anywhere !important;
         white-space: normal !important;
     }
 
-    .print-approval-section {
-        margin-top: 8px !important;
-        padding-top: 0 !important;
-        page-break-before: auto !important;
-        page-break-inside: auto !important;
-        break-inside: auto !important;
+    .header-table td.label {
+        width: 30% !important;
+        font-weight: bold !important;
     }
 
-    .approvals-container {
-        page-break-inside: auto !important;
-        break-inside: auto !important;
-        margin-top: 0 !important;
+    .header-table td.input_cell {
+        width: 70% !important;
     }
 
-    .approval-row {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: flex-start !important;
-        gap: 16px;
-        margin: 0 0 14px 0 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    .signature-group {
-        width: 35% !important;
-    }
-
-    .approval-centered {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        margin: 12px 0 0 0 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    .admin-block {
-        text-align: center !important;
-        margin: 12px 0 6px 0 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    .signature-line {
-        border-bottom: 1.5px solid black !important;
-        margin-bottom: 5px !important;
-        min-height: 22px !important;
-    }
-
-    .name-underlined {
-        text-decoration: underline !important;
-    }
-
-    .print-document-info-section {
-        margin-top: 8px !important;
+    .main-table {
         width: 100% !important;
-        display: block !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        clear: both !important;
-    }
-
-    .document-info {
-        width: 34% !important;
-        max-width: 34% !important;
-        margin: 0 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    .doc-header {
-        width: 100% !important;
-        border-collapse: collapse;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: collapse !important;
         table-layout: fixed !important;
-        font-family: Arial, sans-serif;
-        font-size: 10px;
-        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    .doc-header td.label {
-        width: 38% !important;
-        padding: 4px 6px !important;
-        background-color: #002060 !important;
-        color: white !important;
+    .main-table th,
+    .main-table td {
+        border: 1px solid #000 !important;
+        padding: 4px 3px !important;
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+        vertical-align: top !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        white-space: normal !important;
+        hyphens: auto !important;
+    }
+
+    .main-table th {
+        background-color: #e0e0e0 !important;
+        color: #000 !important;
+        text-align: center !important;
         font-weight: bold !important;
-        border: 1px solid #d1d1d1 !important;
-        text-align: left !important;
-        white-space: nowrap !important;
     }
 
-    .doc-header td:nth-child(2) {
-        width: 4% !important;
-        padding: 0 1px !important;
-        font-weight: bold !important;
-        border-top: 1px solid #d1d1d1 !important;
-        border-bottom: 1px solid #d1d1d1 !important;
+    .main-table th:nth-child(1),
+    .main-table td:nth-child(1) {
+        width: 12% !important;
     }
 
-    .doc-header td.value {
-        width: 58% !important;
-        padding: 4px 8px !important;
-        border: 1px solid #d1d1d1 !important;
+    .main-table th:nth-child(2),
+    .main-table td:nth-child(2) {
+        width: 13% !important;
     }
 
-    .document-info,
-    footer,
-    img {
+    .main-table th:nth-child(3),
+    .main-table td:nth-child(3) {
+        width: 13% !important;
+    }
+
+    .main-table th:nth-child(4),
+    .main-table td:nth-child(4) {
+        width: 10% !important;
+    }
+
+    .main-table th:nth-child(5),
+    .main-table td:nth-child(5) {
+        width: 13% !important;
+    }
+
+    .main-table th:nth-child(6),
+    .main-table td:nth-child(6) {
+        width: 13% !important;
+    }
+
+    .main-table th:nth-child(7),
+    .main-table td:nth-child(7) {
+        width: 13% !important;
+    }
+
+    .main-table th:nth-child(8),
+    .main-table td:nth-child(8) {
+        width: 13% !important;
+    }
+
+    tr {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
+
+    thead {
+        display: table-header-group !important;
+    }
+
+    tfoot {
+        display: table-footer-group !important;
+    }
+
+.print-approval-section {
+    margin-top: 18px !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    color: #000 !important;
+}
+
+.approvals-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+}
+
+.approvals-container .label,
+.print-approval-section .label {
+    font-weight: bold !important;
+    text-align: left !important;
+    font-size: 15px !important;
+    margin-bottom: 35px !important;
+    color: #000 !important;
+}
+
+.approval-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 90px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 22px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.signature-group {
+    flex: 0 0 34% !important;
+    max-width: 34% !important;
+    min-width: 34% !important;
+}
+
+.approval-row .signature-group:nth-child(2) {
+    margin-right: 8% !important;
+}
+
+.signature-line {
+    border-bottom: 1.5px solid #000 !important;
+    min-height: 18px !important;
+    margin-bottom: 3px !important;
+    padding-bottom: 1px !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    color: #000 !important;
+}
+
+.title {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+    color: #000 !important;
+}
+
+.title.bold,
+.bold {
+    font-weight: bold !important;
+}
+
+.approval-centered {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 36px 0 0 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.approval-centered .label,
+.approval-centered .left-align {
+    align-self: flex-start !important;
+    width: 100% !important;
+    margin-bottom: 45px !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    font-size: 15px !important;
+}
+
+.admin-block {
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 0 30px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.name-underlined {
+    display: inline-block !important;
+    min-width: 230px !important;
+    text-align: center !important;
+    text-decoration: underline !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+    line-height: 1.15 !important;
+    color: #000 !important;
+}
+
+.admin-block .title {
+    text-align: center !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    margin-top: 2px !important;
+}
+
+.print-document-info-section {
+    margin-top: 12px !important;
+    width: 100% !important;
+    display: block !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    clear: both !important;
+}
+
+/* container (LEFT SIDE LOOK) */
+.document-info {
+    width: 305px !important;   /* fixed like screenshot */
+    max-width: 305px !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+/* table */
+.doc-header {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 11px !important;
+}
+
+/* LEFT LABEL (BLUE) */
+.doc-header td.label {
+    width: 40% !important;
+    padding: 5px 8px !important;
+    background-color: #002060 !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    border: 1px solid #000 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+
+/* COLON */
+.doc-header td:nth-child(2) {
+    width: 5% !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    border-top: 1px solid #000 !important;
+    border-bottom: 1px solid #000 !important;
+}
+
+/* VALUE COLUMN */
+.doc-header td.value {
+    width: 55% !important;
+    padding: 5px 8px !important;
+    border: 1px solid #000 !important;
+    font-size: 11px !important;
+}
+
+/* REMOVE INPUT LOOK (VERY IMPORTANT) */
+.doc-header input {
+    width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    font-size: 11px !important;
+    font-family: inherit !important;
+    padding: 0 !important;
+}
+
+/* FOR STATIC TEXT (Form Code No.) */
+.document_type {
+    margin: 0 !important;
+    font-size: 11px !important;
+}
 
     .printable-field {
-        display: block;
-        width: 100%;
-        min-height: 1em;
-        white-space: pre-wrap;
-        word-break: break-word;
-        overflow-wrap: anywhere;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 1em !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
         border: none !important;
         background: transparent !important;
-        color: inherit;
-        font-size: inherit;
-        line-height: inherit;
+        color: inherit !important;
+        font-size: inherit !important;
+        line-height: inherit !important;
     }
 
     .printable-checkbox {
-        display: inline-block;
+        display: inline-block !important;
+        color: red !important;
+        font-weight: bold !important;
+    }
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
     @media print {
-        html, body {
+        html,
+        body {
             margin: 0 !important;
             padding: 0 !important;
-            background: white !important;
+            background: #fff !important;
         }
     }
 </style>
 </head>
+
 <body>
     <div id="print-container">
-        <table class="print-shell" role="presentation" aria-hidden="true">
+        <table class="print-shell" role="presentation">
             <thead>
                 <tr>
                     <td>
@@ -565,6 +653,7 @@ async function printReport() {
 </body>
 </html>
         `);
+
         printDoc.close();
 
         const printContent = printDoc.getElementById('printContent');
@@ -595,8 +684,10 @@ function buildPrintableBody(mainContent) {
     wrapper.className = 'print-body-wrapper';
 
     const clonedMainContent = mainContent.cloneNode(true);
+
     removeNonPrintable(clonedMainContent);
     syncFormValues(mainContent, clonedMainContent);
+
     wrapper.appendChild(clonedMainContent);
 
     const approvalSource =
@@ -605,6 +696,7 @@ function buildPrintableBody(mainContent) {
 
     if (approvalSource) {
         const approvalClone = approvalSource.cloneNode(true);
+
         removeNonPrintable(approvalClone);
         syncFormValues(approvalSource, approvalClone);
 
@@ -620,6 +712,7 @@ function buildPrintableBody(mainContent) {
 
     if (documentInfoSource) {
         const documentInfoClone = documentInfoSource.cloneNode(true);
+
         removeNonPrintable(documentInfoClone);
         syncFormValues(documentInfoSource, documentInfoClone);
 
@@ -634,19 +727,21 @@ function buildPrintableBody(mainContent) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
 
     const officeTitle =
         document.querySelector('.office-title')?.textContent?.trim() ||
-        'Monthly Accomplishment Report';
+        'OFFICE OF THE COMMUNITY EXTENSION SERVICES';
 
     const collegeInfoNode = document.querySelector('.college-info');
+
     const collegeInfoHtml = collegeInfoNode
         ? collegeInfoNode.innerHTML
         : `
-            <h1>SAINT MICHAEL COLLEGE OF CARAGA</h1>
+            <h1>Saint Michael College of Caraga</h1>
             <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
             <p>District 8, Brgy. Triangulo, Nasipit, Agusan del Norte, Philippines</p>
             <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
@@ -656,13 +751,25 @@ function buildPrintHeaderHtml() {
     return `
         <div class="print-page-header">
             <div class="header-content">
-                ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
-                <div class="college-info">${collegeInfoHtml}</div>
+                ${
+                    leftLogo
+                        ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">`
+                        : `<div style="width:50px;"></div>`
+                }
+
+                <div class="college-info">
+                    ${collegeInfoHtml}
+                </div>
+
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
                 </div>
             </div>
+
             <div class="office-title">${escapeHtml(officeTitle)}</div>
+
+            <h1 class="report-title">MONTHLY ACCOMPLISHMENT REPORT</h1>
+
             <div class="double-line"></div>
         </div>
     `;
@@ -670,15 +777,21 @@ function buildPrintHeaderHtml() {
 
 function buildPrintFooterHtml() {
     const footerImg = document.querySelector('.footer-bottom img')?.src || '';
+
     return `
         <div class="print-footer-inner">
-            ${footerImg ? `<img src="${escapeHtml(footerImg)}" alt="Footer Logo" class="print-footer-logo">` : ''}
+            ${
+                footerImg
+                    ? `<img src="${escapeHtml(footerImg)}" alt="Footer Logo" class="print-footer-logo">`
+                    : ''
+            }
         </div>
     `;
 }
 
 function createPrintIframe() {
     const iframe = document.createElement('iframe');
+
     iframe.setAttribute('aria-hidden', 'true');
     iframe.style.position = 'fixed';
     iframe.style.right = '0';
@@ -688,7 +801,9 @@ function createPrintIframe() {
     iframe.style.border = '0';
     iframe.style.opacity = '0';
     iframe.style.pointerEvents = 'none';
+
     document.body.appendChild(iframe);
+
     return iframe;
 }
 
@@ -732,9 +847,11 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
         if (tag === 'select') {
             clonedField.value = sourceField.value;
+
             Array.from(clonedField.options).forEach(opt => {
                 opt.selected = opt.value === sourceField.value;
             });
+
             return;
         }
 
@@ -743,6 +860,7 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
             if (type === 'checkbox' || type === 'radio') {
                 clonedField.checked = sourceField.checked;
+
                 if (sourceField.checked) {
                     clonedField.setAttribute('checked', 'checked');
                 } else {
@@ -764,6 +882,7 @@ function convertFormControlsToPrintable(root) {
     fields.forEach(field => {
         const tag = field.tagName.toLowerCase();
         const replacement = document.createElement('div');
+
         replacement.className = 'printable-field';
 
         if (tag === 'textarea') {
@@ -775,7 +894,8 @@ function convertFormControlsToPrintable(root) {
         if (tag === 'select') {
             const selectedText = field.options[field.selectedIndex]
                 ? field.options[field.selectedIndex].text
-                : (field.value || '');
+                : field.value || '';
+
             replacement.textContent = selectedText;
             field.replaceWith(replacement);
             return;
@@ -828,6 +948,7 @@ function waitForImages(docOrRoot) {
 
                 img.addEventListener('load', done, { once: true });
                 img.addEventListener('error', done, { once: true });
+
                 setTimeout(done, 3000);
             });
         })
@@ -861,6 +982,9 @@ function forceTopSpacingReset(doc) {
     if (mainContent) {
         mainContent.style.marginTop = '0';
         mainContent.style.paddingTop = '0';
+        mainContent.style.maxWidth = '100%';
+        mainContent.style.width = '100%';
+        mainContent.style.overflow = 'visible';
     }
 
     if (firstBlock) {
@@ -870,7 +994,9 @@ function forceTopSpacingReset(doc) {
 }
 
 function nextFrame(win) {
-    return new Promise(resolve => win.requestAnimationFrame(() => resolve()));
+    return new Promise(resolve => {
+        win.requestAnimationFrame(() => resolve());
+    });
 }
 
 function runPrintAndCleanup(iframe) {
@@ -880,6 +1006,7 @@ function runPrintAndCleanup(iframe) {
 
         const cleanup = () => {
             if (cleaned) return;
+
             cleaned = true;
 
             try {
@@ -890,11 +1017,13 @@ function runPrintAndCleanup(iframe) {
                 if (iframe.parentNode) {
                     iframe.parentNode.removeChild(iframe);
                 }
+
                 resolve();
             }, 150);
         };
 
         win.onafterprint = cleanup;
+
         setTimeout(cleanup, 5000);
 
         win.focus();
