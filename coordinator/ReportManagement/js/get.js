@@ -116,10 +116,12 @@ function renderApprovedTable() {
                 <td>${report.title || 'N/A'}</td>
                 <td>${report.department || 'N/A'}</td>
                 <td>${formattedDate}</td>
-                <td class="actions">
-                    <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                    <i class="fas fa-cloud-upload-alt upload-icon" data-id="${report.id}" data-table="${report.source_table}" title="Upload/Manage PDFs"></i>
-                    <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+               <td>
+                    <div class="actions">
+                        <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                        <i class="fas fa-cloud-upload-alt upload-icon" data-id="${report.id}" data-table="${report.source_table}" title="Upload/Manage PDFs"></i>
+                        <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                    </div>
                 </td>
             </tr>`;
     });
@@ -207,9 +209,11 @@ function renderRejectedTable() {
                 <td>${report.title || 'N/A'}</td>
                 <td>${report.department || 'N/A'}</td>
                 <td>${formattedDate}</td>
-                <td class="actions">
-                    <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                    <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                <td>
+                    <div class="actions">
+                        <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                        <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                    </div>
                 </td>
             </tr>`;
     });

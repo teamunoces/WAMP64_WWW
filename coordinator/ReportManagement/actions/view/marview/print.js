@@ -1,9 +1,5 @@
 /**
  * print.js - Monthly Accomplishment Report
- * FIXED:
- * 1. Adds missing MONTHLY ACCOMPLISHMENT REPORT title.
- * 2. Prevents table/content from overlapping to the right.
- * 3. Keeps header/footer on every printed page.
  */
 
 async function printReport() {
@@ -228,6 +224,12 @@ async function printReport() {
         letter-spacing: 0.3px !important;
     }
 
+    .double-line {
+        border-top: 3px double #4f81bd !important;
+        margin: 0 0 6px 0 !important;
+        width: 100% !important;
+    }
+
     .report-title {
         display: block !important;
         visibility: visible !important;
@@ -236,36 +238,13 @@ async function printReport() {
         font-size: 15px !important;
         font-weight: bold !important;
         letter-spacing: 1px !important;
-        margin: 5px 0 7px 0 !important;
+        margin: 10px 0 14px 0 !important;
         padding: 0 !important;
         text-transform: uppercase !important;
         color: #000 !important;
         line-height: 1.2 !important;
-    }
-
-    .double-line {
-        border-top: 3px double #4f81bd !important;
-        margin: 0 0 6px 0 !important;
-        width: 100% !important;
-    }
-
-    .print-footer-inner {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .print-footer-logo {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        object-fit: contain !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
     }
 
     table {
@@ -329,47 +308,8 @@ async function printReport() {
         background-color: #e0e0e0 !important;
         color: #000 !important;
         text-align: center !important;
+        vertical-align: top !important;
         font-weight: bold !important;
-    }
-
-    .main-table th:nth-child(1),
-    .main-table td:nth-child(1) {
-        width: 12% !important;
-    }
-
-    .main-table th:nth-child(2),
-    .main-table td:nth-child(2) {
-        width: 13% !important;
-    }
-
-    .main-table th:nth-child(3),
-    .main-table td:nth-child(3) {
-        width: 13% !important;
-    }
-
-    .main-table th:nth-child(4),
-    .main-table td:nth-child(4) {
-        width: 10% !important;
-    }
-
-    .main-table th:nth-child(5),
-    .main-table td:nth-child(5) {
-        width: 13% !important;
-    }
-
-    .main-table th:nth-child(6),
-    .main-table td:nth-child(6) {
-        width: 13% !important;
-    }
-
-    .main-table th:nth-child(7),
-    .main-table td:nth-child(7) {
-        width: 13% !important;
-    }
-
-    .main-table th:nth-child(8),
-    .main-table td:nth-child(8) {
-        width: 13% !important;
     }
 
     tr {
@@ -385,198 +325,191 @@ async function printReport() {
         display: table-footer-group !important;
     }
 
-.print-approval-section {
-    margin-top: 18px !important;
-    padding-top: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 14px !important;
-    color: #000 !important;
-}
+    .print-approval-section {
+        margin-top: 18px !important;
+        padding-top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 14px !important;
+        color: #000 !important;
+    }
 
-.approvals-container {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: 0 !important;
-    padding: 0 !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-}
+    .approvals-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+    }
 
-.approvals-container .label,
-.print-approval-section .label {
-    font-weight: bold !important;
-    text-align: left !important;
-    font-size: 15px !important;
-    margin-bottom: 35px !important;
-    color: #000 !important;
-}
+    .approvals-container .label,
+    .print-approval-section .label {
+        font-weight: bold !important;
+        text-align: left !important;
+        font-size: 15px !important;
+        margin-bottom: 35px !important;
+        color: #000 !important;
+    }
 
-.approval-row {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
-    gap: 90px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 0 22px 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-}
+    .approval-row {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        gap: 90px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 22px 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-.signature-group {
-    flex: 0 0 34% !important;
-    max-width: 34% !important;
-    min-width: 34% !important;
-}
+    .signature-group {
+        flex: 0 0 34% !important;
+        max-width: 34% !important;
+        min-width: 34% !important;
+    }
 
-.approval-row .signature-group:nth-child(2) {
-    margin-right: 8% !important;
-}
+    .approval-row .signature-group:nth-child(2) {
+        margin-right: 8% !important;
+    }
 
-.signature-line {
-    border-bottom: 1.5px solid #000 !important;
-    min-height: 18px !important;
-    margin-bottom: 3px !important;
-    padding-bottom: 1px !important;
-    font-size: 14px !important;
-    font-weight: normal !important;
-    color: #000 !important;
-}
+    .signature-line {
+        border-bottom: 1.5px solid #000 !important;
+        min-height: 18px !important;
+        margin-bottom: 3px !important;
+        padding-bottom: 1px !important;
+        font-size: 14px !important;
+        font-weight: normal !important;
+        color: #000 !important;
+    }
 
-.title {
-    font-size: 13px !important;
-    line-height: 1.2 !important;
-    color: #000 !important;
-}
+    .title {
+        font-size: 13px !important;
+        line-height: 1.2 !important;
+        color: #000 !important;
+    }
 
-.title.bold,
-.bold {
-    font-weight: bold !important;
-}
+    .title.bold,
+    .bold {
+        font-weight: bold !important;
+    }
 
-.approval-centered {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin: 36px 0 0 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-}
+    .approval-centered {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 36px 0 0 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-.approval-centered .label,
-.approval-centered .left-align {
-    align-self: flex-start !important;
-    width: 100% !important;
-    margin-bottom: 45px !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    font-size: 15px !important;
-}
+    .approval-centered .label,
+    .approval-centered .left-align {
+        align-self: flex-start !important;
+        width: 100% !important;
+        margin-bottom: 45px !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        font-size: 15px !important;
+    }
 
-.admin-block {
-    width: 100% !important;
-    text-align: center !important;
-    margin: 0 0 30px 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-}
+    .admin-block {
+        width: 100% !important;
+        text-align: center !important;
+        margin: 0 0 30px 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-.name-underlined {
-    display: inline-block !important;
-    min-width: 230px !important;
-    text-align: center !important;
-    text-decoration: underline !important;
-    font-size: 15px !important;
-    font-weight: bold !important;
-    line-height: 1.15 !important;
-    color: #000 !important;
-}
+    .name-underlined {
+        display: inline-block !important;
+        min-width: 230px !important;
+        text-align: center !important;
+        text-decoration: underline !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+        line-height: 1.15 !important;
+        color: #000 !important;
+    }
 
-.admin-block .title {
-    text-align: center !important;
-    font-size: 13px !important;
-    font-weight: bold !important;
-    margin-top: 2px !important;
-}
+    .admin-block .title {
+        text-align: center !important;
+        font-size: 13px !important;
+        font-weight: bold !important;
+        margin-top: 2px !important;
+    }
 
-.print-document-info-section {
-    margin-top: 12px !important;
-    width: 100% !important;
-    display: block !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    clear: both !important;
-}
+    .print-document-info-section {
+        margin-top: 12px !important;
+        width: 100% !important;
+        display: block !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        clear: both !important;
+    }
 
-/* container (LEFT SIDE LOOK) */
-.document-info {
-    width: 305px !important;   /* fixed like screenshot */
-    max-width: 305px !important;
-    margin: 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-}
+    .document-info {
+        width: 305px !important;
+        max-width: 305px !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-/* table */
-.doc-header {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    table-layout: fixed !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 11px !important;
-}
+    .doc-header {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 11px !important;
+    }
 
-/* LEFT LABEL (BLUE) */
-.doc-header td.label {
-    width: 40% !important;
-    padding: 5px 8px !important;
-    background-color: #002060 !important;
-    color: #ffffff !important;
-    font-weight: bold !important;
-    border: 1px solid #000 !important;
-    text-align: left !important;
-    white-space: nowrap !important;
-}
+    .doc-header td.label {
+        width: 40% !important;
+        padding: 5px 8px !important;
+        background-color: #002060 !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        border: 1px solid #000 !important;
+        text-align: left !important;
+        white-space: nowrap !important;
+    }
 
-/* COLON */
-.doc-header td:nth-child(2) {
-    width: 5% !important;
-    text-align: center !important;
-    font-weight: bold !important;
-    border-top: 1px solid #000 !important;
-    border-bottom: 1px solid #000 !important;
-}
+    .doc-header td:nth-child(2) {
+        width: 5% !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        border-top: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+    }
 
-/* VALUE COLUMN */
-.doc-header td.value {
-    width: 55% !important;
-    padding: 5px 8px !important;
-    border: 1px solid #000 !important;
-    font-size: 11px !important;
-}
+    .doc-header td.value {
+        width: 55% !important;
+        padding: 5px 8px !important;
+        border: 1px solid #000 !important;
+        font-size: 11px !important;
+    }
 
-/* REMOVE INPUT LOOK (VERY IMPORTANT) */
-.doc-header input {
-    width: 100% !important;
-    border: none !important;
-    outline: none !important;
-    background: transparent !important;
-    font-size: 11px !important;
-    font-family: inherit !important;
-    padding: 0 !important;
-}
+    .doc-header input {
+        width: 100% !important;
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
+        font-size: 11px !important;
+        font-family: inherit !important;
+        padding: 0 !important;
+    }
 
-/* FOR STATIC TEXT (Form Code No.) */
-.document_type {
-    margin: 0 !important;
-    font-size: 11px !important;
-}
+    .document_type {
+        margin: 0 !important;
+        font-size: 11px !important;
+    }
 
     .printable-field {
         display: block !important;
@@ -597,6 +530,25 @@ async function printReport() {
         display: inline-block !important;
         color: red !important;
         font-weight: bold !important;
+    }
+
+    .print-footer-inner {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .print-footer-logo {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        object-fit: contain !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
     img {
@@ -688,6 +640,19 @@ function buildPrintableBody(mainContent) {
     removeNonPrintable(clonedMainContent);
     syncFormValues(mainContent, clonedMainContent);
 
+    clonedMainContent.querySelectorAll('.report-title').forEach(el => el.remove());
+
+    Array.from(clonedMainContent.querySelectorAll('h1')).forEach(h1 => {
+        if ((h1.textContent || '').trim().toUpperCase() === 'MONTHLY ACCOMPLISHMENT REPORT') {
+            h1.remove();
+        }
+    });
+
+    const reportTitle = document.createElement('h1');
+    reportTitle.className = 'report-title';
+    reportTitle.textContent = 'MONTHLY ACCOMPLISHMENT REPORT';
+
+    wrapper.appendChild(reportTitle);
     wrapper.appendChild(clonedMainContent);
 
     const approvalSource =
@@ -767,16 +732,17 @@ function buildPrintHeaderHtml() {
             </div>
 
             <div class="office-title">${escapeHtml(officeTitle)}</div>
-
-            <h1 class="report-title">MONTHLY ACCOMPLISHMENT REPORT</h1>
-
             <div class="double-line"></div>
         </div>
     `;
 }
 
 function buildPrintFooterHtml() {
-    const footerImg = document.querySelector('.footer-bottom img')?.src || '';
+    const footerImg =
+        document.querySelector('.footer-bottom img')?.src ||
+        document.querySelector('.footer-logos img')?.src ||
+        document.querySelector('footer img')?.src ||
+        '';
 
     return `
         <div class="print-footer-inner">
@@ -1023,7 +989,6 @@ function runPrintAndCleanup(iframe) {
         };
 
         win.onafterprint = cleanup;
-
         setTimeout(cleanup, 5000);
 
         win.focus();

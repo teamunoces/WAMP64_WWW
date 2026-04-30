@@ -368,55 +368,60 @@ function printReport() {
                     margin-bottom: 2px;
                 }
 
-                .document-info {
-                    margin-top: 50px;
-                    width: 305px;
-                    max-width: 305px;
-                    page-break-inside: avoid;
-                    break-inside: avoid;
-                }
+               .document-info {
+    margin-top: 50px;
+    width: 255px;
+    max-width: 255px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
 
-                .doc-header {
-                    border-collapse: collapse;
-                    font-family: Arial, sans-serif;
-                    font-size: 11px;
-                    width: 305px;
-                    max-width: 305px;
-                    margin-right: auto;
-                    background: white;
-                }
+.doc-header {
+    width: 255px;
+    max-width: 255px;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    margin-right: auto;
+    background: #fff;
+}
 
-                .doc-header td {
-                    border: 1px solid #d1d1d1;
-                    padding: 4px 8px;
-                    vertical-align: middle;
-                    font-size: 11px;
-                    line-height: 1.2;
-                }
+.doc-header td {
+    border: 1px solid #d1d1d1;
+    padding: 4px 6px;
+    height: 23px;
+    vertical-align: middle;
+    line-height: 1.1;
+}
 
-                .doc-header td.label {
-                    background-color: #002060;
-                    color: white;
-                    font-weight: bold;
-                    text-align: left;
-                    white-space: nowrap;
-                    width: 100px;
-                }
+.doc-header td.label {
+    background-color: #002060;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+    width: 98px;
+}
 
-                .doc-header td:nth-child(2) {
-                    width: 10px;
-                    padding: 0 2px;
-                    font-weight: bold;
-                    text-align: center;
-                }
+.doc-header td:nth-child(2) {
+    width: 8px;
+    min-width: 8px;
+    max-width: 8px;
+    padding: 0;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    background: #fff;
+}
 
-                .doc-header td.value {
-                    width: 170px;
-                    min-width: 170px;
-                    text-align: left;
-                    color: #333;
-                    background: #fff;
-                }
+.doc-header td.value {
+    width: 149px;
+    min-width: 149px;
+    text-align: center;
+    color: #000;
+    background: #fff;
+    white-space: nowrap;
+}
 
                 footer {
                     width: 100%;

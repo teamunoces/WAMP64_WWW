@@ -60,7 +60,7 @@ body {
     padding: calc(var(--header-h) + 20px) 20px 20px calc(var(--sidebar-w) + 20px);
 }
 
-/* ===== Frames (Layout Shell) ===== */
+/* ===== Frames ===== */
 #sidebarFrame {
     width: 100px;
     height: 100vh;
@@ -141,7 +141,9 @@ body {
     font-size: 1.2rem;
 }
 
-/* Filter Row & Table */
+/* =========================================================
+   FILTER
+========================================================= */
 .filter-row {
     margin-bottom: 20px;
     display: flex;
@@ -158,7 +160,6 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* Section Label Colors */
 .section-green .label {
     background-color: var(--green-primary);
 }
@@ -189,7 +190,14 @@ select:hover {
     border-color: var(--orange-primary);
 }
 
-/* Header Background Colors */
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+.table-container {
+    overflow-x: auto;
+    padding: 0 20px 10px 20px;
+}
+
 .table-header {
     padding: 12px 24px;
     color: white;
@@ -228,15 +236,12 @@ select:hover {
     font-weight: 600;
 }
 
-/* Optional wrapper if present */
-.table-container {
-    overflow-x: auto;
-    padding: 0 20px 10px 20px;
-}
-
-/* Table Content */
+/* =========================================================
+   TABLE CONTENT
+========================================================= */
 table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     background: var(--bg-container);
     border-radius: 20px;
@@ -245,13 +250,45 @@ table {
 
 th,
 td {
-    padding: 14px 16px;
+    padding: 14px 10px;
     text-align: center;
     border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.3;
+    overflow-wrap: break-word;
 }
 
-/* Table Header Text Colors */
+/* Column Widths */
+th:nth-child(1),
+td:nth-child(1) {
+    width: 25%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 35%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 13%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 12%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 15%;
+    min-width: 120px;
+    text-align: center;
+}
+
+/* Header Text Colors */
 .section-green th {
     color: var(--green-header);
 }
@@ -269,17 +306,12 @@ td {
     letter-spacing: 0.5px;
 }
 
-td {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
 body.dark-mode td {
     color: #cbd5e6;
 }
 
 tbody tr {
-    height: 60px;
+    height: 65px;
 }
 
 tbody tr:nth-child(even) {
@@ -290,34 +322,43 @@ tbody tr:nth-child(even) {
    ACTIONS COLUMN FIX
 ========================================================= */
 td:last-child {
-    padding: 0;
+    padding: 8px 6px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    white-space: nowrap;
 }
 
 .actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    height: 100%;
-    min-height: 48px;
-    font-size: 1.1rem;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px;
+    width: 100%;
+    min-height: 34px;
 }
 
 .actions i {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: 28px;
     height: 28px;
     color: var(--green-primary);
     cursor: pointer;
     transition: 0.2s;
-    line-height: 1;
-    vertical-align: middle;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 16px;
 }
 
 .actions i:hover {
     transform: scale(1.1);
+}
+
+.section-red .actions i {
+    color: var(--red-primary);
 }
 
 .section-Orange .actions i {
@@ -331,14 +372,15 @@ td:last-child {
 .archive-icon {
     background-color: var(--orange-archive);
     color: white !important;
-    width: 28px;
-    height: 28px;
+    width: 28px !important;
+    height: 28px !important;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 12px !important;
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
     text-align: center;
     transition: 0.2s;
 }
@@ -353,6 +395,7 @@ td:last-child {
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 
 .btn-view,
@@ -366,6 +409,7 @@ td:last-child {
     transition: 0.2s;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     color: white;
 }
@@ -388,7 +432,9 @@ td:last-child {
     transform: scale(0.97);
 }
 
-/* Modal Styles - Responsive */
+/* =========================================================
+   MODAL
+========================================================= */
 .modal {
     display: none;
     position: fixed;
@@ -420,90 +466,6 @@ td:last-child {
     to {
         transform: translateY(0);
         opacity: 1;
-    }
-}
-
-/* Mobile responsiveness */
-@media screen and (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        margin: 10px auto;
-        padding: 15px;
-    }
-    
-    .modal-header h2 {
-        font-size: 1.2rem;
-    }
-    
-    .report-info {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .files-grid {
-        max-height: 250px;
-    }
-    
-    .file-item {
-        flex-wrap: wrap;
-    }
-    
-    .file-details {
-        width: 100%;
-        margin: 5px 0;
-    }
-    
-    .reupload-btn {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .selected-file-item {
-        flex-wrap: wrap;
-    }
-    
-    .selected-file-item .file-name {
-        width: 100%;
-        margin-bottom: 5px;
-    }
-    
-    .selected-file-item .file-size,
-    .selected-file-item .file-status {
-        font-size: 10px;
-    }
-
-    .search-container {
-        width: 100%;
-    }
-
-    .filter-row {
-        gap: 12px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .modal-content {
-        padding: 10px;
-    }
-    
-    .file-input-label {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .file-input-hint {
-        font-size: 11px;
-    }
-    
-    .upload-btn {
-        font-size: 13px;
-        padding: 10px;
-    }
-
-    th,
-    td {
-        padding: 12px 10px;
-        font-size: 0.8rem;
     }
 }
 
@@ -541,7 +503,9 @@ td:last-child {
     color: #333;
 }
 
-/* Simplified Report Info */
+/* =========================================================
+   REPORT INFO
+========================================================= */
 .report-info {
     display: flex;
     justify-content: space-between;
@@ -585,7 +549,9 @@ td:last-child {
     font-weight: bold;
 }
 
-/* Files Section */
+/* =========================================================
+   FILES SECTION
+========================================================= */
 .files-section {
     margin-bottom: 25px;
 }
@@ -698,7 +664,9 @@ td:last-child {
     font-size: 12px;
 }
 
-/* Upload Section */
+/* =========================================================
+   UPLOAD SECTION
+========================================================= */
 .upload-section {
     background-color: #f8f9fa;
     padding: 20px;
@@ -863,7 +831,9 @@ td:last-child {
     margin-right: 8px;
 }
 
-/* Status Messages */
+/* =========================================================
+   STATUS / BADGES
+========================================================= */
 .remaining-slots {
     background-color: #e3f2fd;
     color: #1976d2;
@@ -916,7 +886,9 @@ td:last-child {
     border: 1px solid var(--orange-primary);
 }
 
-/* Custom Scrollbar */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 .files-grid::-webkit-scrollbar,
 .selected-files-list::-webkit-scrollbar {
     width: 6px;
@@ -937,4 +909,98 @@ td:last-child {
 .files-grid::-webkit-scrollbar-thumb:hover,
 .selected-files-list::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 850px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .report-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .files-grid {
+        max-height: 250px;
+    }
+    
+    .file-item {
+        flex-wrap: wrap;
+    }
+    
+    .file-details {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .reupload-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .selected-file-item {
+        flex-wrap: wrap;
+    }
+    
+    .selected-file-item .file-name {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .selected-file-item .file-size,
+    .selected-file-item .file-status {
+        font-size: 10px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .filter-row {
+        gap: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modal-content {
+        padding: 10px;
+    }
+    
+    .file-input-label {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .file-input-hint {
+        font-size: 11px;
+    }
+    
+    .upload-btn {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    th,
+    td {
+        padding: 12px 10px;
+        font-size: 0.8rem;
+    }
 }

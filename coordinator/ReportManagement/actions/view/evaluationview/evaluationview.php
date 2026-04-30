@@ -34,7 +34,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
 
                             <div class="buttons">
                                 <button  onclick="printReport()">Print</button>
-                                <button id="downloadPDF" type="button">Download PDF</button>
+                                <!--<button id="downloadPDF" type="button">Download PDF</button> -->
                             </div>
 
                                 <div class="wrapper">
@@ -262,7 +262,52 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
                 <div class="sig-line">Date: <input type="text" name="date" class="sig-input" placeholder="type here..."></div>
             </div>
 
-    
+
+
+                    <!-- APPROVAL SECTIONS -->
+                    <section class="approvals-container">
+                        <div class="approval-row">
+                            <div class="signature-group">
+                            <div class="label">Prepared by:</div>
+                           <div class="signature-line" id="created_by_name"></div>
+                            <div class="title bold">CES Coordinator</div>
+                            </div>
+                        </div>
+
+                        <div class="label" style="margin-top: 20px;">Noted by:</div>
+                        <div class="approval-row">
+                            <div class="signature-group">
+                            <div class="signature-line" id="dean"></div>
+                            <div class="title bold">Dean</div>
+                            </div>
+                            <div class="signature-group">
+                            <div class="signature-line" id="ces_head"></div>
+                            <div class="title bold">CES Head</div>
+                            </div>
+                        </div>
+
+                        <div class="approval-centered" style="margin-top: 40px;">
+                            <div class="label left-align">Recommending Approval:</div>
+                            <div class="admin-block">
+                            <div class="name-underlined" id="vp_acad"></div>
+                            <div class="title bold">Vice-President for Academic Affairs and Research</div>
+                            </div>
+                            <div class="admin-block">
+                            <div class="name-underlined"id="vp_admin" ></div>
+                            <div class="title bold">Vice-President for Administrative Affairs</div>
+                            </div>
+                        </div>
+
+                        <div class="approval-centered">
+                            <div class="label left-align">Approved by:</div>
+                            <div class="admin-block">
+                            <div class="name-underlined"id="school_president"></div>
+                            <div class="title bold">School President</div>
+                            </div>
+                        </div>
+                        </section>
+
+
 
         <!-- DOCUMENT INFORMATION -->
         <section class="document-info">

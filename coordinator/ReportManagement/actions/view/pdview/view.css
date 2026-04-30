@@ -276,9 +276,6 @@ footer {
 }
 
 
-
-
-
 /* ===== BUTTONS - Positioned Above Container ===== */
 .buttons {
     position: fixed;
@@ -337,34 +334,37 @@ footer {
     transform: scale(0.96);
 }
 
-/* ===== 3. Approvals Section (The "Professional" Look) ===== */
+/* ===== 3. Approvals Section ===== */
 .approvals-container {
-    
   font-family: Arial, sans-serif;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
+  width: 95%;              /* same width as table/header/input */
+  max-width: none;         /* remove 900px limit */
+  margin: 40px 0 0 0;      /* add space from table and align left */
   color: #000;
+  box-sizing: border-box;
 }
 
 .approval-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  margin-bottom: 35px;
+  width: 100%;
 }
 
 .signature-group {
-  width: 35%; /* Adjust width to match the line lengths in your image */
+  width: 35%;
 }
 
 .label {
   font-weight: bold;
-  margin-bottom: 35px; /* Creates space for the signature signature */
+  margin-bottom: 35px;
 }
 
 .signature-line {
   border-bottom: 1.5px solid black;
   margin-bottom: 5px;
+  min-height: 18px;
 }
 
 .title {
@@ -380,11 +380,12 @@ footer {
   width: 100%;
 }
 
-/* Centered Layout for VP and President */
 .approval-centered {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 95%;
+  margin-top: 35px;
 }
 
 .admin-block {

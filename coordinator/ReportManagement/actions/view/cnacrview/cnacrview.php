@@ -41,7 +41,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
              <!-- ACTION BUTTONS -->
                         <div class="buttons">
                             <button onclick="printReport()">Print</button>
-                            <button id="downloadPDF" type="button">Download PDF</button>
+                           <!-- <button id="downloadPDF" type="button">Download PDF</button> -->
                         </div>
                                     <div class="admin-comment">
                                           <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>

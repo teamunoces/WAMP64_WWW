@@ -373,7 +373,70 @@ tr td em {
     transform: scale(0.96);
 }
 
+/* ===== 3. Approvals Section (The "Professional" Look) ===== */
+.approvals-container {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #000;
+  margin-top: 80px;
+}
 
+.approval-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.signature-group {
+  width: 35%; /* Adjust width to match the line lengths in your image */
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 35px; /* Creates space for the signature signature */
+}
+
+.signature-line {
+  border-bottom: 1.5px solid black;
+  margin-bottom: 5px;
+}
+
+.title {
+  font-size: 14px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.left-align {
+  text-align: left;
+  width: 100%;
+}
+
+/* Centered Layout for VP and President */
+.approval-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-block {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.name-underlined {
+  font-weight: bold;
+  text-decoration: underline;
+  text-transform: uppercase;
+  font-size: 16px;
+  display: inline-block;
+  margin-bottom: 2px;
+}
 
 /* ===== 4. Document Info Table (The Navy Blue Style) ===== */
 .doc-header {

@@ -34,16 +34,17 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
         title="Navigation Sidebar">
     </iframe>
 
-  
-  <!-- MAIN PRINT CONTAINER -->
-  <div class="container">
-
-   <!--------------------feedback------------------ -->
+     <!--------------------feedback------------------ -->
                                     <div class="admin-comment">
                                           <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
                                           <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
                                     </div>
 
+  
+  <!-- MAIN PRINT CONTAINER -->
+  <div class="container">
+
+  
     
                    <header>
                       <div class="header-content">
@@ -112,18 +113,34 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
         <!-- PROGRAM PLAN TABLE -->
         <section class="table-section">
           <table id="programPlanTable">
-            <thead>
-              <tr>
-                                <th rowspan="5">Program</th>
-                                <th rowspan="5">Objectives</th>
-                                <th rowspan="5">Strategies and Action Plans</th>
-                                <th rowspan="5">Resources from the School</th>
-                                <th rowspan="5">Resources from the Community</th> 
-                                <th rowspan="5">Budget</th>     
-                                <th rowspan="5">Means of Verification</th>     
-                                <th rowspan="5">Time Frame</th>
-              </tr>
-            </thead>
+               <thead>
+                            <tr>
+                                <th rowspan="2">Program</th>
+                                <th rowspan="2">Objectives</th>
+                                <th rowspan="2">Strategies and<br>Action Plans</th>
+                                <th colspan="3">Resources Needed</th>
+                                <th rowspan="2">Means of<br>Verification</th>
+                                <th rowspan="2">Time<br>Frame</th>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Resources from the School<br>
+                                    (Human Resources,<br>
+                                    Collaborating Agencies<br>
+                                    and Equipment)
+                                </th>
+
+                                <th>
+                                    Resources from the Community<br>
+                                    (Human Resources,<br>
+                                    Collaborating Agencies<br>
+                                    and Equipment)
+                                </th>
+
+                                <th>Budget and funding</th>
+                            </tr>
+                </thead>
             <tbody>
               <tr>
                 <td><textarea id="program" rows="5"></textarea></td>

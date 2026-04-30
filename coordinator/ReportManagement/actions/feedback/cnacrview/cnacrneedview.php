@@ -38,13 +38,15 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     </iframe>
 
 
-    <div class="report-container">
-
-                                     <!--------------------feedback------------------ -->
+                                         <!--------------------feedback------------------ -->
                                     <div class="admin-comment">
                                           <label for="admincomment" class="admin-comment-label">Admin Feedback</label>
                                           <textarea id="admincomment" placeholder="Enter admin comments here..." rows="5"></textarea>
                                     </div>
+
+    <div class="report-container">
+
+
 
         <header>
             <div class="header-content">

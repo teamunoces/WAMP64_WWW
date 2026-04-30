@@ -40,7 +40,10 @@
     height: 90px;
     width: auto;
 }
-
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 .logos-right {
     display: flex;
     gap: 20px;
@@ -98,7 +101,7 @@
 
 /* ===== General Styles ===== */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     letter-spacing: -0.011em;
     line-height: 1.6;
     color: #1a202c;
@@ -175,33 +178,31 @@ input[type="text"]:focus, textarea:focus {
     width: 100%;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    /* Removed min-width: 1200px to prevent sliding */
-    table-layout: fixed; /* Keeps columns equal width so they don't "jump" */
-    word-wrap: break-word; /* Ensures long text breaks to new lines */
-}
-
 table thead th {
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
+    background-color: #e5e7eb; /* light gray like screenshot */
+    color: #000;
     font-weight: bold;
-    background-color: #f8fafc;
-    color: #475569;
-    font-size: 0.9rem; /* Smaller font to help 9 columns fit better */
-    padding: 8px 4px;
-    border: 1px solid #cbd5e1;
-    text-transform: uppercase;
+    font-size: 15px;
+    padding: 6px 4px;
+    border: 1px solid #000;
     text-align: center;
-    word-wrap: break-word;
+    vertical-align: middle;
+    line-height: 1.4;
 }
 
-table td {
-    border: 1px solid #cbd5e1;
-    padding: 0;
-    vertical-align: top;
+table {
+    border-collapse: collapse;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
+    border-collapse: collapse;
 }
 
+table th, table td {
+    border: 1px solid #000;
+}
 table td textarea {
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 14px;
     field-sizing: content; 
     width: 100% !important;
     min-height: 60px; 
@@ -209,7 +210,6 @@ table td textarea {
     padding: 10px 5px !important;
     background: transparent !important; /* Ensure no gradient background */
     background-image: none !important;  /* Explicitly remove any inherited lines */
-    font-size: 0.85rem;
     color: #1e293b;
     line-height: 1.4;
     display: block;

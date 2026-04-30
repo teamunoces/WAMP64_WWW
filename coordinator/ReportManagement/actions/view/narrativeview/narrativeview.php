@@ -33,7 +33,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
                             <div class="buttons">
                                 <button  onclick="printReport()">Print</button>
-                                <button id="downloadPDF" type="button">Download PDF</button>
+                                <!-- <button id="downloadPDF" type="button">Download PDF</button> -->
                             </div>
 
                                 <div class="wrapper">

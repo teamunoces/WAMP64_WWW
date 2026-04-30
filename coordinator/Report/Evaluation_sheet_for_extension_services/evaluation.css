@@ -42,6 +42,10 @@
         gap: 20px;
         align-items: center;
     }
+    .logo-left2 {
+    height: 80px;
+    width: auto;
+}
 
     .logos-right img {
         height: 80px;

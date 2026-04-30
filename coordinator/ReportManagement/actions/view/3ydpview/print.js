@@ -24,16 +24,14 @@ async function printReport() {
         const clonedContent = contentBody.cloneNode(true);
 
         syncFormValues(contentBody, clonedContent);
+        fixProgramPlanTableHeader(clonedContent);
         removeNonPrintable(clonedContent);
-
-        // Uncomment if you want to remove the inner report title block
-        // removeInternalReportTitleBlock(clonedContent);
 
         const iframe = createPrintIframe();
         const doc = iframe.contentDocument || iframe.contentWindow.document;
 
         const leftLogoSrc = document.querySelector('.logo-left')?.src || '';
-         const left2LogoSrc = document.querySelector('.logo-left2')?.src || '';
+        const left2LogoSrc = document.querySelector('.logo-left2')?.src || '';
         const rightLogoSrc = document.querySelector('.logos-right img')?.src || '';
         const footerLogoSrc =
             document.querySelector('.footer-bottom img')?.src ||
@@ -47,44 +45,41 @@ async function printReport() {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Print Report</title>
+
 <style>
     * {
         box-sizing: border-box;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
     @page {
         size: A4 portrait;
-        margin: 12mm 12mm 12mm 12mm;
+        margin: 12mm;
     }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
-        color: #1a202c;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-        letter-spacing: -0.011em;
-        line-height: 1.5;
-        font-size: 12px;
-    }
-
+    html,
     body {
-        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+        font-size: 20px;
+        line-height: 1.4;
+        overflow: visible !important;
     }
+
 
     .print-root,
     .print-main,
     .print-content {
+        width: 100%;
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
-        background: #fff !important;
-    }
-
-    .print-root {
-        width: 100%;
+        background: #ffffff !important;
     }
 
     table.print-layout {
@@ -118,16 +113,16 @@ async function printReport() {
     }
 
     .print-header-wrap {
-        padding: 0 0 14px 0;
-        background: #fff;
+        padding: 0 0 12px 0;
+        background: #ffffff !important;
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
     }
 
     .print-footer-wrap {
-        padding: 12px 0 0 0;
-        background: #fff;
+        padding: 8px 0 0 0;
+        background: #ffffff !important;
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
@@ -137,30 +132,30 @@ async function printReport() {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         width: 100%;
     }
 
     .logo-left {
-        height: 90px;
+        height: 85px;
         width: auto;
         display: block;
     }
+
     .logo-left2 {
-        height: 90px;
+        height: 80px;
         width: auto;
         display: block;
     }
 
     .logos-right {
         display: flex;
-        gap: 20px;
         align-items: center;
+        justify-content: flex-end;
     }
 
     .logos-right img {
-        padding-right: 10px;
-        height: 80px;
+        height: 75px;
         width: auto;
         display: block;
     }
@@ -168,13 +163,13 @@ async function printReport() {
     .college-info {
         text-align: center;
         flex-grow: 1;
-        padding: 0 20px;
+        padding: 0 18px;
     }
 
     .college-info h1 {
-        font-family: "Times New Roman", Times, serif;
-        color: #4f81bd;
-        font-size: 26px;
+        font-family: "Times New Roman", Times, serif !important;
+        color: #4f81bd !important;
+        font-size: 24px;
         margin: 0;
         font-weight: normal;
         line-height: 1.2;
@@ -182,29 +177,29 @@ async function printReport() {
 
     .college-info p {
         font-size: 11px;
-        margin: 2px 0;
-        color: #333;
-        line-height: 1.4;
+        margin: 1px 0;
+        color: #333333 !important;
+        line-height: 1.3;
     }
 
     .college-info a {
-        font-size: 13px;
-        color: #0000EE;
+        font-size: 12px;
+        color: #0000ee !important;
         text-decoration: underline;
     }
 
     .office-title {
         text-align: center;
-        font-size: 18px;
-        color: #595959;
+        font-size: 16px;
+        color: #595959 !important;
         font-weight: bold;
-        margin: 20px 0 5px 0;
-        letter-spacing: 0.5px;
+        margin: 12px 0 4px 0;
+        letter-spacing: 0.3px;
         text-transform: uppercase;
     }
 
     .double-line {
-        border-top: 4px double #4f81bd;
+        border-top: 4px double #4f81bd !important;
         margin-bottom: 0;
     }
 
@@ -213,21 +208,16 @@ async function printReport() {
         align-items: flex-end;
         justify-content: flex-end;
         width: 100%;
-        padding-bottom: 5px;
+        padding-bottom: 4px;
     }
 
     .print-footer-logo {
-        height: 40px;
+        height: 38px;
         width: auto;
         display: block;
     }
 
-    .print-main {
-        width: 100%;
-    }
-
     .print-content {
-        width: 100%;
         max-width: 100%;
         overflow: visible !important;
     }
@@ -235,6 +225,7 @@ async function printReport() {
     .print-content,
     .print-content * {
         max-width: 100%;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     }
 
     #headerFrame,
@@ -247,7 +238,13 @@ async function printReport() {
     [data-no-print="true"],
     button,
     script,
-    noscript {
+    noscript,
+    .ai-search-bar,
+    .recommendation-section,
+    #recommendation-container,
+    .form-actions,
+    .add-row-btn,
+    .delete-row-btn {
         display: none !important;
     }
 
@@ -260,38 +257,41 @@ async function printReport() {
     #header h1 {
         text-align: center;
         text-transform: uppercase;
-        font-size: 1.8rem;
-        color: #2c3e50;
-        margin-bottom: 30px;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 10px;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+        font-size: 16px;
+        color: #000000 !important;
+        margin: 10px 0 20px 0;
+        border: none !important;
+        padding: 0 !important;
+        font-weight: bold;
     }
 
     .form-section {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
 
     .input-group {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
 
     .input-group label {
         display: block;
         font-weight: bold;
-        margin-bottom: 8px;
-        color: #444;
+        margin-bottom: 4px;
+        color: #000000 !important;
+        font-size: 12px;
     }
 
     .printable-field {
         display: block;
         width: 100%;
-        min-height: 1em;
+        min-height: 18px;
         white-space: pre-wrap;
         word-break: break-word;
         overflow-wrap: anywhere;
-        color: #1e293b;
-        font-size: 1rem;
-        line-height: 1.45;
+        color: #000000 !important;
+        font-size: 10px;
+        line-height: 1.35;
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
@@ -303,38 +303,37 @@ async function printReport() {
         border: none !important;
         outline: none !important;
         overflow: hidden;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 31px;
-        background-image: linear-gradient(transparent 30px, #000 31px) !important;
-        background-size: 100% 31px !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+        font-size: 11px;
+        line-height: 24px;
+        background-image: linear-gradient(transparent 23px, #000 24px) !important;
+        background-size: 100% 24px !important;
         background-attachment: local;
         display: block;
-        padding: 5px;
+        padding: 0 2px;
         box-sizing: border-box;
         white-space: pre-wrap;
         word-break: break-word;
         overflow-wrap: anywhere;
-        min-height: 62px;
+        min-height: 48px;
         box-shadow: none !important;
     }
 
     .table-section {
-        margin: 40px 0;
+        margin: 25px 0;
         width: 100%;
     }
 
     .table-wrapper {
         overflow-x: visible !important;
-        background: #fff;
+        background: #ffffff !important;
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         width: 100%;
     }
 
-    /* General tables: no forced outer border */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -359,186 +358,247 @@ async function printReport() {
         break-inside: avoid !important;
     }
 
-    /* ================= PROGRAM PLAN TABLE (MATCH SCREENSHOT) ================= */
+    /* ================= PROGRAM PLAN TABLE ================= */
     #programPlanTable {
-        width: 100%;
+        width: 100% !important;
         border-collapse: collapse !important;
         table-layout: fixed !important;
-        border: 1px solid #cbd5e1 !important;
+        border: 1px solid #000000 !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
     }
 
     #programPlanTable thead th {
-        border: 1px solid #cbd5e1 !important;
-        background-color: #e2e8f0 !important;
-        color: #334155 !important;
+        border: 1px solid #000000 !important;
+        background-color: #d9d9d9 !important;
+        color: #000000 !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
         font-weight: bold;
-        font-size: 0.85rem;
+        font-size: 11px;
         text-align: center;
-        padding: 10px 6px;
-        text-transform: uppercase;
-        word-wrap: break-word;
+        vertical-align: top;
+        padding: 4px 3px;
+        line-height: 1.35;
+        text-transform: none !important;
+        word-break: normal;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    #programPlanTable thead tr:first-child th {
+        height: 28px;
+    }
+
+    #programPlanTable thead tr:nth-child(2) th {
+        height: 145px;
+        vertical-align: top;
+        padding-top: 4px;
     }
 
     #programPlanTable td {
-        border: 1px solid #cbd5e1 !important;
+        border: 1px solid #000000 !important;
         vertical-align: top;
         padding: 0;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+        font-size: 11px;
+        color: #000000 !important;
     }
 
     #programPlanTable td .printable-field,
     #programPlanTable td .printable-paper-lines {
-        padding: 10px 8px !important;
-        font-size: 0.85rem;
-        line-height: 1.4;
-        color: #1e293b;
+        padding: 5px 4px !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+        font-size: 11px;
+        line-height: 1.3;
+        color: #000000 !important;
         width: 100%;
         min-height: 60px;
         display: block;
         box-sizing: border-box;
         margin: 0;
         background-color: transparent !important;
+        background-image: none !important;
     }
 
     #programPlanTable th:nth-child(1),
-    #programPlanTable td:nth-child(1) { width: 14%; }
+    #programPlanTable td:nth-child(1) {
+        width: 9%;
+    }
 
     #programPlanTable th:nth-child(2),
-    #programPlanTable td:nth-child(2) { width: 12%; }
+    #programPlanTable td:nth-child(2) {
+        width: 11%;
+    }
 
     #programPlanTable th:nth-child(3),
-    #programPlanTable td:nth-child(3) { width: 18%; }
+    #programPlanTable td:nth-child(3) {
+        width: 13%;
+    }
 
     #programPlanTable th:nth-child(4),
-    #programPlanTable td:nth-child(4) { width: 14%; }
+    #programPlanTable td:nth-child(4) {
+        width: 19%;
+    }
 
     #programPlanTable th:nth-child(5),
-    #programPlanTable td:nth-child(5) { width: 14%; }
+    #programPlanTable td:nth-child(5) {
+        width: 16%;
+    }
 
     #programPlanTable th:nth-child(6),
-    #programPlanTable td:nth-child(6) { width: 10%; }
+    #programPlanTable td:nth-child(6) {
+        width: 12%;
+    }
 
     #programPlanTable th:nth-child(7),
-    #programPlanTable td:nth-child(7) { width: 12%; }
+    #programPlanTable td:nth-child(7) {
+        width: 11%;
+    }
 
     #programPlanTable th:nth-child(8),
-    #programPlanTable td:nth-child(8) { width: 12%; }
-
-    .approvals-container {
-        margin-top: 30px;
-        font-family: Arial, sans-serif;
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-        color: #000;
-        page-break-inside: avoid;
-        break-inside: avoid;
+    #programPlanTable td:nth-child(8) {
+        width: 10%;
     }
 
-    .approval-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        gap: 20px;
-    }
+    /* ---------------- APPROVALS ---------------- */
+.approvals-container {
+    width: 100%;
+    margin-top: 45px !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 12px;
+    color: #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
 
-    .signature-group {
-        width: 35%;
-    }
+.approvals-container .label {
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 35px;
+    font-size: 12px;
+}
 
-    .label {
-        font-weight: bold;
-        margin-bottom: 35px;
-    }
+.approval-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    width: 100%;
+    margin-bottom: 25px;
+}
 
-    .signature-line {
-        border-bottom: 1.5px solid #000 !important;
-        min-height: 25px;
-        margin-bottom: 5px;
-        text-align: center;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+.signature-group {
+    flex: 1;
+    text-align: left;
+}
 
-    .title {
-        font-size: 14px;
-    }
+.approvals-container .signature-line {
+    display: inline-block;
+    width: 280px !important;
+    min-height: 22px;
+    border-bottom: 1px solid #000 !important;
+    padding: 0 0 2px 0;
+    margin-bottom: 3px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 12px;
+    text-transform: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
 
-    .bold {
-        font-weight: bold;
-    }
+.approvals-container .title {
+    text-align: left;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
-    .left-align {
-        text-align: left;
-        width: 100%;
-    }
+.approval-centered {
+    width: 100%;
+    margin-top: 40px;
+    text-align: center;
+}
 
-    .approval-centered {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.approval-centered .left-align {
+    text-align: left;
+    margin-bottom: 65px;
+}
 
-    .admin-block {
-        text-align: center;
-        margin-top: 30px;
-        margin-bottom: 10px;
-    }
+.admin-block {
+    width: 420px;
+    margin: 0 auto 45px auto;
+    text-align: center;
+}
 
-    .name-underlined {
-        font-weight: bold;
-        border-bottom: 1.5px solid #000 !important;
-        text-decoration: none !important;
-        text-transform: uppercase;
-        display: inline-block;
-        padding: 0 15px;
-        min-width: 250px;
-    }
+.approvals-container .name-underlined {
+    display: inline-block;
+    min-width: 280px;
+    border-bottom: 1px solid #000 !important;
+    padding-bottom: 1px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.admin-block .title {
+    text-align: center;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
     /* ---------------- DOCUMENT INFO ---------------- */
     .document-info {
-        margin-top: 50px;
-        width: 30%;
+        margin-top: 50px !important;
+        width: 305px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
     .doc-header {
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
+        width: 305px !important;
+        border-collapse: collapse !important;
+        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
         font-size: 11px;
-        border: none !important;
-        width: auto;
-        margin-right: auto;
+        margin-left: 0 !important;
+        margin-right: auto !important;
         table-layout: auto !important;
-        outline: none !important;
-        box-shadow: none !important;
     }
 
     .doc-header td {
-        padding: 5px 10px;
+        border: 1px solid #d1d1d1 !important;
+        padding: 4px 6px !important;
+        height: 24px;
     }
 
     .doc-header td.label {
         background-color: #002060 !important;
-        color: #fff !important;
+        color: #ffffff !important;
         font-weight: bold;
-        padding: 4px 8px;
-        border: 1px solid #d1d1d1 !important;
         text-align: left;
         white-space: nowrap;
-        width: 100px;
+        width: 105px !important;
     }
 
     .doc-header td:nth-child(2) {
-        width: 2%;
-        padding: 0 1px;
+        width: 8px !important;
+        min-width: 8px !important;
+        max-width: 8px !important;
+        padding: 0 !important;
+        text-align: center;
         font-weight: bold;
-        border-top: 1px solid #d1d1d1 !important;
-        border-bottom: 1px solid #d1d1d1 !important;
+        color: #000000 !important;
+        background: #ffffff !important;
     }
 
     .doc-header td.value {
-        padding: 4px 10px;
-        border: 1px solid #d1d1d1 !important;
-        min-width: 120px;
+        width: 190px !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+        text-align: left;
+        white-space: nowrap;
     }
 
     .doc-header td.value .printable-field,
@@ -548,7 +608,7 @@ async function printReport() {
         background: transparent !important;
         font-family: inherit;
         font-size: inherit;
-        color: #333;
+        color: #000000 !important;
         margin: 0;
         padding: 0;
         width: 100%;
@@ -558,15 +618,33 @@ async function printReport() {
         outline: none !important;
     }
 
+    .print-content,
+.print-content *,
+#programPlanTable,
+#programPlanTable th,
+#programPlanTable td,
+#programPlanTable .printable-field,
+#programPlanTable .printable-paper-lines,
+.printable-field,
+.printable-paper-lines,
+.input-group label,
+.approvals-container,
+.approvals-container *,
+.document-info,
+.document-info * {
+    font-size: 15px !important;
+}
     @media print {
-        html, body {
+        html,
+        body {
             margin: 0 !important;
             padding: 0 !important;
-            background: #fff !important;
+            background: #ffffff !important;
         }
     }
 </style>
 </head>
+
 <body>
     <div class="print-root">
         <table class="print-layout" role="presentation">
@@ -576,7 +654,8 @@ async function printReport() {
                         <div class="print-header-wrap">
                             <div class="header-content">
                                 ${leftLogoSrc ? `<img src="${escapeHtml(leftLogoSrc)}" alt="SMCC Logo" class="logo-left">` : ''}
-                                ${left2LogoSrc ? `<img src="${escapeHtml(left2LogoSrc)}" alt="CES logo" class="logo-left2">` : ''}
+                                ${left2LogoSrc ? `<img src="${escapeHtml(left2LogoSrc)}" alt="CES Logo" class="logo-left2">` : ''}
+
                                 <div class="college-info">
                                     <h1>Saint Michael College of Caraga</h1>
                                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -584,10 +663,12 @@ async function printReport() {
                                     <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
                                     <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
                                 </div>
+
                                 <div class="logos-right">
                                     ${rightLogoSrc ? `<img src="${escapeHtml(rightLogoSrc)}" alt="SOCOTEC Logo">` : ''}
                                 </div>
                             </div>
+
                             <h2 class="office-title">OFFICE OF THE COMMUNITY EXTENSION SERVICES</h2>
                             <div class="double-line"></div>
                         </div>
@@ -621,6 +702,7 @@ async function printReport() {
 </body>
 </html>
         `);
+
         doc.close();
 
         const printContent = doc.getElementById('printContent');
@@ -648,8 +730,56 @@ async function printReport() {
     }
 }
 
+function fixProgramPlanTableHeader(root) {
+    const table = root.querySelector('#programPlanTable');
+    if (!table) return;
+
+    let thead = table.querySelector('thead');
+
+    if (!thead) {
+        thead = document.createElement('thead');
+        table.insertBefore(thead, table.firstChild);
+    }
+
+    thead.innerHTML = `
+        <tr>
+            <th rowspan="2">Program</th>
+            <th rowspan="2">Objectives</th>
+            <th rowspan="2">Strategies and<br>Action Plans</th>
+            <th colspan="3">Resources Needed</th>
+            <th rowspan="2">Means of<br>Verification</th>
+            <th rowspan="2">Time<br>Frame</th>
+        </tr>
+
+        <tr>
+            <th>
+                Resources from the<br>
+                School (Human<br>
+                Resources,<br>
+                Collaborating Agencies<br>
+                and Equipment)
+            </th>
+
+            <th>
+                Resources from the<br>
+                Community<br>
+                (Human Resources,<br>
+                Collaborating<br>
+                Agencies and<br>
+                Equipment)
+            </th>
+
+            <th>
+                Budget and<br>
+                funding
+            </th>
+        </tr>
+    `;
+}
+
 function createPrintIframe() {
     const iframe = document.createElement('iframe');
+
     iframe.style.position = 'fixed';
     iframe.style.right = '0';
     iframe.style.bottom = '0';
@@ -658,8 +788,11 @@ function createPrintIframe() {
     iframe.style.border = '0';
     iframe.style.opacity = '0';
     iframe.style.pointerEvents = 'none';
+
     iframe.setAttribute('aria-hidden', 'true');
+
     document.body.appendChild(iframe);
+
     return iframe;
 }
 
@@ -669,6 +802,7 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
     sourceFields.forEach((sourceField, index) => {
         const clonedField = clonedFields[index];
+
         if (!clonedField) return;
 
         const tag = sourceField.tagName.toLowerCase();
@@ -681,9 +815,11 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
         if (tag === 'select') {
             clonedField.value = sourceField.value;
-            Array.from(clonedField.options).forEach(opt => {
-                opt.selected = opt.value === sourceField.value;
+
+            Array.from(clonedField.options).forEach(option => {
+                option.selected = option.value === sourceField.value;
             });
+
             return;
         }
 
@@ -692,8 +828,12 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
             if (type === 'checkbox' || type === 'radio') {
                 clonedField.checked = sourceField.checked;
-                if (sourceField.checked) clonedField.setAttribute('checked', 'checked');
-                else clonedField.removeAttribute('checked');
+
+                if (sourceField.checked) {
+                    clonedField.setAttribute('checked', 'checked');
+                } else {
+                    clonedField.removeAttribute('checked');
+                }
             } else {
                 clonedField.value = sourceField.value;
                 clonedField.setAttribute('value', sourceField.value);
@@ -714,16 +854,25 @@ function removeNonPrintable(root) {
         '[data-no-print="true"]',
         'button',
         'script',
-        'noscript'
+        'noscript',
+        '.ai-search-bar',
+        '.recommendation-section',
+        '#recommendation-container',
+        '.form-actions',
+        '.add-row-btn',
+        '.delete-row-btn'
     ];
 
     selectors.forEach(selector => {
-        root.querySelectorAll(selector).forEach(el => el.remove());
+        root.querySelectorAll(selector).forEach(element => {
+            element.remove();
+        });
     });
 }
 
 function removeInternalReportTitleBlock(root) {
     const internalHeader = root.querySelector('#header');
+
     if (internalHeader) {
         internalHeader.remove();
     }
@@ -751,10 +900,12 @@ function convertFormControlsToPrintable(root) {
 
         if (tag === 'select') {
             replacement.className = 'printable-field';
+
             const selectedText =
                 field.options[field.selectedIndex]
                     ? field.options[field.selectedIndex].text
                     : (field.value || '');
+
             replacement.textContent = selectedText;
             field.replaceWith(replacement);
             return;
@@ -790,23 +941,25 @@ function convertFormControlsToPrintable(root) {
 
 function waitForImages(doc) {
     const images = Array.from(doc.images || []);
+
     if (!images.length) return Promise.resolve();
 
     return Promise.all(
-        images.map(img => {
-            if (img.complete && img.naturalWidth > 0) {
+        images.map(image => {
+            if (image.complete && image.naturalWidth > 0) {
                 return Promise.resolve();
             }
 
             return new Promise(resolve => {
                 const done = () => {
-                    img.removeEventListener('load', done);
-                    img.removeEventListener('error', done);
+                    image.removeEventListener('load', done);
+                    image.removeEventListener('error', done);
                     resolve();
                 };
 
-                img.addEventListener('load', done, { once: true });
-                img.addEventListener('error', done, { once: true });
+                image.addEventListener('load', done, { once: true });
+                image.addEventListener('error', done, { once: true });
+
                 setTimeout(done, 3000);
             });
         })
@@ -814,7 +967,9 @@ function waitForImages(doc) {
 }
 
 function nextFrame(win) {
-    return new Promise(resolve => win.requestAnimationFrame(() => resolve()));
+    return new Promise(resolve => {
+        win.requestAnimationFrame(() => resolve());
+    });
 }
 
 function printIframeAndCleanup(iframe, printButton, state) {
@@ -824,14 +979,17 @@ function printIframeAndCleanup(iframe, printButton, state) {
 
         const cleanup = () => {
             if (cleaned) return;
+
             cleaned = true;
 
             try {
                 win.onafterprint = null;
-            } catch (e) {}
+            } catch (error) {}
 
             setTimeout(() => {
-                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
 
                 if (printButton) {
                     printButton.textContent = state.originalButtonText;
@@ -851,10 +1009,12 @@ function printIframeAndCleanup(iframe, printButton, state) {
 }
 
 function escapeHtml(value) {
-    return String(value)
+    return String(value ?? '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
+
+window.printReport = printReport;

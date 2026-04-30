@@ -80,7 +80,7 @@ function printReport() {
                 overflow: visible !important;
                 background: #fff !important;
                 font-family: Arial, sans-serif;
-                font-size: 12px;
+                font-size: 15px;
                 line-height: 1.4;
                 color: #333;
             }
@@ -552,8 +552,40 @@ function printReport() {
 }
 
 function fixFormStatesForPrint(cloneElement) {
+    const rows = cloneElement.querySelectorAll('.evaluation-table tbody tr');
+
+    rows.forEach((row) => {
+        const categoryCell = row.querySelector('.category-row td, td[colspan="5"]');
+        const categoryText = categoryCell ? categoryCell.textContent.trim() : '';
+
+        if (categoryText === 'Program Relevance') {
+            let currentRow = row.nextElementSibling;
+
+            while (currentRow && !currentRow.classList.contains('category-row')) {
+                const radios = currentRow.querySelectorAll('input[type="radio"]');
+
+                radios.forEach((radio) => {
+                    radio.checked = false;
+                    radio.removeAttribute('checked');
+                });
+
+                currentRow = currentRow.nextElementSibling;
+            }
+        }
+    });
+
     const radios = cloneElement.querySelectorAll('input[type="radio"]');
+
     radios.forEach((radio) => {
+        const row = radio.closest('tr');
+        const isProgramRelevance = row && row.dataset.removeProgramRelevanceCheck === 'true';
+
+        if (isProgramRelevance) {
+            radio.checked = false;
+            radio.removeAttribute('checked');
+            return;
+        }
+
         if (radio.checked) {
             radio.setAttribute('checked', 'checked');
         } else {
@@ -564,6 +596,8 @@ function fixFormStatesForPrint(cloneElement) {
             radio.setAttribute('name', radio.name);
         }
     });
+
+    removeProgramRelevanceChecks(cloneElement);
 
     const checkboxes = cloneElement.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
@@ -607,6 +641,30 @@ function fixFormStatesForPrint(cloneElement) {
             type !== 'password'
         ) {
             input.setAttribute('value', input.value || '');
+        }
+    });
+}
+
+function removeProgramRelevanceChecks(cloneElement) {
+    const categoryRows = cloneElement.querySelectorAll('.evaluation-table tbody tr.category-row');
+
+    categoryRows.forEach((categoryRow) => {
+        const text = categoryRow.textContent.trim();
+
+        if (text !== 'Program Relevance') return;
+
+        let row = categoryRow.nextElementSibling;
+
+        while (row && !row.classList.contains('category-row')) {
+            const radios = row.querySelectorAll('input[type="radio"]');
+
+            radios.forEach((radio) => {
+                radio.checked = false;
+                radio.removeAttribute('checked');
+                radio.defaultChecked = false;
+            });
+
+            row = row.nextElementSibling;
         }
     });
 }

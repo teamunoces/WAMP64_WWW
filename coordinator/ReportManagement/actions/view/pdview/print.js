@@ -53,7 +53,7 @@ async function printReport() {
             background: #fff !important;
             color: #000;
             font-family: Arial, sans-serif;
-            font-size: 11px;
+            font-size: 15px;
             line-height: 1.35;
             overflow: visible !important;
         }
@@ -349,7 +349,7 @@ async function printReport() {
         .program-table,
         table {
             width: 100% !important;
-            max-width: 100% !important;
+            max-width: 99.5% !important;
             border-collapse: collapse !important;
             table-layout: fixed !important;
         }
@@ -360,6 +360,7 @@ async function printReport() {
             border: 1px solid #000 !important;
             padding: 6px 4px !important;
             text-align: center;
+            vertical-align: top !important;
             font-weight: bold;
             word-break: break-word;
             overflow-wrap: anywhere;
@@ -411,83 +412,71 @@ async function printReport() {
             display: inline-block;
         }
 
-        /* ===== Approvals Section ===== */
-        .approvals-container {
-            margin-top: 30px !important;
-            margin-bottom: 0 !important;
-            width: 100% !important;
-            page-break-inside: auto !important;
-            break-inside: auto !important;
-        }
+/* ===== Approvals Section ===== */
+.approvals-container {
+    margin-top: 40px !important;   /* FIX: adds proper space from table */
+    margin-bottom: 10px !important;
+    width: 95% !important;         /* FIX: match table width */
+    max-width: none !important;    /* FIX: remove restriction */
+    margin-left: 0 !important;     /* FIX: align with table (left) */
+    margin-right: 0 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+}
 
-        .approvals-container .label {
-            font-weight: bold !important;
-            margin-bottom: 6px !important;
-        }
+.approvals-container .label {
+    font-weight: bold !important;
+    margin-bottom: 10px !important;
+}
 
-        .approval-row {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: flex-start !important;
-            margin-bottom: 14px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
+.approval-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 25px !important;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
 
-        .signature-group {
-            width: 40% !important;
-            text-align: center !important;
-        }
+.signature-group {
+    width: 35% !important;
+    text-align: left !important;
+}
 
-        .signature-line {
-            border-bottom: 1.5px solid #000 !important;
-            height: 25px !important;
-            margin: 0 auto 4px auto !important;
-            width: 80% !important;
-            min-height: 25px !important;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-        }
+.signature-line {
+    border-bottom: 1.5px solid #000 !important;
+    height: 25px !important;
+    margin-bottom: 5px !important;
+    width: 100% !important;
+}
 
-        .signature-group .title {
-            font-size: 12px !important;
-        }
+.signature-group .title {
+    font-size: 12px !important;
+}
 
-        .approval-centered {
-            text-align: center !important;
-            margin-top: 10px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
+.approval-centered {
+    text-align: center !important;
+    margin-top: 20px !important;
+}
 
-        .approval-centered:last-of-type {
-            margin-top: 8px !important;
-            margin-bottom: 0 !important;
-        }
+.admin-block {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+}
 
-        .admin-block {
-            margin-bottom: 8px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
+.name-underlined {
+    display: inline-block !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    text-transform: uppercase !important;
+    margin-bottom: 2px !important;
+}
 
-        .admin-block:last-child {
-            margin-bottom: 4px !important;
-        }
-
-        .name-underlined {
-            display: inline-block !important;
-            font-weight: bold !important;
-            text-decoration: underline !important;
-            text-transform: uppercase !important;
-            margin-bottom: 2px !important;
-        }
-
-        .left-align {
-            text-align: left !important;
-            width: 100% !important;
-        }
+.left-align {
+    text-align: left !important;
+    width: 100% !important;
+}
 
         /* ===== Document Info ===== */
         .document-info {
