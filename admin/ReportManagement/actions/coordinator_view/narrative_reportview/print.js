@@ -64,7 +64,7 @@ async function printReport() {
 
         @page {
             size: A4 portrait;
-            margin: 12mm 10mm 12mm 10mm;
+            margin: 12mm 10mm 14mm 10mm;
         }
 
         html, body {
@@ -147,7 +147,7 @@ async function printReport() {
         }
 
         .print-footer {
-            padding: 8px 0 0 0 !important;
+            padding: 14px 0 0 0 !important;
         }
 
         .print-body {
@@ -189,7 +189,7 @@ async function printReport() {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
+            width: 98%;
             gap: 12px;
             flex-wrap: nowrap;
             margin: 0 0 10px 0 !important;
@@ -198,6 +198,11 @@ async function printReport() {
 
         .logo-left {
             height: 90px;
+            width: auto;
+            flex: 0 0 auto;
+        }
+        .logo-left2 {
+            height: 80px;
             width: auto;
             flex: 0 0 auto;
         }
@@ -471,8 +476,8 @@ async function printReport() {
             width: 100%;
             max-width: 100%;
             height: auto;
-            max-height: 26px;
-            margin: 0 !important;
+            max-height: 85px;
+            margin: 0 auto !important;
             padding: 0 !important;
             border: none !important;
             outline: none !important;
@@ -666,6 +671,9 @@ function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src ||
         '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
 
+    const leftLogo2 = document.querySelector('.logo-left2')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png';
+
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -693,6 +701,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <img src="${escapeHtml(leftLogo2)}" alt="CES Logo" class="logo-left2">
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">${rightLogoHtml}</div>
             </div>

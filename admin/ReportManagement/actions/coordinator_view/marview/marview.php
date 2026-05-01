@@ -38,7 +38,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                                    <!-- ACTION BUTTONS -->
                         <div class="buttons">
                             <button  onclick="printReport()">Print</button>
-                            <button id="downloadPDF" type="button">Download PDF</button>
+                           <!--  <button id="downloadPDF" type="button">Download PDF</button> -->
                         </div>
 
                                     <div class="admin-comment">
@@ -53,6 +53,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                     <header>
                         <div class="header-content">
                             <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                            <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES Logo" class="logo-left2">
                             <div class="college-info">
                                 <h1>Saint Michael College of Caraga</h1>
                                 <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -76,27 +77,27 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                 <table class="header-table">
                         <tr>
                             <td class="label">Department</td>
-                            <td class="input_cell"><input type="text" name="department" id="department" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="department" id="department" ></td>
                         </tr>
                         <tr>
                             <td class="label">Report for the Month of</td>
-                            <td class="input_cell"><input type="text" name="month" id="month" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="month" id="month" ></td>
                         </tr>
                         <tr>
                             <td class="label">Title of Activity</td>
-                            <td class="input_cell"><input type="text" name="title_act" id="title_act" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="title_act" id="title_act"  ></td>
                         </tr>
                         <tr>
                             <td class="label">Location of Program Implementation</td>
-                            <td class="input_cell"><input type="text" name="location" id="location" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="location" id="location"></td>
                         </tr>
                         <tr>
                             <td class="label">Beneficiaries</td>
-                            <td class="input_cell"><input type="text" name="benefeciaries" id="benefeciaries" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="benefeciaries" id="benefeciaries"  ></td>
                         </tr>
                         <tr>
                             <td class="label">Date Submitted</td>
-                            <td class="input_cell"><input type="text" name="date_submitted" id="date_submitted" placeholder="Type here..." ></td>
+                            <td class="input_cell"><input type="text" name="date_submitted" id="date_submitted"></td>
                         </tr>
                     </table>
 
@@ -241,8 +242,8 @@ function printReport(){
       <script src="./get.js" ></script>
       <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
       <script src="./darkmode.js"></script>
-      <script src="./print.js"></script>
       <script src="./download.js"></script>
+      <script src="./print.js"></script>
 
 
 

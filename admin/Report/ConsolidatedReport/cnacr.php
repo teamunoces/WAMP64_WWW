@@ -42,6 +42,7 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
         <header>
             <div class="header-content">
                 <img src="../images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="../images/Ceslogo.png" alt="CEs Logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>

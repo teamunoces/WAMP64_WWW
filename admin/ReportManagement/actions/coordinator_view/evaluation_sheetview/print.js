@@ -1,5 +1,7 @@
-// print.js - Print the evaluation sheet with repeating header/footer and no margin line
-function printReport() {
+// print.js - Evaluation Sheet Print
+// Fixed: print button no longer changes the main display size
+
+async function printReport() {
     const evaluationContainer = document.querySelector('.evaluation-container');
     const evaluationForm = document.getElementById('evaluationForm');
 
@@ -9,13 +11,12 @@ function printReport() {
         return;
     }
 
-    // Clone the printable layout
-    const printClone = evaluationContainer.cloneNode(true);
+    const oldIframe = document.getElementById('print-iframe');
+    if (oldIframe) oldIframe.remove();
 
-    // Preserve current form states in the clone
+    const printClone = evaluationContainer.cloneNode(true);
     fixFormStatesForPrint(printClone);
 
-    // Extract header(s), footer, and form from the cloned layout
     const headerElements = [...printClone.querySelectorAll('header')];
     const footerElement = printClone.querySelector('footer');
     const formElement = printClone.querySelector('#evaluationForm');
@@ -24,19 +25,582 @@ function printReport() {
     const footerHTML = footerElement ? footerElement.outerHTML : '';
     const formHTML = formElement ? formElement.outerHTML : '';
 
-    // Create print-only container
-    const printContainer = document.createElement('div');
-    printContainer.id = 'print-container';
+    const iframe = document.createElement('iframe');
+    iframe.id = 'print-iframe';
+    iframe.setAttribute('aria-hidden', 'true');
 
-    // Use a print table shell so thead/tfoot repeat during printing
-    printContainer.innerHTML = `
-        <table class="print-shell" role="presentation" aria-hidden="true">
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+    doc.open();
+    doc.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluation Sheet for Extension Services</title>
+
+    <style>
+        * {
+            box-sizing: border-box !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
+        html,
+        body {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+            background: #fff !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 15px !important;
+            line-height: 1.4 !important;
+            color: #333 !important;
+        }
+
+        body {
+            background: white !important;
+        }
+
+        .print-container {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+            background: white !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .print-shell {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            table-layout: fixed !important;
+            background: white !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .print-shell thead {
+            display: table-header-group !important;
+        }
+
+        .print-shell tfoot {
+            display: table-footer-group !important;
+        }
+
+        .print-shell tbody {
+            display: table-row-group !important;
+        }
+
+        .print-shell tr,
+        .print-shell td {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            vertical-align: top !important;
+            overflow: visible !important;
+            background: white !important;
+        }
+
+        .print-header,
+        .print-footer,
+        .print-body,
+        .evaluation-container,
+        #evaluationForm {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            overflow: visible !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+
+        .print-header {
+            padding-bottom: 8px !important;
+        }
+
+        .print-footer {
+            padding-top: 8px !important;
+        }
+
+        .print-body {
+            padding: 0 !important;
+        }
+
+        header,
+        footer,
+        .header-content,
+        .footer-bottom,
+        .footer-logos {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .header-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 8px !important;
+            flex-wrap: nowrap !important;
+            margin: 0 0 8px 0 !important;
+            padding: 0 !important;
+        }
+
+        .logo-left,
+        .logo-left2 {
+            height: 75px !important;
+            width: auto !important;
+            max-width: 18% !important;
+            flex: 0 0 auto !important;
+            object-fit: contain !important;
+        }
+
+        .logos-right {
+            display: flex !important;
+            gap: 4px !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            max-width: 100% !important;
+            flex: 0 0 auto !important;
+        }
+
+        .logos-right img {
+            height: 75px !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+        }
+
+        .college-info {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            max-width: 58% !important;
+            text-align: center !important;
+            padding: 0 4px !important;
+            overflow-wrap: break-word !important;
+            word-break: normal !important;
+        }
+
+        .college-info h1 {
+            font-family: "Times New Roman", Times, serif !important;
+            color: #4f81bd !important;
+            font-size: 22px !important;
+            margin: 0 !important;
+            font-weight: normal !important;
+            line-height: 1.1 !important;
+            text-decoration: none !important;
+        }
+
+        .college-info p {
+            font-size: 10px !important;
+            margin: 1px 0 !important;
+            line-height: 1.2 !important;
+        }
+
+        .college-info a {
+            font-size: 10px !important;
+            word-break: break-word !important;
+        }
+
+        .office-title {
+            text-align: center !important;
+            font-size: 16px !important;
+            color: #595959 !important;
+            font-weight: bold !important;
+            margin: 4px 0 !important;
+            text-transform: uppercase !important;
+        }
+
+        .double-line {
+            border-top: 4px double #4f81bd !important;
+            margin-bottom: 10px !important;
+        }
+
+        header h1 {
+            text-align: center !important;
+            font-size: 16px !important;
+            text-decoration: underline !important;
+            margin: 10px 0 15px 0 !important;
+        }
+
+        .header-info,
+        .input-line,
+        .checkbox-grid,
+        .signature-section,
+        .approvals-container,
+        .document-info {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            overflow: visible !important;
+        }
+
+        .header-info .input-line {
+            display: flex !important;
+            align-items: flex-end !important;
+            flex-wrap: nowrap !important;
+            margin-bottom: 8px !important;
+        }
+
+        .header-info label {
+            flex: 0 0 auto !important;
+            font-weight: bold !important;
+            margin-right: 8px !important;
+            white-space: nowrap !important;
+        }
+
+        .full-line,
+        .sig-input {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            border: none !important;
+            border-bottom: 1px solid #000 !important;
+            background: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .checkbox-grid {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+            flex-wrap: nowrap !important;
+            margin: 15px 0 !important;
+        }
+
+        .checkbox-grid .column {
+            width: 50% !important;
+            max-width: 50% !important;
+            min-width: 0 !important;
+        }
+
+        .checkbox-grid label {
+            display: block !important;
+            margin-bottom: 5px !important;
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+        }
+
+        table,
+        .legend-table,
+        .evaluation-table,
+        .doc-header {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            table-layout: fixed !important;
+            border-collapse: collapse !important;
+            overflow-wrap: break-word !important;
+            word-wrap: break-word !important;
+            word-break: normal !important;
+        }
+
+        th,
+        td {
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+            word-wrap: break-word !important;
+            word-break: normal !important;
+            white-space: normal !important;
+        }
+
+        .legend-table th,
+        .legend-table td,
+        .evaluation-table th,
+        .evaluation-table td,
+        .doc-header th,
+        .doc-header td {
+            border: 1px solid #000 !important;
+            padding: 6px !important;
+            vertical-align: top !important;
+            font-size: 13px !important;
+        }
+
+        .legend-table tr,
+        .evaluation-table tr,
+        .doc-header tr {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .evaluation-table thead {
+            display: table-header-group !important;
+        }
+
+        .evaluation-table .num-col,
+        .legend-table td.score-cell {
+            width: 35px !important;
+            max-width: 35px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        .radio-cell {
+            width: 38px !important;
+            max-width: 38px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        input[type="radio"] {
+            -webkit-appearance: radio !important;
+            appearance: radio !important;
+            display: inline-block !important;
+            width: 14px !important;
+            height: 14px !important;
+            margin: 0 !important;
+            transform: none !important;
+            accent-color: #dc2626 !important;
+        }
+
+        input[type="checkbox"] {
+            accent-color: #dc2626 !important;
+        }
+
+        input,
+        textarea,
+        select {
+            max-width: 100% !important;
+            min-width: 0 !important;
+            font-family: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .signature-section {
+            margin-top: 35px !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .sig-line {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            margin-bottom: 10px !important;
+            font-weight: bold !important;
+        }
+
+        .sig-input {
+            width: auto !important;
+            margin-left: 10px !important;
+            padding: 4px 0 !important;
+        }
+
+        .approvals-container {
+            margin-top: 35px !important;
+            font-size: 14px !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
+
+        .approval-row {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 40px !important;
+            margin-bottom: 20px !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .signature-group {
+            width: 42% !important;
+        }
+
+        .label {
+            font-weight: bold !important;
+            margin-bottom: 30px !important;
+            font-size: 14px !important;
+        }
+
+        .signature-line {
+            border-bottom: 1.5px solid #000 !important;
+            min-height: 20px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .title {
+            font-size: 13px !important;
+        }
+
+        .bold {
+            font-weight: bold !important;
+        }
+
+        .approval-centered {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .left-align {
+            width: 100% !important;
+            text-align: left !important;
+        }
+
+        .admin-block {
+            text-align: center !important;
+            margin-top: 25px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .name-underlined {
+            display: inline-block !important;
+            font-size: 15px !important;
+            font-weight: bold !important;
+            text-decoration: underline !important;
+            text-transform: uppercase !important;
+            min-width: 220px !important;
+        }
+
+        .document-info {
+            margin-top: 45px !important;
+            width: auto !important;
+            max-width: 305px !important;
+            margin-right: auto !important;
+            margin-left: 0 !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .doc-header {
+            width: 305px !important;
+            max-width: 305px !important;
+            font-size: 11px !important;
+        }
+
+        .doc-header .label {
+            background-color: #002060 !important;
+            color: white !important;
+            font-weight: bold !important;
+            width: 95px !important;
+            white-space: nowrap !important;
+            text-align: left !important;
+            font-size: 11px !important;
+            margin: 0 !important;
+        }
+
+        .doc-header td.value {
+            width: 210px !important;
+            text-align: left !important;
+        }
+
+        .doc-header td.value input,
+        .doc-header td.value p {
+            width: 100% !important;
+            border: none !important;
+            background: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .footer-bottom,
+        .footer-logos {
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: flex-end !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .footer-logos img {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: 60px !important;
+            object-fit: contain !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, p {
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+            page-break-after: avoid !important;
+            break-after: avoid-page !important;
+            orphans: 3;
+            widows: 3;
+        }
+
+        .category-row,
+        .evaluation-table thead th {
+            background-color: #f2f2f2 !important;
+            font-weight: bold !important;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="print-container">
+        <table class="print-shell" role="presentation">
             <thead>
                 <tr>
                     <td>
-                        <div class="print-header">
-                            ${headerHTML}
-                        </div>
+                        <div class="print-header">${headerHTML}</div>
                     </td>
                 </tr>
             </thead>
@@ -44,9 +608,7 @@ function printReport() {
             <tfoot>
                 <tr>
                     <td>
-                        <div class="print-footer">
-                            ${footerHTML}
-                        </div>
+                        <div class="print-footer">${footerHTML}</div>
                     </td>
                 </tr>
             </tfoot>
@@ -54,564 +616,74 @@ function printReport() {
             <tbody>
                 <tr>
                     <td>
-                        <div class="print-body">
-                            ${formHTML}
-                        </div>
+                        <div class="print-body">${formHTML}</div>
                     </td>
                 </tr>
             </tbody>
         </table>
-    `;
-
-    const styleElement = document.createElement('style');
-    styleElement.setAttribute('data-print-runtime', 'true');
-    styleElement.textContent = `
-        * {
-            box-sizing: border-box;
-        }
-
-        @media print {
-            @page {
-                margin: 12mm;
-                size: auto;
-            }
-
-            html, body {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                background: white !important;
-                font-family: Arial, sans-serif;
-                font-size: 12px;
-                line-height: 1.4;
-                color: #333;
-            }
-
-            body > *:not(#print-container):not(style[data-print-runtime]) {
-                display: none !important;
-            }
-
-            #print-container {
-                display: block !important;
-                width: 100%;
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                background: white !important;
-            }
-
-            /* Hide screen-only elements */
-            #sidebarFrame,
-            #headerFrame,
-            .buttons,
-            .admin-comment,
-            .action-buttons,
-            .wrapper {
-                display: none !important;
-            }
-
-            /* Print shell */
-            .print-shell {
-                width: 100%;
-                margin: 0 !important;
-                padding: 0 !important;
-                border-collapse: collapse;
-                border-spacing: 0;
-                table-layout: fixed;
-                border: none !important;
-                outline: none !important;
-                background: white !important;
-            }
-
-            .print-shell thead {
-                display: table-header-group;
-            }
-
-            .print-shell tfoot {
-                display: table-footer-group;
-            }
-
-            .print-shell tbody {
-                display: table-row-group;
-            }
-
-            .print-shell > thead > tr,
-            .print-shell > tbody > tr,
-            .print-shell > tfoot > tr,
-            .print-shell > thead > tr > td,
-            .print-shell > tbody > tr > td,
-            .print-shell > tfoot > tr > td {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                vertical-align: top;
-                background: white !important;
-            }
-
-            /* Repeating header/footer containers */
-            .print-header,
-            .print-footer,
-            .print-body {
-                width: 100%;
-                margin: 0 !important;
-                background: white !important;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
-            .print-header {
-                padding: 0 0 10px 0 !important;
-            }
-
-            .print-footer {
-                padding: 10px 0 0 0 !important;
-            }
-
-            .print-body {
-                padding: 0 !important;
-            }
-
-            /* Neutralize outer layout box */
-            .evaluation-container {
-                max-width: none !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-                background: white !important;
-            }
-
-            #evaluationForm {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-                background: white !important;
-                pointer-events: none;
-            }
-
-            /* Remove margin lines from header/footer/layout */
-            header,
-            footer,
-            .print-header,
-            .print-footer,
-            .header-content,
-            .footer-bottom,
-            .footer-logos {
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
-            /* Header layout */
-            .header-content {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-                gap: 12px;
-                flex-wrap: nowrap;
-                margin: 0 0 10px 0 !important;
-                padding: 0 !important;
-            }
-
-            .logo-left {
-                height: 90px;
-                width: auto;
-                flex: 0 0 auto;
-            }
-
-            .logos-right {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-                flex: 0 0 auto;
-            }
-
-            .logos-right img {
-                height: 80px;
-                width: auto;
-            }
-
-            .college-info {
-                text-align: center;
-                flex: 1 1 auto;
-                padding: 0 10px;
-            }
-
-            .college-info h1 {
-                font-family: "Times New Roman", Times, serif;
-                color: #4f81bd !important;
-                font-size: 26px;
-                margin: 0;
-                font-weight: normal;
-                line-height: 1.2;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .college-info p {
-                font-size: 11px;
-                margin: 2px 0;
-                color: #333;
-                line-height: 1.3;
-            }
-
-            .college-info a {
-                font-size: 13px;
-                color: #0000EE !important;
-                text-decoration: underline;
-                word-break: break-all;
-            }
-
-            .office-title {
-                text-align: center;
-                font-size: 18px;
-                color: #595959 !important;
-                font-weight: bold;
-                margin: 5px 0;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-            }
-
-            .double-line {
-                border-top: 4px double #4f81bd !important;
-                margin-bottom: 15px;
-            }
-
-            header h1 {
-                text-align: center;
-                font-size: 18px;
-                text-decoration: underline;
-                margin: 15px 0 20px 0;
-            }
-
-            /* Form top section */
-            .header-info .input-line {
-                display: flex;
-                margin-bottom: 10px;
-                align-items: flex-end;
-                flex-wrap: wrap;
-            }
-
-            .header-info label {
-                font-weight: bold;
-                margin-right: 10px;
-                white-space: nowrap;
-            }
-
-            .full-line {
-                border: none !important;
-                border-bottom: 1px solid #000 !important;
-                flex-grow: 1;
-                background: transparent !important;
-                font-family: inherit;
-                font-size: inherit;
-                padding: 4px 0;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
-            .checkbox-grid {
-                display: flex;
-                justify-content: space-between;
-                margin: 20px 0;
-                flex-wrap: wrap;
-            }
-
-            .checkbox-grid .column {
-                width: 48%;
-            }
-
-            .checkbox-grid label {
-                display: block;
-                margin-bottom: 5px;
-            }
-
-            /* Inner content tables only */
-            .legend-table,
-            .evaluation-table,
-            .doc-header {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                page-break-inside: auto;
-                break-inside: auto;
-            }
-
-            .legend-table th,
-            .legend-table td,
-            .evaluation-table th,
-            .evaluation-table td,
-            .doc-header th,
-            .doc-header td {
-                border: 1px solid #000 !important;
-            }
-
-            .legend-table td,
-            .evaluation-table td,
-            .doc-header td {
-                padding: 8px;
-                vertical-align: top;
-            }
-
-            .legend-table tr,
-            .evaluation-table tr,
-            .doc-header tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            .evaluation-table thead {
-                display: table-header-group;
-            }
-
-            .evaluation-table tbody {
-                display: table-row-group;
-            }
-
-            .legend-table td.score-cell {
-                width: 40px;
-                text-align: center;
-                font-weight: bold;
-                vertical-align: middle;
-            }
-
-            .evaluation-table thead th {
-                background-color: #f2f2f2 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .evaluation-table .num-col {
-                width: 40px;
-                text-align: center;
-            }
-
-            .category-row {
-                background-color: #e9e9e9 !important;
-                font-weight: bold;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            tr td em {
-                font-size: 11px;
-                display: block;
-                margin-top: 2px;
-            }
-
-            /* Radio / checkbox */
-            .radio-cell {
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            input[type="radio"] {
-                -webkit-appearance: radio !important;
-                appearance: radio !important;
-                opacity: 1 !important;
-                display: inline-block !important;
-                transform: scale(1.1) !important;
-                margin: 0 4px !important;
-                width: 16px !important;
-                height: 16px !important;
-                accent-color: #dc2626 !important;
-                color: #dc2626 !important;
-                background-color: transparent !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            input[type="radio"]::before,
-            input[type="radio"]::after {
-                display: none !important;
-                content: none !important;
-            }
-
-            input[type="checkbox"] {
-                accent-color: #dc2626 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            /* Signature */
-            .signature-section {
-                margin-top: 40px;
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            .sig-line {
-                margin-bottom: 10px;
-                font-weight: bold;
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-
-            .sig-input {
-                border: none !important;
-                border-bottom: 1px solid #000 !important;
-                background: transparent !important;
-                width: 280px;
-                font-family: inherit;
-                font-size: inherit;
-                margin-left: 10px;
-                padding: 4px 0;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
-            /* Document info */
-            .document-info {
-                margin-top: 50px;
-                width: 30%;
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            .doc-header {
-                width: auto;
-                margin-right: auto;
-                border-collapse: collapse;
-                font-family: Arial, sans-serif;
-                font-size: 11px;
-                border: 1px solid #d1d1d1;
-            }
-
-            .doc-header td {
-                padding: 5px 10px;
-            }
-
-            .doc-header .label {
-                background-color: #002060 !important;
-                color: white !important;
-                width: 25%;
-                font-size: 11px;
-                font-weight: bold;
-                padding: 4px 8px;
-                text-align: left;
-                white-space: nowrap;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .doc-header td.value {
-                width: 70%;
-                font-size: 11px;
-                text-align: left;
-                padding: 4px 10px;
-            }
-
-            .doc-header td.value input,
-            .doc-header td.value p {
-                border: none !important;
-                background: transparent !important;
-                font-family: inherit;
-                font-size: inherit;
-                color: #333;
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                outline: none !important;
-                box-shadow: none !important;
-            }
-
-            /* Footer image */
-            footer {
-                width: 100%;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .footer-bottom {
-                display: flex;
-                align-items: flex-end;
-                justify-content: flex-end;
-                width: 100%;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .footer-logos {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                width: 100%;
-                gap: 0;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .footer-logos img {
-                display: block;
-                width: 100%;
-                max-width: 100%;
-                height: auto;
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                box-shadow: none !important;
-                object-fit: contain;
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            /* Page-break hygiene */
-            h1, h2, h3, h4, h5, h6, p {
-                page-break-after: avoid;
-                break-after: avoid-page;
-                orphans: 3;
-                widows: 3;
-            }
-
-            img {
-                max-width: 100%;
-                height: auto;
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            * {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-        }
-    `;
-
-    document.head.appendChild(styleElement);
-    document.body.appendChild(printContainer);
+    </div>
+</body>
+</html>
+    `);
+    doc.close();
+
+    await waitForImages(doc);
+    await waitForFonts(doc);
+    await nextFrame(iframe.contentWindow);
+    await nextFrame(iframe.contentWindow);
+
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
 
     const cleanup = () => {
-        if (printContainer.parentNode) {
-            printContainer.parentNode.removeChild(printContainer);
-        }
-        if (styleElement.parentNode) {
-            styleElement.parentNode.removeChild(styleElement);
-        }
-        window.removeEventListener('afterprint', cleanup);
+        iframe.remove();
+        iframe.contentWindow.removeEventListener('afterprint', cleanup);
     };
 
-    window.addEventListener('afterprint', cleanup);
-    window.print();
+    iframe.contentWindow.addEventListener('afterprint', cleanup);
 
-    // Fallback cleanup
-    setTimeout(cleanup, 1000);
+    setTimeout(() => {
+        if (document.body.contains(iframe)) {
+            iframe.remove();
+        }
+    }, 3000);
 }
 
 function fixFormStatesForPrint(cloneElement) {
-    // Preserve radio checked states
+    const rows = cloneElement.querySelectorAll('.evaluation-table tbody tr');
+
+    rows.forEach((row) => {
+        const categoryCell = row.querySelector('.category-row td, td[colspan="5"]');
+        const categoryText = categoryCell ? categoryCell.textContent.trim() : '';
+
+        if (categoryText === 'Program Relevance') {
+            let currentRow = row.nextElementSibling;
+
+            while (currentRow && !currentRow.classList.contains('category-row')) {
+                const radios = currentRow.querySelectorAll('input[type="radio"]');
+
+                radios.forEach((radio) => {
+                    radio.checked = false;
+                    radio.removeAttribute('checked');
+                });
+
+                currentRow = currentRow.nextElementSibling;
+            }
+        }
+    });
+
     const radios = cloneElement.querySelectorAll('input[type="radio"]');
+
     radios.forEach((radio) => {
+        const row = radio.closest('tr');
+        const isProgramRelevance = row && row.dataset.removeProgramRelevanceCheck === 'true';
+
+        if (isProgramRelevance) {
+            radio.checked = false;
+            radio.removeAttribute('checked');
+            return;
+        }
+
         if (radio.checked) {
             radio.setAttribute('checked', 'checked');
         } else {
@@ -623,8 +695,10 @@ function fixFormStatesForPrint(cloneElement) {
         }
     });
 
-    // Preserve checkbox checked states
+    removeProgramRelevanceChecks(cloneElement);
+
     const checkboxes = cloneElement.querySelectorAll('input[type="checkbox"]');
+
     checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
             checkbox.setAttribute('checked', 'checked');
@@ -633,7 +707,6 @@ function fixFormStatesForPrint(cloneElement) {
         }
     });
 
-    // Preserve text/date/other input values
     const inputs = cloneElement.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
@@ -668,6 +741,73 @@ function fixFormStatesForPrint(cloneElement) {
         ) {
             input.setAttribute('value', input.value || '');
         }
+    });
+}
+
+function removeProgramRelevanceChecks(cloneElement) {
+    const categoryRows = cloneElement.querySelectorAll('.evaluation-table tbody tr.category-row');
+
+    categoryRows.forEach((categoryRow) => {
+        const text = categoryRow.textContent.trim();
+
+        if (text !== 'Program Relevance') return;
+
+        let row = categoryRow.nextElementSibling;
+
+        while (row && !row.classList.contains('category-row')) {
+            const radios = row.querySelectorAll('input[type="radio"]');
+
+            radios.forEach((radio) => {
+                radio.checked = false;
+                radio.removeAttribute('checked');
+                radio.defaultChecked = false;
+            });
+
+            row = row.nextElementSibling;
+        }
+    });
+}
+
+function waitForImages(doc) {
+    const images = Array.from(doc.querySelectorAll('img'));
+
+    if (!images.length) return Promise.resolve();
+
+    return Promise.all(
+        images.map((img) => {
+            if (img.complete && img.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                const done = () => {
+                    img.removeEventListener('load', done);
+                    img.removeEventListener('error', done);
+                    resolve();
+                };
+
+                img.addEventListener('load', done, { once: true });
+                img.addEventListener('error', done, { once: true });
+
+                setTimeout(done, 3000);
+            });
+        })
+    );
+}
+
+async function waitForFonts(doc) {
+    try {
+        if (doc.fonts && doc.fonts.ready) {
+            await doc.fonts.ready;
+        }
+    } catch (error) {
+        console.warn('Font loading skipped:', error);
+    }
+}
+
+function nextFrame(win) {
+    return new Promise((resolve) => {
+        win.requestAnimationFrame(() => resolve());
     });
 }
 

@@ -204,7 +204,7 @@ function printReport() {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                width: 100%;
+                width: 98%;
                 gap: 12px;
                 flex-wrap: nowrap;
                 margin: 0 0 10px 0 !important;

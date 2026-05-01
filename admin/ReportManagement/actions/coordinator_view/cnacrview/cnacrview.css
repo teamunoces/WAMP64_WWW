@@ -52,6 +52,10 @@ body {
     height: 90px;
     width: auto;
 }
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 
 .logos-right {
     display: flex;
@@ -342,85 +346,78 @@ footer {
     min-width: 250px;
 }
 
-/* ===== 4. Document Info Table ===== */
-.doc-header {
-    width: auto;
-    margin-right: auto;
-}
-
-.doc-header td {
-    border: 1px solid #000;
-    padding: 5px 10px;
-}
-
-.doc-header .label {
-    background-color: #002060;
-    color: #fff;
-    width: 25%;
-    font-size: 11px;
-}
-
-.doc-header .value {
-    width: 70%;
-    font-size: 11px;
-    text-align: left;
-}
-
+/* ===== 4. DOCUMENT INFO TABLE (FINAL CLEAN VERSION) ===== */
 .document-info {
     margin-top: 50px;
-    width: 30%;
+    width: 255px;
+    max-width: 255px;
 }
 
-/* Table Styling */
+/* TABLE */
 .doc-header {
+    width: 255px;
     border-collapse: collapse;
+    table-layout: fixed;
     font-family: Arial, sans-serif;
-    font-size: 11px;
-    border: 1px solid #d1d1d1;
+    font-size: 10px;
+    background: #fff;
+    border: 1px solid #808080; /* OUTER BORDER FIX */
 }
 
+/* ALL CELLS */
+.doc-header td {
+    border: 1px solid #808080; /* FULL GRID BORDER */
+    padding: 3px 6px;
+    height: 20px;
+    vertical-align: middle;
+    line-height: 1.1;
+}
+
+/* LABEL COLUMN (BLUE) */
 .doc-header td.label {
     background-color: #002060;
-    color: white;
+    color: #fff;
     font-weight: bold;
-    padding: 4px 8px;
-    border: 1px solid #d1d1d1;
     text-align: left;
     white-space: nowrap;
-    width: 100px;
+    width: 105px;
 }
 
+/* COLON COLUMN */
 .doc-header td:nth-child(2) {
-    width: 2%;
-    padding: 0 1px;
+    width: 10px;
+    text-align: center;
+    padding: 0;
     font-weight: bold;
-    border-top: 1px solid #d1d1d1;
-    border-bottom: 1px solid #d1d1d1;
+    background: #fff;
 }
 
+/* VALUE COLUMN */
 .doc-header td.value {
-    padding: 4px 10px;
-    border: 1px solid #d1d1d1;
-    min-width: 120px;
+    width: 140px;
+    text-align: left !important;
+    padding-left: 6px;
+    white-space: nowrap;
 }
 
-.doc-header td.value input, 
-.doc-header td.value p {
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    color: #333;
+/* FORCE TEXT LEFT */
+.doc-header td.value *,
+.doc-header td.value input,
+.doc-header td.value p,
+.doc-header td.value span {
+    text-align: left !important;
     margin: 0;
     padding: 0;
+}
+
+/* REMOVE INPUT STYLE */
+.doc-header td.value input {
+    border: none;
+    background: transparent;
     width: 100%;
+    font-family: inherit;
+    font-size: inherit;
 }
-
-.doc-header td.value input:disabled {
-    color: black;
-    cursor: default;
-}
-
 /* ===== BUTTONS - Positioned Above Container ===== */
 .buttons {
     position: fixed;

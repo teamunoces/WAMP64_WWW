@@ -41,7 +41,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
              <!-- ACTION BUTTONS -->
                         <div class="buttons">
                             <button onclick="printReport()">Print</button>
-                            <button id="downloadPDF" type="button">Download PDF</button>
+                         <!--   <button id="downloadPDF" type="button">Download PDF</button>-->
                         </div>
                                     <div class="admin-comment">
                                           <label for="admincomment" class="admin-comment-label" style="font-weight: bold;">Admin Feedback</label>
@@ -55,6 +55,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES Logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>

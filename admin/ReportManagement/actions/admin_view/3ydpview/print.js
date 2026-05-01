@@ -31,6 +31,7 @@ async function printReport() {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
 
         const leftLogoSrc = document.querySelector('.logo-left')?.src || '';
+        const left2LogoSrc = document.querySelector('.logo-left2')?.src || '';
         const rightLogoSrc = document.querySelector('.logos-right img')?.src || '';
         const footerLogoSrc =
             document.querySelector('.footer-bottom img')?.src ||
@@ -50,35 +51,34 @@ async function printReport() {
     box-sizing: border-box;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
 }
 
 @page {
     size: A4 portrait;
-    margin: 12mm 12mm 12mm 12mm;
+    margin: 12mm;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-    background: #fff;
-    color: #000;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif;
-    font-size: 10pt;
-    line-height: 1.35;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 20px;
+    line-height: 1.4;
+    overflow: visible !important;
 }
 
 .print-root,
 .print-main,
 .print-content {
+    width: 100%;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-    background: #fff !important;
-}
-
-.print-root {
-    width: 100%;
+    background: #ffffff !important;
 }
 
 table.print-layout {
@@ -87,6 +87,8 @@ table.print-layout {
     border-spacing: 0;
     table-layout: fixed;
     border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .print-layout thead {
@@ -110,39 +112,50 @@ table.print-layout {
 }
 
 .print-header-wrap {
-    padding: 0 0 14px 0;
-    background: #fff;
+    padding: 0 0 12px 0;
+    background: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .print-footer-wrap {
-    padding: 12px 0 0 0;
-    background: #fff;
+    padding: 8px 0 0 0;
+    background: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-/* ===== HEADER ===== */
+/* ================= HEADER ================= */
 .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     width: 100%;
 }
 
 .logo-left {
-    height: 90px;
+    height: 85px;
+    width: auto;
+    display: block;
+}
+
+.logo-left2 {
+    height: 80px;
     width: auto;
     display: block;
 }
 
 .logos-right {
     display: flex;
-    gap: 20px;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .logos-right img {
-    padding-right: 10px;
-    height: 80px;
+    height: 75px;
     width: auto;
     display: block;
 }
@@ -150,13 +163,13 @@ table.print-layout {
 .college-info {
     text-align: center;
     flex-grow: 1;
-    padding: 0 20px;
+    padding: 0 18px;
 }
 
 .college-info h1 {
-    font-family: "Times New Roman", Times, serif;
-    color: #4f81bd;
-    font-size: 26px;
+    font-family: "Times New Roman", Times, serif !important;
+    color: #4f81bd !important;
+    font-size: 24px;
     margin: 0;
     font-weight: normal;
     line-height: 1.2;
@@ -164,51 +177,49 @@ table.print-layout {
 
 .college-info p {
     font-size: 11px;
-    margin: 2px 0;
-    color: #333;
-    line-height: 1.4;
+    margin: 1px 0;
+    color: #333333 !important;
+    line-height: 1.3;
 }
 
 .college-info a {
-    font-size: 13px;
-    color: #0000EE;
+    font-size: 12px;
+    color: #0000ee !important;
     text-decoration: underline;
 }
 
 .office-title {
     text-align: center;
-    font-size: 18px;
-    color: #595959;
+    font-size: 16px;
+    color: #595959 !important;
     font-weight: bold;
-    margin: 20px 0 5px 0;
-    letter-spacing: 0.5px;
+    margin: 12px 0 4px 0;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
 }
 
 .double-line {
-    border-top: 4px double #4f81bd;
+    border-top: 4px double #4f81bd !important;
     margin-bottom: 0;
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
 .print-footer-inner {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
     width: 100%;
-    padding-bottom: 5px;
+    padding-bottom: 4px;
 }
 
 .print-footer-logo {
-    height: 40px;
+    height: 38px;
     width: auto;
     display: block;
 }
 
-/* ===== MAIN CONTENT ===== */
-.print-main,
+/* ================= MAIN CONTENT ================= */
 .print-content {
-    width: 100%;
     max-width: 100%;
     overflow: visible !important;
 }
@@ -216,6 +227,7 @@ table.print-layout {
 .print-content,
 .print-content * {
     max-width: 100%;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
 }
 
 #headerFrame,
@@ -228,7 +240,13 @@ table.print-layout {
 [data-no-print="true"],
 button,
 script,
-noscript {
+noscript,
+.ai-search-bar,
+.recommendation-section,
+#recommendation-container,
+.form-actions,
+.add-row-btn,
+.delete-row-btn {
     display: none !important;
 }
 
@@ -241,40 +259,41 @@ header h1,
 #header h1 {
     text-align: center;
     text-transform: uppercase;
-    font-family: "Century Gothic", Arial, sans-serif !important;
-    font-size: 13pt !important;
-    font-weight: normal !important;
-    color: #000;
-    margin-bottom: 30px;
-    border-bottom: none !important;
-    padding-bottom: 10px;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 16px;
+    color: #000000 !important;
+    margin: 10px 0 20px 0;
+    border: none !important;
+    padding: 0 !important;
+    font-weight: bold;
 }
 
 .form-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .input-group label {
     display: block;
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #000;
+    margin-bottom: 4px;
+    color: #000000 !important;
+    font-size: 12px;
 }
 
 .printable-field {
     display: block;
     width: 100%;
-    min-height: 1em;
+    min-height: 18px;
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;
-    color: #000;
-    font-size: 10pt;
-    line-height: 1.45;
+    color: #000000 !important;
+    font-size: 10px;
+    line-height: 1.35;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -286,14 +305,14 @@ header h1,
     border: none !important;
     outline: none !important;
     overflow: hidden;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif;
-    font-size: 10pt;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 11px;
     line-height: 24px;
     background-image: linear-gradient(transparent 23px, #000 24px) !important;
     background-size: 100% 24px !important;
     background-attachment: local;
     display: block;
-    padding: 5px;
+    padding: 0 2px;
     box-sizing: border-box;
     white-space: pre-wrap;
     word-break: break-word;
@@ -303,15 +322,17 @@ header h1,
 }
 
 .table-section {
-    margin: 40px 0;
+    margin: 25px 0;
     width: 100%;
 }
 
 .table-wrapper {
     overflow-x: visible !important;
-    background: #fff;
+    background: #ffffff !important;
     border: none !important;
-    margin-bottom: 30px;
+    outline: none !important;
+    box-shadow: none !important;
+    margin-bottom: 20px;
     width: 100%;
 }
 
@@ -322,6 +343,8 @@ table {
     page-break-inside: auto;
     break-inside: auto;
     border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 thead {
@@ -337,202 +360,313 @@ tr {
     break-inside: avoid !important;
 }
 
-/* ===== PROGRAM PLAN TABLE ===== */
+/* ================= PROGRAM PLAN TABLE ================= */
 #programPlanTable {
-    width: 100%;
+    width: 100% !important;
     border-collapse: collapse !important;
     table-layout: fixed !important;
-    border: 1px solid #cbd5e1 !important;
+    border: 1px solid #000000 !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
 }
 
 #programPlanTable thead th {
-    border: 1px solid #cbd5e1 !important;
-    background-color: #e2e8f0 !important;
-    color: #334155 !important;
+    border: 1px solid #000000 !important;
+    background-color: #d9d9d9 !important;
+    color: #000000 !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 11px;
     text-align: center;
-    padding: 10px 6px;
-    text-transform: uppercase;
-    word-wrap: break-word;
+    vertical-align: top;
+    padding: 4px 3px;
+    line-height: 1.35;
+    text-transform: none !important;
+    word-break: normal;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+#programPlanTable thead tr:first-child th {
+    height: 28px;
+}
+
+#programPlanTable thead tr:nth-child(2) th {
+    height: 145px;
+    vertical-align: top;
+    padding-top: 4px;
 }
 
 #programPlanTable td {
-    border: 1px solid #cbd5e1 !important;
+    border: 1px solid #000000 !important;
     vertical-align: top;
     padding: 0;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 11px;
+    color: #000000 !important;
 }
 
 #programPlanTable td .printable-field,
 #programPlanTable td .printable-paper-lines {
-    padding: 10px 8px !important;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: #1e293b;
+    padding: 5px 4px !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 11px;
+    line-height: 1.3;
+    color: #000000 !important;
     width: 100%;
     min-height: 60px;
     display: block;
     box-sizing: border-box;
     margin: 0;
     background-color: transparent !important;
+    background-image: none !important;
 }
 
-/* ===== APPROVAL SECTION - FIXED NEW STYLE ===== */
+#programPlanTable th:nth-child(1),
+#programPlanTable td:nth-child(1) {
+    width: 9%;
+}
+
+#programPlanTable th:nth-child(2),
+#programPlanTable td:nth-child(2) {
+    width: 11%;
+}
+
+#programPlanTable th:nth-child(3),
+#programPlanTable td:nth-child(3) {
+    width: 13%;
+}
+
+#programPlanTable th:nth-child(4),
+#programPlanTable td:nth-child(4) {
+    width: 19%;
+}
+
+#programPlanTable th:nth-child(5),
+#programPlanTable td:nth-child(5) {
+    width: 16%;
+}
+
+#programPlanTable th:nth-child(6),
+#programPlanTable td:nth-child(6) {
+    width: 12%;
+}
+
+#programPlanTable th:nth-child(7),
+#programPlanTable td:nth-child(7) {
+    width: 11%;
+}
+
+#programPlanTable th:nth-child(8),
+#programPlanTable td:nth-child(8) {
+    width: 10%;
+}
+
+/* ================= APPROVALS ================= */
+.approvals-container,
 .approvals {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 35px !important;
-    margin-top: 50px !important;
-    width: 100% !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
-    color: #000 !important;
+    width: 100%;
+    margin-top: 45px !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 15px;
+    color: #000000 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
 }
 
+.approvals-container .label,
+.approvals .label {
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 35px;
+    font-size: 15px;
+}
+
+.approval-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.signature-group {
+    flex: 1;
+    text-align: left;
+}
+
+.approvals-container .signature-line,
+.approvals .signature-line {
+    display: inline-block;
+    width: 280px !important;
+    min-height: 22px;
+    border-bottom: 1px solid #000000 !important;
+    padding: 0 0 2px 0;
+    margin-bottom: 3px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 15px;
+    text-transform: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.approvals-container .title,
+.approvals .title {
+    text-align: left;
+    margin-top: 2px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.approval-centered {
+    width: 100%;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.approval-centered .left-align {
+    text-align: left;
+    margin-bottom: 65px;
+}
+
+.admin-block {
+    width: 420px;
+    margin: 0 auto 45px auto;
+    text-align: center;
+}
+
+.approvals-container .name-underlined,
+.approvals .name-underlined {
+    display: inline-block;
+    min-width: 280px;
+    border-bottom: 1px solid #000000 !important;
+    padding-bottom: 1px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.admin-block .title {
+    text-align: center;
+    margin-top: 3px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* New approval fallback style */
 .approval-section {
     width: 100% !important;
+    margin-bottom: 25px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-}
-
-.approval-section .label {
-    display: block !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
-    margin-bottom: 5px !important;
-    text-align: left !important;
-    color: #000 !important;
 }
 
 .ces-head-block {
-    width: 200px !important;
+    width: 280px !important;
     text-align: left !important;
 }
 
 .ces-head-block .name,
 .ces-head-block #ces_head {
     display: block !important;
-    width: 200px !important;
-    border-bottom: 1px solid #000 !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
-    text-transform: uppercase !important;
-    min-height: 16px !important;
-    line-height: 16px !important;
+    width: 280px !important;
+    min-height: 22px !important;
+    border-bottom: 1px solid #000000 !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
     text-align: left !important;
+    text-transform: uppercase !important;
 }
 
 .ces-head-block .ces-head {
     display: block !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 12px !important;
     font-weight: bold !important;
-    text-align: left !important;
-    margin-top: 1px !important;
+    margin-top: 3px !important;
 }
 
 .signature-block {
-    width: 340px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    width: 420px !important;
+    margin: 0 auto 40px auto !important;
     text-align: center !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
 }
 
 .signature-block .name {
     display: block !important;
     width: 100% !important;
-    border-bottom: 1px solid #000 !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
-    text-transform: uppercase !important;
+    min-height: 22px !important;
+    border-bottom: 1px solid #000000 !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
     text-align: center !important;
-    min-height: 16px !important;
-    line-height: 16px !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
 }
 
 .signature-block .title {
     display: block !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 9pt !important;
-    font-weight: normal !important;
+    margin-top: 3px !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
     text-align: center !important;
-    margin-top: 1px !important;
 }
 
-.approval-section:nth-child(2) .label,
-.approval-section:nth-child(3) .label {
-    margin-bottom: 55px !important;
-}
-
-.approval-section:nth-child(2) .signature-block + .signature-block {
-    margin-top: 40px !important;
-}
-
-.approval-section:nth-child(3) {
-    margin-top: -8px !important;
-}
-
-/* Hide old approval layout if it exists inside cloned content */
-.approvals-container,
-.approval-row,
-.signature-group,
-.approval-centered,
-.admin-block,
-.name-underlined,
-.signature-line {
-    display: none !important;
-}
-
-/* ===== DOCUMENT INFO ===== */
+/* ================= DOCUMENT INFO (SMALLER VERSION) ================= */
 .document-info {
-    margin-top: 50px;
-    width: 30%;
+    margin-top: 30px !important;
+    width: 240px !important; /* reduced from 305px */
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
 }
 
 .doc-header {
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    border: none !important;
-    width: auto;
-    margin-right: auto;
+    width: 240px !important;
+    border-collapse: collapse !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 11px !important; /* smaller font */
+    margin-left: 0 !important;
+    margin-right: auto !important;
     table-layout: auto !important;
 }
 
 .doc-header td {
-    padding: 5px 10px;
+    border: 1px solid #d1d1d1 !important;
+    padding: 2px 4px !important; /* tighter padding */
+    height: 18px; /* reduced height */
 }
 
 .doc-header td.label {
     background-color: #002060 !important;
-    color: #fff !important;
+    color: #ffffff !important;
     font-weight: bold;
-    padding: 4px 8px;
-    border: 1px solid #d1d1d1 !important;
     text-align: left;
     white-space: nowrap;
-    width: 100px;
+    width: 80px !important;
+
+    font-size: 11px !important;   /* 🔥 FIX: make it smaller */
+    line-height: 1.1 !important; /* tighter text */
 }
 
 .doc-header td:nth-child(2) {
-    width: 2%;
-    padding: 0 1px;
+    width: 6px !important;
+    min-width: 6px !important;
+    max-width: 6px !important;
+    padding: 0 !important;
+    text-align: center;
     font-weight: bold;
-    border-top: 1px solid #d1d1d1 !important;
-    border-bottom: 1px solid #d1d1d1 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
 }
 
 .doc-header td.value {
-    padding: 4px 10px;
-    border: 1px solid #d1d1d1 !important;
-    min-width: 120px;
+    width: 150px !important; /* reduced */
+    color: #000000 !important;
+    background: #ffffff !important;
+    text-align: left;
+    white-space: nowrap;
 }
 
 .doc-header td.value .printable-field,
@@ -541,13 +675,33 @@ tr {
     border: none !important;
     background: transparent !important;
     font-family: inherit;
-    font-size: inherit;
-    color: #333;
+    font-size: 11px !important; /* match smaller size */
+    color: #000000 !important;
     margin: 0;
     padding: 0;
     width: 100%;
     min-height: auto;
-    line-height: inherit;
+    line-height: 1.2;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.print-content,
+.print-content *,
+#programPlanTable,
+#programPlanTable th,
+#programPlanTable td,
+#programPlanTable .printable-field,
+#programPlanTable .printable-paper-lines,
+.printable-field,
+.printable-paper-lines,
+.input-group label,
+.approvals-container,
+.approvals-container *,
+.approvals,
+.approvals *,
+.document-info,
+.document-info * {
+    font-size: 15px !important;
 }
 
 @media print {
@@ -555,7 +709,7 @@ tr {
     body {
         margin: 0 !important;
         padding: 0 !important;
-        background: #fff !important;
+        background: #ffffff !important;
     }
 }
 </style>
@@ -570,6 +724,7 @@ tr {
                         <div class="print-header-wrap">
                             <div class="header-content">
                                 ${leftLogoSrc ? `<img src="${escapeHtml(leftLogoSrc)}" alt="SMCC Logo" class="logo-left">` : ''}
+                                ${left2LogoSrc ? `<img src="${escapeHtml(left2LogoSrc)}" alt="CES Logo" class="logo-left2">` : ''}
                                 <div class="college-info">
                                     <h1>Saint Michael College of Caraga</h1>
                                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -644,8 +799,8 @@ tr {
 
 function fixApprovalSection(root) {
     const existingApproval =
-        root.querySelector('.approvals') ||
-        root.querySelector('.approvals-container');
+        root.querySelector('.approvals-container') ||
+        root.querySelector('.approvals');
 
     if (!existingApproval) return;
 
@@ -676,7 +831,7 @@ function fixApprovalSection(root) {
             <div class="label">Prepared by:</div>
             <div class="ces-head-block">
                 <div id="ces_head" class="name">${escapeHtml(cesHead)}</div>
-                <span class="ces-head"><strong>CES Head</strong></span>
+                <span class="ces-head">CES Head</span>
             </div>
         </div>
 
@@ -687,7 +842,7 @@ function fixApprovalSection(root) {
                 <span class="title">Vice-President for Academic Affairs and Research</span>
             </div>
 
-            <div class="signature-block" style="margin-top: 40px;">
+            <div class="signature-block">
                 <span id="vp_admin" class="name">${escapeHtml(vpAdmin)}</span>
                 <span class="title">Vice-President for Administrative Affairs</span>
             </div>
@@ -749,8 +904,11 @@ function syncFormValues(sourceRoot, clonedRoot) {
 
             if (type === 'checkbox' || type === 'radio') {
                 clonedField.checked = sourceField.checked;
-                if (sourceField.checked) clonedField.setAttribute('checked', 'checked');
-                else clonedField.removeAttribute('checked');
+                if (sourceField.checked) {
+                    clonedField.setAttribute('checked', 'checked');
+                } else {
+                    clonedField.removeAttribute('checked');
+                }
             } else {
                 clonedField.value = sourceField.value;
                 clonedField.setAttribute('value', sourceField.value);
@@ -771,7 +929,13 @@ function removeNonPrintable(root) {
         '[data-no-print="true"]',
         'button',
         'script',
-        'noscript'
+        'noscript',
+        '.ai-search-bar',
+        '.recommendation-section',
+        '#recommendation-container',
+        '.form-actions',
+        '.add-row-btn',
+        '.delete-row-btn'
     ];
 
     selectors.forEach(selector => {
@@ -821,13 +985,13 @@ function convertFormControlsToPrintable(root) {
             replacement.className = 'printable-field';
 
             if (type === 'checkbox') {
-                replacement.textContent = field.checked ? '✓ Checked' : '□ Unchecked';
+                replacement.textContent = field.checked ? '✓' : '';
                 field.replaceWith(replacement);
                 return;
             }
 
             if (type === 'radio') {
-                replacement.textContent = field.checked ? '◉ Selected' : '○';
+                replacement.textContent = field.checked ? '●' : '';
                 field.replaceWith(replacement);
                 return;
             }
@@ -881,7 +1045,9 @@ function printIframeAndCleanup(iframe, printButton, state) {
             } catch (e) {}
 
             setTimeout(() => {
-                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
 
                 if (printButton) {
                     printButton.textContent = state.originalButtonText;

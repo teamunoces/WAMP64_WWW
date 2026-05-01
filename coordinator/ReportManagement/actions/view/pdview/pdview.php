@@ -236,9 +236,10 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     <script src="./get.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/js/getapproval.js"></script>
-    <script src="./print.js"></script>
     <script src="./download.js"></script>
     <script src="./darkmode.js"></script>
+    <script src="./print.js"></script>
+    
 
 </body>
 </html>

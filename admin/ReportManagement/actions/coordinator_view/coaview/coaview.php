@@ -15,7 +15,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
 <body>
  <!-- Header -->
    <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/coordinator/Profile/profile.html"
+        src="http://localhost/SYSTEM_VERSION_!/admin/Profile/profile.html"
         id="headerFrame"
         frameborder="0"
         scrolling="no"
@@ -24,7 +24,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
 
     <!-- Sidebar -->
     <iframe 
-        src="http://localhost/SYSTEM_VERSION_!/coordinator/Sidebar/sidebar.html"
+        src="http://localhost/SYSTEM_VERSION_!/admin/Nav/navigation.html"
         id="sidebarFrame"
         frameborder="0"
         scrolling="no"
@@ -33,7 +33,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
 
                             <div class="buttons">
                                 <button  onclick="printReport()">Print</button>
-                                <button id="downloadPDF" type="button">Download PDF</button>
+                              <!--   <button id="downloadPDF" type="button">Download PDF</button> -->
                             </div>
 
                                 <div class="wrapper">
@@ -48,6 +48,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Certific
           <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES Logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>

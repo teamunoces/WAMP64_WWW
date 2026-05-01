@@ -1,4 +1,7 @@
 /* General Styling */
+* {
+    box-sizing: border-box;
+}
 body {
     font-family: 'Arial', sans-serif;
     display: flex;
@@ -112,6 +115,10 @@ body {
 
 .logo-left {
     height: 90px;
+    width: auto;
+}
+.logo-left2 {
+    height: 80px;
     width: auto;
 }
 
@@ -454,7 +461,8 @@ footer {
 .doc-header td.value {
     padding: 4px 10px;
     border: 1px solid #d1d1d1;
-    min-width: 120px;
+    min-width: 150px;
+    text-align: left !important;
 }
 
 /* Styling the inputs/text inside the value cell */
@@ -468,4 +476,5 @@ footer {
     margin: 0;
     padding: 0;
     width: 100%;
+    text-align: left !important; /* <-- THIS FIXES YOUR ISSUE */
 }

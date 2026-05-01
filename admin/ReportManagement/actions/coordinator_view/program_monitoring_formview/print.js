@@ -43,19 +43,21 @@ async function printReport() {
 
         @page {
             size: A4 portrait;
-            margin: 12mm 10mm 12mm 10mm;
+            margin: 15mm 12mm 15mm 12mm;
         }
 
         html, body {
             margin: 0 !important;
             padding: 0 !important;
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
             background: #fff !important;
-            color: #000;
+            color: #000 !important;
             font-family: Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            overflow: visible !important;
+            font-size: 13px !important;
+            line-height: 1.45;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
         }
 
         body {
@@ -64,21 +66,24 @@ async function printReport() {
 
         #print-container {
             display: block !important;
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
             outline: none !important;
             background: #fff !important;
+            overflow: visible !important;
         }
 
         .print-shell {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             border-collapse: collapse !important;
             border-spacing: 0 !important;
-            table-layout: fixed !important;
+            table-layout: auto !important;
             border: none !important;
             outline: none !important;
             background: #fff !important;
@@ -108,17 +113,21 @@ async function printReport() {
             outline: none !important;
             vertical-align: top !important;
             background: #fff !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         .print-header-shell,
         .print-footer-shell,
         .print-body {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 !important;
             background: #fff !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
+            overflow: visible !important;
         }
 
         .print-header-shell {
@@ -144,17 +153,21 @@ async function printReport() {
             box-shadow: none !important;
             background: #fff !important;
             overflow: visible !important;
+            font-size: 13px !important;
         }
 
         .print-body-wrapper,
         .form-container,
         #main_content,
+        .form-content,
         .approvals-container,
         .document-info {
             width: 100% !important;
             max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
@@ -167,7 +180,8 @@ async function printReport() {
         .print-body-wrapper > *:first-child,
         .print-body-wrapper > *:first-child *:first-child,
         .form-container > *:first-child,
-        #main_content > *:first-child {
+        #main_content > *:first-child,
+        .form-content > *:first-child {
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
@@ -194,56 +208,74 @@ async function printReport() {
         .print-page-header {
             margin: 0 !important;
             padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
-            width: 100%;
+            margin-bottom: 12px;
+            width: 100% !important;
+            max-width: 100% !important;
+            gap: 8px;
+            overflow: hidden !important;
         }
 
         .logo-left {
-            height: 90px;
+            height: 82px;
             width: auto;
+            flex-shrink: 0;
+        }
+
+        .logo-left2 {
+            height: 74px;
+            width: auto;
+            flex-shrink: 0;
         }
 
         .logos-right {
             display: flex;
-            gap: 20px;
+            gap: 8px;
             align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
         }
 
         .logos-right img {
-            height: 80px;
+            height: 70px;
             width: auto;
+            flex-shrink: 0;
         }
 
         .college-info {
             text-align: center;
-            flex-grow: 1;
-            padding: 0 20px;
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 0 6px;
         }
 
         .college-info h1 {
             font-family: "Times New Roman", Times, serif;
             color: #4f81bd !important;
-            font-size: 26px;
+            font-size: 23px;
             margin: 0;
             font-weight: normal;
-            line-height: 1.2;
+            line-height: 1.15;
+            white-space: normal;
         }
 
         .college-info p {
-            font-size: 11px;
+            font-size: 10.5px;
             margin: 2px 0;
-            color: #333;
-            line-height: 1.4;
+            color: #333 !important;
+            line-height: 1.25;
         }
 
         .college-info a {
-            font-size: 13px;
+            font-size: 12px;
             color: #0000EE !important;
             text-decoration: underline;
         }
@@ -253,52 +285,60 @@ async function printReport() {
             font-size: 18px;
             color: #595959 !important;
             font-weight: bold;
-            margin: 20px 0 5px 0;
+            margin: 14px 0 5px 0;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
         .double-line {
             border-top: 4px double #4f81bd !important;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        /* Main flat layout */
-        .form-container {
+        /* Main Content */
+        .form-container,
+        .form-content,
+        #main_content {
             background: #fff !important;
             max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             box-shadow: none !important;
+            font-size: 13px !important;
         }
 
         h2 {
             text-align: center;
-            margin: 0 0 30px 0 !important;
+            margin: 0 0 24px 0 !important;
             text-transform: capitalize;
-            font-size: 16px !important;
+            font-size: 17px !important;
         }
 
         h3 {
-            margin-top: 30px;
+            margin-top: 24px;
             margin-bottom: 10px;
-            font-size: 1.1em;
+            font-size: 15px !important;
         }
 
         .header-info {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         .input-group {
             display: flex;
             margin-bottom: 8px;
             align-items: flex-end;
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         .input-group label {
             font-weight: bold;
             white-space: nowrap;
             margin-right: 10px;
+            font-size: 13px !important;
         }
 
         .input-group input,
@@ -306,31 +346,42 @@ async function printReport() {
             border: none !important;
             border-bottom: 1px solid black !important;
             width: 100% !important;
+            max-width: 100% !important;
             outline: none !important;
             background: transparent !important;
             color: #000 !important;
             padding: 2px 4px !important;
-            min-height: 18px !important;
+            min-height: 20px !important;
+            font-size: 13px !important;
         }
 
         table {
             width: 100% !important;
+            max-width: 100% !important;
             border-collapse: collapse !important;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            table-layout: fixed !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid black !important;
-            padding: 8px !important;
-            font-size: 0.9em !important;
+            padding: 6px 5px !important;
+            font-size: 12.5px !important;
             vertical-align: top !important;
             color: #000 !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
+            white-space: normal !important;
         }
 
         th {
             background-color: #ffffff !important;
             text-align: center;
             text-transform: uppercase;
+            font-weight: bold !important;
         }
 
         .center-text {
@@ -338,7 +389,8 @@ async function printReport() {
         }
 
         tbody tr {
-            height: 30px;
+            height: auto !important;
+            min-height: 30px;
         }
 
         tr {
@@ -356,91 +408,112 @@ async function printReport() {
         }
 
         .followUp {
-            width: 70px !important;
+            width: 100% !important;
+            max-width: 100% !important;
             padding: 4px !important;
             text-align: center !important;
             border: none !important;
             background: transparent !important;
             color: #000 !important;
+            font-size: 12.5px !important;
         }
 
         textarea {
             width: 100% !important;
+            max-width: 100% !important;
             border: 1px solid #ccc !important;
             padding: 4px !important;
             font-family: Arial, sans-serif !important;
-            font-size: 0.9em !important;
+            font-size: 13px !important;
             resize: none !important;
             background: transparent !important;
             color: #000 !important;
+            overflow: hidden !important;
         }
 
         .paper-lines,
         #other_recommendations {
             width: 100% !important;
+            max-width: 100% !important;
             border: none !important;
             outline: none !important;
-            font-size: 0.9em !important;
-            line-height: 30px !important;
+            font-size: 13px !important;
+            line-height: 28px !important;
             padding: 0 !important;
             background-attachment: local !important;
-            background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
-            background-size: 100% 30px !important;
+            background-image: linear-gradient(to bottom, transparent 27px, #000 27px) !important;
+            background-size: 100% 28px !important;
             background-color: transparent !important;
             font-family: Arial, sans-serif !important;
             overflow: hidden !important;
             margin-top: 8px !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
         }
 
         .footer-notes {
-            margin-top: 20px;
+            margin-top: 18px;
+            font-size: 13px !important;
         }
 
         #feedbackTable {
             width: 100% !important;
+            max-width: 100% !important;
             border-collapse: collapse !important;
             font-family: Arial, sans-serif !important;
+            table-layout: fixed !important;
         }
 
         #feedbackTable th,
         #feedbackTable td {
             border: 1px solid #000 !important;
-            padding: 10px !important;
+            padding: 8px !important;
+            font-size: 12.5px !important;
         }
 
         .feedbackSummary,
         .feedbackAction {
             width: 100% !important;
+            max-width: 100% !important;
             box-sizing: border-box !important;
             border: none !important;
-            padding: 8px !important;
+            padding: 6px !important;
             font-family: inherit !important;
-            font-size: 0.9em !important;
+            font-size: 12.5px !important;
             display: block !important;
             overflow: hidden !important;
             min-height: 50px !important;
             background: transparent !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
         }
 
         #otherIssues {
             width: 100% !important;
+            max-width: 100% !important;
             box-sizing: border-box !important;
             border: none !important;
-            padding: 8px !important;
+            padding: 6px !important;
             font-family: inherit !important;
             font-size: 13px !important;
             display: block !important;
             overflow: hidden !important;
             min-height: 38px !important;
             background: transparent !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
         }
 
         .printable-field {
             display: block;
-            width: 100%;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
+            width: 100% !important;
+            max-width: 100% !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
             border: none !important;
             background: transparent !important;
             color: inherit;
@@ -453,24 +526,30 @@ async function printReport() {
         }
 
         /* Section III checkbox styling */
+        #recommendationsTable {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+        }
+
         #recommendationsTable td:first-child {
-            width: 120px !important;
-            white-space: nowrap !important;
+            width: 135px !important;
+            white-space: normal !important;
             text-align: left !important;
             vertical-align: middle !important;
-            padding: 8px 10px !important;
+            padding: 7px 8px !important;
         }
 
         #recommendationsTable td:first-child .printable-choice {
             display: inline-flex !important;
             align-items: center !important;
             gap: 6px !important;
-            margin-right: 10px !important;
+            margin-right: 8px !important;
             vertical-align: middle !important;
         }
 
         #recommendationsTable td:first-child .choice-label {
-            font-size: 0.9em !important;
+            font-size: 12.5px !important;
             color: #000 !important;
             line-height: 1 !important;
         }
@@ -488,6 +567,7 @@ async function printReport() {
             font-size: 10px !important;
             line-height: 1 !important;
             vertical-align: middle !important;
+            flex-shrink: 0 !important;
         }
 
         .printable-box.checked {
@@ -511,37 +591,45 @@ async function printReport() {
         .approvals-container {
             font-family: Arial, sans-serif;
             width: 100% !important;
-            max-width: 900px !important;
-            margin: 0 auto !important;
-            color: #000;
+            max-width: 100% !important;
+            margin: 35px auto 0 auto !important;
+            color: #000 !important;
             page-break-inside: auto !important;
             break-inside: auto !important;
+            font-size: 13px !important;
         }
 
         .approval-row {
             display: flex !important;
             justify-content: space-between !important;
-            margin-bottom: 20px !important;
+            gap: 30px !important;
+            margin-bottom: 22px !important;
+            width: 100% !important;
+            max-width: 100% !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
         }
 
         .signature-group {
-            width: 35% !important;
+            width: 40% !important;
+            max-width: 40% !important;
+            font-size: 13px !important;
         }
 
         .label {
             font-weight: bold !important;
             margin-bottom: 35px !important;
+            font-size: 13px !important;
         }
 
         .signature-line {
             border-bottom: 1.5px solid black !important;
             margin-bottom: 5px !important;
+            min-height: 18px !important;
         }
 
         .title {
-            font-size: 14px !important;
+            font-size: 13px !important;
         }
 
         .bold {
@@ -559,6 +647,7 @@ async function printReport() {
             align-items: center !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+            font-size: 13px !important;
         }
 
         .admin-block {
@@ -567,53 +656,59 @@ async function printReport() {
             margin-bottom: 10px !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+            font-size: 13px !important;
         }
 
         .name-underlined {
             font-weight: bold !important;
             text-decoration: underline !important;
             text-transform: uppercase !important;
-            font-size: 16px !important;
+            font-size: 15px !important;
             display: inline-block !important;
             margin-bottom: 2px !important;
         }
 
         /* Document Info */
         .document-info {
-            margin-top: 50px !important;
-            width: 30% !important;
+            margin-top: 45px !important;
+            width: 38% !important;
+            max-width: 38% !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
         }
 
         .doc-header {
-            width: auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
             margin-right: auto !important;
             border-collapse: collapse !important;
             font-family: Arial, sans-serif !important;
             font-size: 11px !important;
             border: 1px solid #d1d1d1 !important;
+            table-layout: fixed !important;
         }
 
         .doc-header td {
             border: 1px solid #000 !important;
-            padding: 5px 10px !important;
+            padding: 5px 6px !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
         }
 
         .doc-header td.label {
             background-color: #002060 !important;
             color: #fff !important;
-            width: 100px !important;
+            width: 42% !important;
             font-size: 11px !important;
             font-weight: bold !important;
-            padding: 4px 8px !important;
+            padding: 4px 6px !important;
             border: 1px solid #d1d1d1 !important;
             text-align: left !important;
             white-space: nowrap !important;
         }
 
         .doc-header td:nth-child(2) {
-            width: 2% !important;
+            width: 6% !important;
             padding: 0 1px !important;
             font-weight: bold !important;
             border-top: 1px solid #d1d1d1 !important;
@@ -622,12 +717,12 @@ async function printReport() {
         }
 
         .doc-header td.value {
-            width: 70% !important;
+            width: 52% !important;
             font-size: 11px !important;
             text-align: left !important;
-            padding: 4px 10px !important;
+            padding: 4px 6px !important;
             border: 1px solid #d1d1d1 !important;
-            min-width: 120px !important;
+            min-width: 0 !important;
         }
 
         .doc-header td.value input,
@@ -640,6 +735,7 @@ async function printReport() {
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
+            max-width: 100% !important;
         }
 
         .doc-header td.value input:disabled {
@@ -650,7 +746,8 @@ async function printReport() {
         /* Footer */
         .print-footer-inner,
         footer {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -679,16 +776,16 @@ async function printReport() {
         .footer-logos img,
         .print-footer-logo {
             display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            max-height: 26px;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: 60px !important;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
-            object-fit: contain;
+            object-fit: contain !important;
         }
 
         img {
@@ -699,13 +796,27 @@ async function printReport() {
         }
 
         @media print {
-            .no-print { display: none !important; }
-            body { background-color: white !important; padding: 0 !important; }
-            .form-container { box-shadow: none !important; width: 100% !important; max-width: none !important; }
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+            }
+
+            .form-container,
+            .form-content,
+            #main_content {
+                box-shadow: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
             .paper-lines,
             #other_recommendations {
-                background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
-                background-size: 100% 30px !important;
+                background-image: linear-gradient(to bottom, transparent 27px, #000 27px) !important;
+                background-size: 100% 28px !important;
                 border: none !important;
             }
 
@@ -824,6 +935,7 @@ function buildPrintableBody(formContainer) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -847,6 +959,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
+                ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">` : '<div></div>'}
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
@@ -953,7 +1066,6 @@ function syncFormValues(sourceRoot, clonedRoot) {
 function convertFormControlsToPrintable(root) {
     if (!root) return;
 
-    // Fix Section III first: replace the whole applicability cell once
     const recommendationRows = root.querySelectorAll('#recommendationsTable tbody tr');
 
     recommendationRows.forEach(row => {
@@ -1014,7 +1126,6 @@ function convertFormControlsToPrintable(root) {
                 return;
             }
 
-            // skip recYes/recNa because Section III cell was already rebuilt above
             if (field.classList.contains('recYes') || field.classList.contains('recNa')) {
                 return;
             }

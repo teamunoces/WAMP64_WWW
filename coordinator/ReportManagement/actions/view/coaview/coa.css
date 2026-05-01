@@ -334,12 +334,12 @@ footer {
 
 /* ===== 3. Approvals Section (The "Professional" Look) ===== */
 .approvals-container {
+    margin-top: 30px;
   font-family: Arial, sans-serif;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
   color: #000;
-  margin-top: 80px;
 }
 
 .approval-row {
@@ -358,8 +358,12 @@ footer {
 }
 
 .signature-line {
-  border-bottom: 1.5px solid black;
-  margin-bottom: 5px;
+  border-bottom: 1.5px solid #000 !important; /* The actual line */
+    min-height: 25px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .title {
@@ -389,12 +393,13 @@ footer {
 }
 
 .name-underlined {
-  font-weight: bold;
-  text-decoration: underline;
-  text-transform: uppercase;
-  font-size: 16px;
-  display: inline-block;
-  margin-bottom: 2px;
+ font-weight: bold;
+    border-bottom: 1.5px solid #000 !important; /* The actual line for VP/President */
+    text-decoration: none !important; /* Remove standard browser underline */
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 0 15px;
+    min-width: 250px;
 }
 
 /* ===== 4. Document Info Table (The Navy Blue Style) ===== */
@@ -461,7 +466,8 @@ footer {
 .doc-header td.value {
     padding: 4px 10px;
     border: 1px solid #d1d1d1;
-    min-width: 120px;
+    min-width: 150px;
+    text-align: left !important;
 }
 
 /* Styling the inputs/text inside the value cell */
@@ -475,4 +481,5 @@ footer {
     margin: 0;
     padding: 0;
     width: 100%;
+    text-align: left !important; /* <-- THIS FIXES YOUR ISSUE */
 }

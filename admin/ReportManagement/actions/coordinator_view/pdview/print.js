@@ -53,7 +53,7 @@ async function printReport() {
             background: #fff !important;
             color: #000;
             font-family: Arial, sans-serif;
-            font-size: 11px;
+            font-size: 15px;
             line-height: 1.35;
             overflow: visible !important;
         }
@@ -211,6 +211,12 @@ async function printReport() {
             flex: 0 0 auto;
         }
 
+        .logo-left2 {
+            height: 80px;
+            width: auto;
+            flex: 0 0 auto;
+        }
+
         .logos-right {
             display: flex;
             gap: 20px;
@@ -267,7 +273,6 @@ async function printReport() {
             margin-bottom: 15px;
         }
 
-        /* ===== Title and top input fields ===== */
         .form-type {
             text-align: center !important;
             font-family: "Times New Roman", Times, serif !important;
@@ -284,16 +289,22 @@ async function printReport() {
             padding: 0 !important;
         }
 
-        .input-row {
+        .input-row,
+        .input-fields > div {
             display: flex !important;
             align-items: center !important;
+            width: 100% !important;
             gap: 14px !important;
             margin-bottom: 14px !important;
         }
 
-        .input-row label {
+        .input-row label,
+        .input-fields label,
+        .input-fields > div > label:first-child,
+        .input-fields > div > .label:first-child {
             width: 145px !important;
             min-width: 145px !important;
+            max-width: 145px !important;
             font-weight: bold !important;
             font-size: 12px !important;
             text-align: left !important;
@@ -304,9 +315,16 @@ async function printReport() {
         .input-row input,
         .input-row textarea,
         .input-row select,
-        .input-row .line-input {
+        .input-row .line-input,
+        .input-fields input,
+        .input-fields textarea,
+        .input-fields select,
+        .input-fields .printable-field,
+        .input-fields .line-input {
             flex: 1 1 auto !important;
-            width: auto !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            display: block !important;
             border: none !important;
             border-bottom: 1px solid #bfbfbf !important;
             background: transparent !important;
@@ -317,39 +335,21 @@ async function printReport() {
             min-height: 24px !important;
             box-shadow: none !important;
             outline: none !important;
-        }
-
-        .input-row .printable-field {
             white-space: pre-wrap !important;
             word-break: break-word !important;
             overflow-wrap: anywhere !important;
         }
 
-        .input-fields > div {
-            display: flex !important;
-            align-items: center !important;
-            gap: 14px !important;
-            margin-bottom: 14px !important;
-        }
-
-        .input-fields > div > label:first-child,
-        .input-fields > div > .label:first-child {
-            width: 145px !important;
-            min-width: 145px !important;
-            font-weight: bold !important;
-            font-size: 12px !important;
-            margin: 0 !important;
-        }
-
         .input-fields > div > *:last-child {
             flex: 1 1 auto !important;
+            min-width: 0 !important;
         }
 
-        /* ===== Main form/table ===== */
+        /* ===== Main form/table - UPDATED FONT SIZE ===== */
         .program-table,
         table {
             width: 100% !important;
-            max-width: 100% !important;
+            max-width: 99.5% !important;
             border-collapse: collapse !important;
             table-layout: fixed !important;
         }
@@ -358,21 +358,41 @@ async function printReport() {
             background-color: #d9d9d9 !important;
             color: #000 !important;
             border: 1px solid #000 !important;
-            padding: 6px 4px !important;
-            text-align: center;
-            font-weight: bold;
-            word-break: break-word;
-            overflow-wrap: anywhere;
+            padding: 4px 3px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            font-weight: bold !important;
+
+            font-size: 11px !important;
+            line-height: 1.15 !important;
+
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            hyphens: auto !important;
         }
 
-        .program-table td,
-        table td {
+        .program-table td {
             border: 1px solid #000 !important;
-            padding: 6px 4px !important;
-            vertical-align: top;
-            word-break: break-word;
-            overflow-wrap: anywhere;
+            padding: 4px 3px !important;
+            vertical-align: top !important;
+
+            font-size: 11px !important;
+            line-height: 1.15 !important;
+
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
             white-space: normal !important;
+        }
+
+        .program-table thead tr:first-child th {
+            font-size: 11px !important;
+            line-height: 1.15 !important;
+        }
+
+        .program-table thead tr:nth-child(2) th {
+            font-size: 11px !important;
+            line-height: 1.15 !important;
         }
 
         tr {
@@ -411,43 +431,42 @@ async function printReport() {
             display: inline-block;
         }
 
-        /* ===== Approvals Section ===== */
         .approvals-container {
-            margin-top: 30px !important;
-            margin-bottom: 0 !important;
-            width: 100% !important;
+            margin-top: 40px !important;
+            margin-bottom: 10px !important;
+            width: 95% !important;
+            max-width: none !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
             page-break-inside: auto !important;
             break-inside: auto !important;
         }
 
         .approvals-container .label {
             font-weight: bold !important;
-            margin-bottom: 6px !important;
+            margin-bottom: 10px !important;
         }
 
         .approval-row {
             display: flex !important;
             justify-content: space-between !important;
             align-items: flex-start !important;
-            margin-bottom: 14px !important;
+            margin-bottom: 25px !important;
+            width: 100% !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
         }
 
         .signature-group {
-            width: 40% !important;
-            text-align: center !important;
+            width: 35% !important;
+            text-align: left !important;
         }
 
         .signature-line {
             border-bottom: 1.5px solid #000 !important;
             height: 25px !important;
-            margin: 0 auto 4px auto !important;
-            width: 80% !important;
-            min-height: 25px !important;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
+            margin-bottom: 5px !important;
+            width: 100% !important;
         }
 
         .signature-group .title {
@@ -456,24 +475,12 @@ async function printReport() {
 
         .approval-centered {
             text-align: center !important;
-            margin-top: 10px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .approval-centered:last-of-type {
-            margin-top: 8px !important;
-            margin-bottom: 0 !important;
+            margin-top: 20px !important;
         }
 
         .admin-block {
-            margin-bottom: 8px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .admin-block:last-child {
-            margin-bottom: 4px !important;
+            margin-top: 20px !important;
+            margin-bottom: 10px !important;
         }
 
         .name-underlined {
@@ -489,7 +496,6 @@ async function printReport() {
             width: 100% !important;
         }
 
-        /* ===== Document Info ===== */
         .document-info {
             margin-top: 4px !important;
             width: 100% !important;
@@ -567,7 +573,6 @@ async function printReport() {
             box-shadow: none !important;
         }
 
-        /* ===== Footer ===== */
         .print-footer-inner,
         footer {
             width: 100%;
@@ -746,6 +751,7 @@ function buildPrintableBody(formContainer) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -769,6 +775,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
+                ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">` : '<div></div>'}
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}

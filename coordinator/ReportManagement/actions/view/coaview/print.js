@@ -368,7 +368,8 @@ function printReport() {
                     margin-bottom: 2px;
                 }
 
-               .document-info {
+/* ===== DOCUMENT INFO (PRINT - BORDER FIX) ===== */
+.document-info {
     margin-top: 50px;
     width: 255px;
     max-width: 255px;
@@ -380,47 +381,79 @@ function printReport() {
     width: 255px;
     max-width: 255px;
     border-collapse: collapse;
+    table-layout: fixed;
     font-family: Arial, sans-serif;
     font-size: 9px;
     margin-right: auto;
     background: #fff;
+    border: 1px solid #808080 !important;
+}
+
+.doc-header tr,
+.doc-header td {
+    border: 1px solid #808080 !important;
 }
 
 .doc-header td {
-    border: 1px solid #d1d1d1;
-    padding: 4px 6px;
-    height: 23px;
+    padding: 3px 6px;
+    height: 20px;
     vertical-align: middle;
     line-height: 1.1;
 }
 
+/* BLUE LABEL COLUMN */
 .doc-header td.label {
-    background-color: #002060;
-    color: #fff;
+    background-color: #002060 !important;
+    color: #fff !important;
     font-weight: bold;
     text-align: left;
     white-space: nowrap;
-    width: 98px;
+    width: 105px;
+    padding-left: 6px;
 }
 
+/* COLON COLUMN */
 .doc-header td:nth-child(2) {
-    width: 8px;
-    min-width: 8px;
-    max-width: 8px;
+    width: 10px;
+    min-width: 10px;
+    max-width: 10px;
     padding: 0;
     font-weight: bold;
     text-align: center;
     color: #000;
-    background: #fff;
+    background: #fff !important;
 }
 
+/* VALUE COLUMN */
 .doc-header td.value {
-    width: 149px;
-    min-width: 149px;
-    text-align: center;
+    width: 140px;
+    min-width: 140px;
+    text-align: left !important;
     color: #000;
-    background: #fff;
+    background: #fff !important;
+    padding-left: 6px;
     white-space: nowrap;
+}
+
+/* FORCE INNER TEXT LEFT */
+.doc-header td.value *,
+.doc-header td.value input,
+.doc-header td.value p,
+.doc-header td.value span {
+    text-align: left !important;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* REMOVE INPUT DEFAULT STYLE */
+.doc-header td.value input {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
 }
 
                 footer {

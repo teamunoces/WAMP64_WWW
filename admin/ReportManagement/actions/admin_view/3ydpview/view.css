@@ -9,7 +9,7 @@
     width: calc(100% - 100px);
     z-index: 1000;
     background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 #sidebarFrame {
@@ -26,30 +26,66 @@
 
 /* ===== General Styles ===== */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     letter-spacing: -0.011em;
     line-height: 1.6;
     color: #1a202c;
     background-color: #f4f7f9;
     margin: 0;
     padding: 0;
-    margin-left: 100px; /* Account for fixed sidebar */
+    margin-left: 150px;
 }
 
 .container {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     max-width: 1100px;
-    margin: 80px auto 40px auto; /* Center horizontally with auto margins */
+    margin: 80px auto 40px auto;
     background: #fff;
     padding: 40px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    width: calc(100% - 40px); /* Responsive width with some padding */
+    width: calc(100% - 40px);
     pointer-events: none;
 }
 
+/* ===== Admin Comment ===== */
+.admin-comment {
+    pointer-events: none;
+    width: calc(100% - 40px);
+    max-width: 1100px;
+    box-sizing: border-box;
+    display: block;
+    margin: 80px auto 20px auto;
+}
+
+#admincomment {
+    pointer-events: none;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    margin-top: 10px;
+    background-color: #fff9db;
+    color: #856404;
+    border: 2px solid #f59e0b;
+    border-left: 8px solid #f59e0b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    font-style: italic;
+    padding: 20px;
+    font-family: inherit;
+    border-radius: 4px 12px 12px 4px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    resize: vertical;
+}
+
+#admincomment:focus {
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.15);
+}
 
 /* ===== Header Section ===== */
 .header-content {
@@ -61,6 +97,11 @@ body {
 }
 
 .logo-left {
+    height: 90px;
+    width: auto;
+}
+
+.logo-left2 {
     height: 90px;
     width: auto;
 }
@@ -101,11 +142,11 @@ body {
 
 .college-info a {
     font-size: 13px;
-    color: #0000EE;
+    color: #0000ee;
     text-decoration: underline;
 }
 
-/* Office Title and Double Line */
+/* ===== Office Title and Double Line ===== */
 .office-title {
     text-align: center;
     font-size: 18px;
@@ -125,6 +166,7 @@ body {
 header h1 {
     text-align: center;
     text-transform: uppercase;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     font-size: 1.8rem;
     color: #2c3e50;
     margin-bottom: 30px;
@@ -148,17 +190,20 @@ header h1 {
     color: #444;
 }
 
-input[type="text"], textarea {
+input[type="text"],
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     font-size: 1rem;
     transition: border-color 0.3s;
     box-sizing: border-box;
 }
 
-input[type="text"]:focus, textarea:focus {
+input[type="text"]:focus,
+textarea:focus {
     border-color: #3498db;
     outline: none;
     background-color: #f9fbff;
@@ -170,81 +215,93 @@ input[type="text"]:focus, textarea:focus {
     width: 100%;
 }
 
-/* ===== Table Section Fixes ===== */
 .table-wrapper {
-    overflow-x: visible; /* Remove horizontal scroll */
+    overflow-x: visible;
     background: #fff;
     border: 1px solid #e2e8f0;
     margin-bottom: 30px;
     width: 100%;
 }
 
+/* ===== Main Table ===== */
 table {
     width: 100%;
     border-collapse: collapse;
-    /* Removed min-width: 1200px to prevent sliding */
-    table-layout: fixed; /* Keeps columns equal width so they don't "jump" */
-    word-wrap: break-word; /* Ensures long text breaks to new lines */
+    table-layout: fixed;
+    word-wrap: break-word;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
+}
+
+table th,
+table td {
+    border: 1px solid #000;
 }
 
 table thead th {
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
+    background-color: #e5e7eb;
+    color: #000;
     font-weight: bold;
-    background-color: #f8fafc;
-    color: #475569;
-    font-size: 0.9rem; /* Smaller font to help 9 columns fit better */
-    padding: 8px 4px;
-    border: 1px solid #cbd5e1;
-    text-transform: uppercase;
+    font-size: 15px;
+    padding: 6px 4px;
+    border: 1px solid #000;
     text-align: center;
+    vertical-align: top;
+    line-height: 1.4;
     word-wrap: break-word;
+    white-space: normal;
 }
 
 table td {
-    border: 1px solid #cbd5e1;
     padding: 0;
     vertical-align: top;
 }
 
 table td textarea {
-    field-sizing: content; 
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 14px;
+    field-sizing: content;
     width: 100% !important;
-    min-height: 60px; 
+    min-height: 60px;
     border: none !important;
     padding: 10px 5px !important;
-    background: transparent !important; /* Ensure no gradient background */
-    background-image: none !important;  /* Explicitly remove any inherited lines */
-    font-size: 0.85rem;
+    background: transparent !important;
+    background-image: none !important;
     color: #1e293b;
     line-height: 1.4;
     display: block;
     box-sizing: border-box;
     outline: none;
-    overflow: hidden; 
+    overflow: hidden;
     resize: none;
     white-space: pre-wrap;
     pointer-events: none;
 }
 
-/* Fixes the "Overlapping" on Focus */
 table td textarea:focus {
     background-color: #f0f7ff;
-    box-shadow: inset 0 0 0 2px #3498db; 
+    box-shadow: inset 0 0 0 2px #3498db;
     z-index: 10;
-    position: relative; 
+    position: relative;
 }
 
-/* Column-specific widths if you want to prioritize certain data */
-/* Example: Making the "Program" or "Objectives" column slightly wider */
-table th:nth-child(1), table td:nth-child(1) { width: 12%; } /* Program */
-table th:nth-child(3), table td:nth-child(3) { width: 15%; } /* Objectives */
+/* Column Widths */
+table th:nth-child(1),
+table td:nth-child(1) {
+    width: 12%;
+}
 
-/* Specific Column Alignment */
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 15%;
+}
+
 table td:first-child textarea {
     text-align: center;
     font-weight: 600;
 }
 
-/* Footer Section */
+/* ===== Footer Section ===== */
 footer {
     margin-top: 50px;
     width: 100%;
@@ -269,135 +326,162 @@ footer {
     height: 40px;
     width: auto;
 }
-/* ===== 3. Approvals Section (The "Professional" Look) ===== */
+
+/* ===== Approval Sections ===== */
 .approvals {
     display: flex;
     flex-direction: column;
     gap: 35px;
     margin-top: 50px;
     width: 100%;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
+    font-size: 15px;
+    color: #000;
 }
 
-.approval-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 40px;
+.approval-section {
+    width: 100%;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.approval-section .label {
+    display: block;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 35px;
+    font-size: 15px;
+}
+
+.ces-head-block {
+    width: 280px;
+    text-align: left;
+}
+
+.ces-head-block .name,
+.ces-head-block #ces_head {
+    display: block;
+    width: 280px;
+    min-height: 22px;
+    border-bottom: 1px solid #000;
+    font-size: 15px;
+    line-height: 1.2;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.ces-head-block .ces-head {
+    display: block;
+    margin-top: 3px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
 }
 
 .signature-block {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center names/titles */
+    width: 420px;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
-}
-
-.signature-block .label {
-    align-self: flex-start; /* "Noted by" stays left */
-    font-weight: bold;
-    margin-bottom: 25px;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .signature-block .name {
-    width: 80%;
-    border-bottom: 1px solid #000; /* Signature Line */
-    font-weight: bold;
+    display: block;
+    width: 100%;
+    min-height: 22px;
+    border-bottom: 1px solid #000;
+    font-size: 15px;
+    line-height: 1.2;
+    text-align: center;
     text-transform: uppercase;
-    margin-bottom: 5px;
-    min-height: 20px;
+    font-weight: bold;
 }
 
 .signature-block .title {
-    font-size: 0.9rem;
+    display: block;
+    margin-top: 3px;
+    font-size: 15px;
     font-weight: bold;
+    text-align: center;
 }
-.name{
-    border-bottom: 1px solid #000;
-    width: 200px; /* adjust size */
+
+.approval-section:nth-child(3) {
+    margin-top: 10px;
 }
-/* ===== 4. Document Info Table (The Navy Blue Style) ===== */
+
+/* ===== 4. Document Info Table - Navy Blue Style ===== */
+.document-info {
+    margin-top: 50px !important;
+    width: 305px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
 .doc-header {
-    width: auto; /* Shrinks the table to fit the content */
-    margin-right: auto; /* Keeps it pushed to the left */
+    width: 305px !important;
+    border-collapse: collapse !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 11px;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    table-layout: auto !important;
+    border: none !important;
 }
 
 .doc-header td {
-    border: 1px solid #000;
-    padding: 5px 10px;
+    border: 1px solid #d1d1d1 !important;
+    padding: 4px 6px !important;
+    height: 24px;
 }
 
-.doc-header .label {
-    background-color: #002060;
-    color: #fff;
-    width: 25%;
-    font-size: 11px;
-}
-
-.doc-header .value {
-    /* Reduced from 75% to 50% or 30% depending on how narrow you want it */
-    width: 70%; 
-    font-size: 11px;
-    /* This ensures the text stays aligned left within that narrower space */
-    text-align: left; 
-}
-/*------------------------------------------ Container positioning */
-.document-info {
-    margin-top: 50px; /* Adjust based on space needed after approvals */
-    width: 30%;
-}
-
-/* Table Styling */
-.doc-header {
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    font-size: 11px; /* Matches the compact look of the screenshot */
-    border: 1px solid #d1d1d1;
-}
-
-/* The first column (Dark Blue Background) */
 .doc-header td.label {
-    background-color: #002060; /* Dark Navy Blue */
-    color: white;
+    background-color: #002060 !important;
+    color: #ffffff !important;
     font-weight: bold;
-    padding: 4px 8px;
-    border: 1px solid #d1d1d1;
     text-align: left;
     white-space: nowrap;
-    width: 100px;
+    width: 105px !important;
 }
 
-/* The middle colon column */
 .doc-header td:nth-child(2) {
-    width: 2%;
-    padding: 0 1px;
+    width: 8px !important;
+    min-width: 8px !important;
+    max-width: 8px !important;
+    padding: 0 !important;
+    text-align: center;
     font-weight: bold;
-    border-top: 1px solid #d1d1d1;
-    border-bottom: 1px solid #d1d1d1;
+    color: #000000 !important;
+    background: #ffffff !important;
 }
 
-/* The value column */
 .doc-header td.value {
-    padding: 4px 10px;
-    border: 1px solid #d1d1d1;
-    min-width: 120px;
+    width: 190px !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    text-align: left;
+    white-space: nowrap;
 }
 
-/* Styling the inputs/text inside the value cell */
-.doc-header td.value input, 
+.doc-header td.value input,
 .doc-header td.value p {
-    border: none;
-    background: transparent;
+    border: none !important;
+    background: transparent !important;
     font-family: inherit;
     font-size: inherit;
-    color: #333;
+    color: #000000 !important;
     margin: 0;
     padding: 0;
     width: 100%;
+    min-height: auto;
+    line-height: inherit;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
-/* Remove default focus outline for disabled inputs */
 .doc-header td.value input:disabled {
-    color: black;
+    color: #000000 !important;
     cursor: default;
 }
 
@@ -410,7 +494,7 @@ footer {
     justify-content: flex-end;
     gap: 15px;
     z-index: 1001;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .buttons button {
@@ -427,7 +511,7 @@ footer {
 }
 
 .buttons button[onclick] {
-    background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
+    background: linear-gradient(135deg, #59af29 0%, #254911 100%);
     color: white;
     box-shadow: 0 4px 6px rgba(37, 73, 17, 0.2);
 }
@@ -445,7 +529,7 @@ footer {
 .buttons a button {
     background-color: transparent;
     color: #254911;
-    border: 2px solid #59AF29;
+    border: 2px solid #59af29;
     box-shadow: none;
 }
 
@@ -458,6 +542,7 @@ footer {
 .buttons button:active {
     transform: scale(0.96);
 }
+
 /* ===== Optimized Paper Lines Fix ===== */
 .paper-lines {
     width: 100%;
@@ -465,10 +550,9 @@ footer {
     outline: none;
     resize: none;
     overflow: hidden;
-    font-family: Arial, sans-serif;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
     font-size: 16px;
     line-height: 31px;
-    /* Notebook lines - Only applied to elements with this specific class */
     background-image: linear-gradient(transparent 30px, #000 31px);
     background-size: 100% 31px;
     background-attachment: local;
