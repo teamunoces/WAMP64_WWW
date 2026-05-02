@@ -102,7 +102,7 @@ body {
 }
 
 .logo-left2 {
-    height: 90px;
+    height: 80px;
     width: auto;
 }
 
@@ -327,161 +327,151 @@ footer {
     width: auto;
 }
 
-/* ===== Approval Sections ===== */
+/* ===== 3. Approvals Section ===== */
 .approvals {
+    width: 100%;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    gap: 35px;
-    margin-top: 50px;
-    width: 100%;
-    font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
-    font-size: 15px;
-    color: #000;
+    gap: 45px;
+    font-family: "Calibri", "Calibri Light", Arial, sans-serif;
+    font-size: 10pt;
 }
 
-.approval-section {
-    width: 100%;
-    page-break-inside: avoid;
-    break-inside: avoid;
-}
-
-.approval-section .label {
-    display: block;
+/* labels: Prepared by, Recommending Approval, Approved by */
+.approvals .label,
+.signature-block .label {
     font-weight: bold;
-    text-align: left;
     margin-bottom: 35px;
-    font-size: 15px;
 }
 
+/* prepared by block stays on the left */
 .ces-head-block {
     width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     text-align: left;
 }
 
-.ces-head-block .name,
-.ces-head-block #ces_head {
-    display: block;
-    width: 280px;
-    min-height: 22px;
+/* ===== CES HEAD (Prepared by) ===== */
+#ces_head {
+    display: inline-block;
     border-bottom: 1px solid #000;
-    font-size: 15px;
-    line-height: 1.2;
-    text-align: left;
+
+    font-weight: normal;
     text-transform: uppercase;
+
+    padding: 0 12px;
+    min-width: 180px;   /* short but visible */
+    max-width: 260px;   /* prevents long line */
+    width: auto;
 }
 
-.ces-head-block .ces-head {
+/* ===== TITLE ===== */
+.ces-head {
     display: block;
-    margin-top: 3px;
-    font-size: 15px;
+    margin-top: 6px;
     font-weight: bold;
-    text-align: left;
+    border: none !important;
 }
 
+/* ===== CENTER SIGNATURES ===== */
 .signature-block {
-    width: 420px;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    page-break-inside: avoid;
-    break-inside: avoid;
 }
 
+/* ===== NAME (Recommending / Approved) ===== */
 .signature-block .name {
-    display: block;
-    width: 100%;
-    min-height: 22px;
+    display: inline-block;   /* key for short line */
     border-bottom: 1px solid #000;
-    font-size: 15px;
-    line-height: 1.2;
-    text-align: center;
+
+    font-weight: bold;
     text-transform: uppercase;
-    font-weight: bold;
+
+    padding: 0 15px;
+    min-width: 260px;   /* shorter than before */
+    max-width: 340px;   /* prevents over-stretch */
+    width: auto;
+
+    margin-bottom: 5px;
 }
 
+/* ===== TITLE ===== */
 .signature-block .title {
-    display: block;
-    margin-top: 3px;
-    font-size: 15px;
+    margin-top: 6px;
     font-weight: bold;
-    text-align: center;
 }
 
-.approval-section:nth-child(3) {
-    margin-top: 10px;
+/* remove old conflicting rule */
+.name {
+    width: auto;
 }
-
-/* ===== 4. Document Info Table - Navy Blue Style ===== */
+/* ===== 4. Document Info Table (COMPACT VERSION) ===== */
 .document-info {
-    margin-top: 50px !important;
-    width: 305px !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    margin-top: 30px;   /* reduced space */
+    width: 22%;         /* smaller overall width */
 }
 
+/* Table */
 .doc-header {
-    width: 305px !important;
-    border-collapse: collapse !important;
-    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
-    font-size: 11px;
-    margin-left: 0 !important;
-    margin-right: auto !important;
-    table-layout: auto !important;
-    border: none !important;
+    width: auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 9.5px;   /* smaller text */
+    border: 1px solid #d1d1d1;
 }
 
+/* ALL CELLS */
 .doc-header td {
-    border: 1px solid #d1d1d1 !important;
-    padding: 4px 6px !important;
-    height: 24px;
+    border: 1px solid #d1d1d1;
+    padding: 2px 6px;   /* reduced padding */
 }
 
+/* LEFT LABEL (BLUE) */
 .doc-header td.label {
-    background-color: #002060 !important;
-    color: #ffffff !important;
+    background-color: #002060;
+    color: #fff;
     font-weight: bold;
-    text-align: left;
+    font-size: 9.5px;
     white-space: nowrap;
-    width: 105px !important;
+    width: 85px;        /* narrower */
+    padding: 2px 6px;
 }
 
+/* COLON */
 .doc-header td:nth-child(2) {
-    width: 8px !important;
-    min-width: 8px !important;
-    max-width: 8px !important;
-    padding: 0 !important;
-    text-align: center;
+    width: 2%;
+    padding: 0 2px;
     font-weight: bold;
-    color: #000000 !important;
-    background: #ffffff !important;
 }
 
+/* VALUE */
 .doc-header td.value {
-    width: 190px !important;
-    color: #000000 !important;
-    background: #ffffff !important;
-    text-align: left;
-    white-space: nowrap;
+    padding: 2px 6px;
+    min-width: 110px;    /* smaller */
+    font-size: 9.5px;
 }
 
-.doc-header td.value input,
+/* INPUT / TEXT */
+.doc-header td.value input, 
 .doc-header td.value p {
-    border: none !important;
-    background: transparent !important;
+    border: none;
+    background: transparent;
     font-family: inherit;
     font-size: inherit;
-    color: #000000 !important;
+    color: #333;
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: auto;
-    line-height: inherit;
-    box-shadow: none !important;
-    outline: none !important;
 }
 
+/* DISABLED INPUT */
 .doc-header td.value input:disabled {
-    color: #000000 !important;
+    color: black;
     cursor: default;
 }
 

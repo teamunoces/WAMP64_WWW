@@ -100,7 +100,6 @@ function printReport() {
                 background: white !important;
             }
 
-            /* Hide screen-only elements */
             #sidebarFrame,
             #headerFrame,
             .buttons,
@@ -113,7 +112,6 @@ function printReport() {
                 display: none !important;
             }
 
-            /* Print shell */
             .print-shell {
                 width: 100%;
                 margin: 0 !important;
@@ -164,15 +162,15 @@ function printReport() {
             }
 
             .print-header {
-                padding: 0 0 10px 0 !important;
+                padding: 0 0 8px 0 !important;
             }
 
             .print-footer {
-                padding: 10px 0 0 0 !important;
+                padding: 8px 0 0 0 !important;
             }
 
             .print-body {
-                padding: 0 !important;
+                padding: 0 0 55px 0 !important;
             }
 
             .report-container {
@@ -199,7 +197,6 @@ function printReport() {
                 box-shadow: none !important;
             }
 
-            /* Header layout */
             .header-content {
                 display: flex;
                 align-items: center;
@@ -280,7 +277,6 @@ function printReport() {
                 margin: 15px 0 20px 0;
             }
 
-            /* Report-specific layout */
             .header-grid {
                 display: grid !important;
                 grid-template-columns: 145px 1fr 150px 1fr !important;
@@ -327,13 +323,88 @@ function printReport() {
                 text-decoration: underline !important;
             }
 
+            /* ===== DOCUMENT INFO - SMALLER + NO FOOTER OVERLAP ===== */
+            .document-info {
+                width: 22% !important;
+                max-width: 22% !important;
+                margin-top: 18px !important;
+                margin-bottom: 45px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .doc-header {
+                width: auto !important;
+                border-collapse: collapse !important;
+                table-layout: auto !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 9px !important;
+                border: 1px solid #d1d1d1 !important;
+            }
+
+            .doc-header td {
+                border: 1px solid #d1d1d1 !important;
+                padding: 2px 5px !important;
+                line-height: 1.15 !important;
+                vertical-align: middle !important;
+            }
+
             .doc-header td.label {
                 background-color: #002060 !important;
                 color: white !important;
+                font-weight: bold !important;
+                font-size: 9px !important;
+                width: 78px !important;
+                min-width: 78px !important;
+                max-width: 78px !important;
+                padding: 2px 5px !important;
+                text-align: left !important;
+                white-space: nowrap !important;
+            }
+
+            .doc-header td:nth-child(2) {
+                width: 8px !important;
+                min-width: 8px !important;
+                max-width: 8px !important;
+                padding: 0 1px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                border-top: 1px solid #d1d1d1 !important;
+                border-bottom: 1px solid #d1d1d1 !important;
+            }
+
+            .doc-header td.value {
+                font-size: 9px !important;
+                padding: 2px 5px !important;
+                min-width: 88px !important;
+                max-width: 130px !important;
+                text-align: left !important;
+                white-space: nowrap !important;
+            }
+
+            .doc-header td.value input,
+            .doc-header td.value p {
+                border: none !important;
+                background: transparent !important;
+                font-family: inherit !important;
+                font-size: inherit !important;
+                color: #000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                line-height: 1.15 !important;
+                box-shadow: none !important;
+                outline: none !important;
+            }
+
+            .doc-header td.value input:disabled {
+                color: #000 !important;
+                cursor: default !important;
+                opacity: 1 !important;
+                -webkit-text-fill-color: #000 !important;
             }
 
             .approvals-container,
-            .document-info,
             .section-header,
             .approval-row,
             .signature-group,
@@ -348,7 +419,6 @@ function printReport() {
                 break-inside: avoid;
             }
 
-            /* Textarea fix */
             textarea,
             .paper-lines,
             .print-body textarea,
@@ -434,9 +504,11 @@ function printReport() {
         if (printContainer.parentNode) {
             printContainer.parentNode.removeChild(printContainer);
         }
+
         if (styleElement.parentNode) {
             styleElement.parentNode.removeChild(styleElement);
         }
+
         window.removeEventListener('afterprint', cleanup);
     };
 
@@ -451,8 +523,10 @@ function printReport() {
         }
 
         let done = 0;
+
         const finish = () => {
             done += 1;
+
             if (done >= images.length) {
                 window.addEventListener('afterprint', cleanup);
                 window.print();
@@ -483,6 +557,7 @@ function syncFormValues(source, clone) {
 
     sourceInputs.forEach((original, index) => {
         const target = cloneInputs[index];
+
         if (!target) return;
 
         const tag = target.tagName.toLowerCase();
@@ -496,6 +571,7 @@ function syncFormValues(source, clone) {
                 target.removeAttribute('checked');
                 target.checked = false;
             }
+
             return;
         }
 
@@ -510,9 +586,14 @@ function syncFormValues(source, clone) {
         if (tag === 'select') {
             [...target.options].forEach((opt, i) => {
                 opt.selected = original.options[i]?.selected || false;
-                if (opt.selected) opt.setAttribute('selected', 'selected');
-                else opt.removeAttribute('selected');
+
+                if (opt.selected) {
+                    opt.setAttribute('selected', 'selected');
+                } else {
+                    opt.removeAttribute('selected');
+                }
             });
+
             return;
         }
 
@@ -526,6 +607,7 @@ function convertTextareasForPrint(root) {
 
     textareas.forEach((textarea) => {
         const div = document.createElement('div');
+
         div.className = textarea.classList.contains('paper-lines')
             ? 'paper-lines print-textarea-block'
             : 'print-textarea-block';

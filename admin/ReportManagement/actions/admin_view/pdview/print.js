@@ -42,31 +42,36 @@ async function printReport() {
 
 @page {
     size: A4 portrait;
-    margin: 12mm 10mm 12mm 10mm;
+    margin: 12mm;
 }
 
 html,
 body {
     margin: 0 !important;
     padding: 0 !important;
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     background: #fff !important;
     color: #000 !important;
     font-family: Calibri, Arial, sans-serif !important;
     font-size: 11pt !important;
     line-height: 1.4;
-    overflow: visible !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
 }
 
 #print-container {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
+    overflow: hidden !important;
 }
 
 .print-shell {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     border-collapse: collapse !important;
     border-spacing: 0 !important;
     table-layout: fixed !important;
@@ -96,22 +101,34 @@ body {
     border: none !important;
     vertical-align: top !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-header-shell {
     padding: 0 0 8px 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-footer-shell {
     padding: 8px 0 0 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-body {
-    padding: 0 !important;
+    padding: 0 0 35px 0 !important;
     margin: 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-content,
@@ -126,7 +143,16 @@ body {
     outline: none !important;
     box-shadow: none !important;
     background: #fff !important;
-    overflow: visible !important;
+    overflow: hidden !important;
+}
+
+.print-content *,
+.print-body-wrapper *,
+.form-container *,
+#main_content * {
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
 }
 
 .print-body-wrapper > *:first-child,
@@ -159,77 +185,98 @@ footer,
     margin: 0 !important;
     padding: 0 !important;
     font-family: Arial, sans-serif !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    width: 100%;
-    gap: 12px;
+    display: grid !important;
+    grid-template-columns: 65px 65px minmax(0, 1fr) 90px !important;
+    align-items: center !important;
+    margin-bottom: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+    overflow: hidden !important;
 }
 
-.logo-left {
-    height: 90px;
-    width: auto;
+.logo-left,
+.logo-left2 {
+    height: 62px !important;
+    width: auto !important;
+    max-width: 65px !important;
+    display: block !important;
+    justify-self: center !important;
 }
 
 .logos-right {
-    display: flex;
-    gap: 20px;
-    align-items: center;
+    display: flex !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 90px !important;
+    max-width: 90px !important;
+    overflow: hidden !important;
 }
 
 .logos-right img {
-    height: 80px;
-    width: auto;
+    height: 52px !important;
+    width: auto !important;
+    max-width: 48px !important;
+    display: block !important;
 }
 
 .college-info {
-    text-align: center;
-    flex-grow: 1;
-    padding: 0 20px;
+    text-align: center !important;
+    justify-self: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 6px !important;
+    overflow: hidden !important;
 }
 
 .college-info h1 {
     font-family: "Times New Roman", Times, serif !important;
     color: #4f81bd !important;
-    font-size: 26px !important;
-    margin: 0;
-    font-weight: normal;
-    line-height: 1.2;
+    font-size: 21px !important;
+    margin: 0 !important;
+    font-weight: normal !important;
+    line-height: 1.1 !important;
+    text-align: center !important;
 }
 
 .college-info p {
     font-family: Arial, sans-serif !important;
     font-size: 11px !important;
-    margin: 2px 0;
-    color: #333;
-    line-height: 1.4;
+    margin: 2px 0 !important;
+    color: #333 !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
 }
 
 .college-info a {
     font-family: Arial, sans-serif !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     color: #0000EE !important;
-    text-decoration: underline;
+    text-decoration: underline !important;
+    word-break: break-all !important;
 }
 
 .office-title {
     font-family: Arial, sans-serif !important;
-    text-align: center;
-    font-size: 18px !important;
+    text-align: center !important;
+    font-size: 16px !important;
     color: #595959 !important;
-    font-weight: bold;
-    margin: 20px 0 5px 0;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-weight: bold !important;
+    margin: 12px 0 5px 0 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
 }
 
 .double-line {
     border-top: 4px double #4f81bd !important;
-    margin-bottom: 25px;
+    margin-bottom: 18px !important;
 }
 
 /* Form title */
@@ -259,10 +306,11 @@ h3 {
     font-size: 11pt !important;
 }
 
-/* ===== INPUT FIELDS: CALIBRI BODY 12 - SCREENSHOT STYLE ===== */
+/* Input fields */
 .input-fields,
 .header-info {
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 0 !important;
     margin-bottom: 48px !important;
     font-family: Calibri, Arial, sans-serif !important;
@@ -272,12 +320,14 @@ h3 {
 .input-fields .field,
 .input-group {
     display: grid !important;
-    grid-template-columns: 150px 1fr !important;
+    grid-template-columns: 145px minmax(0, 1fr) !important;
     align-items: center !important;
-    column-gap: 10px !important;
+    column-gap: 8px !important;
     margin-bottom: 14px !important;
     font-family: Calibri, Arial, sans-serif !important;
     font-size: 12pt !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .input-fields .field label,
@@ -301,17 +351,18 @@ h3 {
     font-family: Calibri, Arial, sans-serif !important;
     font-size: 12pt !important;
     width: 100% !important;
+    max-width: 100% !important;
     min-height: 24px !important;
     border: none !important;
     border-bottom: 1px solid #cfcfcf !important;
-    padding: 2px 10px 4px 10px !important;
+    padding: 2px 6px 4px 6px !important;
     background: transparent !important;
     color: #000 !important;
     text-align: left !important;
     line-height: 1.2 !important;
 }
 
-/* ===== TABLE FORM: CALIBRI BODY 10 - SCREENSHOT STYLE ===== */
+/* Table form */
 .table_form,
 .program-table {
     font-family: Calibri, Arial, sans-serif !important;
@@ -323,11 +374,19 @@ h3 {
     margin-top: 0 !important;
     margin-bottom: 20px !important;
     color: #000 !important;
+    overflow: hidden !important;
 }
 
 .table_form {
     display: block !important;
-    overflow: visible !important;
+    overflow: hidden !important;
+}
+
+.table_form table,
+.program-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
 }
 
 .table_form th,
@@ -335,16 +394,16 @@ h3 {
 .program-table th,
 .program-table td {
     font-family: Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 9.5pt !important;
     border: 1px solid #9e9e9e !important;
-    padding: 7px 6px !important;
+    padding: 5px 4px !important;
     font-weight: normal !important;
     text-align: center !important;
     vertical-align: top !important;
     color: #000 !important;
     word-break: normal !important;
-    overflow-wrap: break-word !important;
-    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.2 !important;
 }
 
 .table_form th,
@@ -381,22 +440,24 @@ h3 {
 .program-table select,
 .program-table .printable-field {
     width: 100% !important;
+    max-width: 100% !important;
     min-height: 16px !important;
     padding: 0 !important;
     border: none !important;
     background: transparent !important;
     font-family: Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 9.5pt !important;
     text-align: center !important;
-    line-height: 1.25 !important;
+    line-height: 1.2 !important;
     white-space: pre-wrap !important;
     word-break: normal !important;
-    overflow-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
 }
 
 /* General table reset */
 table {
     border-collapse: collapse !important;
+    max-width: 100% !important;
 }
 
 th,
@@ -404,7 +465,6 @@ td {
     color: #000 !important;
 }
 
-/* Inputs / fields */
 input,
 textarea,
 select {
@@ -418,6 +478,7 @@ select {
 .printable-field {
     display: block;
     width: 100%;
+    max-width: 100%;
     min-height: 16px;
     white-space: pre-wrap;
     word-break: break-word;
@@ -452,27 +513,31 @@ select {
     content: "✓";
 }
 
-/* ===== APPROVALS - SCREENSHOT STYLE ===== */
+/* ===== APPROVALS - UPDATED ===== */
 .approvals-container,
 .approvals {
     font-family: Arial, sans-serif !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 50px !important;
     color: #000 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .approval-section {
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 38px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .approval-section .label {
-    font-size: 16px !important;
-    font-weight: normal !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
     margin-bottom: 60px !important;
     text-align: left !important;
 }
@@ -482,32 +547,38 @@ select {
 }
 
 .ces-head-block {
-    width: 200px !important;
+    width: auto !important;
+    max-width: 240px !important;
     text-align: left !important;
 }
 
 .ces-head-block .name,
 .ces-head-block #ces_head {
-    display: block !important;
-    width: 200px !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 170px !important;
+    max-width: 230px !important;
     border-bottom: 1px solid #000 !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     font-weight: normal !important;
     text-transform: uppercase !important;
     min-height: 20px !important;
     line-height: 20px !important;
     text-align: left !important;
+    padding: 0 8px 1px 0 !important;
 }
 
 .ces-head-block .ces-head {
     display: block !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     font-weight: bold !important;
     text-align: left !important;
+    margin-top: 2px !important;
 }
 
 .signature-block {
-    width: 420px !important;
+    width: auto !important;
+    max-width: 380px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     text-align: center !important;
@@ -515,92 +586,115 @@ select {
     break-inside: avoid !important;
 }
 
-.signature-block .name {
-    display: block !important;
-    width: 100% !important;
+.signature-block .name,
+.name-underlined {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 280px !important;
+    max-width: 360px !important;
     border-bottom: 1px solid #000 !important;
-    font-size: 16px !important;
-    font-weight: normal !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
     text-transform: uppercase !important;
     text-align: center !important;
     min-height: 20px !important;
     line-height: 20px !important;
     margin-bottom: 3px !important;
+    padding: 0 12px 1px 12px !important;
+}
+
+.signature-block .name:empty::after,
+.name-underlined:empty::after {
+    content: "\\00a0";
 }
 
 .signature-block .title {
     display: block !important;
     font-size: 14px !important;
-    font-weight: normal !important;
+    font-weight: bold !important;
     text-align: center !important;
+    margin-top: 3px !important;
 }
 
 .approval-row,
 .signature-group,
 .approval-centered,
-.admin-block,
-.name-underlined {
+.admin-block {
     all: unset;
 }
 
-/* Document Info */
+/* ===== DOCUMENT INFO - UPDATED SMALLER ===== */
 .document-info {
-    margin-top: 50px !important;
-    width: 305px !important;
+    margin-top: 30px !important;
+    width: 215px !important;
+    max-width: 215px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .doc-header {
-    width: 305px !important;
+    width: 215px !important;
+    max-width: 215px !important;
     margin-right: auto !important;
     border-collapse: collapse !important;
+    table-layout: fixed !important;
     font-family: Arial, sans-serif !important;
-    font-size: 11px !important;
-    border: 1px solid #d1d1d1 !important;
+    font-size: 9px !important;
+    border: none !important;
 }
 
 .doc-header td {
     border: 1px solid #d1d1d1 !important;
-    padding: 5px 10px !important;
+    padding: 2px 3px !important;
+    height: 15px !important;
+    line-height: 1.05 !important;
+    vertical-align: middle !important;
 }
 
 .doc-header td.label {
     background-color: #002060 !important;
     color: #fff !important;
-    width: 100px !important;
-    font-size: 11px !important;
+    width: 78px !important;
+    max-width: 78px !important;
+    font-size: 9px !important;
     font-weight: bold !important;
-    padding: 4px 8px !important;
+    padding: 2px 3px !important;
     text-align: left !important;
     white-space: nowrap !important;
 }
 
 .doc-header td:nth-child(2) {
     width: 8px !important;
-    padding: 0 1px !important;
+    max-width: 8px !important;
+    padding: 0 !important;
     font-weight: bold !important;
     text-align: center !important;
 }
 
 .doc-header td.value {
-    width: 190px !important;
-    font-size: 11px !important;
+    width: 129px !important;
+    max-width: 129px !important;
+    font-size: 9px !important;
     text-align: left !important;
-    padding: 4px 10px !important;
-    min-width: 120px !important;
+    padding: 2px 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
 }
 
 .doc-header td.value input,
-.doc-header td.value p {
+.doc-header td.value p,
+.doc-header td.value .printable-field {
     border: none !important;
     background: transparent !important;
     font-family: inherit !important;
-    font-size: inherit !important;
-    color: #333 !important;
+    font-size: 9px !important;
+    color: #000 !important;
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
+    line-height: 1.05 !important;
+    min-height: auto !important;
 }
 
 /* Footer */
@@ -640,12 +734,13 @@ img {
     body {
         background: #fff !important;
         padding: 0 !important;
+        overflow-x: hidden !important;
     }
 
     .form-container {
         box-shadow: none !important;
         width: 100% !important;
-        max-width: none !important;
+        max-width: 100% !important;
     }
 
     #print-container,
@@ -783,6 +878,7 @@ function buildPrintableBody(formContainer) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -807,6 +903,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
+                ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">` : '<div></div>'}
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}

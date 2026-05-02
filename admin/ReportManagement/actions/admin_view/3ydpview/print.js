@@ -461,13 +461,13 @@ tr {
     width: 10%;
 }
 
-/* ================= APPROVALS ================= */
+/* ================= APPROVALS - SHORTER UNDERLINES ================= */
 .approvals-container,
 .approvals {
     width: 100%;
     margin-top: 45px !important;
     font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
-    font-size: 15px;
+    font-size: 15px !important;
     color: #000000 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -475,16 +475,16 @@ tr {
 
 .approvals-container .label,
 .approvals .label {
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: left;
     margin-bottom: 35px;
-    font-size: 15px;
+    font-size: 13px !important;
 }
 
 .approval-row {
     display: flex;
     justify-content: space-between;
-    gap: 60px;
+    gap: 45px;
     width: 100%;
     margin-bottom: 25px;
 }
@@ -497,14 +497,14 @@ tr {
 .approvals-container .signature-line,
 .approvals .signature-line {
     display: inline-block;
-    width: 280px !important;
-    min-height: 22px;
+    width: 220px !important;
+    min-height: 18px;
     border-bottom: 1px solid #000000 !important;
-    padding: 0 0 2px 0;
+    padding: 0 0 1px 0;
     margin-bottom: 3px;
     text-align: left;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 15px !important;
     text-transform: none;
     white-space: pre-wrap;
     word-break: break-word;
@@ -515,7 +515,7 @@ tr {
 .approvals .title {
     text-align: left;
     margin-top: 2px;
-    font-size: 15px;
+    font-size: 15px !important;
     font-weight: bold;
 }
 
@@ -531,7 +531,7 @@ tr {
 }
 
 .admin-block {
-    width: 420px;
+    width: 320px;
     margin: 0 auto 45px auto;
     text-align: center;
 }
@@ -539,12 +539,13 @@ tr {
 .approvals-container .name-underlined,
 .approvals .name-underlined {
     display: inline-block;
-    min-width: 280px;
+    min-width: 240px !important;
+    max-width: 320px !important;
     border-bottom: 1px solid #000000 !important;
-    padding-bottom: 1px;
+    padding: 0 10px 1px 10px;
     text-align: center;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 15px !important;
     line-height: 1.2;
     text-transform: uppercase;
 }
@@ -552,11 +553,10 @@ tr {
 .admin-block .title {
     text-align: center;
     margin-top: 3px;
-    font-size: 15px;
+    font-size: 15px !important;
     font-weight: bold;
 }
 
-/* New approval fallback style */
 .approval-section {
     width: 100% !important;
     margin-bottom: 25px !important;
@@ -565,45 +565,49 @@ tr {
 }
 
 .ces-head-block {
-    width: 280px !important;
-    text-align: left !important;
+    width: auto !important;
 }
 
 .ces-head-block .name,
 .ces-head-block #ces_head {
-    display: block !important;
-    width: 280px !important;
-    min-height: 22px !important;
-    border-bottom: 1px solid #000000 !important;
-    font-size: 15px !important;
-    line-height: 1.2 !important;
+    display: inline-block !important;
+    width: auto !important;
+
+    min-width: 160px;     /* shorter line */
+    max-width: 240px;     /* prevent long stretch */
+
+    border-bottom: 1px solid #000 !important;
+    padding: 0 10px 1px 10px !important;
+
     text-align: left !important;
-    text-transform: uppercase !important;
 }
 
 .ces-head-block .ces-head {
     display: block !important;
-    font-size: 12px !important;
+    font-size: 15px !important;
     font-weight: bold !important;
     margin-top: 3px !important;
 }
 
 .signature-block {
-    width: 420px !important;
+    width: 340px !important;
     margin: 0 auto 40px auto !important;
     text-align: center !important;
 }
 
 .signature-block .name {
-    display: block !important;
-    width: 100% !important;
-    min-height: 22px !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-height: 18px !important;
+    min-width: 220px;   /* shorter */
+    max-width: 300px;   /* prevent long line */
     border-bottom: 1px solid #000000 !important;
     font-size: 15px !important;
     line-height: 1.2 !important;
     text-align: center !important;
     text-transform: uppercase !important;
     font-weight: bold !important;
+    padding: 0 12px 1px 12px !important;
 }
 
 .signature-block .title {
@@ -614,59 +618,68 @@ tr {
     text-align: center !important;
 }
 
-/* ================= DOCUMENT INFO (SMALLER VERSION) ================= */
+/* ================= DOCUMENT INFO - SMALLER VERSION ================= */
 .document-info {
-    margin-top: 30px !important;
-    width: 240px !important; /* reduced from 305px */
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    width: 205px !important;
+    max-width: 205px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
 }
 
 .doc-header {
-    width: 240px !important;
+    width: 205px !important;
+    max-width: 205px !important;
     border-collapse: collapse !important;
     font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
-    font-size: 11px !important; /* smaller font */
+    font-size: 9px !important;
     margin-left: 0 !important;
     margin-right: auto !important;
-    table-layout: auto !important;
+    table-layout: fixed !important;
 }
 
 .doc-header td {
     border: 1px solid #d1d1d1 !important;
-    padding: 2px 4px !important; /* tighter padding */
-    height: 18px; /* reduced height */
+    padding: 1px 3px !important;
+    height: 15px !important;
+    line-height: 1.05 !important;
+    vertical-align: middle !important;
 }
 
 .doc-header td.label {
     background-color: #002060 !important;
     color: #ffffff !important;
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: left;
     white-space: nowrap;
-    width: 80px !important;
-
-    font-size: 11px !important;   /* 🔥 FIX: make it smaller */
-    line-height: 1.1 !important; /* tighter text */
+    width: 75px !important;
+    max-width: 75px !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
 }
 
 .doc-header td:nth-child(2) {
-    width: 6px !important;
-    min-width: 6px !important;
-    max-width: 6px !important;
+    width: 7px !important;
+    min-width: 7px !important;
+    max-width: 7px !important;
     padding: 0 !important;
     text-align: center;
     font-weight: bold;
     color: #000000 !important;
     background: #ffffff !important;
+    font-size: 9px !important;
 }
 
 .doc-header td.value {
-    width: 150px !important; /* reduced */
+    width: 123px !important;
+    max-width: 123px !important;
     color: #000000 !important;
     background: #ffffff !important;
     text-align: left;
     white-space: nowrap;
+    font-size: 9px !important;
+    overflow: hidden !important;
 }
 
 .doc-header td.value .printable-field,
@@ -675,15 +688,21 @@ tr {
     border: none !important;
     background: transparent !important;
     font-family: inherit;
-    font-size: 11px !important; /* match smaller size */
+    font-size: 9px !important;
     color: #000000 !important;
     margin: 0;
     padding: 0;
     width: 100%;
     min-height: auto;
-    line-height: 1.2;
+    line-height: 1.05 !important;
     box-shadow: none !important;
     outline: none !important;
+}
+
+/* keep document info small even with global print font */
+.document-info,
+.document-info * {
+    font-size: 9px !important;
 }
 .print-content,
 .print-content *,

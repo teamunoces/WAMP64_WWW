@@ -44,31 +44,36 @@ async function printReport() {
 
 @page {
     size: A4 portrait;
-    margin: 12mm 10mm 12mm 10mm;
+    margin: 12mm;
 }
 
 html,
 body {
     margin: 0 !important;
     padding: 0 !important;
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     background: #fff !important;
     color: #000 !important;
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     line-height: 1.35;
-    overflow: visible !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
 }
 
 #print-container {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
+    overflow: hidden !important;
 }
 
 .print-shell {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     border-collapse: collapse !important;
@@ -101,24 +106,36 @@ body {
     border: none !important;
     vertical-align: top !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-header {
     padding: 0 0 8px 0 !important;
     margin: 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-footer {
     padding: 8px 0 0 0 !important;
     margin: 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-body {
-    padding: 0 !important;
+    padding: 0 0 35px 0 !important;
     margin: 0 !important;
     background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .print-content,
@@ -132,9 +149,9 @@ body {
     border: none !important;
     box-shadow: none !important;
     background: #fff !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
 }
 
 #printContent,
@@ -163,77 +180,107 @@ noscript {
     display: none !important;
 }
 
+/* prevent right overlap globally */
+.print-content *,
+#main_content *,
+.form-container * {
+    max-width: 100% !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+}
+
 /* ===== PRINT HEADER ===== */
 .print-page-header {
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
+    display: grid !important;
+    grid-template-columns: 64px 64px minmax(0, 1fr) 90px !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
     margin: 0 0 4px 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
 }
 
-.logo-left {
-    height: 56px;
-    width: auto;
-    display: block;
+.logo-left,
+.logo-left2 {
+    height: 60px !important;
+    width: auto !important;
+    max-width: 64px !important;
+    display: block !important;
+    justify-self: center !important;
 }
 
 .logos-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    width: 90px !important;
+    max-width: 90px !important;
+    overflow: hidden !important;
 }
 
 .logos-right img {
-    height: 48px;
-    width: auto;
-    display: block;
+    height: 50px !important;
+    width: auto !important;
+    max-width: 48px !important;
+    display: block !important;
 }
 
 .college-info {
-    flex: 1;
-    text-align: center;
-    padding: 0 6px;
+    text-align: center !important;
+    justify-self: center !important;
+    align-self: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 6px !important;
+    overflow: hidden !important;
 }
 
 .college-info h1 {
-    margin: 0;
+    margin: 0 !important;
     font-family: "Times New Roman", Times, serif !important;
-    font-size: 18px !important;
-    line-height: 1.05;
-    font-weight: normal;
+    font-size: 20px !important;
+    line-height: 1.05 !important;
+    font-weight: normal !important;
     color: #4f81bd !important;
+    white-space: normal !important;
+    text-align: center !important;
 }
 
 .college-info p {
-    margin: 1px 0;
-    font-size: 10px !important;
-    line-height: 1.1;
+    margin: 1px 0 !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
     color: #333 !important;
+    text-align: center !important;
 }
 
 .college-info a {
-    font-size: 10px !important;
+    font-size: 11px !important;
     color: #0000EE !important;
-    text-decoration: underline;
+    text-decoration: underline !important;
+    word-break: break-all !important;
 }
 
 .office-title {
-    text-align: center;
-    font-size: 14px !important;
-    font-weight: bold;
+    text-align: center !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
     color: #595959 !important;
-    margin: 1px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
+    margin: 2px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.2px !important;
 }
 
 .double-line {
@@ -241,7 +288,7 @@ noscript {
     margin: 0 0 8px 0 !important;
 }
 
-/* ===== MONTHLY ACCOMPLISHMENT REPORT TITLE ===== */
+/* ===== TITLE ===== */
 #main_content h1,
 .print-body-wrapper h1,
 .print-content h1 {
@@ -254,7 +301,6 @@ noscript {
     margin: 0 0 12px 0 !important;
 }
 
-/* ===== FORM TITLE ===== */
 .form-type {
     font-family: "Courier New", Courier, monospace !important;
     text-align: center !important;
@@ -274,10 +320,9 @@ noscript {
 .print-content,
 .print-content * {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
 }
 
-/* keep report h1 different */
 #main_content h1,
 .print-body-wrapper h1,
 .print-content h1 {
@@ -289,28 +334,31 @@ noscript {
 .input-fields,
 .header-info {
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 0 !important;
     margin-bottom: 48px !important;
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
 }
 
 .input-fields .field,
 .input-group {
     display: grid !important;
-    grid-template-columns: 150px 1fr !important;
+    grid-template-columns: 140px minmax(0, 1fr) !important;
     align-items: center !important;
-    column-gap: 10px !important;
+    column-gap: 8px !important;
     margin-bottom: 14px !important;
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .input-fields .field label,
 .input-group label {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
     font-weight: normal !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     color: #000 !important;
     white-space: nowrap !important;
     text-align: left !important;
@@ -325,12 +373,13 @@ noscript {
 .input-group select,
 .input-group .printable-field {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     width: 100% !important;
+    max-width: 100% !important;
     min-height: 20px !important;
     border: none !important;
     border-bottom: 1px solid #cfcfcf !important;
-    padding: 2px 10px 3px 10px !important;
+    padding: 2px 6px 3px 6px !important;
     background: transparent !important;
     color: #000 !important;
     text-align: left !important;
@@ -341,7 +390,7 @@ noscript {
 .table_form,
 .program-table {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 10.5pt !important;
     width: 100% !important;
     max-width: 100% !important;
     border-collapse: collapse !important;
@@ -353,7 +402,9 @@ noscript {
 
 .table_form {
     display: block !important;
-    overflow: visible !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .table_form table,
@@ -367,16 +418,16 @@ noscript {
 .program-table th,
 .program-table td {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 10.5pt !important;
     border: 1px solid #9e9e9e !important;
-    padding: 7px 6px !important;
+    padding: 5px 4px !important;
     font-weight: normal !important;
     text-align: center !important;
     vertical-align: top !important;
     color: #000 !important;
     word-break: normal !important;
-    overflow-wrap: break-word !important;
-    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.2 !important;
 }
 
 .table_form th,
@@ -396,12 +447,6 @@ noscript {
 .program-table tr {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-}
-
-.table_form td[contenteditable="true"],
-.program-table td[contenteditable="true"] {
-    background-color: #fff !important;
-    outline: none !important;
 }
 
 /* ===== GENERAL TABLES ===== */
@@ -443,7 +488,7 @@ table {
     padding: 6px 4px !important;
     text-align: center;
     font-weight: normal !important;
-    font-size: 10pt !important;
+    font-size: 10.5pt !important;
     word-break: break-word;
     overflow-wrap: anywhere;
 }
@@ -452,7 +497,7 @@ table {
     border: 1px solid #000 !important;
     padding: 6px 4px !important;
     vertical-align: top;
-    font-size: 10pt !important;
+    font-size: 10.5pt !important;
     word-break: break-word;
     overflow-wrap: anywhere;
 }
@@ -462,7 +507,7 @@ tr {
     break-inside: avoid !important;
 }
 
-/* ===== APPROVAL SECTION - SCREENSHOT STYLE ===== */
+/* ===== APPROVAL SECTION ===== */
 .print-approval-section {
     margin-top: 0 !important;
     padding-top: 0 !important;
@@ -475,19 +520,22 @@ tr {
 .prepared-block,
 .signature-block {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     color: #000 !important;
 }
 
 .approvals-container {
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 70px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .prepared-block {
-    width: 200px !important;
+    width: auto !important;
+    max-width: 230px !important;
     margin-bottom: 38px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -500,24 +548,28 @@ tr {
 .signature-block .name,
 .signature-block .title {
     font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     color: #000 !important;
 }
 
 .approvals-container .label,
 .approval-section .label {
-    font-weight: normal !important;
+    font-weight: bold !important;
     margin-bottom: 2px !important;
     text-align: left !important;
 }
 
 .prepared-name {
-    width: 200px !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 165px !important;
+    max-width: 220px !important;
     border-bottom: 1px solid #000 !important;
     text-transform: uppercase !important;
-    min-height: 20px !important;
-    line-height: 20px !important;
+    min-height: 21px !important;
+    line-height: 21px !important;
     text-align: left !important;
+    padding: 0 8px 1px 0 !important;
 }
 
 .prepared-title {
@@ -527,9 +579,11 @@ tr {
 
 .approval-section {
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 38px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .approval-section.recommending .label {
@@ -545,7 +599,8 @@ tr {
 }
 
 .signature-block {
-    width: 420px !important;
+    width: auto !important;
+    max-width: 380px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     text-align: center !important;
@@ -553,72 +608,126 @@ tr {
     break-inside: avoid !important;
 }
 
+.name,
 .signature-block .name {
-    display: block !important;
-    width: 100% !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 260px !important;
+    max-width: 350px !important;
     border-bottom: 1px solid #000 !important;
     text-transform: uppercase !important;
     text-align: center !important;
-    min-height: 20px !important;
-    line-height: 20px !important;
+    min-height: 21px !important;
+    line-height: 21px !important;
+    padding: 0 12px 1px 12px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+}
+
+.signature-block .name:empty::after,
+.name:empty::after {
+    content: "\\00a0";
 }
 
 .signature-block .title {
     display: block !important;
     text-align: center !important;
     margin-top: 3px !important;
+    font-weight: bold !important;
 }
 
-/* ===== DOCUMENT INFO ===== */
+/* ===== DOCUMENT INFO - SMALLER ===== */
 .print-document-info-section {
     margin-top: 8px !important;
+    margin-bottom: 25px !important;
     width: 100% !important;
+    max-width: 100% !important;
     display: block !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     clear: both !important;
+    overflow: hidden !important;
 }
 
 .document-info {
-    width: 34% !important;
-    max-width: 34% !important;
+    width: 215px !important;
+    max-width: 215px !important;
     margin: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
 }
 
 .doc-header {
-    width: 100% !important;
-    border-collapse: collapse;
+    width: 215px !important;
+    max-width: 215px !important;
+    border-collapse: collapse !important;
     table-layout: fixed !important;
     font-family: Arial, sans-serif !important;
-    font-size: 10px !important;
+    font-size: 9px !important;
     border: none !important;
 }
 
+.doc-header td {
+    border: 1px solid #d1d1d1 !important;
+    padding: 2px 3px !important;
+    height: 15px !important;
+    line-height: 1.05 !important;
+    vertical-align: middle !important;
+}
+
 .doc-header td.label {
-    width: 38% !important;
-    padding: 4px 6px !important;
+    width: 78px !important;
+    max-width: 78px !important;
+    padding: 2px 3px !important;
     background-color: #002060 !important;
     color: white !important;
     font-weight: bold !important;
     border: 1px solid #d1d1d1 !important;
     text-align: left !important;
     white-space: nowrap !important;
+    font-size: 9px !important;
 }
 
 .doc-header td:nth-child(2) {
-    width: 4% !important;
-    padding: 0 1px !important;
+    width: 8px !important;
+    max-width: 8px !important;
+    padding: 0 !important;
     font-weight: bold !important;
+    text-align: center !important;
     border-top: 1px solid #d1d1d1 !important;
     border-bottom: 1px solid #d1d1d1 !important;
+    font-size: 9px !important;
 }
 
 .doc-header td.value {
-    width: 58% !important;
-    padding: 4px 8px !important;
+    width: 129px !important;
+    max-width: 129px !important;
+    padding: 2px 4px !important;
     border: 1px solid #d1d1d1 !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.doc-header td.value input,
+.doc-header td.value p,
+.doc-header td.value .printable-field {
+    border: none !important;
+    background: transparent !important;
+    font-family: inherit !important;
+    font-size: 9px !important;
+    color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    line-height: 1.05 !important;
+    min-height: auto !important;
+}
+
+/* keep document info small */
+.document-info,
+.document-info * {
+    font-size: 9px !important;
 }
 
 /* ===== FOOTER ===== */
@@ -691,6 +800,7 @@ select {
         margin: 0 !important;
         padding: 0 !important;
         background: white !important;
+        overflow-x: hidden !important;
     }
 }
 </style>
@@ -815,6 +925,7 @@ function buildPrintableBody(mainContent) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -838,7 +949,8 @@ function buildPrintHeaderHtml() {
     return `
         <div class="print-page-header">
             <div class="header-content">
-                ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
+                ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div class="logo-left-placeholder"></div>'}
+                ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">` : '<div class="logo-left2-placeholder"></div>'}
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
