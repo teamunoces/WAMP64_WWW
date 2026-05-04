@@ -64,6 +64,10 @@
     height: 90px;
     width: auto;
 }
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 
 .logos-right {
     display: flex;
@@ -139,10 +143,9 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-header h1 {
+#report_title {
     text-align: center;
     font-size: 18px;
-    text-decoration: underline;
     margin-bottom: 30px;
 }
 
@@ -369,7 +372,89 @@ tr td em {
     transform: scale(0.96);
 }
 
+/* ===== 3. Approvals Section ===== */
+.approvals {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    font-family: "Calibri", "Calibri Light", Arial, sans-serif;
+    font-size: 12pt;
+}
 
+/* labels: Prepared by, Recommending Approval, Approved by */
+.approvals .label,
+.signature-block .label {
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+/* prepared by block stays on the left */
+.ces-head-block {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+/* ===== CES HEAD (Prepared by) ===== */
+#ces_head {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+
+    font-weight: normal;
+    text-transform: uppercase;
+
+    padding: 0 12px;
+    min-width: 180px;   /* short but visible */
+    max-width: 260px;   /* prevents long line */
+    width: auto;
+}
+
+/* ===== TITLE ===== */
+.ces-head {
+    display: block;
+    margin-top: 6px;
+    font-weight: bold;
+    border: none !important;
+}
+
+/* ===== CENTER SIGNATURES ===== */
+.signature-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* ===== NAME (Recommending / Approved) ===== */
+.signature-block .name {
+    display: inline-block;   /* key for short line */
+    border-bottom: 1px solid #000;
+
+    font-weight: bold;
+    text-transform: uppercase;
+
+    padding: 0 15px;
+    min-width: 260px;   /* shorter than before */
+    max-width: 340px;   /* prevents over-stretch */
+    width: auto;
+
+    margin-bottom: 5px;
+}
+
+/* ===== TITLE ===== */
+.signature-block .title {
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+/* remove old conflicting rule */
+.name {
+    width: auto;
+}
 
 /* ===== 4. Document Info Table (The Navy Blue Style) ===== */
 .doc-header {

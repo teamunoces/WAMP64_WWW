@@ -36,7 +36,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
                             <div class="buttons">
                                 <button  onclick="printReport()">Print</button>
-                                <button id="downloadPDF" type="button">Download PDF</button>
+                                 <!-- <button id="downloadPDF" type="button">Download PDF</button>-->
                             </div>
 
             
@@ -46,6 +46,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
          <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES Logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -166,6 +167,38 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
         </div>
     </div>
 
+
+                      <!-- APPROVAL SECTIONS -->
+        <section class="approvals">
+          <div class="approval-section">
+            <div class="label">Prepared by:</div>
+            <div class="ces-head-block">
+              <div id="ces_head" class="name"></div>
+              <span class="ces-head"><strong>CES Head</strong></span>
+            </div>
+          </div>
+
+          <div class="approval-section">
+            <div class="label">Recommending Approval:</div>
+            <div class="signature-block">
+              <span id="vp_acad" class="name"></span>
+              <span class="title">Vice-President for Academic Affairs and Research</span>
+            </div>
+            <div class="signature-block" style="margin-top: 40px;">
+              <span id="vp_admin" class="name"></span>
+              <span class="title">Vice-President for Administrative Affairs</span>
+            </div>
+          </div>
+
+          <div class="approval-section">
+            <div class="label">Approved by:</div>
+            <div class="signature-block">
+              <span id="school_president" class="name"></span>
+              <span class="title">School President</span>
+            </div>
+          </div>
+        </section>
+
      <!-- DOCUMENT INFORMATION -->
         <section class="document-info">
           <table class="doc-header">
@@ -207,8 +240,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
     <script src="./get.js"></script>
     <script src="./expand.js"></script>
-    <script src="./print.js"></script>
     <script src="./download.js"></script>
     <script src="./darkmode.js"></script>
+    <script src="./print.js"></script>
 </body>
 </html>

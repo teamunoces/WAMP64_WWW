@@ -1,8 +1,8 @@
 // print.js - Narrative Report Print
-// Fixed: prevents duplicate "Approved by" section.
+// Fixed: footer size, leftLogo2 display, and duplicate "Approved by" section.
 
 async function printReport() {
-    console.log("NEW NARRATIVE PRINT.JS LOADED - APPROVAL DUPLICATE FIXED");
+    console.log("NEW NARRATIVE PRINT.JS LOADED - FOOTER + LOGOLEFT2 + APPROVAL FIXED");
 
     const narrateSuccess = document.getElementById('narrate_success')?.value || '';
     const provideData = document.getElementById('provide_data')?.value || '';
@@ -127,7 +127,7 @@ body {
 }
 
 .print-footer {
-    padding: 8px 0 0 0 !important;
+    padding: 6px 0 0 0 !important;
 }
 
 .print-body,
@@ -156,7 +156,20 @@ body {
     padding: 0 !important;
 }
 
+.left-logo-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
 .logo-left {
+    height: 56px;
+    width: auto;
+    display: block;
+}
+
+.logo-left2 {
     height: 56px;
     width: auto;
     display: block;
@@ -167,6 +180,7 @@ body {
     gap: 8px;
     align-items: center;
     justify-content: flex-end;
+    flex: 0 0 auto;
 }
 
 .logos-right img {
@@ -279,68 +293,72 @@ body {
     color: #000 !important;
 }
 
-/* ===== APPROVAL SECTION - NO DUPLICATE APPROVED BY ===== */
+/* ===== APPROVALS ===== */
+.approvals-container,
 .approvals {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 35px !important;
-    margin-top: 50px !important;
+    font-family: Arial, sans-serif !important;
     width: 100% !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
+    max-width: 100% !important;
+    margin-top: 50px !important;
     color: #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .approval-section {
     width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 38px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .approval-section .label {
-    display: block !important;
-    font-family: "Calibri Light", Calibri, Arial, sans-serif !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 60px !important;
+    text-align: left !important;
+}
+
+.approval-section:first-child .label {
     margin-bottom: 5px !important;
-    text-align: left !important;
 }
 
-/* hide duplicate approved blocks if browser duplicates print nodes */
-#print_approvals .approved-print-section ~ .approved-print-section,
-#print_approvals .approval-section.approved-print-section ~ .approval-section.approved-print-section {
-    display: none !important;
-}
-
-/* Prepared by */
 .ces-head-block {
-    width: 200px !important;
+    width: auto !important;
+    max-width: 240px !important;
     text-align: left !important;
 }
 
-.ces-head-block .name {
-    display: block !important;
-    width: 200px !important;
+.ces-head-block .name,
+.ces-head-block #ces_head {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 170px !important;
+    max-width: 230px !important;
     border-bottom: 1px solid #000 !important;
-    font-size: 10pt !important;
+    font-size: 14px !important;
     font-weight: normal !important;
     text-transform: uppercase !important;
-    min-height: 16px !important;
-    line-height: 16px !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
     text-align: left !important;
+    padding: 0 8px 1px 0 !important;
 }
 
 .ces-head-block .ces-head {
     display: block !important;
-    font-size: 10pt !important;
+    font-size: 14px !important;
     font-weight: bold !important;
     text-align: left !important;
-    margin-top: 1px !important;
+    margin-top: 2px !important;
 }
 
-/* Center signatures */
 .signature-block {
-    width: 340px !important;
+    width: auto !important;
+    max-width: 380px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     text-align: center !important;
@@ -348,115 +366,151 @@ body {
     break-inside: avoid !important;
 }
 
-.signature-block .name {
-    display: block !important;
-    width: 100% !important;
+.signature-block .name,
+.name-underlined {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 280px !important;
+    max-width: 360px !important;
     border-bottom: 1px solid #000 !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
     text-transform: uppercase !important;
     text-align: center !important;
-    min-height: 16px !important;
-    line-height: 16px !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
+    margin-bottom: 3px !important;
+    padding: 0 12px 1px 12px !important;
+}
+
+.signature-block .name:empty::after,
+.name-underlined:empty::after {
+    content: "\\00a0";
 }
 
 .signature-block .title {
     display: block !important;
-    font-size: 9pt !important;
-    font-weight: normal !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
     text-align: center !important;
-    margin-top: 1px !important;
+    margin-top: 3px !important;
 }
 
-/* sample-like spacing */
-.approval-section:nth-child(2) .label {
-    margin-bottom: 55px !important;
+.approval-row,
+.signature-group,
+.approval-centered,
+.admin-block {
+    all: unset;
 }
 
-.approval-section:nth-child(2) .signature-block + .signature-block {
-    margin-top: 40px !important;
-}
-
-.approval-section.approved-print-section {
-    margin-top: -8px !important;
-}
-
-.approval-section.approved-print-section .label {
-    margin-bottom: 55px !important;
-}
-
-/* ===== DOCUMENT INFO ===== */
+/* ================= DOCUMENT INFO - SAME SIZE, SCREENSHOT STYLE ================= */
 .document-info {
-    margin-top: 50px !important;
-    width: 305px !important;
-    max-width: 305px !important;
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    width: 230px !important;
+    max-width: 230px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
 }
 
 .doc-header {
-    width: 100% !important;
+    width: 230px !important;
+    max-width: 230px !important;
     border-collapse: collapse !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 11px !important;
-    border: 1px solid #d1d1d1 !important;
     table-layout: fixed !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 8px !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    border: 1px solid #bfbfbf !important;
 }
 
 .doc-header td {
-    border: 1px solid #d1d1d1 !important;
-    vertical-align: middle;
+    border: 1px solid #bfbfbf !important;
+    height: 16px !important;
+    line-height: 1.1 !important;
+    vertical-align: middle !important;
+    padding: 1px 3px !important;
 }
 
+/* left blue label */
 .doc-header td.label {
+    width: 86px !important;
+    max-width: 86px !important;
     background-color: #002060 !important;
-    color: #fff !important;
+    color: #ffffff !important;
     font-weight: bold !important;
     text-align: left !important;
     white-space: nowrap !important;
-    width: 100px !important;
-    font-size: 11px !important;
-    padding: 6px 8px !important;
-    font-family: Arial, sans-serif !important;
+    font-size: 8px !important;
+    padding: 2px 4px !important;
     display: table-cell !important;
 }
 
-.doc-header td.colon {
-    width: 14px !important;
-    padding: 0 1px !important;
+/* colon column */
+.doc-header td.colon,
+.doc-header td:nth-child(2) {
+    width: 9px !important;
+    min-width: 9px !important;
+    max-width: 9px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
     font-weight: bold !important;
     text-align: center !important;
-    background: #fff !important;
-    color: #000 !important;
+    padding: 0 !important;
+    font-size: 8px !important;
 }
 
+/* value column */
 .doc-header td.value {
-    padding: 6px 10px !important;
-    min-width: 190px !important;
+    width: 135px !important;
+    max-width: 135px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
     text-align: left !important;
-    background: #fff !important;
-    color: #000 !important;
     white-space: nowrap !important;
+    font-size: 8px !important;
+    font-weight: normal !important;
+    overflow: hidden !important;
+    padding: 2px 4px !important;
 }
 
-/* ===== FOOTER ===== */
+.doc-header td.value .printable-field,
+.doc-header td.value input,
+.doc-header td.value p {
+    border: none !important;
+    background: transparent !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 8px !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    line-height: 1.1 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+/* ===== FOOTER - FIXED BIGGER SIZE ===== */
 .print-footer-inner {
-    width: 100%;
+    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
+    border: none !important;
 }
 
 .print-footer-logo {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: 26px;
-    margin: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 65px !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     border: none !important;
-    object-fit: contain;
+    outline: none !important;
+    box-shadow: none !important;
+    object-fit: contain !important;
 }
 
 img {
@@ -653,6 +707,9 @@ function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src ||
         '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
 
+    const leftLogo2 = document.querySelector('.logo-left2')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png';
+
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -680,8 +737,13 @@ function buildPrintHeaderHtml() {
     return `
         <div class="print-page-header">
             <div class="header-content">
-                <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <div class="left-logo-group">
+                    <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                    ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="CES Logo" class="logo-left2">` : ''}
+                </div>
+
                 <div class="college-info">${collegeInfoHtml}</div>
+
                 <div class="logos-right">${rightLogoHtml}</div>
             </div>
             <div class="office-title">${escapeHtml(officeTitle)}</div>

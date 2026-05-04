@@ -48,10 +48,6 @@ async function printReport() {
             overflow: visible !important;
         }
 
-        body {
-            background: #fff !important;
-        }
-
         #print-container {
             display: block !important;
             width: 100%;
@@ -100,44 +96,17 @@ async function printReport() {
             background: #fff !important;
         }
 
-        .print-header-shell,
-        .print-footer-shell,
-        .print-body {
-            width: 100%;
-            margin: 0 !important;
-            background: #fff !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-        }
-
         .print-header-shell {
             padding: 0 0 8px 0 !important;
         }
 
         .print-footer-shell {
-            padding: 8px 0 0 0 !important;
+            padding: 6px 0 0 0 !important;
         }
 
-        .print-body {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        .print-content {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            background: #fff !important;
-            overflow: visible !important;
-        }
-
-        .report-container,
-        .document-info {
+        .print-body,
+        .print-content,
+        .report-container {
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
@@ -165,6 +134,7 @@ async function printReport() {
             display: none !important;
         }
 
+        /* ===== Header ===== */
         .print-page-header {
             margin: 0 !important;
             padding: 0 !important;
@@ -176,28 +146,46 @@ async function printReport() {
             justify-content: space-between;
             margin-bottom: 15px;
             width: 100%;
+            gap: 10px;
+        }
+
+        .left-logo-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto;
         }
 
         .logo-left {
             height: 90px;
             width: auto;
+            display: block;
+        }
+
+        .logo-left2 {
+            height: 80px;
+            width: auto;
+            display: block;
         }
 
         .logos-right {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
+            justify-content: flex-end;
+            flex: 0 0 auto;
         }
 
         .logos-right img {
             height: 80px;
             width: auto;
+            display: block;
         }
 
         .college-info {
             text-align: center;
             flex: 1;
-            padding: 0 20px;
+            padding: 0 10px;
         }
 
         .college-info h1 {
@@ -244,6 +232,7 @@ async function printReport() {
             text-transform: uppercase;
         }
 
+        /* ===== Form Content ===== */
         .input-group {
             display: flex;
             margin-bottom: 10px;
@@ -395,93 +384,210 @@ async function printReport() {
             font-size: 14px;
         }
 
+        /* ===== Beneficiary Signature - RIGHT SIDE ===== */
         .signature-wrapper {
-            margin-top: 80px;
-            display: flex;
-            justify-content: flex-end;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-start !important;
+            margin-top: 80px !important;
+            margin-bottom: 60px !important;
         }
 
-        .signature-block {
-            text-align: center;
-            width: 300px;
+        .signature-wrapper .signature-block {
+            width: 300px !important;
+            max-width: 300px !important;
+            text-align: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .signature-line {
-            border-bottom: 1px solid black;
+            width: 100% !important;
+            border-bottom: 1px solid black !important;
             padding: 5px;
             margin-bottom: 5px;
             min-height: 30px;
             white-space: pre-wrap;
             word-break: break-word;
             overflow-wrap: anywhere;
+            text-align: center;
         }
 
         .signature-label {
             margin-top: 8px;
             font-size: 13px;
+            text-align: center;
         }
 
+        /* ===== Approvals Section ===== */
+        .approvals {
+            width: 100%;
+            margin-top: 55px;
+            font-family: "Calibri", "Calibri Light", Arial, sans-serif;
+            font-size: 12pt;
+            color: #333;
+        }
+
+        .approvals .label {
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+
+        .ces-head-block {
+            width: 280px;
+            text-align: left;
+            margin-left: 10px;
+            margin-bottom: 65px;
+        }
+
+        #ces_head {
+            display: block;
+            width: 255px;
+            border-bottom: 1px solid #000;
+            text-align: center;
+            font-weight: normal;
+            text-transform: uppercase;
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+        }
+
+        .ces-head {
+            display: block;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .approvals .signature-block {
+            width: 100% !important;
+            max-width: 100% !important;
+            text-align: left;
+            margin-bottom: 60px;
+        }
+
+        .approvals .signature-block .name,
+        .approvals .signature-block .title {
+            display: block;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .approvals .signature-block .name {
+            width: 365px;
+            border-bottom: 1px solid #000;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding-bottom: 2px;
+            margin-bottom: 10px;
+        }
+
+        .approvals .signature-block .title {
+            font-weight: bold;
+        }
+
+        .approvals .signature-block + .signature-block {
+            margin-top: -10px;
+        }
+
+        .approvals .signature-block:last-child {
+            margin-top: 5px;
+        }
+
+        .name {
+            width: auto;
+        }
+
+        /* ================= DOCUMENT INFO - SMALLER VERSION ================= */
         .document-info {
-            margin-top: 50px !important;
-            width: 32% !important;
+            margin-top: 25px !important;
+            margin-bottom: 25px !important;
+            width: 205px !important;
+            max-width: 205px !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
         }
 
         .doc-header {
-            border-collapse: collapse;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            border: 1px solid #d1d1d1;
-            width: auto;
-            margin-right: auto;
+            width: 205px !important;
+            max-width: 205px !important;
+            border-collapse: collapse !important;
+            font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+            font-size: 9px !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
+            table-layout: fixed !important;
         }
 
         .doc-header td {
-            border: 1px solid #d1d1d1;
-            padding: 5px 10px;
+            border: 1px solid #d1d1d1 !important;
+            padding: 1px 3px !important;
+            height: 15px !important;
+            line-height: 1.05 !important;
+            vertical-align: middle !important;
         }
 
         .doc-header td.label {
             background-color: #002060 !important;
-            color: white !important;
-            font-weight: bold;
-            padding: 4px 8px;
+            color: #ffffff !important;
+            font-weight: bold !important;
             text-align: left;
             white-space: nowrap;
-            width: 100px;
+            width: 75px !important;
+            max-width: 75px !important;
+            font-size: 9px !important;
+            line-height: 1.05 !important;
         }
 
         .doc-header td:nth-child(2) {
-            width: 2%;
-            padding: 0 1px;
-            font-weight: bold;
-            border-top: 1px solid #d1d1d1;
-            border-bottom: 1px solid #d1d1d1;
+            width: 7px !important;
+            min-width: 7px !important;
+            max-width: 7px !important;
+            padding: 0 !important;
             text-align: center;
+            font-weight: bold;
+            color: #000000 !important;
+            background: #ffffff !important;
+            font-size: 9px !important;
         }
 
         .doc-header td.value {
-            padding: 4px 10px;
-            min-width: 120px;
+            width: 123px !important;
+            max-width: 123px !important;
+            color: #000000 !important;
+            background: #ffffff !important;
             text-align: left;
+            white-space: nowrap;
+            font-size: 9px !important;
+            overflow: hidden !important;
         }
 
-        .doc-header td.value .printable-field {
+        .doc-header td.value .printable-field,
+        .doc-header td.value input,
+        .doc-header td.value p {
             border: none !important;
             background: transparent !important;
-            font-family: inherit !important;
-            font-size: inherit !important;
-            color: #333 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            min-height: 0 !important;
+            font-family: inherit;
+            font-size: 9px !important;
+            color: #000000 !important;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: auto;
+            line-height: 1.05 !important;
+            box-shadow: none !important;
+            outline: none !important;
         }
 
+        .document-info,
+        .document-info * {
+            font-size: 9px !important;
+        }
+
+        /* ===== Footer - FIXED BIGGER SIZE ===== */
         .print-footer-inner,
         footer {
-            width: 100%;
+            width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -507,19 +613,22 @@ async function printReport() {
             padding: 0 !important;
         }
 
-        .footer-logos img,
         .print-footer-logo {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            max-height: 26px;
-            margin: 0 !important;
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: 65px !important;
+            margin: 0 auto !important;
             padding: 0 !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
-            object-fit: contain;
+            object-fit: contain !important;
+        }
+
+        .footer-logos img {
+            max-height: none !important;
         }
 
         img {
@@ -642,6 +751,7 @@ function buildPrintableBody() {
             <label>Name of the Beneficiary:</label>
             <div class="print-line">${escapeHtml(beneficiaryName)}</div>
         </div>
+
         <div class="input-group">
             <label>Implementing Department:</label>
             <div class="print-line">${escapeHtml(implementingDept)}</div>
@@ -660,6 +770,7 @@ function buildPrintableBody() {
                 <div class="check-item"><label><span class="printable-box ${checkboxValues[3] ? 'checked' : ''}"></span> Recollection/Retreat</label></div>
                 <div class="check-item"><label><span class="printable-box ${checkboxValues[4] ? 'checked' : ''}"></span> Lecture/Seminar</label></div>
             </div>
+
             <div class="column">
                 <div class="check-item"><label><span class="printable-box ${checkboxValues[5] ? 'checked' : ''}"></span> Training and Workshop</label></div>
                 <div class="check-item"><label><span class="printable-box ${checkboxValues[6] ? 'checked' : ''}"></span> Coastal Clean-Up drive</label></div>
@@ -672,14 +783,17 @@ function buildPrintableBody() {
 
         <div class="questions-section">
             <h3>Guide Questions:</h3>
+
             <div class="question">
                 <p>1. How did the program influence your sense of social responsibility?</p>
                 <p class="italic-trans">Giunsa sa programa pagpalambo sa imong pagbati sa sosyal nga responsibilidad?</p>
             </div>
+
             <div class="question">
                 <p>2. What values did you develop or strengthen through participation?</p>
                 <p class="italic-trans">Unsang mga kinaiya ang imong napalambo o napalig-on pinaagi sa pag-apil sa programa?</p>
             </div>
+
             <div class="question">
                 <p>3. How will you apply what you learned from the program in your daily life or real-life situations?</p>
                 <p class="italic-trans">Giunsa nimo pag-aplikar ang imong nahibal-an gikan sa programa sa imong adlaw-adlaw nga kinabuhi o sa tinuod nga kahimtang?</p>
@@ -711,6 +825,39 @@ function buildPrintableBody() {
                 <div class="signature-label">Signature of the Beneficiary</div>
             </div>
         </div>
+
+        <section class="approvals">
+            <div class="approval-section">
+                <div class="label">Prepared by:</div>
+                <div class="ces-head-block">
+                    <div id="ces_head" class="name"></div>
+                    <span class="ces-head"><strong>CES Head</strong></span>
+                </div>
+            </div>
+
+            <div class="approval-section">
+                <div class="label">Recommending Approval:</div>
+
+                <div class="signature-block">
+                    <span id="vp_acad" class="name"></span>
+                    <span class="title">Vice-President for Academic Affairs and Research</span>
+                </div>
+
+                <div class="signature-block" style="margin-top: 40px;">
+                    <span id="vp_admin" class="name"></span>
+                    <span class="title">Vice-President for Administrative Affairs</span>
+                </div>
+            </div>
+
+            <div class="approval-section">
+                <div class="label">Approved by:</div>
+
+                <div class="signature-block">
+                    <span id="school_president" class="name"></span>
+                    <span class="title">School President</span>
+                </div>
+            </div>
+        </section>
 
         <div class="document-info">
             <table class="doc-header">
@@ -770,8 +917,10 @@ function splitTextIntoLines(text, maxChars = 85, minRows = 5) {
         }
 
         let current = '';
+
         words.forEach(word => {
             const test = current ? `${current} ${word}` : word;
+
             if (test.length <= maxChars) {
                 current = test;
             } else {
@@ -795,6 +944,10 @@ function buildPrintHeaderHtml() {
         document.querySelector('.logo-left')?.src ||
         '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
 
+    const leftLogo2 =
+        document.querySelector('.logo-left2')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcc2logo.png';
+
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -804,6 +957,7 @@ function buildPrintHeaderHtml() {
         'OFFICE OF THE COMMUNITY EXTENSION SERVICES';
 
     const collegeInfoNode = document.querySelector('.college-info');
+
     const collegeInfoHtml = collegeInfoNode
         ? collegeInfoNode.innerHTML
         : `
@@ -821,10 +975,16 @@ function buildPrintHeaderHtml() {
     return `
         <div class="print-page-header">
             <div class="header-content">
-                <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <div class="left-logo-group">
+                    <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                    ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="SMCC Logo 2" class="logo-left2">` : ''}
+                </div>
+
                 <div class="college-info">${collegeInfoHtml}</div>
+
                 <div class="logos-right">${rightLogoHtml}</div>
             </div>
+
             <h2 class="office-title">${escapeHtml(officeTitle)}</h2>
             <div class="double-line"></div>
         </div>
@@ -930,6 +1090,7 @@ function runPrintAndCleanup(iframe) {
 
 function escapeHtml(str) {
     if (!str) return '';
+
     return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')

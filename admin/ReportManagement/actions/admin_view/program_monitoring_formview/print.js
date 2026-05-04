@@ -1,6 +1,7 @@
 /**
  * print.js - Program Monitoring Form
- * Repeats header/footer on every printed page and prevents overlap.
+ * Fixed: right overlap, main font size, smaller document info, bigger footer.
+ * Updated: Follow-up Required (Y/N) answers centered.
  */
 
 async function printReport() {
@@ -30,755 +31,790 @@ async function printReport() {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Program Monitoring Form</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            color-adjust: exact !important;
-        }
-
-        @page {
-            size: A4 portrait;
-            margin: 12mm 10mm 12mm 10mm;
-        }
-
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100%;
-            background: #fff !important;
-            color: #000;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            overflow: visible !important;
-        }
-
-        #print-container {
-            display: block !important;
-            width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            background: #fff !important;
-        }
-
-        .print-shell {
-            width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-            table-layout: fixed !important;
-            border: none !important;
-            outline: none !important;
-            background: #fff !important;
-        }
-
-        .print-shell thead {
-            display: table-header-group;
-        }
-
-        .print-shell tfoot {
-            display: table-footer-group;
-        }
-
-        .print-shell tbody {
-            display: table-row-group;
-        }
-
-        .print-shell > thead > tr,
-        .print-shell > tbody > tr,
-        .print-shell > tfoot > tr,
-        .print-shell > thead > tr > td,
-        .print-shell > tbody > tr > td,
-        .print-shell > tfoot > tr > td {
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            vertical-align: top !important;
-            background: #fff !important;
-        }
-
-        .print-header-shell,
-        .print-footer-shell,
-        .print-body {
-            width: 100%;
-            margin: 0 !important;
-            background: #fff !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-        }
-
-        .print-header-shell {
-            padding: 0 0 8px 0 !important;
-        }
-
-        .print-footer-shell {
-            padding: 8px 0 0 0 !important;
-        }
-
-        .print-body {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        .print-content {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            background: #fff !important;
-            overflow: visible !important;
-        }
-
-        .print-body-wrapper,
-        .form-container,
-        #main_content {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            background: #fff !important;
-            overflow: visible !important;
-            pointer-events: none !important;
-            user-select: text !important;
-        }
-
-        .print-body-wrapper > *:first-child,
-        .print-body-wrapper > *:first-child *:first-child,
-        .form-container > *:first-child,
-        #main_content > *:first-child {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        #sidebarFrame,
-        #headerFrame,
-        .buttons,
-        .admin-comment,
-        .no-print,
-        .print-hide,
-        [data-no-print="true"],
-        button,
-        script,
-        noscript,
-        .print-header,
-        .print-footer,
-        footer,
-        .footer-bottom,
-        .footer-logos {
-            display: none !important;
-        }
-
-        /* Header */
-        .print-page-header {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            width: 100%;
-        }
-
-        .logo-left {
-            height: 90px;
-            width: auto;
-        }
-
-        .logos-right {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .logos-right img {
-            height: 80px;
-            width: auto;
-        }
-
-        .college-info {
-            text-align: center;
-            flex-grow: 1;
-            padding: 0 20px;
-        }
-
-        .college-info h1 {
-            font-family: "Times New Roman", Times, serif;
-            color: #4f81bd !important;
-            font-size: 26px;
-            margin: 0;
-            font-weight: normal;
-            line-height: 1.2;
-        }
-
-        .college-info p {
-            font-size: 11px;
-            margin: 2px 0;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .college-info a {
-            font-size: 13px;
-            color: #0000EE !important;
-            text-decoration: underline;
-        }
-
-        .office-title {
-            text-align: center;
-            font-size: 18px;
-            color: #595959 !important;
-            font-weight: bold;
-            margin: 20px 0 5px 0;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .double-line {
-            border-top: 4px double #4f81bd !important;
-            margin-bottom: 25px;
-        }
-
-        /* Main flat layout */
-        .form-container {
-            background: #fff !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-        }
-
-        h2 {
-            text-align: center;
-            margin: 0 0 30px 0 !important;
-            text-transform: capitalize;
-            font-size: 16px !important;
-        }
-
-        h3 {
-            margin-top: 30px;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .header-info {
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            margin-bottom: 8px;
-            align-items: flex-end;
-        }
-
-        .input-group label {
-            font-weight: bold;
-            white-space: nowrap;
-            margin-right: 10px;
-        }
-
-        .input-group input,
-        .input-group .printable-field {
-            border: none !important;
-            border-bottom: 1px solid black !important;
-            width: 100% !important;
-            outline: none !important;
-            background: transparent !important;
-            color: #000 !important;
-            padding: 2px 4px !important;
-            min-height: 18px !important;
-        }
-
-        table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            border: 1px solid black !important;
-            padding: 8px !important;
-            font-size: 0.9em !important;
-            vertical-align: top !important;
-            color: #000 !important;
-        }
-
-        th {
-            background-color: #ffffff !important;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .center-text {
-            text-align: center !important;
-        }
-
-        tbody tr {
-            height: 30px;
-        }
-
-        tr {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .checkbox-cell {
-            text-align: center !important;
-            vertical-align: middle !important;
-        }
-
-        input[type="checkbox"] {
-            cursor: default !important;
-        }
-
-        .followUp {
-            width: 70px !important;
-            padding: 4px !important;
-            text-align: center !important;
-            border: none !important;
-            background: transparent !important;
-            color: #000 !important;
-        }
-
-        textarea {
-            width: 100% !important;
-            border: 1px solid #ccc !important;
-            padding: 4px !important;
-            font-family: Arial, sans-serif !important;
-            font-size: 0.9em !important;
-            resize: none !important;
-            background: transparent !important;
-            color: #000 !important;
-        }
-
-        .paper-lines,
-        #other_recommendations {
-            width: 100% !important;
-            border: none !important;
-            outline: none !important;
-            font-size: 0.9em !important;
-            line-height: 30px !important;
-            padding: 0 !important;
-            background-attachment: local !important;
-            background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
-            background-size: 100% 30px !important;
-            background-color: transparent !important;
-            font-family: Arial, sans-serif !important;
-            overflow: hidden !important;
-            margin-top: 8px !important;
-        }
-
-        .footer-notes {
-            margin-top: 20px;
-        }
-
-        #feedbackTable {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            font-family: Arial, sans-serif !important;
-        }
-
-        #feedbackTable th,
-        #feedbackTable td {
-            border: 1px solid #000 !important;
-            padding: 10px !important;
-        }
-
-        .feedbackSummary,
-        .feedbackAction {
-            width: 100% !important;
-            box-sizing: border-box !important;
-            border: none !important;
-            padding: 8px !important;
-            font-family: inherit !important;
-            font-size: 0.9em !important;
-            display: block !important;
-            overflow: hidden !important;
-            min-height: 50px !important;
-            background: transparent !important;
-        }
-
-        #otherIssues {
-            width: 100% !important;
-            box-sizing: border-box !important;
-            border: none !important;
-            padding: 8px !important;
-            font-family: inherit !important;
-            font-size: 13px !important;
-            display: block !important;
-            overflow: hidden !important;
-            min-height: 38px !important;
-            background: transparent !important;
-        }
-
-        .printable-field {
-            display: block;
-            width: 100%;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            border: none !important;
-            background: transparent !important;
-            color: inherit;
-            font-size: inherit;
-            line-height: inherit;
-        }
-
-        .printable-checkbox {
-            display: inline-block;
-        }
-
-        /* Section III checkbox styling */
-        #recommendationsTable td:first-child {
-            width: 120px !important;
-            white-space: nowrap !important;
-            text-align: left !important;
-            vertical-align: middle !important;
-            padding: 8px 10px !important;
-        }
-
-        #recommendationsTable td:first-child .printable-choice {
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 6px !important;
-            margin-right: 10px !important;
-            vertical-align: middle !important;
-        }
-
-        #recommendationsTable td:first-child .choice-label {
-            font-size: 0.9em !important;
-            color: #000 !important;
-            line-height: 1 !important;
-        }
-
-        .printable-box {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 13px !important;
-            height: 13px !important;
-            border: 1px solid #666 !important;
-            border-radius: 2px !important;
-            background: #fff !important;
-            color: transparent !important;
-            font-size: 10px !important;
-            line-height: 1 !important;
-            vertical-align: middle !important;
-        }
-
-        .printable-box.checked {
-            background: #e1251b !important;
-            border-color: #e1251b !important;
-            color: #fff !important;
-            font-weight: bold !important;
-        }
-
-        .printable-box.checked::before {
-            content: "✓";
-            transform: translateY(-0.5px);
-        }
-
-        #recommendationsTable td:last-child {
-            vertical-align: middle !important;
-            line-height: 1.35 !important;
-        }
-
-        /* ===== UPDATED APPROVALS - SCREENSHOT STYLE ===== */
-        .approvals-container,
-        .approvals {
-            font-family: Arial, sans-serif !important;
-            width: 100% !important;
-            margin-top: 50px !important;
-            color: #000 !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .approval-section {
-            width: 100% !important;
-            margin-top: 38px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .approval-section .label {
-            font-size: 16px !important;
-            font-weight: normal !important;
-            margin-bottom: 60px !important;
-            text-align: left !important;
-        }
-
-        .approval-section:first-child .label {
-            margin-bottom: 5px !important;
-        }
-
-        .ces-head-block {
-            width: 200px !important;
-            text-align: left !important;
-        }
-
-        .ces-head-block .name,
-        .ces-head-block #ces_head {
-            display: block !important;
-            width: 200px !important;
-            border-bottom: 1px solid #000 !important;
-            font-size: 16px !important;
-            font-weight: normal !important;
-            text-transform: uppercase !important;
-            min-height: 20px !important;
-            line-height: 20px !important;
-            text-align: left !important;
-        }
-
-        .ces-head-block .ces-head {
-            display: block !important;
-            font-size: 16px !important;
-            font-weight: bold !important;
-            text-align: left !important;
-        }
-
-        .signature-block {
-            width: 420px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            text-align: center !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .signature-block .name {
-            display: block !important;
-            width: 100% !important;
-            border-bottom: 1px solid #000 !important;
-            font-size: 16px !important;
-            font-weight: normal !important;
-            text-transform: uppercase !important;
-            text-align: center !important;
-            min-height: 20px !important;
-            line-height: 20px !important;
-            margin-bottom: 3px !important;
-        }
-
-        .signature-block .title {
-            display: block !important;
-            font-size: 14px !important;
-            font-weight: normal !important;
-            text-align: center !important;
-        }
-
-        .approval-row,
-        .signature-group,
-        .approval-centered,
-        .admin-block,
-        .name-underlined {
-            all: unset;
-        }
-
-        /* Document Info */
-        .document-info {
-            margin-top: 50px !important;
-            width: 305px !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .doc-header {
-            width: 305px !important;
-            margin-right: auto !important;
-            border-collapse: collapse !important;
-            font-family: Arial, sans-serif !important;
-            font-size: 11px !important;
-            border: 1px solid #d1d1d1 !important;
-        }
-
-        .doc-header td {
-            border: 1px solid #d1d1d1 !important;
-            padding: 5px 10px !important;
-        }
-
-        .doc-header td.label {
-            background-color: #002060 !important;
-            color: #fff !important;
-            width: 100px !important;
-            font-size: 11px !important;
-            font-weight: bold !important;
-            padding: 4px 8px !important;
-            border: 1px solid #d1d1d1 !important;
-            text-align: left !important;
-            white-space: nowrap !important;
-        }
-
-        .doc-header td:nth-child(2) {
-            width: 8px !important;
-            padding: 0 1px !important;
-            font-weight: bold !important;
-            border: 1px solid #d1d1d1 !important;
-            text-align: center !important;
-        }
-
-        .doc-header td.value {
-            width: 190px !important;
-            font-size: 11px !important;
-            text-align: left !important;
-            padding: 4px 10px !important;
-            border: 1px solid #d1d1d1 !important;
-            min-width: 120px !important;
-        }
-
-        .doc-header td.value input,
-        .doc-header td.value p {
-            border: none !important;
-            background: transparent !important;
-            font-family: inherit !important;
-            font-size: inherit !important;
-            color: #333 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-        }
-
-        .doc-header td.value input:disabled {
-            color: black !important;
-            cursor: default !important;
-        }
-
-        /* Footer */
-        .print-footer-inner,
-        footer {
-            width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            background: #fff !important;
-        }
-
-        .footer-bottom {
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .footer-logos {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            width: 100%;
-            gap: 0;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .footer-logos img,
-        .print-footer-logo {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            max-height: 26px;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            object-fit: contain;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { background-color: white !important; padding: 0 !important; }
-            .form-container { box-shadow: none !important; width: 100% !important; max-width: none !important; }
-
-            .paper-lines,
-            #other_recommendations {
-                background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
-                background-size: 100% 30px !important;
-                border: none !important;
-            }
-
-            #print-container,
-            .print-shell,
-            .print-shell tbody,
-            .print-shell tbody > tr,
-            .print-body {
-                height: auto !important;
-                min-height: 0 !important;
-            }
-
-            .approvals-container,
-            .approvals,
-            .approval-section,
-            .signature-block,
-            .ces-head-block,
-            .document-info,
-            .doc-header {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Program Monitoring Form</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 12mm;
+}
+
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #fff !important;
+    color: #000 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    overflow-x: hidden !important;
+}
+
+#print-container,
+.print-shell,
+.print-header-shell,
+.print-footer-shell,
+.print-body,
+.print-content,
+.print-body-wrapper,
+.form-container,
+#main_content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    overflow-x: hidden !important;
+}
+
+.print-shell {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    table-layout: fixed !important;
+}
+
+.print-shell thead {
+    display: table-header-group;
+}
+
+.print-shell tfoot {
+    display: table-footer-group;
+}
+
+.print-shell tbody {
+    display: table-row-group;
+}
+
+.print-shell > thead > tr,
+.print-shell > tbody > tr,
+.print-shell > tfoot > tr,
+.print-shell > thead > tr > td,
+.print-shell > tbody > tr > td,
+.print-shell > tfoot > tr > td {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    vertical-align: top !important;
+    background: #fff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.print-header-shell {
+    padding-bottom: 8px !important;
+}
+
+.print-footer-shell {
+    padding-top: 12px !important;
+}
+
+.print-body {
+    padding-bottom: 35px !important;
+}
+
+.print-content *,
+.print-body-wrapper *,
+.form-container *,
+#main_content * {
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+}
+
+.print-body-wrapper > *:first-child,
+.form-container > *:first-child,
+#main_content > *:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+#sidebarFrame,
+#headerFrame,
+.buttons,
+.admin-comment,
+.no-print,
+.print-hide,
+[data-no-print="true"],
+button,
+script,
+noscript,
+.print-header,
+.print-footer,
+footer,
+.footer-bottom,
+.footer-logos {
+    display: none !important;
+}
+
+/* HEADER */
+.print-page-header {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.header-content {
+    display: grid !important;
+    grid-template-columns: 70px 70px minmax(0, 1fr) 130px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 10px !important;
+    overflow: hidden !important;
+}
+
+.logo-left {
+    height: 70px !important;
+    width: auto !important;
+    max-width: 70px !important;
+    display: block !important;
+    justify-self: center !important;
+}
+
+.logo-left2 {
+    height: 66px !important;
+    width: auto !important;
+    max-width: 70px !important;
+    display: block !important;
+    justify-self: center !important;
+}
+
+.logos-right {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 130px !important;
+    max-width: 130px !important;
+    overflow: hidden !important;
+}
+
+.logos-right img {
+    height: 66px !important;
+    width: auto !important;
+    max-width: 60px !important;
+    display: block !important;
+}
+
+.college-info {
+    text-align: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 4px !important;
+    overflow: hidden !important;
+}
+
+.college-info h1 {
+    font-family: "Times New Roman", Times, serif !important;
+    color: #4f81bd !important;
+    font-size: 22px !important;
+    margin: 0 !important;
+    font-weight: normal !important;
+    line-height: 1.1 !important;
+}
+
+.college-info p {
+    font-size: 10.5px !important;
+    margin: 2px 0 !important;
+    color: #333 !important;
+    line-height: 1.25 !important;
+}
+
+.college-info a {
+    font-size: 11px !important;
+    color: #0000EE !important;
+    text-decoration: underline !important;
+    word-break: break-all !important;
+}
+
+.office-title {
+    text-align: center !important;
+    font-size: 16px !important;
+    color: #595959 !important;
+    font-weight: bold !important;
+    margin: 12px 0 5px 0 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+}
+
+.double-line {
+    border-top: 4px double #4f81bd !important;
+    margin-bottom: 18px !important;
+}
+
+/* MAIN CONTENT */
+.form-container,
+#main_content,
+.print-body-wrapper {
+    font-family: Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+}
+
+h2 {
+    text-align: center !important;
+    margin: 0 0 25px 0 !important;
+    text-transform: capitalize !important;
+    font-size: 16px !important;
+}
+
+h3 {
+    margin-top: 24px !important;
+    margin-bottom: 10px !important;
+    font-size: 13px !important;
+}
+
+.header-info {
+    margin-bottom: 20px !important;
+}
+
+.input-group {
+    display: grid !important;
+    grid-template-columns: max-content minmax(0, 1fr) !important;
+    column-gap: 10px !important;
+    align-items: end !important;
+    margin-bottom: 9px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.input-group label {
+    font-weight: bold !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+}
+
+.input-group input,
+.input-group .printable-field {
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    outline: none !important;
+    background: transparent !important;
+    color: #000 !important;
+    padding: 2px 4px !important;
+    min-height: 18px !important;
+    font-size: 12px !important;
+}
+
+table {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    margin-bottom: 20px !important;
+}
+
+th,
+td {
+    border: 1px solid #000 !important;
+    padding: 6px 5px !important;
+    font-size: 11.5px !important;
+    vertical-align: top !important;
+    color: #000 !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+}
+
+th {
+    background-color: #fff !important;
+    text-align: center !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+
+.center-text {
+    text-align: center !important;
+}
+
+tbody tr {
+    height: auto !important;
+    min-height: 30px !important;
+}
+
+tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.checkbox-cell {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* FOLLOW-UP REQUIRED (Y/N) CENTER FIX */
+.followUp {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    text-align-last: center !important;
+    border: none !important;
+    background: transparent !important;
+    color: #000 !important;
+    display: block !important;
+    font-size: 11.5px !important;
+    line-height: 1.25 !important;
+}
+
+td:has(.followUp) {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.followup-printable,
+td .followup-printable {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 18px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    font-size: 11.5px !important;
+    line-height: 1.25 !important;
+}
+
+table td:last-child,
+table th:last-child {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 1px solid #ccc !important;
+    padding: 4px !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 11.5px !important;
+    resize: none !important;
+    background: transparent !important;
+    color: #000 !important;
+}
+
+.paper-lines,
+#other_recommendations {
+    width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    font-size: 11.5px !important;
+    line-height: 30px !important;
+    padding: 0 !important;
+    background-attachment: local !important;
+    background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
+    background-size: 100% 30px !important;
+    background-color: transparent !important;
+    font-family: Arial, sans-serif !important;
+    overflow: hidden !important;
+    margin-top: 8px !important;
+}
+
+.footer-notes {
+    margin-top: 20px !important;
+}
+
+#feedbackTable {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-family: Arial, sans-serif !important;
+    table-layout: fixed !important;
+}
+
+#feedbackTable th,
+#feedbackTable td {
+    border: 1px solid #000 !important;
+    padding: 7px !important;
+}
+
+.feedbackSummary,
+.feedbackAction,
+#otherIssues {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    padding: 6px !important;
+    font-family: inherit !important;
+    font-size: 11.5px !important;
+    display: block !important;
+    overflow: hidden !important;
+    min-height: 38px !important;
+    background: transparent !important;
+}
+
+.printable-field {
+    display: block !important;
+    width: 100% !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    border: none !important;
+    background: transparent !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
+
+/* CHECKBOXES */
+#recommendationsTable td:first-child {
+    width: 115px !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    vertical-align: middle !important;
+    padding: 6px 8px !important;
+}
+
+#recommendationsTable td:first-child .printable-choice {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-right: 8px !important;
+    vertical-align: middle !important;
+}
+
+#recommendationsTable td:first-child .choice-label {
+    font-size: 11.5px !important;
+    color: #000 !important;
+    line-height: 1 !important;
+}
+
+.printable-box {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 13px !important;
+    height: 13px !important;
+    border: 1px solid #666 !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    color: transparent !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+}
+
+.printable-box.checked {
+    background: #e1251b !important;
+    border-color: #e1251b !important;
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+.printable-box.checked::before {
+    content: "✓";
+    transform: translateY(-0.5px);
+}
+
+/* APPROVALS */
+.approvals-container,
+.approvals {
+    font-family: Arial, sans-serif !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 45px !important;
+    color: #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+}
+
+.approval-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 34px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+}
+
+.approval-section .label {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    margin-bottom: 48px !important;
+    text-align: left !important;
+}
+
+.approval-section:first-child .label {
+    margin-bottom: 5px !important;
+}
+
+.ces-head-block {
+    width: 190px !important;
+    max-width: 190px !important;
+    text-align: left !important;
+}
+
+.ces-head-block .name,
+.ces-head-block #ces_head {
+    display: block !important;
+    width: 190px !important;
+    max-width: 190px !important;
+    border-bottom: 1px solid #000 !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    text-transform: uppercase !important;
+    min-height: 18px !important;
+    line-height: 18px !important;
+    text-align: left !important;
+}
+
+.ces-head-block .ces-head {
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    text-align: left !important;
+}
+
+.signature-block {
+    width: 330px !important;
+    max-width: 330px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.signature-block .name {
+    display: block !important;
+    width: 100% !important;
+    border-bottom: 1px solid #000 !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    min-height: 18px !important;
+    line-height: 18px !important;
+    margin-bottom: 3px !important;
+}
+
+.signature-block .title {
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    text-align: center !important;
+}
+
+.approval-row,
+.signature-group,
+.approval-centered,
+.admin-block,
+.name-underlined {
+    all: unset;
+}
+
+/* DOCUMENT INFO */
+.document-info {
+    margin-top: 30px !important;
+    width: 215px !important;
+    max-width: 215px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+}
+
+.doc-header {
+    width: 215px !important;
+    max-width: 215px !important;
+    margin-right: auto !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 9px !important;
+    border: none !important;
+}
+
+.doc-header td {
+    border: 1px solid #d1d1d1 !important;
+    padding: 2px 3px !important;
+    height: 15px !important;
+    line-height: 1.05 !important;
+    vertical-align: middle !important;
+}
+
+.doc-header td.label {
+    background-color: #002060 !important;
+    color: #fff !important;
+    width: 78px !important;
+    max-width: 78px !important;
+    font-size: 9px !important;
+    font-weight: bold !important;
+    padding: 2px 3px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+
+.doc-header td:nth-child(2) {
+    width: 8px !important;
+    max-width: 8px !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.doc-header td.value {
+    width: 129px !important;
+    max-width: 129px !important;
+    font-size: 9px !important;
+    text-align: left !important;
+    padding: 2px 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.doc-header td.value input,
+.doc-header td.value p,
+.doc-header td.value .printable-field {
+    border: none !important;
+    background: transparent !important;
+    font-family: inherit !important;
+    font-size: 9px !important;
+    color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    line-height: 1.05 !important;
+    min-height: auto !important;
+}
+
+/* FOOTER */
+.print-footer-inner,
+footer {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: #fff !important;
+}
+
+.print-footer-logo {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 65px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    object-fit: contain !important;
+}
+
+img {
+    max-width: 100% !important;
+    height: auto;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background-color: white !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    .form-container {
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .paper-lines,
+    #other_recommendations {
+        background-image: linear-gradient(to bottom, transparent 29px, #000 29px) !important;
+        background-size: 100% 30px !important;
+        border: none !important;
+    }
+
+    #print-container,
+    .print-shell,
+    .print-shell tbody,
+    .print-shell tbody > tr,
+    .print-body {
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+    .approvals-container,
+    .approvals,
+    .approval-section,
+    .signature-block,
+    .ces-head-block,
+    .document-info,
+    .doc-header {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+}
+</style>
 </head>
+
 <body>
-    <div id="print-container">
-        <table class="print-shell" role="presentation" aria-hidden="true">
-            <thead>
-                <tr>
-                    <td>
-                        <div class="print-header-shell">
-                            ${headerHTML}
-                        </div>
-                    </td>
-                </tr>
-            </thead>
+<div id="print-container">
+    <table class="print-shell" role="presentation" aria-hidden="true">
+        <thead>
+            <tr>
+                <td>
+                    <div class="print-header-shell">
+                        ${headerHTML}
+                    </div>
+                </td>
+            </tr>
+        </thead>
 
-            <tfoot>
-                <tr>
-                    <td>
-                        <div class="print-footer-shell">
-                            ${footerHTML}
-                        </div>
-                    </td>
-                </tr>
-            </tfoot>
+        <tfoot>
+            <tr>
+                <td>
+                    <div class="print-footer-shell">
+                        ${footerHTML}
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
 
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="print-body">
-                            <div class="print-content" id="printContent"></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="print-body">
+                        <div class="print-content" id="printContent"></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
         `);
@@ -850,6 +886,7 @@ function buildPrintableBody(formContainer) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
         .filter(Boolean);
@@ -873,6 +910,7 @@ function buildPrintHeaderHtml() {
         <div class="print-page-header">
             <div class="header-content">
                 ${leftLogo ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">` : '<div></div>'}
+                ${leftLogo2 ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">` : '<div></div>'}
                 <div class="college-info">${collegeInfoHtml}</div>
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
@@ -1022,10 +1060,14 @@ function convertFormControlsToPrintable(root) {
 
         if (tag === 'select') {
             const replacement = document.createElement('div');
-            replacement.className = 'printable-field';
+            replacement.className = field.classList.contains('followUp')
+                ? 'printable-field followup-printable'
+                : 'printable-field';
+
             const selectedText = field.options[field.selectedIndex]
                 ? field.options[field.selectedIndex].text
                 : (field.value || '');
+
             replacement.textContent = selectedText;
             field.replaceWith(replacement);
             return;
@@ -1051,7 +1093,10 @@ function convertFormControlsToPrintable(root) {
             }
 
             const replacement = document.createElement('div');
-            replacement.className = 'printable-field';
+            replacement.className = field.classList.contains('followUp')
+                ? 'printable-field followup-printable'
+                : 'printable-field';
+
             replacement.textContent = field.value || '';
             field.replaceWith(replacement);
         }

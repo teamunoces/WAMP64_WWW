@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.4;
     color: #000;
-    margin: 40px; /* Fixed: was '40x' */
+    margin: 40px;
     background-color: #f4f4f4;
 }
 
@@ -36,81 +36,83 @@ body {
     background: #fff;
     padding: 40px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    
-    /* Centering and Spacing Logic */
-    margin: 0 auto;           /* Centers horizontally */
-    margin-top: 70px;        /* Pushes content below the 60px fixed header */
-    margin-left: calc(100px + auto); /* Adjust if you want it centered relative to the remaining space */
-    pointer-events: none; /* Disables interaction with the container */
+    margin: 70px auto 0 auto;
 }
-    /* ===== Header Section ===== */
-    .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 15px;
-        width: 100%;
-    }
 
-    .logo-left {
-        height: 90px;
-        width: auto;
-    }
+/* ===== Header Section ===== */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+}
 
-    .logos-right {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-    }
+.logo-left {
+    height: 90px;
+    width: auto;
+}
 
-    .logos-right img {
-        height: 80px;
-        width: auto;
-    }
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 
-    .college-info {
-        text-align: center;
-        flex-grow: 1;
-        padding: 0 20px;
-    }
+.logos-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
 
-    .college-info h1 {
-        font-family: "Times New Roman", Times, serif;
-        color: #4f81bd;
-        font-size: 26px;
-        margin: 0;
-        font-weight: normal;
-        line-height: 1.2;
-    }
+.logos-right img {
+    height: 80px;
+    width: auto;
+}
 
-    .college-info p {
-        font-size: 11px;
-        margin: 2px 0;
-        color: #333;
-        line-height: 1.4;
-    }
+.college-info {
+    text-align: center;
+    flex-grow: 1;
+    padding: 0 20px;
+}
 
-    .college-info a {
-        font-size: 13px;
-        color: #0000EE;
-        text-decoration: underline;
-    }
+.college-info h1 {
+    font-family: "Times New Roman", Times, serif;
+    color: #4f81bd;
+    font-size: 26px;
+    margin: 0;
+    font-weight: normal;
+    line-height: 1.2;
+}
 
-    /* ===== Office Title ===== */
-    .office-title {
-        text-align: center;
-        font-size: 18px;
-        color: #595959;
-        font-weight: bold;
-        margin: 20px 0 5px 0;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
+.college-info p {
+    font-size: 11px;
+    margin: 2px 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.college-info a {
+    font-size: 13px;
+    color: #0000EE;
+    text-decoration: underline;
+}
+
+/* ===== Office Title ===== */
+.office-title {
+    text-align: center;
+    font-size: 18px;
+    color: #595959;
+    font-weight: bold;
+    margin: 20px 0 5px 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
 
 .double-line {
     border-top: 4px double #4f81bd;
     margin-bottom: 25px;
 }
+
 header h1 {
     text-align: center;
     font-size: 1.2rem;
@@ -118,21 +120,10 @@ header h1 {
     margin-bottom: 25px;
 }
 
+/* ===== Inputs ===== */
 .input-group {
     display: flex;
-    margin-bottom: 5px;
     align-items: flex-end;
-}
-
-.input-group label {
-    white-space: nowrap;
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-.input-group {
-    display: flex;
-    align-items: flex-end; /* Keeps text sitting on the line */
     margin-bottom: 10px;
     width: 100%;
 }
@@ -144,20 +135,20 @@ header h1 {
 }
 
 .line-input {
-    flex-grow: 1;           /* Makes the line fill the rest of the row */
-    border: none;           /* Removes the box look */
-    border-bottom: 1px solid black; /* Creates the underline */
-    outline: none;          /* Removes the blue glow when clicking */
-    font-family: inherit;   /* Uses the same font as the rest of the form */
+    flex-grow: 1;
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    font-family: inherit;
     font-size: 1rem;
     padding: 0 5px;
     background: transparent;
 }
 
-/* Optional: Slight highlight when the user clicks the line */
 .line-input:focus {
     border-bottom: 2px solid #000;
 }
+
 .line {
     border-bottom: 1px solid black;
     flex-grow: 1;
@@ -170,10 +161,11 @@ header h1 {
 }
 
 .translation {
-    color: #000000; /* Matching the red underline feel */
+    color: #000000;
     text-decoration: underline;
 }
 
+/* ===== Checkbox Section ===== */
 .checkbox-grid {
     display: flex;
     justify-content: space-between;
@@ -186,14 +178,6 @@ header h1 {
 }
 
 .check-item {
-    margin-bottom: 5px;
-}
-
-.box {
-    margin-right: 5px;
-}
-
-.check-item {
     margin-bottom: 8px;
     display: flex;
     align-items: flex-start;
@@ -203,10 +187,13 @@ header h1 {
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px; /* Spaces the checkbox from the text */
+    gap: 8px;
 }
 
-/* Optional: Makes the checkbox look a bit cleaner */
+.box {
+    margin-right: 5px;
+}
+
 input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -214,6 +201,7 @@ input[type="checkbox"] {
     margin: 0;
 }
 
+/* ===== Questions ===== */
 .questions-section h3 {
     margin-top: 30px;
     font-size: 1.1rem;
@@ -237,12 +225,13 @@ input[type="checkbox"] {
 .answer-block {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .answer-block label {
     font-weight: bold;
     margin-right: 10px;
+    padding-top: 5px;
 }
 
 .writing-lines {
@@ -253,30 +242,49 @@ input[type="checkbox"] {
     margin-bottom: 8px;
 }
 
-.signature-wrapper {
-    margin-top: 80px; /* Space from the content above */
-    display: flex;
-    justify-content: flex-end; /* Keeps it on the right side */
+.writing-lines-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 32px;
+    padding: 0;
+    background-attachment: local;
+    background-image: linear-gradient(transparent 31px, #000 31px);
+    background-size: 100% 32px;
+    background-color: transparent;
 }
 
-.signature-block {
-    text-align: center;
+/* ===== Beneficiary Signature - Right Side ===== */
+.signature-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 80px;
+}
+
+.signature-wrapper .signature-block {
     width: 300px;
+    text-align: center;
+    margin-bottom: 0;
 }
 
 .signature-input {
     width: 100%;
     border: none;
-    border-bottom: 1px solid black; /* This is your signature line */
+    border-bottom: 1px solid black;
     text-align: center;
-    font-family: Arial, sans-serif; /* Optional: gives a 'signed' look */
+    font-family: Arial, sans-serif;
     font-size: 1.1rem;
     padding-bottom: 5px;
     outline: none;
     background: transparent;
+    box-sizing: border-box;
 }
 
-/* Optional: change line color when user clicks to type */
 .signature-input:focus {
     border-bottom: 2px solid #000;
 }
@@ -287,39 +295,7 @@ input[type="checkbox"] {
     font-weight: normal;
 }
 
-.answer-block {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-}
-
-.answer-block label {
-    font-weight: bold;
-    margin-right: 10px;
-    padding-top: 5px; /* Aligns number with the first line of text */
-}
-
-.writing-lines-input {
-    flex-grow: 1;
-    border: none;
-    outline: none;
-    resize: none;
-    overflow: hidden;
-    font-family: inherit;
-    font-size: 1rem;
-    
-    /* line-height (32px) must match background-size height (32px) */
-    line-height: 32px; 
-    padding: 0;
-    
-    background-attachment: local;
-    /* This creates the persistent underline effect */
-    background-image: linear-gradient(transparent 31px, #000 31px);
-    background-size: 100% 32px;
-    background-color: transparent;
-}
-
-/* ===== BUTTONS - Positioned Above Container ===== */
+/* ===== BUTTONS ===== */
 .buttons {
     position: fixed;
     top: 70px;
@@ -377,8 +353,9 @@ input[type="checkbox"] {
     transform: scale(0.96);
 }
 
+/* ===== Admin Comment ===== */
 .admin-comment {
-    width: 100%; 
+    width: 100%;
     max-width: 930px;
     box-sizing: border-box;
     display: block;
@@ -394,7 +371,7 @@ input[type="checkbox"] {
     color: #856404;
     border: 2px solid #f59e0b;
     border-left: 8px solid #f59e0b;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
     font-weight: 600;
     font-style: italic;
     padding: 20px;
@@ -403,10 +380,96 @@ input[type="checkbox"] {
     resize: none;
 }
 
-/* ===== 4. Document Info Table (The Navy Blue Style) ===== */
+/* ===== Approvals Section ===== */
+.approvals {
+    width: 100%;
+    margin-top: 55px;
+    font-family: "Calibri", "Calibri Light", Arial, sans-serif;
+    font-size: 12pt;
+    color: #333;
+}
+
+.approvals .label {
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.ces-head-block {
+    width: 280px;
+    text-align: left;
+    margin-left: 10px;
+    margin-bottom: 65px;
+}
+
+#ces_head {
+    display: block;
+    width: 255px;
+    border-bottom: 1px solid #000;
+    text-align: center;
+    font-weight: normal;
+    text-transform: uppercase;
+    padding-bottom: 2px;
+    margin-bottom: 8px;
+}
+
+.ces-head {
+    display: block;
+    font-weight: bold;
+    text-align: left;
+}
+
+.approvals .signature-block {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 60px;
+}
+
+.approvals .signature-block .name,
+.approvals .signature-block .title {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.approvals .signature-block .name {
+    width: 365px;
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+}
+
+.approvals .signature-block .title {
+    font-weight: bold;
+}
+
+.approvals .signature-block + .signature-block {
+    margin-top: -10px;
+}
+
+.approvals .signature-block:last-child {
+    margin-top: 5px;
+}
+
+.name {
+    width: auto;
+}
+
+/* ===== Document Info Table ===== */
+.document-info {
+    margin-top: 50px;
+    width: 32%;
+}
+
 .doc-header {
-    width: auto; /* Shrinks the table to fit the content */
-    margin-right: auto; /* Keeps it pushed to the left */
+    width: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    border: 1px solid #d1d1d1;
 }
 
 .doc-header td {
@@ -414,37 +477,8 @@ input[type="checkbox"] {
     padding: 5px 10px;
 }
 
-.doc-header .label {
-    background-color: #002060;
-    color: #fff;
-    width: 25%;
-    font-size: 11px;
-}
-
-.doc-header .value {
-    /* Reduced from 75% to 50% or 30% depending on how narrow you want it */
-    width: 70%; 
-    font-size: 11px;
-    /* This ensures the text stays aligned left within that narrower space */
-    text-align: left; 
-}
-/*------------------------------------------ Container positioning */
-.document-info {
-    margin-top: 50px; /* Adjust based on space needed after approvals */
-    width: 32%;
-}
-
-/* Table Styling */
-.doc-header {
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    font-size: 11px; /* Matches the compact look of the screenshot */
-    border: 1px solid #d1d1d1;
-}
-
-/* The first column (Dark Blue Background) */
 .doc-header td.label {
-    background-color: #002060; /* Dark Navy Blue */
+    background-color: #002060;
     color: white;
     font-weight: bold;
     padding: 4px 8px;
@@ -452,9 +486,9 @@ input[type="checkbox"] {
     text-align: left;
     white-space: nowrap;
     width: 100px;
+    font-size: 11px;
 }
 
-/* The middle colon column */
 .doc-header td:nth-child(2) {
     width: 2%;
     padding: 0 1px;
@@ -463,15 +497,16 @@ input[type="checkbox"] {
     border-bottom: 1px solid #d1d1d1;
 }
 
-/* The value column */
 .doc-header td.value {
     padding: 4px 10px;
     border: 1px solid #d1d1d1;
     min-width: 120px;
+    width: 70%;
+    font-size: 11px;
+    text-align: left;
 }
 
-/* Styling the inputs/text inside the value cell */
-.doc-header td.value input, 
+.doc-header td.value input,
 .doc-header td.value p {
     border: none;
     background: transparent;
@@ -482,7 +517,8 @@ input[type="checkbox"] {
     padding: 0;
     width: 100%;
 }
-/* Footer Section */
+
+/* ===== Footer Section ===== */
 footer {
     margin-top: 50px;
     width: 100%;

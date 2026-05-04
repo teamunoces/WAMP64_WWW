@@ -115,7 +115,7 @@ body {
 }
 
 .print-footer-shell {
-    padding: 8px 0 0 0 !important;
+    padding: 12px 0 0 0 !important;
     background: #fff !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -192,7 +192,7 @@ footer,
 
 .header-content {
     display: grid !important;
-    grid-template-columns: 65px 65px minmax(0, 1fr) 90px !important;
+    grid-template-columns: 70px 70px minmax(0, 1fr) 135px !important;
     align-items: center !important;
     margin-bottom: 10px !important;
     width: 100% !important;
@@ -203,27 +203,27 @@ footer,
 
 .logo-left,
 .logo-left2 {
-    height: 62px !important;
+    height: 68px !important;
     width: auto !important;
-    max-width: 65px !important;
+    max-width: 70px !important;
     display: block !important;
     justify-self: center !important;
 }
 
 .logos-right {
     display: flex !important;
-    gap: 6px !important;
+    gap: 8px !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    width: 90px !important;
-    max-width: 90px !important;
+    width: 135px !important;
+    max-width: 135px !important;
     overflow: hidden !important;
 }
 
 .logos-right img {
-    height: 52px !important;
+    height: 68px !important;
     width: auto !important;
-    max-width: 48px !important;
+    max-width: 62px !important;
     display: block !important;
 }
 
@@ -232,7 +232,7 @@ footer,
     justify-self: center !important;
     width: 100% !important;
     min-width: 0 !important;
-    padding: 0 6px !important;
+    padding: 0 4px !important;
     overflow: hidden !important;
 }
 
@@ -513,7 +513,7 @@ select {
     content: "✓";
 }
 
-/* ===== APPROVALS - UPDATED ===== */
+/* ===== APPROVALS ===== */
 .approvals-container,
 .approvals {
     font-family: Arial, sans-serif !important;
@@ -623,30 +623,30 @@ select {
     all: unset;
 }
 
-/* ===== DOCUMENT INFO - UPDATED SMALLER ===== */
+/* ================= DOCUMENT INFO - SMALLER VERSION ================= */
 .document-info {
-    margin-top: 30px !important;
-    width: 215px !important;
-    max-width: 215px !important;
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    width: 205px !important;
+    max-width: 205px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    overflow: hidden !important;
 }
 
 .doc-header {
-    width: 215px !important;
-    max-width: 215px !important;
-    margin-right: auto !important;
+    width: 205px !important;
+    max-width: 205px !important;
     border-collapse: collapse !important;
-    table-layout: fixed !important;
-    font-family: Arial, sans-serif !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
     font-size: 9px !important;
-    border: none !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    table-layout: fixed !important;
 }
 
 .doc-header td {
     border: 1px solid #d1d1d1 !important;
-    padding: 2px 3px !important;
+    padding: 1px 3px !important;
     height: 15px !important;
     line-height: 1.05 !important;
     vertical-align: middle !important;
@@ -654,53 +654,66 @@ select {
 
 .doc-header td.label {
     background-color: #002060 !important;
-    color: #fff !important;
-    width: 78px !important;
-    max-width: 78px !important;
-    font-size: 9px !important;
+    color: #ffffff !important;
     font-weight: bold !important;
-    padding: 2px 3px !important;
-    text-align: left !important;
-    white-space: nowrap !important;
+    text-align: left;
+    white-space: nowrap;
+    width: 75px !important;
+    max-width: 75px !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
 }
 
 .doc-header td:nth-child(2) {
-    width: 8px !important;
-    max-width: 8px !important;
+    width: 7px !important;
+    min-width: 7px !important;
+    max-width: 7px !important;
     padding: 0 !important;
-    font-weight: bold !important;
-    text-align: center !important;
+    text-align: center;
+    font-weight: bold;
+    color: #000000 !important;
+    background: #ffffff !important;
+    font-size: 9px !important;
 }
 
 .doc-header td.value {
-    width: 129px !important;
-    max-width: 129px !important;
+    width: 123px !important;
+    max-width: 123px !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    text-align: left;
+    white-space: nowrap;
     font-size: 9px !important;
-    text-align: left !important;
-    padding: 2px 4px !important;
-    white-space: nowrap !important;
     overflow: hidden !important;
 }
 
+.doc-header td.value .printable-field,
 .doc-header td.value input,
-.doc-header td.value p,
-.doc-header td.value .printable-field {
+.doc-header td.value p {
     border: none !important;
     background: transparent !important;
-    font-family: inherit !important;
+    font-family: inherit;
     font-size: 9px !important;
-    color: #000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
+    color: #000000 !important;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: auto;
     line-height: 1.05 !important;
-    min-height: auto !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* keep document info small even with global print font */
+.document-info,
+.document-info * {
+    font-size: 9px !important;
 }
 
 /* Footer */
 .print-footer-inner,
 footer {
-    width: 100%;
+    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -708,15 +721,15 @@ footer {
 }
 
 .print-footer-logo {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: 28px;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 65px !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    object-fit: contain;
+    object-fit: contain !important;
 }
 
 img {

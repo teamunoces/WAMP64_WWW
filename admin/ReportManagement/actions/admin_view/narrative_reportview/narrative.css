@@ -85,7 +85,10 @@ body {
     height: 90px;
     width: auto;
 }
-
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 .logos-right {
     display: flex;
     gap: 20px;
@@ -255,51 +258,88 @@ header h1 {
 }
 
 
-/* ===== 3. Approvals Section (The "Professional" Look) ===== */
+/* ===== 3. Approvals Section ===== */
 .approvals {
-    display: flex;
-    flex-direction: column;
-    gap: 35px;
-    margin-top: 50px;
     width: 100%;
-}
-
-.approval-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 40px;
-}
-
-.signature-block {
-    flex: 1;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center names/titles */
+    gap: 45px;
+    font-family: "Calibri", "Calibri Light", Arial, sans-serif;
+    font-size: 12pt;
+}
+
+/* labels: Prepared by, Recommending Approval, Approved by */
+.approvals .label,
+.signature-block .label {
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+/* prepared by block stays on the left */
+.ces-head-block {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+/* ===== CES HEAD (Prepared by) ===== */
+#ces_head {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+
+    font-weight: normal;
+    text-transform: uppercase;
+
+    padding: 0 12px;
+    min-width: 180px;   /* short but visible */
+    max-width: 260px;   /* prevents long line */
+    width: auto;
+}
+
+/* ===== TITLE ===== */
+.ces-head {
+    display: block;
+    margin-top: 6px;
+    font-weight: bold;
+    border: none !important;
+}
+
+/* ===== CENTER SIGNATURES ===== */
+.signature-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-.signature-block .label {
-    align-self: flex-start; /* "Noted by" stays left */
-    font-weight: bold;
-    margin-bottom: 25px;
-}
-
+/* ===== NAME (Recommending / Approved) ===== */
 .signature-block .name {
-    width: 80%;
-    border-bottom: 1px solid #000; /* Signature Line */
+    display: inline-block;   /* key for short line */
+    border-bottom: 1px solid #000;
+
     font-weight: bold;
     text-transform: uppercase;
+
+    padding: 0 15px;
+    min-width: 260px;   /* shorter than before */
+    max-width: 340px;   /* prevents over-stretch */
+    width: auto;
+
     margin-bottom: 5px;
-    min-height: 20px;
 }
 
+/* ===== TITLE ===== */
 .signature-block .title {
-    font-size: 0.9rem;
+    margin-top: 6px;
     font-weight: bold;
 }
-.name{
-    border-bottom: 1px solid #000;
-    width: 200px; /* adjust size */
+
+/* remove old conflicting rule */
+.name {
+    width: auto;
 }
 
 /* ===== Document Info Table ===== */

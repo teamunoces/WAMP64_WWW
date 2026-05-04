@@ -21,13 +21,20 @@ function printReport() {
     const dateEffective = document.querySelector('input[name="date_effective"]')?.value || '';
     const approvedBy = document.querySelector('input[name="approved_by"]')?.value || '';
 
+    const oldIframe = document.getElementById('print-iframe');
+    if (oldIframe) oldIframe.remove();
+
     const iframe = document.createElement('iframe');
+    iframe.id = 'print-iframe';
     iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
+    iframe.style.left = '-9999px';
+    iframe.style.top = '0';
+    iframe.style.width = '1px';
+    iframe.style.height = '1px';
     iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+    iframe.style.visibility = 'hidden';
     document.body.appendChild(iframe);
 
     const doc = iframe.contentWindow.document;
@@ -45,6 +52,8 @@ function printReport() {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 html,
@@ -119,6 +128,11 @@ body {
 
 .logo-left {
     height: 90px;
+    width: auto;
+}
+
+.logo-left2 {
+    height: 80px;
     width: auto;
 }
 
@@ -262,131 +276,201 @@ body {
     width: 100%;
 }
 
-/* ===== APPROVAL SECTION - SCREENSHOT STYLE ===== */
-.approvals-container {
-    width: 100%;
-    margin-top: 70px;
-    color: #000;
-    page-break-inside: avoid;
-    break-inside: avoid;
+/* Approvals */
+.approvals-container,
+.approvals {
+    font-family: Arial, sans-serif !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 50px !important;
+    color: #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
 .prepared-block {
-    width: 200px;
-    margin-bottom: 38px;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
 }
 
-.approvals-container .label,
-.approval-section .label {
-    font-size: 16px;
-    font-weight: normal;
-    margin-bottom: 2px;
+.prepared-block .label {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 5px !important;
+    text-align: left !important;
 }
 
 .prepared-name {
-    width: 200px;
-    border-bottom: 1px solid #000;
-    font-size: 16px;
-    text-transform: uppercase;
-    min-height: 20px;
-    line-height: 20px;
-    text-align: left;
+    display: inline-block !important;
+    min-width: 190px !important;
+    max-width: 260px !important;
+    border-bottom: 1px solid #000 !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    text-align: left !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
+    padding: 0 8px 1px 0 !important;
+}
+
+.prepared-name:empty::after {
+    content: "\\00a0";
 }
 
 .prepared-title {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    margin-top: 2px !important;
 }
 
 .approval-section {
-    width: 100%;
-    margin-top: 38px;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 38px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
 }
 
-.approval-section.recommending .label {
-    margin-bottom: 65px;
-}
-
-.approval-section.approved-section {
-    margin-top: 15px;
-}
-
-.approval-section.approved-section .label {
-    margin-bottom: 65px;
+.approval-section .label {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 60px !important;
+    text-align: left !important;
 }
 
 .signature-block {
-    width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    width: auto !important;
+    max-width: 380px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
 }
 
-.signature-block .name {
-    display: block;
-    width: 100%;
-    border-bottom: 1px solid #000;
-    font-size: 16px;
-    text-transform: uppercase;
-    text-align: center;
-    min-height: 20px;
-    line-height: 20px;
+.signature-block .name,
+.name-underlined {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 280px !important;
+    max-width: 360px !important;
+    border-bottom: 1px solid #000 !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
+    margin-bottom: 3px !important;
+    padding: 0 12px 1px 12px !important;
+    text-decoration: none !important;
+}
+
+.signature-block .name:empty::after,
+.name-underlined:empty::after {
+    content: "\\00a0";
 }
 
 .signature-block .title {
-    display: block;
-    font-size: 14px;
-    text-align: center;
-    margin-top: 3px;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin-top: 3px !important;
 }
 
-/* Document Info */
+/* ================= DOCUMENT INFO - SMALLER VERSION ================= */
 .document-info {
-    margin-top: 45px;
-    width: 305px;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    width: 205px !important;
+    max-width: 205px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
 }
 
 .doc-header {
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    width: 305px;
-    background: #fff;
+    width: 205px !important;
+    max-width: 205px !important;
+    border-collapse: collapse !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 9px !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    table-layout: fixed !important;
 }
 
 .doc-header td {
     border: 1px solid #d1d1d1 !important;
-    padding: 6px 8px;
+    padding: 1px 3px !important;
+    height: 15px !important;
+    line-height: 1.05 !important;
+    vertical-align: middle !important;
 }
 
 .doc-header td.label {
-    background-color: #002060;
-    color: #fff;
-    font-weight: bold;
+    background-color: #002060 !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
     text-align: left;
     white-space: nowrap;
-    width: 95px;
+    width: 75px !important;
+    max-width: 75px !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
 }
 
-.doc-header td.colon {
-    width: 8px;
-    padding: 0;
+.doc-header td:nth-child(2) {
+    width: 7px !important;
+    min-width: 7px !important;
+    max-width: 7px !important;
+    padding: 0 !important;
     text-align: center;
     font-weight: bold;
+    color: #000000 !important;
+    background: #ffffff !important;
+    font-size: 9px !important;
 }
 
 .doc-header td.value {
-    width: 190px;
+    width: 123px !important;
+    max-width: 123px !important;
+    color: #000000 !important;
+    background: #ffffff !important;
     text-align: left;
+    white-space: nowrap;
+    font-size: 9px !important;
+    overflow: hidden !important;
+}
+
+.doc-header td.value .printable-field,
+.doc-header td.value input,
+.doc-header td.value p {
+    border: none !important;
+    background: transparent !important;
+    font-family: inherit;
+    font-size: 9px !important;
+    color: #000000 !important;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: auto;
+    line-height: 1.05 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* keep document info small even with global print font */
+.document-info,
+.document-info * {
+    font-size: 9px !important;
 }
 
 /* Footer */
@@ -445,19 +529,6 @@ footer,
         print-color-adjust: exact;
     }
 
-    .college-info h1 {
-        color: #4f81bd !important;
-    }
-
-    .double-line {
-        border-top: 4px double #4f81bd !important;
-    }
-
-    .doc-header td.label {
-        background-color: #002060 !important;
-        color: #fff !important;
-    }
-
     .approvals-container,
     .prepared-block,
     .approval-section,
@@ -483,6 +554,7 @@ footer,
 <header>
     <div class="header-content">
         <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" class="logo-left" alt="SMCC Logo">
+        <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" class="logo-left2" alt="CES Logo">
 
         <div class="college-info">
             <h1>Saint Michael College of Caraga</h1>
@@ -582,9 +654,7 @@ footer,
     </div>
 </section>
 
-<!-- APPROVAL SECTIONS -->
 <section class="approvals-container">
-
     <div class="prepared-block">
         <div class="label">Prepared by:</div>
         <div class="prepared-name">${escapeHtml(cesHead)}</div>
@@ -613,7 +683,6 @@ footer,
             <span class="title">School President</span>
         </div>
     </div>
-
 </section>
 
 <section class="document-info">
@@ -659,24 +728,53 @@ footer,
 
     doc.close();
 
+    let printStarted = false;
+
+    const cleanup = () => {
+        if (iframe && iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+        }
+    };
+
     const runPrint = () => {
+        if (printStarted) return;
+        printStarted = true;
+
         setTimeout(() => {
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
 
-            const cleanup = () => {
-                if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe);
-                }
-            };
-
             iframe.contentWindow.addEventListener('afterprint', cleanup, { once: true });
-            setTimeout(cleanup, 1500);
-        }, 400);
+
+            setTimeout(cleanup, 1200);
+        }, 300);
     };
 
-    iframe.onload = runPrint;
-    setTimeout(runPrint, 700);
+    const images = Array.from(doc.images);
+
+    if (images.length === 0) {
+        runPrint();
+    } else {
+        let loaded = 0;
+
+        const imageDone = () => {
+            loaded++;
+            if (loaded >= images.length) {
+                runPrint();
+            }
+        };
+
+        images.forEach((img) => {
+            if (img.complete) {
+                imageDone();
+            } else {
+                img.addEventListener('load', imageDone, { once: true });
+                img.addEventListener('error', imageDone, { once: true });
+            }
+        });
+
+        setTimeout(runPrint, 1000);
+    }
 }
 
 function escapeHtml(str) {
