@@ -407,15 +407,34 @@ async function printReport() {
             cursor: default !important;
         }
 
-        .followUp {
+        .followUp,
+        .followUp-print {
             width: 100% !important;
             max-width: 100% !important;
-            padding: 4px !important;
+            min-height: 24px !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
             text-align: center !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             border: none !important;
             background: transparent !important;
             color: #000 !important;
             font-size: 12.5px !important;
+            line-height: 1 !important;
+        }
+
+        td.followup-cell {
+            text-align: center !important;
+            vertical-align: middle !important;
+            padding: 0 !important;
+        }
+
+        td.followup-cell .followUp-print {
+            text-align: center !important;
+            vertical-align: middle !important;
         }
 
         textarea {
@@ -1145,7 +1164,18 @@ function convertFormControlsToPrintable(root) {
             }
 
             const replacement = document.createElement('div');
-            replacement.className = 'printable-field';
+
+            if (field.classList.contains('followUp')) {
+                replacement.className = 'printable-field followUp-print';
+
+                const parentTd = field.closest('td');
+                if (parentTd) {
+                    parentTd.classList.add('followup-cell');
+                }
+            } else {
+                replacement.className = 'printable-field';
+            }
+
             replacement.textContent = field.value || '';
             field.replaceWith(replacement);
         }

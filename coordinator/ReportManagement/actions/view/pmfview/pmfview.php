@@ -53,7 +53,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
           <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
-                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES logo" class="logo-left">
+                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -341,8 +341,8 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
     <script src="./get.js"></script>
  <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/js/getapproval.js"></script>
- <script src="./print.js"></script>
  <script src="./download.js"></script>
  <script src="./darkmode.js"></script>
+ <script src="./print.js"></script>
 </body>
 </html>

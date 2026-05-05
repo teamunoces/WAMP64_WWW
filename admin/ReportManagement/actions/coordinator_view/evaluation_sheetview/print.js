@@ -1,5 +1,5 @@
 // print.js - Evaluation Sheet Print
-// Fixed: no right overlap + bigger right-side logos
+// Fixed: no right overlap + smaller document info + Program Relevance ratings visible
 
 async function printReport() {
     const evaluationContainer = document.querySelector('.evaluation-container');
@@ -187,6 +187,8 @@ async function printReport() {
         max-width: 23% !important;
         min-width: 0 !important;
         overflow: hidden !important;
+        margin-right: 2mm !important;
+        transform: translateX(-3mm) !important;
     }
 
     .logos-right img {
@@ -258,8 +260,7 @@ async function printReport() {
     .input-line,
     .checkbox-grid,
     .signature-section,
-    .approvals-container,
-    .document-info {
+    .approvals-container {
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
@@ -325,6 +326,14 @@ async function printReport() {
         word-wrap: break-word !important;
     }
 
+    .legend-table {
+        margin-bottom: 15px !important;
+    }
+
+    .evaluation-table {
+        margin-top: 15px !important;
+    }
+
     th,
     td {
         max-width: 100% !important;
@@ -377,6 +386,10 @@ async function printReport() {
         height: 14px !important;
         margin: 0 !important;
         transform: none !important;
+        accent-color: #dc2626 !important;
+    }
+
+    input[type="radio"]:checked {
         accent-color: #dc2626 !important;
     }
 
@@ -482,9 +495,9 @@ async function printReport() {
     }
 
     .document-info {
-        margin-top: 45px !important;
-        width: 305px !important;
-        max-width: 305px !important;
+        margin-top: 35px !important;
+        width: 255px !important;
+        max-width: 255px !important;
         min-width: 0 !important;
         margin-right: auto !important;
         margin-left: 0 !important;
@@ -494,19 +507,19 @@ async function printReport() {
     }
 
     .doc-header {
-        width: 305px !important;
-        max-width: 305px !important;
+        width: 255px !important;
+        max-width: 255px !important;
         min-width: 0 !important;
         table-layout: fixed !important;
         border-collapse: collapse !important;
-        font-size: 11px !important;
+        font-size: 9px !important;
     }
 
     .doc-header td {
         border: 1px solid #000 !important;
-        padding: 4px 5px !important;
-        font-size: 11px !important;
-        line-height: 1.15 !important;
+        padding: 2px 4px !important;
+        font-size: 9px !important;
+        line-height: 1.1 !important;
         vertical-align: middle !important;
         overflow-wrap: break-word !important;
         word-break: normal !important;
@@ -516,15 +529,16 @@ async function printReport() {
         background-color: #002060 !important;
         color: white !important;
         font-weight: bold !important;
-        width: 95px !important;
+        width: 82px !important;
         white-space: nowrap !important;
         text-align: left !important;
-        font-size: 11px !important;
+        font-size: 9px !important;
         margin: 0 !important;
+        padding: 2px 4px !important;
     }
 
     .doc-header td:nth-child(2) {
-        width: 12px !important;
+        width: 10px !important;
         text-align: center !important;
         font-weight: bold !important;
         padding-left: 0 !important;
@@ -532,7 +546,7 @@ async function printReport() {
     }
 
     .doc-header td.value {
-        width: 198px !important;
+        width: 163px !important;
         text-align: left !important;
     }
 
@@ -547,10 +561,12 @@ async function printReport() {
         margin: 0 !important;
         padding: 0 !important;
         font-family: inherit !important;
-        font-size: inherit !important;
+        font-size: 9px !important;
+        line-height: 1.1 !important;
         color: #000 !important;
         outline: none !important;
         box-shadow: none !important;
+        text-align: left !important;
     }
 
     .footer-bottom,
@@ -664,44 +680,15 @@ async function printReport() {
 }
 
 function fixFormStatesForPrint(cloneElement) {
-    const rows = cloneElement.querySelectorAll('.evaluation-table tbody tr');
-
-    rows.forEach((row) => {
-        const categoryCell = row.querySelector('.category-row td, td[colspan="5"]');
-        const categoryText = categoryCell ? categoryCell.textContent.trim() : '';
-
-        if (categoryText === 'Program Relevance') {
-            let currentRow = row.nextElementSibling;
-
-            while (currentRow && !currentRow.classList.contains('category-row')) {
-                const radios = currentRow.querySelectorAll('input[type="radio"]');
-
-                radios.forEach((radio) => {
-                    radio.checked = false;
-                    radio.removeAttribute('checked');
-                });
-
-                currentRow = currentRow.nextElementSibling;
-            }
-        }
-    });
-
     const radios = cloneElement.querySelectorAll('input[type="radio"]');
 
     radios.forEach((radio) => {
-        const row = radio.closest('tr');
-        const isProgramRelevance = row && row.dataset.removeProgramRelevanceCheck === 'true';
-
-        if (isProgramRelevance) {
-            radio.checked = false;
-            radio.removeAttribute('checked');
-            return;
-        }
-
         if (radio.checked) {
             radio.setAttribute('checked', 'checked');
+            radio.defaultChecked = true;
         } else {
             radio.removeAttribute('checked');
+            radio.defaultChecked = false;
         }
 
         if (radio.name) {
@@ -709,15 +696,15 @@ function fixFormStatesForPrint(cloneElement) {
         }
     });
 
-    removeProgramRelevanceChecks(cloneElement);
-
     const checkboxes = cloneElement.querySelectorAll('input[type="checkbox"]');
 
     checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
             checkbox.setAttribute('checked', 'checked');
+            checkbox.defaultChecked = true;
         } else {
             checkbox.removeAttribute('checked');
+            checkbox.defaultChecked = false;
         }
     });
 
@@ -725,6 +712,7 @@ function fixFormStatesForPrint(cloneElement) {
 
     inputs.forEach((input) => {
         const tag = input.tagName.toLowerCase();
+        const type = (input.getAttribute('type') || '').toLowerCase();
 
         if (tag === 'textarea') {
             input.textContent = input.value || '';
@@ -742,8 +730,6 @@ function fixFormStatesForPrint(cloneElement) {
             return;
         }
 
-        const type = (input.getAttribute('type') || '').toLowerCase();
-
         if (
             type !== 'radio' &&
             type !== 'checkbox' &&
@@ -754,30 +740,6 @@ function fixFormStatesForPrint(cloneElement) {
             type !== 'password'
         ) {
             input.setAttribute('value', input.value || '');
-        }
-    });
-}
-
-function removeProgramRelevanceChecks(cloneElement) {
-    const categoryRows = cloneElement.querySelectorAll('.evaluation-table tbody tr.category-row');
-
-    categoryRows.forEach((categoryRow) => {
-        const text = categoryRow.textContent.trim();
-
-        if (text !== 'Program Relevance') return;
-
-        let row = categoryRow.nextElementSibling;
-
-        while (row && !row.classList.contains('category-row')) {
-            const radios = row.querySelectorAll('input[type="radio"]');
-
-            radios.forEach((radio) => {
-                radio.checked = false;
-                radio.removeAttribute('checked');
-                radio.defaultChecked = false;
-            });
-
-            row = row.nextElementSibling;
         }
     });
 }

@@ -153,82 +153,89 @@ async function printReport() {
         padding: 0 !important;
     }
 
-    .header-content {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        gap: 8px !important;
-        margin: 0 0 3px 0 !important;
-        padding: 0 !important;
-    }
+/* ===== HEADER FIX (NO OVERFLOW) ===== */
 
-    .logo-left {
-        height: 50px !important;
-        width: auto !important;
-        display: block !important;
-        flex: 0 0 auto !important;
-    }
+.header-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 98% !important;
+    margin-bottom: 10px !important;
+    gap: 10px !important;
+}
 
-    .logos-right {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        gap: 5px !important;
-        flex: 0 0 auto !important;
-    }
+/* LEFT LOGOS */
+.left-logos {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+    max-width: 155px !important; /* prevents overflow */
+}
 
-    .logos-right img {
-        height: 42px !important;
-        width: auto !important;
-        display: block !important;
-    }
+.logo-left {
+    height: 85px !important;
+    width: auto !important;
+}
 
-    .college-info {
-        flex: 1 1 auto !important;
-        text-align: center !important;
-        padding: 0 5px !important;
-    }
+.logo-left2 {
+    height: 75px !important;
+    width: auto !important;
+}
 
-    .college-info h1 {
-        margin: 0 !important;
-        font-family: "Times New Roman", Times, serif !important;
-        font-size: 16px !important;
-        line-height: 1.05 !important;
-        font-weight: normal !important;
-        color: #4f81bd !important;
-        text-transform: none !important;
-        letter-spacing: 0 !important;
-    }
+/* CENTER TEXT (IMPORTANT FIX) */
+.college-info {
+    flex: 1 1 auto !important;
+    min-width: 0 !important; /* 🔥 prevents pushing layout */
+    text-align: center !important;
+    padding: 0 10px !important;
+}
 
-    .college-info p {
-        margin: 1px 0 !important;
-        font-size: 8.5px !important;
-        line-height: 1.1 !important;
-        color: #333 !important;
-    }
+.college-info h1 {
+    font-family: "Times New Roman", Times, serif !important;
+    color: #4f81bd !important;
+    font-size: 22px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+}
 
-    .college-info a {
-        font-size: 8.5px !important;
-        color: #0000ee !important;
-        text-decoration: underline !important;
-    }
+.college-info p {
+    font-size: 10px !important;
+    margin: 1px 0 !important;
+    line-height: 1.2 !important;
+}
 
-    .office-title {
-        text-align: center !important;
-        font-size: 11px !important;
-        font-weight: bold !important;
-        color: #595959 !important;
-        margin: 2px 0 3px 0 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.3px !important;
-    }
+.college-info a {
+    font-size: 10px !important;
+}
 
-    .double-line {
-        border-top: 3px double #4f81bd !important;
-        margin: 0 0 6px 0 !important;
-        width: 100% !important;
-    }
+/* RIGHT LOGOS */
+.logos-right {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+    max-width: 135px !important; /* prevents overflow */
+}
+
+.logos-right img {
+    height: 65px !important;
+    width: auto !important;
+}
+
+/* OFFICE TITLE */
+.office-title {
+    text-align: center !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+    margin: 10px 0 4px 0 !important;
+}
+
+/* LINE */
+.double-line {
+    border-top: 3px double #4f81bd !important;
+}
 
     .report-title {
         display: block !important;
@@ -640,6 +647,25 @@ function buildPrintableBody(mainContent) {
     removeNonPrintable(clonedMainContent);
     syncFormValues(mainContent, clonedMainContent);
 
+    clonedMainContent.querySelectorAll(
+        [
+            '.print-page-header',
+            '.header-content',
+            '.college-info',
+            '.office-title',
+            '.double-line',
+            '.left-logos',
+            '.logo-left',
+            '.logo-left2',
+            '.logos-right',
+            '.page-header',
+            '.header',
+            '.report-header',
+            '.school-header',
+            '.document-header'
+        ].join(',')
+    ).forEach(el => el.remove());
+
     clonedMainContent.querySelectorAll('.report-title').forEach(el => el.remove());
 
     Array.from(clonedMainContent.querySelectorAll('h1')).forEach(h1 => {
@@ -659,7 +685,7 @@ function buildPrintableBody(mainContent) {
         document.querySelector('.approvals-container') ||
         document.querySelector('.approval-row')?.closest('section, div');
 
-    if (approvalSource) {
+    if (approvalSource && !clonedMainContent.contains(approvalSource)) {
         const approvalClone = approvalSource.cloneNode(true);
 
         removeNonPrintable(approvalClone);
@@ -675,7 +701,7 @@ function buildPrintableBody(mainContent) {
         document.querySelector('.document-info') ||
         document.querySelector('.doc-header')?.closest('.document-info, div');
 
-    if (documentInfoSource) {
+    if (documentInfoSource && !clonedMainContent.contains(documentInfoSource)) {
         const documentInfoClone = documentInfoSource.cloneNode(true);
 
         removeNonPrintable(documentInfoClone);
@@ -692,6 +718,7 @@ function buildPrintableBody(mainContent) {
 
 function buildPrintHeaderHtml() {
     const leftLogo = document.querySelector('.logo-left')?.src || '';
+    const leftLogo2 = document.querySelector('.logo-left2')?.src || '';
 
     const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
         .map(img => img.src)
@@ -716,11 +743,20 @@ function buildPrintHeaderHtml() {
     return `
         <div class="print-page-header">
             <div class="header-content">
-                ${
-                    leftLogo
-                        ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">`
-                        : `<div style="width:50px;"></div>`
-                }
+
+                <div class="left-logos">
+                    ${
+                        leftLogo
+                            ? `<img src="${escapeHtml(leftLogo)}" alt="Logo" class="logo-left">`
+                            : ''
+                    }
+
+                    ${
+                        leftLogo2
+                            ? `<img src="${escapeHtml(leftLogo2)}" alt="Logo" class="logo-left2">`
+                            : ''
+                    }
+                </div>
 
                 <div class="college-info">
                     ${collegeInfoHtml}
@@ -729,6 +765,7 @@ function buildPrintHeaderHtml() {
                 <div class="logos-right">
                     ${rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')}
                 </div>
+
             </div>
 
             <div class="office-title">${escapeHtml(officeTitle)}</div>
@@ -756,8 +793,15 @@ function buildPrintFooterHtml() {
 }
 
 function createPrintIframe() {
+    const oldFrame = document.getElementById('monthlyPrintFrame');
+
+    if (oldFrame) {
+        oldFrame.remove();
+    }
+
     const iframe = document.createElement('iframe');
 
+    iframe.id = 'monthlyPrintFrame';
     iframe.setAttribute('aria-hidden', 'true');
     iframe.style.position = 'fixed';
     iframe.style.right = '0';

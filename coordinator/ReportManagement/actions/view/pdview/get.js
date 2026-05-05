@@ -21,17 +21,22 @@ async function loadReport() {
         console.log("Fetched data:", data);
 
         if (data.success && data.main) {
-            // Fill top input fields
             document.getElementById('admincomment').value = data.main.feedback || '';
             document.getElementById('department').value = data.main.department || '';
             document.getElementById('title_of_activity').value = data.main.title_of_activity || '';
             document.getElementById('participants').value = data.main.participants || '';
             document.getElementById('location').value = data.main.location || '';
 
+            // ===== APPROVALS FROM DATABASE ONLY =====
+            document.getElementById('created_by_name').textContent = data.main.created_by_name || '';
+            document.getElementById('dean').textContent = data.main.dean || '';
+            document.getElementById('ces_head').textContent = data.main.ces_head || '';
+            document.getElementById('vp_acad').textContent = data.main.vp_acad || '';
+            document.getElementById('vp_admin').textContent = data.main.vp_admin || '';
+            document.getElementById('school_president').textContent = data.main.school_president || '';
 
-            // Populate table
             const tableBody = document.querySelector('.program-table tbody');
-            tableBody.innerHTML = ''; // clear existing rows
+            tableBody.innerHTML = '';
 
             data.details.forEach(row => {
                 const tr = document.createElement('tr');
@@ -49,7 +54,6 @@ async function loadReport() {
                     <td contenteditable="true">${row.risk_management_and_contingency_plans || ''}</td>
                     <td contenteditable="true">${row.sustainability_and_follow_up || ''}</td>
                     <td contenteditable="true">${row.promotion_and_awareness || ''}</td>
-
                 `;
                 tableBody.appendChild(tr);
             });

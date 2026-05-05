@@ -70,7 +70,7 @@ function printReport() {
 
         @media print {
             @page {
-                margin: 12mm;
+                margin: 12mm 12mm 20mm 12mm;
                 size: auto;
             }
 
@@ -100,7 +100,6 @@ function printReport() {
                 background: white !important;
             }
 
-            /* Hide screen-only elements */
             #sidebarFrame,
             #headerFrame,
             .buttons,
@@ -113,7 +112,6 @@ function printReport() {
                 display: none !important;
             }
 
-            /* Print shell */
             .print-shell {
                 width: 100%;
                 margin: 0 !important;
@@ -168,11 +166,12 @@ function printReport() {
             }
 
             .print-footer {
-                padding: 10px 0 0 0 !important;
+                padding: 6mm 0 0 0 !important;
+                height: auto !important;
             }
 
             .print-body {
-                padding: 0 !important;
+                padding: 0 0 18mm 0 !important;
             }
 
             .report-container {
@@ -199,7 +198,6 @@ function printReport() {
                 box-shadow: none !important;
             }
 
-            /* Header layout */
             .header-content {
                 display: flex;
                 align-items: center;
@@ -280,7 +278,6 @@ function printReport() {
                 margin: 15px 0 20px 0;
             }
 
-            /* Report-specific layout */
             .header-grid {
                 display: grid !important;
                 grid-template-columns: 145px 1fr 150px 1fr !important;
@@ -327,9 +324,70 @@ function printReport() {
                 text-decoration: underline !important;
             }
 
+            .approvals-container {
+                margin-bottom: 14mm !important;
+            }
+
+            .document-info {
+                width: 34% !important;
+                max-width: 34% !important;
+                margin: 35px 0 25mm 0 !important;
+                padding: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-before: auto !important;
+                display: block !important;
+            }
+
+            .doc-header {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                table-layout: fixed !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 10px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .doc-header td {
+                border: 1px solid #000 !important;
+                padding: 3px 5px !important;
+                line-height: 1.2 !important;
+                vertical-align: middle !important;
+            }
+
             .doc-header td.label {
+                width: 42% !important;
                 background-color: #002060 !important;
                 color: white !important;
+                font-weight: bold !important;
+                text-align: left !important;
+                white-space: nowrap !important;
+            }
+
+            .doc-header td:nth-child(2) {
+                width: 5% !important;
+                text-align: center !important;
+                font-weight: bold !important;
+            }
+
+            .doc-header td.value {
+                width: 53% !important;
+                text-align: left !important;
+                white-space: normal !important;
+                overflow-wrap: break-word !important;
+            }
+
+            .doc-header input,
+            .doc-header p {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                background: transparent !important;
+                font-size: 10px !important;
+                line-height: 1.2 !important;
+                text-align: left !important;
             }
 
             .approvals-container,
@@ -339,8 +397,8 @@ function printReport() {
             .signature-group,
             .approval-centered,
             .header-grid {
-                page-break-inside: avoid;
-                break-inside: avoid;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
             table, tr, td, th {
@@ -348,7 +406,6 @@ function printReport() {
                 break-inside: avoid;
             }
 
-            /* Textarea fix */
             textarea,
             .paper-lines,
             .print-body textarea,
@@ -381,16 +438,18 @@ function printReport() {
             }
 
             footer {
-                width: 100%;
+                width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
             .footer-bottom {
                 display: flex;
                 align-items: flex-end;
                 justify-content: flex-end;
-                width: 100%;
+                width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
@@ -399,23 +458,23 @@ function printReport() {
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
-                width: 100%;
+                width: 100% !important;
                 gap: 0;
                 margin: 0 !important;
                 padding: 0 !important;
             }
 
             .footer-logos img {
-                display: block;
-                width: 100%;
-                max-width: 100%;
-                height: auto;
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 border: none !important;
                 outline: none !important;
                 box-shadow: none !important;
-                object-fit: contain;
+                object-fit: contain !important;
             }
 
             h1, h2, h3, h4, h5, h6, p {
@@ -434,9 +493,11 @@ function printReport() {
         if (printContainer.parentNode) {
             printContainer.parentNode.removeChild(printContainer);
         }
+
         if (styleElement.parentNode) {
             styleElement.parentNode.removeChild(styleElement);
         }
+
         window.removeEventListener('afterprint', cleanup);
     };
 
@@ -444,17 +505,19 @@ function printReport() {
         const images = [...printContainer.querySelectorAll('img')];
 
         if (!images.length) {
-            window.addEventListener('afterprint', cleanup);
+            window.addEventListener('afterprint', cleanup, { once: true });
             window.print();
             setTimeout(cleanup, 1500);
             return;
         }
 
         let done = 0;
+
         const finish = () => {
             done += 1;
+
             if (done >= images.length) {
-                window.addEventListener('afterprint', cleanup);
+                window.addEventListener('afterprint', cleanup, { once: true });
                 window.print();
                 setTimeout(cleanup, 1500);
             }
@@ -510,8 +573,12 @@ function syncFormValues(source, clone) {
         if (tag === 'select') {
             [...target.options].forEach((opt, i) => {
                 opt.selected = original.options[i]?.selected || false;
-                if (opt.selected) opt.setAttribute('selected', 'selected');
-                else opt.removeAttribute('selected');
+
+                if (opt.selected) {
+                    opt.setAttribute('selected', 'selected');
+                } else {
+                    opt.removeAttribute('selected');
+                }
             });
             return;
         }
@@ -526,6 +593,7 @@ function convertTextareasForPrint(root) {
 
     textareas.forEach((textarea) => {
         const div = document.createElement('div');
+
         div.className = textarea.classList.contains('paper-lines')
             ? 'paper-lines print-textarea-block'
             : 'print-textarea-block';

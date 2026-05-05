@@ -137,7 +137,7 @@ async function printReport() {
     }
 
     .logo-left {
-        height: 85px;
+        height: 90px;
         width: auto;
         display: block;
     }
@@ -549,74 +549,77 @@ async function printReport() {
     font-weight: bold;
 }
 
-    /* ---------------- DOCUMENT INFO ---------------- */
-    .document-info {
-        margin-top: 50px !important;
-        width: 305px !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
+    /* ================= DOCUMENT INFO (SMALLER VERSION) ================= */
+.document-info {
+    margin-top: 30px !important;
+    width: 240px !important; /* reduced from 305px */
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
 
-    .doc-header {
-        width: 305px !important;
-        border-collapse: collapse !important;
-        font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
-        font-size: 11px;
-        margin-left: 0 !important;
-        margin-right: auto !important;
-        table-layout: auto !important;
-    }
+.doc-header {
+    width: 240px !important;
+    border-collapse: collapse !important;
+    font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
+    font-size: 9px !important; /* smaller font */
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    table-layout: auto !important;
+}
 
-    .doc-header td {
-        border: 1px solid #d1d1d1 !important;
-        padding: 4px 6px !important;
-        height: 24px;
-    }
+.doc-header td {
+    border: 1px solid #d1d1d1 !important;
+    padding: 2px 4px !important; /* tighter padding */
+    height: 18px; /* reduced height */
+}
 
-    .doc-header td.label {
-        background-color: #002060 !important;
-        color: #ffffff !important;
-        font-weight: bold;
-        text-align: left;
-        white-space: nowrap;
-        width: 105px !important;
-    }
+.doc-header td.label {
+    background-color: #002060 !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+    width: 80px !important;
 
-    .doc-header td:nth-child(2) {
-        width: 8px !important;
-        min-width: 8px !important;
-        max-width: 8px !important;
-        padding: 0 !important;
-        text-align: center;
-        font-weight: bold;
-        color: #000000 !important;
-        background: #ffffff !important;
-    }
+    font-size: 11px !important;   /* 🔥 FIX: make it smaller */
+    line-height: 1.1 !important; /* tighter text */
+}
 
-    .doc-header td.value {
-        width: 190px !important;
-        color: #000000 !important;
-        background: #ffffff !important;
-        text-align: left;
-        white-space: nowrap;
-    }
+.doc-header td:nth-child(2) {
+    width: 6px !important;
+    min-width: 6px !important;
+    max-width: 6px !important;
+    padding: 0 !important;
+    text-align: center;
+    font-weight: bold;
+    color: #000000 !important;
+    background: #ffffff !important;
+}
 
-    .doc-header td.value .printable-field,
-    .doc-header td.value input,
-    .doc-header td.value p {
-        border: none !important;
-        background: transparent !important;
-        font-family: inherit;
-        font-size: inherit;
-        color: #000000 !important;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        min-height: auto;
-        line-height: inherit;
-        box-shadow: none !important;
-        outline: none !important;
-    }
+.doc-header td.value {
+    width: 150px !important; /* reduced */
+    color: #000000 !important;
+    background: #ffffff !important;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.doc-header td.value .printable-field,
+.doc-header td.value input,
+.doc-header td.value p {
+    border: none !important;
+    background: transparent !important;
+    font-family: inherit;
+    font-size: 9px !important; /* match smaller size */
+    color: #000000 !important;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: auto;
+    line-height: 1.2;
+    box-shadow: none !important;
+    outline: none !important;
+}
 
     .print-content,
 .print-content *,

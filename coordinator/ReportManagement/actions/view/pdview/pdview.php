@@ -55,7 +55,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
         <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
-                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES logo" class="logo-left">
+                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -143,7 +143,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                         <div class="approval-row">
                             <div class="signature-group">
                             <div class="label">Prepared by:</div>
-                            <div class="signature-line"><?php echo htmlspecialchars($userName); ?></div>
+                            <div class="signature-line" id="created_by_name"></div>
                             <div class="title bold">CES Coordinator</div>
                             </div>
                         </div>
@@ -151,7 +151,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                         <div class="label" style="margin-top: 20px;">Noted by:</div>
                         <div class="approval-row">
                             <div class="signature-group">
-                             <div class="signature-line"><?php echo htmlspecialchars($userDean); ?></div>
+                             <div class="signature-line" id="dean"></div>
                             <div class="title bold">Dean</div>
                             </div>
                             <div class="signature-group">
@@ -238,7 +238,8 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/js/getapproval.js"></script>
     <script src="./download.js"></script>
     <script src="./darkmode.js"></script>
-    <script src="./print.js"></script>
+    <script src="./print.js?v=<?php echo time(); ?>"></script>
+
     
 
 </body>

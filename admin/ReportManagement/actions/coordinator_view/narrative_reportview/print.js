@@ -1,4 +1,5 @@
 // print.js - Handles printing of the monthly accomplishment report - narrative report
+// Fixed: document info will not overlap the footer.
 
 async function printReport() {
     const narrateSuccess = document.getElementById('narrate_success')?.value || '';
@@ -64,7 +65,7 @@ async function printReport() {
 
         @page {
             size: A4 portrait;
-            margin: 12mm 10mm 14mm 10mm;
+            margin: 12mm 10mm 24mm 10mm;
         }
 
         html, body {
@@ -147,11 +148,11 @@ async function printReport() {
         }
 
         .print-footer {
-            padding: 14px 0 0 0 !important;
+            padding: 8px 0 0 0 !important;
         }
 
         .print-body {
-            padding: 0 !important;
+            padding: 0 0 28mm 0 !important;
             margin: 0 !important;
         }
 
@@ -159,7 +160,7 @@ async function printReport() {
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 0 0 20mm 0 !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
@@ -172,8 +173,10 @@ async function printReport() {
         .document-info-wrap {
             width: 100% !important;
             max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
@@ -201,6 +204,7 @@ async function printReport() {
             width: auto;
             flex: 0 0 auto;
         }
+
         .logo-left2 {
             height: 80px;
             width: auto;
@@ -374,6 +378,7 @@ async function printReport() {
 
         .document-info-wrap {
             margin-top: 40px !important;
+            margin-bottom: 32mm !important;
             display: block !important;
             clear: both !important;
             page-break-inside: avoid !important;
@@ -476,7 +481,7 @@ async function printReport() {
             width: 100%;
             max-width: 100%;
             height: auto;
-            max-height: 85px;
+            max-height: 65px;
             margin: 0 auto !important;
             padding: 0 !important;
             border: none !important;
@@ -726,7 +731,11 @@ function buildPrintFooterHtml() {
 }
 
 function createPrintIframe() {
+    const oldIframe = document.getElementById('print-iframe');
+    if (oldIframe) oldIframe.remove();
+
     const iframe = document.createElement('iframe');
+    iframe.id = 'print-iframe';
     iframe.setAttribute('aria-hidden', 'true');
     iframe.style.position = 'fixed';
     iframe.style.right = '0';

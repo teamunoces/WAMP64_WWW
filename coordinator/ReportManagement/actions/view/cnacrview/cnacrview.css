@@ -316,6 +316,9 @@ footer {
     font-weight: bold;
     text-transform: uppercase;
 }
+#created_by_name, #dean{
+    text-align: left;
+}
 
 .title {
     font-size: 14px;

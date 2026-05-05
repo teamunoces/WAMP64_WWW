@@ -25,21 +25,12 @@ function displayFeedback(feedback) {
         autoExpand(adminComment);
     }
 }
-// Display feedback in the admin comment textarea
-function displayFeedback(feedback) {
-    const adminComment = document.getElementById('admincomment');
-    if (adminComment) {
-        adminComment.value = feedback || '';
-        autoExpand(adminComment);
-    }
-}
 
-// Populate form fields with report data
 function populateFormFields(report) {
-    // Map database columns to form fields
+    // existing mappings...
     const fieldMappings = {
         'department': 'department',
-        'date': 'date', // Note: your input has id="date_submitted" but name="date"
+        'date': 'date',
         'date_conduct': 'date_conduct',
         'participants': 'participants',
         'location': 'location',
@@ -58,25 +49,36 @@ function populateFormFields(report) {
         'from_community': 'from_community'
     };
 
+    // ===== EXISTING LOOP =====
     for (const [dbField, formField] of Object.entries(fieldMappings)) {
-        // Handle special case for date field
         if (formField === 'date') {
             const element = document.getElementById('date_submitted');
-            if (element && report[dbField] !== undefined && report[dbField] !== null) {
+            if (element && report[dbField] != null) {
                 element.value = report[dbField];
             }
         } else {
             const element = document.querySelector(`textarea[name="${formField}"], input[name="${formField}"]`);
-            if (element && report[dbField] !== undefined && report[dbField] !== null) {
+            if (element && report[dbField] != null) {
                 element.value = report[dbField];
-                if (element.tagName === 'TEXTAREA') {
-                    autoExpand(element);
-                }
+                if (element.tagName === 'TEXTAREA') autoExpand(element);
             }
         }
     }
-}
 
+    // ===== NEW PART (IMPORTANT) =====
+
+    // Created by (CES Coordinator)
+    const createdBy = document.getElementById('created_by_name');
+    if (createdBy && report.created_by_name != null) {
+        createdBy.textContent = report.created_by_name;
+    }
+
+    // Dean
+    const dean = document.getElementById('dean');
+    if (dean && report.dean != null) {
+        dean.textContent = report.dean;
+    }
+}
 // Auto-expand textareas
 function autoExpand(element) {
     element.style.height = 'auto';
