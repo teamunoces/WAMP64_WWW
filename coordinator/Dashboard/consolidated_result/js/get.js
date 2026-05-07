@@ -1,3 +1,15 @@
+const isDebug = new URLSearchParams(window.location.search).has("debug");
+const debugLog = (...args) => {
+    if (isDebug) {
+        console.log(...args);
+    }
+};
+const debugWarn = (...args) => {
+    if (isDebug) {
+        console.warn(...args);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     const barangaySelect = document.getElementById("barangaySelect");
     const yearSelect = document.getElementById("yearSelect");
@@ -41,7 +53,7 @@ function loadBarangayData(barangay, selectedYear) {
         url += `&year=${encodeURIComponent(selectedYear)}`;
     }
     
-    console.log("Fetching URL:", url);
+    debugLog("Fetching URL:", url);
     
     fetch(url)
         .then(response => {
@@ -49,10 +61,10 @@ function loadBarangayData(barangay, selectedYear) {
             return response.json();
         })
         .then(data => {
-            console.log("Full response data:", data);
+            debugLog("Full response data:", data);
             
             if (data.error) {
-                console.error("Server error:", data.error);
+                debugWarn("Server error:", data.error);
                 showErrorMessage(data.error);
                 return;
             }
@@ -406,7 +418,7 @@ function loadBarangayData(barangay, selectedYear) {
             }
         })
         .catch(error => {
-            console.error("Error loading data:", error);
+            debugWarn("Error loading data:", error);
             showErrorMessage("Failed to load data: " + error.message);
         });
 }

@@ -64,6 +64,10 @@
     height: 90px;
     width: auto;
 }
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 
 .logos-right {
     display: flex;
@@ -355,4 +359,27 @@ tr td em {
         width: 12px;
         height: 12px;
     }
+}
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body { padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px)); }
+    .evaluation-container, .admin-comment { width: min(100%, 900px); margin-left: auto; margin-right: auto; }
+    .evaluation-container { margin-top: 0; box-sizing: border-box; overflow-x: auto; }
+    .admin-comment { margin-top: 0; margin-bottom: 24px; }
+}
+@media (max-width: 1366px) and (min-width: 769px) {
+    .evaluation-container { padding: 34px; }
+    .logo-left { height: 76px; }
+    .logo-left2, .logos-right img { height: 68px; }
+    .college-info h1 { font-size: 23px; }
+}
+@media (max-width: 900px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { padding: 80px 14px 28px; }
+    .evaluation-container, .admin-comment { width: 100%; }
+    .evaluation-container { padding: 22px; overflow-x: auto; }
+    .checkbox-grid { flex-direction: column; }
+    .checkbox-grid .column { width: 100%; }
+    table { min-width: 680px; }
 }

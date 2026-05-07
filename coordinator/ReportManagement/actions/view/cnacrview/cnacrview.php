@@ -12,6 +12,22 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="anti-fouc">
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+        background-color: #f4f7f9;
+    }
+
+    #headerFrame {
+        background-color: #ffffff;
+    }
+
+    #sidebarFrame {
+        background-color: #254911;
+    }
+</style>
     <title>Community Needs Assessment Report</title>
     <link rel="stylesheet" href="cnacrview.css">
     <link rel="stylesheet" href="darkmode.css">
@@ -230,7 +246,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
                             </div>
                             <div class="signature-group">
                             <div class="signature-line" id="ces_head"></div>
-                            <div class="title bold">CES Head</div>
+                            <div class="title bold" id="ces_tittle">CES Head</div>
                             </div>
                         </div>
 

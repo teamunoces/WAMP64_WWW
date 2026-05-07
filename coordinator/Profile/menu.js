@@ -3,6 +3,13 @@ const menu = document.querySelector('.menu-card');
 let isMenuInParent = false;
 let injectedStyle = null;
 let injectedFontAwesome = null;
+const menuDebug = new URLSearchParams(window.location.search).has('debug');
+const menuLog = (...args) => {
+    if (menuDebug) console.log(...args);
+};
+const menuWarn = (...args) => {
+    if (menuDebug) console.warn(...args);
+};
 
 /* ================= MENU CSS INJECTION ================= */
 async function loadAndInjectCSS() {
@@ -16,7 +23,7 @@ async function loadAndInjectCSS() {
             parent.document.head.appendChild(injectedStyle);
         }
     } catch (error) {
-        console.error('Failed to load CSS:', error);
+        menuWarn('Failed to load CSS:', error);
     }
 }
 
@@ -28,17 +35,17 @@ function injectFontAwesome() {
             const existingFA = parent.document.querySelector('link[href*="font-awesome"], link[href*="fa.min.css"], link[href*="fontawesome"]');
             
             if (!existingFA) {
-                console.log('Injecting Font Awesome into parent document');
+                menuLog('Injecting Font Awesome into parent document');
                 injectedFontAwesome = parent.document.createElement('link');
                 injectedFontAwesome.rel = 'stylesheet';
                 injectedFontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
                 parent.document.head.appendChild(injectedFontAwesome);
             } else {
-                console.log('Font Awesome already exists in parent');
+                menuLog('Font Awesome already exists in parent');
             }
         }
     } catch (error) {
-        console.error('Failed to inject Font Awesome:', error);
+        menuWarn('Failed to inject Font Awesome:', error);
     }
 }
 
@@ -113,14 +120,18 @@ function updateHeaderBasedOnPage() {
 
     if (!headerTitle || !headerIcon) return;
 
-    // Get the current path from parent if in iframe, otherwise from window
+    // Get the current page from parent, referrer, or current window.
+    // The referrer fallback matters when iframe parent access is blocked.
     let currentPath;
     try {
         // Try to get from parent first (if in iframe)
         currentPath = parent?.location?.pathname || window.location.pathname;
     } catch (e) {
-        // Cross-origin error fallback
-        currentPath = window.location.pathname;
+        try {
+            currentPath = document.referrer ? new URL(document.referrer).pathname : window.location.pathname;
+        } catch (referrerError) {
+            currentPath = window.location.pathname;
+        }
     }
 
     const pageMap = {
@@ -130,7 +141,7 @@ function updateHeaderBasedOnPage() {
         'AccountManagement.html': { title: 'ACCOUNT MANAGEMENT', icon: 'fa-users' },
         'Approval.html': { title: 'APPROVAL', icon: 'fa-check-circle' },
         'Archive.html': { title: 'ARCHIVE', icon: 'fa-archive' },
-        'Pending.html': { title: 'PENDING', icon: 'fa-hourglass-half' },
+        'Pending.html': { title: 'PENDING AND NEED FIXES', icon: 'fa-hourglass-half' },
         'SubmittedMonthly.html': { title: 'SUBMITTED MONTHLY', icon: 'fa-calendar-alt' },
         'cnacr.php': { title: 'Community Needs Assessment Consolidated Report', icon: 'fa-file-contract' },
         'cnacr.html': { title: 'Community Needs Assessment Consolidated Result', icon: 'fa-file-contract' },
@@ -155,6 +166,7 @@ function updateHeaderBasedOnPage() {
         'evaluation.php': { title: 'Evaluation Sheet for Extension Services', icon: 'fa-file-alt' },
         'evaluationview.php': { title: 'Evaluation Sheet for Extension Services View', icon: 'fa-file-alt' },
         'evaluationneedview.php': { title: 'Evaluation Sheet for Extension Services Need Fix', icon: 'fa-tools' },
+        'evaluationneedfix.php': { title: 'Evaluation Sheet for Extension Services Needs Fix', icon: 'fa-tools' },
         'certificate.php': { title: 'Certificate of Appearance', icon: 'fa-certificate' },
         'coaview.php': { title: 'Certificate of Appearance View', icon: 'fa-certificate' },
         'coaneedview.php': { title: 'Certificate of Appearance Need Fix', icon: 'fa-tools' },
@@ -167,13 +179,20 @@ function updateHeaderBasedOnPage() {
 
     };
 
-    const currentPage = currentPath.split('/').pop();
-    
-    console.log('Current page:', currentPage); // For debugging
+    if (!currentPath || currentPath.endsWith('profile.html')) {
+        try {
+            currentPath = document.referrer ? new URL(document.referrer).pathname : currentPath;
+        } catch (e) {
+            // Keep the existing path if referrer parsing fails.
+        }
+    }
 
-    if (pageMap[currentPage]) {
-        headerTitle.textContent = pageMap[currentPage].title;
-        headerIcon.className = `fas dashboard-icon ${pageMap[currentPage].icon}`;
+    const currentPage = currentPath.split('/').pop();
+    const matchingPage = pageMap[currentPage] ? currentPage : Object.keys(pageMap).find(page => page.toLowerCase() === currentPage.toLowerCase());
+    
+    if (matchingPage) {
+        headerTitle.textContent = pageMap[matchingPage].title;
+        headerIcon.className = `fas dashboard-icon ${pageMap[matchingPage].icon}`;
     } else {
         // Optional: Set a default title for unknown pages
         headerTitle.textContent = 'DASHBOARD';
@@ -210,7 +229,7 @@ function setupIframeNavigationListener() {
             }, 500);
         }
     } catch (e) {
-        console.log('Not in iframe or cross-origin restrictions');
+        menuLog('Not in iframe or cross-origin restrictions');
     }
 }
 
@@ -265,7 +284,7 @@ if (modeToggle) {
                 parent.localStorage.setItem('darkMode', isEnabled ? 'enabled' : 'disabled');
             }
         } catch (e) {
-            console.warn("LocalStorage access denied", e);
+            menuWarn("LocalStorage access denied", e);
         }
     });
 }

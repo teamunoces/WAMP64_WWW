@@ -64,3 +64,32 @@ body.dark-mode .type-badge.green{
 body.dark-mode ::-webkit-scrollbar-track{
     background:#1e1e1e;
 }
+/* ===== FIX WHITE GAP BETWEEN SIDEBAR AND DASHBOARD ===== */
+body.dark-mode {
+    background: #121212 !important;
+}
+
+body.dark-mode .dashboard-wrapper {
+    background: transparent !important;
+}
+
+body.dark-mode #sidebarFrame {
+    background: #2f641f !important;
+}
+
+body.dark-mode #headerFrame {
+    background: #1a1a1a !important;
+}
+
+/* Fix the visible page strip beside sidebar */
+body.dark-mode::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 100px;
+    width: 55px;
+    height: 100vh;
+    background: #121212;
+    z-index: 1;
+    pointer-events: none;
+}

@@ -113,14 +113,18 @@ function updateHeaderBasedOnPage() {
 
     if (!headerTitle || !headerIcon) return;
 
-    // Get the current path from parent if in iframe, otherwise from window
+    // Get the current page from parent, referrer, or current window.
+    // The referrer fallback matters when iframe parent access is blocked.
     let currentPath;
     try {
         // Try to get from parent first (if in iframe)
         currentPath = parent?.location?.pathname || window.location.pathname;
     } catch (e) {
-        // Cross-origin error fallback
-        currentPath = window.location.pathname;
+        try {
+            currentPath = document.referrer ? new URL(document.referrer).pathname : window.location.pathname;
+        } catch (referrerError) {
+            currentPath = window.location.pathname;
+        }
     }
 
     const pageMap = {
@@ -134,6 +138,7 @@ function updateHeaderBasedOnPage() {
         'SubmittedMonthly.html': { title: 'SUBMITTED MONTHLY', icon: 'fa-calendar-alt' },
         'cnacr.php': { title: 'Community Needs Assessment Consolidated Result Report', icon: 'fa-file-contract' },
         'cnacr.html': { title: 'Community Needs Assessment Consolidated Result', icon: 'fa-file-contract' },
+        'cnacr_coordinator.php': { title: 'Community Needs Assessment Consolidated Result Review', icon: 'fa-file-contract' },
         'cnacrreview.php': { title: 'Community Needs Assessment Consolidated Report Review', icon: 'fa-file-contract' },
         '3ydpneedfix.html': { title: ' 3 Year Development Plan Needs Fix', icon: 'fa-tools' },
         'pdneedfix.html': { title: 'Program Design Needs Fix', icon: 'fa-tools' },
@@ -141,22 +146,21 @@ function updateHeaderBasedOnPage() {
         'cnacrview.php': { title: 'Community Needs Assessment Consolidated Report View', icon: 'fa-file-contract' },
         '3ydpreport.php': { title: '3 Year Development Plan', icon: 'fa-file-alt' },
         '3ydpreview.php': { title: '3 Year Development Plan Review', icon: 'fa-file-alt' },
-        '3ydpview.php': { title: 'Coordinator 3 Year Development Plan View', icon: 'fa-file-alt' },
+        '3ydpview.php': { title: '3 Year Development Plan View', icon: 'fa-file-alt' },
         'programdesign.php': { title: 'Program Design', icon: 'fa-file-alt' },
-        'pdview.php': { title: 'Coordinator Program Design View', icon: 'fa-file-alt' },
+        'pdview.php': { title: 'Program Design View', icon: 'fa-file-alt' },
         'dpir.php': { title: 'Departmental Planned Initiative Report', icon: 'fa-file-alt' },
         'Departments.html': { title: 'Departments', icon: 'fa-building' },
         'ApprovedReports.php' : { title: 'Approved Report Attachments', icon: 'fa-check-circle' },
-        'marview.php': { title: 'Coordinator Monthly Accomplishment Report', icon: 'fa-file-alt'},
+        'marview.php': { title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
         'marreport.php': {title: 'Monthly Accomplishment Report', icon: 'fa-file-alt'},
         'monitoringreview.php': {title: 'Program Monitoring Form Review', icon: 'fa-file-alt'},
         'evaluationreview.php': {title: 'Evaluation Sheet for Extension Services Review', icon: 'fa-file-alt'},
-        'evaluationneedfix.php': {title: 'Evaluation Sheet for Extension Services Needs Fix', icon: 'fa-file-alt'},
         'evaluation_sheetview.php': {title: 'Evaluation Sheet for Extension Services', icon: 'fa-file-alt'},
         'reflectionreview.php': {title: 'Reflection Sheet for Extension Services Review', icon: 'fa-file-alt'},
         'coareview.php': {title: 'Certificate of Appearance Review', icon: 'fa-file-alt'},
         'coaneedfix.php': {title: 'Certificate of Appearance Needs Fix', icon: 'fa-file-alt'},
-        'coaview.php': {title: 'Coordinator Certificate of Appearance View', icon: 'fa-file-alt'},
+        'coaview.php': {title: 'Certificate of Appearance View', icon: 'fa-file-alt'},
         'reflectionneedfix.php': {title: 'Reflection Paper Needs Fix', icon: 'fa-file-alt'},
         'narrativeview.php': {title: 'Narrative Report Review', icon: 'fa-file-alt'},
         'narrativeneedfix.php': {title: 'Narrative Report Needs Fix', icon: 'fa-file-alt'},
@@ -168,6 +172,8 @@ function updateHeaderBasedOnPage() {
         'certificate.php': {title: 'Certificate of Appearance', icon: 'fa-file-alt'},
         'narrative.php': {title: 'Narrative Report', icon: 'fa-file-alt'},
         'reflection_paperview.php': {title: 'Reflection Paper View', icon: 'fa-file-alt'},
+        'mar.php': {title: 'Monthly Accomplishment Report Review', icon: 'fa-file-alt'},
+        'evaluationneedfix.php': {title: 'Evaluation Sheet for Extension Services Needs Fix', icon: 'fa-file-alt'},
 
 
 
@@ -175,13 +181,22 @@ function updateHeaderBasedOnPage() {
 
         
     }
+    if (!currentPath || currentPath.endsWith('profile.html')) {
+        try {
+            currentPath = document.referrer ? new URL(document.referrer).pathname : currentPath;
+        } catch (e) {
+            // Keep the existing path if referrer parsing fails.
+        }
+    }
+
     const currentPage = currentPath.split('/').pop();
+    const matchingPage = pageMap[currentPage] ? currentPage : Object.keys(pageMap).find(page => page.toLowerCase() === currentPage.toLowerCase());
     
     console.log('Current page:', currentPage); // For debugging
 
-    if (pageMap[currentPage]) {
-        headerTitle.textContent = pageMap[currentPage].title;
-        headerIcon.className = `fas dashboard-icon ${pageMap[currentPage].icon}`;
+    if (matchingPage) {
+        headerTitle.textContent = pageMap[matchingPage].title;
+        headerIcon.className = `fas dashboard-icon ${pageMap[matchingPage].icon}`;
     } else {
         // Optional: Set a default title for unknown pages
         headerTitle.textContent = 'DASHBOARD';

@@ -8,19 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!profileContainer || !dropdown) return;
 
-    /* ================= INJECT CSS INTO PARENT PAGE ================= */
-    async function injectHeaderCSS() {
+    /* ================= INJECT DROPDOWN CSS INTO PARENT PAGE ================= */
+    function injectHeaderCSS() {
         try {
             // Check if already injected
-            if (document.getElementById('header-injected-styles')) return;
-            
-            const response = await fetch('header.css');
-            let cssText = await response.text();
-            
-            // Modify CSS to work in parent page context
-            cssText = cssText.replace(/position:\s*absolute;/g, 'position: fixed;');
-            cssText += `
-                /* Additional styles for iframe dropdown */
+            if (window.top.document.getElementById('header-injected-styles')) return;
+
+            const cssText = `
                 .header-dropdown {
                     display: none;
                     position: fixed !important;
@@ -31,22 +25,43 @@ document.addEventListener("DOMContentLoaded", function () {
                     border-radius: 12px;
                     border: 1px solid #e0e0e0;
                     padding: 8px;
+                    scroll-behavior: smooth;
                 }
                 
                 .header-dropdown.show {
                     display: block !important;
+                    animation: headerDropdownFadeIn 0.2s ease-out;
                 }
                 
-                .header-dropdown::before {
-                    content: '';
-                    position: fixed;
-                    width: 0;
-                    height: 0;
-                    border-left: 8px solid transparent;
-                    border-right: 8px solid transparent;
-                    border-bottom: 8px solid white;
-                    z-index: 10002;
-                    pointer-events: none;
+                .header-dropdown .logout-btn {
+                    width: 100%;
+                    padding: 12px;
+                    background: linear-gradient(135deg, #ff4757 0%, #e63946 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    letter-spacing: 0.5px;
+                }
+
+                .header-dropdown .logout-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+                }
+
+                @keyframes headerDropdownFadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
                 }
             `;
             
@@ -76,21 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
         dropdownElement.style.right = (window.innerWidth - rect.right) + 'px';
         dropdownElement.style.left = 'auto';
         dropdownElement.style.bottom = 'auto';
-        
-        // Update arrow position
-        const arrowStyle = document.createElement('style');
-        arrowStyle.textContent = `
-            .header-dropdown::before {
-                top: ${headerRect.bottom}px !important;
-                right: ${window.innerWidth - rect.right + 20}px !important;
-            }
-        `;
-        
-        // Remove old arrow style and add new one
-        const oldArrowStyle = window.top.document.querySelector('#dropdown-arrow-style');
-        if (oldArrowStyle) oldArrowStyle.remove();
-        arrowStyle.id = 'dropdown-arrow-style';
-        window.top.document.head.appendChild(arrowStyle);
     }
 
     /* ================= CREATE DROPDOWN IN PARENT PAGE ================= */

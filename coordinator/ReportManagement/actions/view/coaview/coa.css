@@ -334,14 +334,14 @@ footer {
 
 /* ===== 3. Approvals Section (The "Professional" Look) ===== */
 .approvals-container {
-    margin-top: 30px;
-  font-family: Arial, sans-serif;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  color: #000;
+    margin-top: 80px !important;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #000;
 }
-
 .approval-row {
   display: flex;
   justify-content: space-between;
@@ -400,6 +400,23 @@ footer {
     display: inline-block;
     padding: 0 15px;
     min-width: 250px;
+}
+/* created_by_name and dean = left */
+#created_by_name,
+#dean {
+    text-align: left !important;
+}
+
+/* ces_head = right */
+#ces_head {
+    text-align: right !important;
+}
+
+/* vp_acad, vp_admin, school_president = center */
+#vp_acad,
+#vp_admin,
+#school_president {
+    text-align: center !important;
 }
 
 /* ===== 4. Document Info Table (The Navy Blue Style) ===== */
@@ -483,3 +500,88 @@ footer {
     width: 100%;
     text-align: left !important; /* <-- THIS FIXES YOUR ISSUE */
 }
+
+/* ===== Laptop / Monitor Responsiveness ===== */
+:root {
+    --sidebar-width: 100px;
+    --header-height: 60px;
+    --page-gutter: clamp(16px, 3vw, 40px);
+    --report-max-width: 950px;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+#sidebarFrame {
+    width: var(--sidebar-width);
+}
+
+#headerFrame {
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+}
+
+.wrapper,
+.certificate-container,
+.admin-comment {
+    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
+    max-width: var(--report-max-width);
+    box-sizing: border-box;
+}
+
+.college-info {
+    min-width: 0;
+}
+
+@media (min-width: 1440px) {
+    :root {
+        --report-max-width: 1050px;
+        --page-gutter: 48px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --page-gutter: 24px;
+    }
+
+    .certificate-container {
+        padding: 44px;
+    }
+
+    .logo-left,
+    .logo-left2,
+    .logos-right img {
+        height: 70px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    body {
+        margin-left: 0;
+        padding: calc(var(--header-height) + 20px) var(--page-gutter) 30px var(--page-gutter);
+    }
+
+    .wrapper,
+    .certificate-container,
+    .admin-comment {
+        width: calc(100vw - (var(--page-gutter) * 2));
+    }
+}
+

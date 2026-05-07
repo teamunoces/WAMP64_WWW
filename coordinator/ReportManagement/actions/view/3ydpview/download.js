@@ -1,4 +1,14 @@
-document.getElementById('downloadPDF').addEventListener('click', downloadReportPDF);
+const downloadPdfButton = document.getElementById('downloadPDF');
+const downloadDebug = new URLSearchParams(window.location.search).has('debug');
+const downloadWarn = (...args) => {
+    if (downloadDebug) {
+        console.warn(...args);
+    }
+};
+
+if (downloadPdfButton) {
+    downloadPdfButton.addEventListener('click', downloadReportPDF);
+}
 
 async function downloadReportPDF() {
     const contentBody = document.querySelector('.content-body');
@@ -12,7 +22,7 @@ async function downloadReportPDF() {
     }
 
     if (typeof html2pdf === 'undefined') {
-        console.error('html2pdf is not available.');
+        downloadWarn('html2pdf is not available.');
         alert('PDF generator is not loaded properly.');
         return;
     }
@@ -57,7 +67,7 @@ async function downloadReportPDF() {
 
         pdf.save(`${sanitizeFilename(reportType)}.pdf`);
     } catch (error) {
-        console.error('PDF generation failed:', error);
+        downloadWarn('PDF generation failed:', error);
         alert('Failed to generate PDF. Please try again.');
     } finally {
         if (stage && stage.parentNode) {

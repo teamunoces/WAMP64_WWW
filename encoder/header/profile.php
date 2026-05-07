@@ -1,6 +1,6 @@
 <?php
 session_start();
-$username = $_SESSION['name'];
+$username = $_SESSION['name'] ?? $_SESSION['username'] ?? 'Guest';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +18,7 @@ $username = $_SESSION['name'];
         
         <!-- DISPLAY USERNAME DIRECTLY FROM SESSION -->
         <span class="username">
-            <?php echo htmlspecialchars($username); ?> &#9662;
+            <?php echo htmlspecialchars($username); ?>
         </span>
 
         <div class="dropdown">

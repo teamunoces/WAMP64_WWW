@@ -1,4 +1,4 @@
-// Global variables for upload functionality
+﻿// Global variables for upload functionality
 let currentUploadReportId = null;
 let currentUploadTable = null;
 let currentExistingFiles = [];
@@ -16,7 +16,6 @@ let isCoordinatorPage = false;
 // Debug function to check if elements exist
 function debugElement(id) {
     const element = document.getElementById(id);
-    console.log(`Element #${id}:`, element ? 'Found' : 'NOT FOUND');
     return element;
 }
 
@@ -172,11 +171,9 @@ function renderRejectedTable(data) {
 
 // Function to load reports from server
 async function loadReports() {
-    console.log("loadReports started");
     try {
         const response = await fetch("/SYSTEM_VERSION_!/admin/ReportManagement/php/get.php");
         const data = await response.json();
-        console.log("Reports data loaded:", data.length, "reports");
         
         // Store all data globally
         allReportsData = data;
@@ -191,7 +188,6 @@ async function loadReports() {
         initFilters();
         
     } catch (error) {
-        console.error("Error loading reports:", error);
         showNotification("Error loading reports. Please refresh the page.", "error");
     }
 }
@@ -263,7 +259,6 @@ function populateFilterDropdowns() {
         const adminFilter = document.getElementById('adminFilterSelect');
         if (adminFilter) {
             const adminTypes = getUniqueTypes('admin');
-            console.log("Admin report types:", adminTypes);
             
             const currentValue = adminFilter.value;
             adminFilter.innerHTML = '<option value="All type">All type</option>';
@@ -285,7 +280,6 @@ function populateFilterDropdowns() {
         const approvedFilter = document.getElementById('approvedFilterSelect');
         if (approvedFilter) {
             const approvedTypes = getUniqueTypes('coordinator', 'approve');
-            console.log("Approved report types:", approvedTypes);
             
             const currentValue = approvedFilter.value;
             approvedFilter.innerHTML = '<option value="All type">All type</option>';
@@ -304,7 +298,6 @@ function populateFilterDropdowns() {
         const rejectedFilter = document.getElementById('rejectedFilterSelect');
         if (rejectedFilter) {
             const rejectedTypes = getUniqueTypes('coordinator', 'rejected');
-            console.log("Rejected report types:", rejectedTypes);
             
             const currentValue = rejectedFilter.value;
             rejectedFilter.innerHTML = '<option value="All type">All type</option>';
@@ -323,21 +316,17 @@ function populateFilterDropdowns() {
 
 // Filter admin reports
 function filterAdminReports() {
-    console.log("=== filterAdminReports START ===");
     
     if (!isAdminPage) {
-        console.log("Not on admin page, skipping admin filter");
         return;
     }
     
     const filterSelect = document.getElementById('adminFilterSelect');
     if (!filterSelect) {
-        console.log("Admin filter select not found");
         return;
     }
     
     const selectedType = filterSelect.value;
-    console.log(`Filtering admin reports by: "${selectedType}"`);
     
     // Filter only admin reports
     let adminReports = allReportsData.filter(report => {
@@ -366,27 +355,22 @@ function filterAdminReports() {
         });
     }
     
-    console.log(`Found ${adminReports.length} matching reports`);
     renderAdminTable(adminReports);
 }
 
 // Filter approved reports
 function filterApprovedReports() {
-    console.log("=== filterApprovedReports START ===");
     
     if (!isCoordinatorPage) {
-        console.log("Not on coordinator page, skipping approved filter");
         return;
     }
     
     const filterSelect = document.getElementById('approvedFilterSelect');
     if (!filterSelect) {
-        console.log("Approved filter select not found");
         return;
     }
     
     const selectedType = filterSelect.value;
-    console.log(`Filtering approved reports by: "${selectedType}"`);
     
     // Filter only approved coordinator reports
     let approvedReports = allReportsData.filter(report => {
@@ -415,27 +399,22 @@ function filterApprovedReports() {
         });
     }
     
-    console.log(`Found ${approvedReports.length} matching approved reports`);
     renderApprovedTable(approvedReports);
 }
 
 // Filter rejected reports
 function filterRejectedReports() {
-    console.log("=== filterRejectedReports START ===");
     
     if (!isCoordinatorPage) {
-        console.log("Not on coordinator page, skipping rejected filter");
         return;
     }
     
     const filterSelect = document.getElementById('rejectedFilterSelect');
     if (!filterSelect) {
-        console.log("Rejected filter select not found");
         return;
     }
     
     const selectedType = filterSelect.value;
-    console.log(`Filtering rejected reports by: "${selectedType}"`);
     
     // Filter only rejected coordinator reports
     let rejectedReports = allReportsData.filter(report => {
@@ -464,66 +443,51 @@ function filterRejectedReports() {
         });
     }
     
-    console.log(`Found ${rejectedReports.length} matching rejected reports`);
     renderRejectedTable(rejectedReports);
 }
 
 function initFilters() {
-    console.log("Initializing filters for", isAdminPage ? "Admin page" : isCoordinatorPage ? "Coordinator page" : "Unknown page");
     
     if (isAdminPage) {
         const adminFilter = document.getElementById('adminFilterSelect');
         if (adminFilter) {
-            console.log("Found admin filter select");
             
             // Remove existing listener by cloning
             const newAdminFilter = adminFilter.cloneNode(true);
             adminFilter.parentNode.replaceChild(newAdminFilter, adminFilter);
             
             newAdminFilter.addEventListener('change', function() {
-                console.log("✅ Admin filter CHANGE event triggered! New value:", this.value);
                 filterAdminReports();
             });
-            console.log("Admin filter event attached successfully");
         } else {
-            console.log("❌ Admin filter select NOT found! Make sure you have id='adminFilterSelect'");
         }
     }
     
     if (isCoordinatorPage) {
         const approvedFilter = document.getElementById('approvedFilterSelect');
         if (approvedFilter) {
-            console.log("Found approved filter select");
             const newApprovedFilter = approvedFilter.cloneNode(true);
             approvedFilter.parentNode.replaceChild(newApprovedFilter, approvedFilter);
             
             newApprovedFilter.addEventListener('change', function() {
-                console.log("✅ Approved filter changed to:", this.value);
                 filterApprovedReports();
             });
-            console.log("Approved filter event attached");
         } else {
-            console.log("❌ Approved filter select NOT found!");
         }
         
         const rejectedFilter = document.getElementById('rejectedFilterSelect');
         if (rejectedFilter) {
-            console.log("Found rejected filter select");
             const newRejectedFilter = rejectedFilter.cloneNode(true);
             rejectedFilter.parentNode.replaceChild(newRejectedFilter, rejectedFilter);
             
             newRejectedFilter.addEventListener('change', function() {
-                console.log("✅ Rejected filter changed to:", this.value);
                 filterRejectedReports();
             });
-            console.log("Rejected filter event attached");
         } else {
-            console.log("❌ Rejected filter select NOT found!");
         }
     }
 }
 function attachActionEvents(data) {
-    console.log("attachActionEvents called with", data.length, "reports");
     
     // View icon events
     document.querySelectorAll(".view-icon").forEach((icon) => {
@@ -541,20 +505,15 @@ function attachActionEvents(data) {
             const report = allReportsData.find(r => r.id == reportId && r.source_table === sourceTable);
             
             if (!report) {
-                console.error("Report not found in allReportsData. Report ID:", reportId, "Source Table:", sourceTable);
-                console.log("Available reports:", allReportsData.map(r => ({id: r.id, table: r.source_table})));
                 showNotification("Report not found", "error");
                 return;
             }
             
             // Check which table this is in
             const parentTbody = row.closest('tbody');
-            console.log("Parent tbody id:", parentTbody ? parentTbody.id : 'none');
-            console.log("Report found:", report.id, report.title);
             
             // For rejected table on coordinator page - show feedback modal
             if (parentTbody && parentTbody.id === 'coordinatorrejectedTableBody' && isCoordinatorPage) {
-                console.log("Rejected report view clicked - showing feedback for report:", reportId);
                 
                 const typeMap = {
                     "cnacr": "CNACR",
@@ -577,10 +536,8 @@ function attachActionEvents(data) {
                 
                 // Check if showFeedbackModal exists
                 if (typeof window.showFeedbackModal === 'function') {
-                    console.log("Calling showFeedbackModal with:", reportId, sourceTable);
                     window.showFeedbackModal(reportId, sourceTable, reportWithDisplay);
                 } else {
-                    console.error("showFeedbackModal function not found");
                     // Fallback: Show a simple alert with feedback
                     if (report.feedback) {
                         alert(`Feedback for rejected report:\n\n${report.feedback}`);
@@ -591,7 +548,6 @@ function attachActionEvents(data) {
             } 
             // For approved table on coordinator page - navigate to view
             else if (parentTbody && parentTbody.id === 'coordinatorapprovedTableBody' && isCoordinatorPage) {
-                console.log("Approved report view clicked - navigating to view");
                 const viewPath = getViewPath(report, row);
                 if (viewPath) {
                     window.location.href = `${viewPath}?id=${reportId}`;
@@ -601,7 +557,6 @@ function attachActionEvents(data) {
             }
             // For admin page - navigate to view
             else if (isAdminPage) {
-                console.log("Admin report view clicked - navigating to view");
                 const viewPath = getViewPath(report, row);
                 if (viewPath) {
                     window.location.href = `${viewPath}?id=${reportId}`;
@@ -621,7 +576,6 @@ function attachActionEvents(data) {
             const uploadHandler = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("Upload icon clicked");
                 
                 const reportId = icon.getAttribute("data-id");
                 const reportTable = icon.getAttribute("data-table");
@@ -676,7 +630,6 @@ function attachActionEvents(data) {
                     showNotification("Failed to archive report: " + (result.error || "Unknown error"), "error");
                 }
             } catch (error) {
-                console.error("Archive error:", error);
                 showNotification("Error archiving report", "error");
             }
         };
@@ -731,7 +684,6 @@ function getViewPath(report, row) {
         }
     }
     
-    console.log("getViewPath - tableKey:", tableKey, "type:", type);
     
     const mapping = viewMappings[tableKey];
     
@@ -740,30 +692,24 @@ function getViewPath(report, row) {
     }
     
     const path = mapping[type] || mapping.default;
-    console.log("getViewPath - returning path:", path);
     return path;
 }
 
 // Show upload modal
 function showUploadModal(reportId, reportTable, report = null) {
-    console.log("showUploadModal called with:", reportId, reportTable, report);
     
     const modal = document.getElementById("uploadModal");
     if (!modal) {
-        console.error("Upload modal not found in the DOM");
         alert("Error: Upload modal not found. Please check the HTML.");
         return;
     }
     
-    console.log("Modal found, setting display to block");
     modal.style.display = "block";
     
     const reportTitleSpan = document.getElementById("modalReportTitle");
     const fileCountSpan = document.getElementById("fileCount");
     
     // Debug: Check if elements exist
-    console.log("reportTitleSpan:", reportTitleSpan ? 'Found' : 'NOT FOUND');
-    console.log("fileCountSpan:", fileCountSpan ? 'Found' : 'NOT FOUND');
     
     // Type mapping for display
     const typeMap = {
@@ -835,7 +781,6 @@ function showUploadModal(reportId, reportTable, report = null) {
 
 // Close upload modal
 function closeUploadModal() {
-    console.log("closeUploadModal called");
     const modal = document.getElementById("uploadModal");
     if (modal) {
         modal.style.display = "none";
@@ -869,7 +814,6 @@ function closeUploadModal() {
 
 // Handle file selection
 function handleFileSelect(input) {
-    console.log("handleFileSelect called with files:", input.files.length);
     
     const selectedFilesList = document.getElementById("selectedFilesList");
     if (!selectedFilesList) return;
@@ -1028,7 +972,6 @@ function removeSelectedFile(index) {
 
 // Upload files
 async function uploadFiles() {
-    console.log("uploadFiles called");
     
     const fileInput = document.getElementById("fileInput");
     if (!fileInput) {
@@ -1107,7 +1050,6 @@ async function uploadFiles() {
                 }
             }
         } catch (error) {
-            console.error("Upload error:", error);
             failCount++;
             failedFiles.push(file.name);
             const fileItems = document.querySelectorAll(".selected-file-item");
@@ -1138,7 +1080,6 @@ async function uploadFiles() {
 
 // Reupload file (replace existing)
 async function reuploadFile(fileId, oldFileName) {
-    console.log("reuploadFile called with:", fileId, oldFileName);
     
     const fileInput = document.getElementById("fileInput");
     if (!fileInput) {
@@ -1226,7 +1167,6 @@ async function reuploadFile(fileId, oldFileName) {
             showNotification("Replacement failed: " + (result.error || "Unknown error"), "error");
         }
     } catch (error) {
-        console.error("Reupload error:", error);
         showNotification("Error replacing file. Please try again.", "error");
     } finally {
         uploadBtn.disabled = false;
@@ -1235,7 +1175,6 @@ async function reuploadFile(fileId, oldFileName) {
 
 // Clear reupload mode
 function clearReuploadMode() {
-    console.log("clearReuploadMode called");
     
     // Reset pending reupload variables
     pendingReuploadFileId = null;
@@ -1277,7 +1216,6 @@ function clearReuploadMode() {
 
 // Load report files
 async function loadReportFiles(reportId, reportTable) {
-    console.log("loadReportFiles called for report:", reportId);
     
     const fileListDiv = document.getElementById("fileList");
     if (!fileListDiv) return;
@@ -1286,7 +1224,6 @@ async function loadReportFiles(reportId, reportTable) {
     
     try {
         const url = `/SYSTEM_VERSION_!/admin/ReportManagement/php/get_report_files.php?report_id=${reportId}`;
-        console.log("Fetching files from:", url);
         
         const response = await fetch(url);
         
@@ -1295,7 +1232,6 @@ async function loadReportFiles(reportId, reportTable) {
         }
         
         const result = await response.json();
-        console.log("Files response:", result);
         
         if (result.success) {
             currentExistingFiles = result.files || [];
@@ -1311,7 +1247,6 @@ async function loadReportFiles(reportId, reportTable) {
                         try {
                             uploadDate = new Date(file.uploaded_at).toLocaleString();
                         } catch (e) {
-                            console.warn("Date parsing error:", e);
                         }
                     }
                     
@@ -1364,11 +1299,9 @@ async function loadReportFiles(reportId, reportTable) {
                 if (fileInput) fileInput.disabled = false;
             }
         } else {
-            console.error("Server returned error:", result.error);
             fileListDiv.innerHTML = `<p class='error'>Error: ${escapeHtml(result.error || 'Failed to load files')}</p>`;
         }
     } catch (error) {
-        console.error("Error loading files:", error);
         fileListDiv.innerHTML = "<p class='error'>Error loading files. Please try again.</p>";
     }
 }
@@ -1385,7 +1318,6 @@ function updateFileCount() {
 
 // Prepare for reupload
 function prepareReupload(fileId, fileName) {
-    console.log("prepareReupload called for file:", fileId, fileName);
     
     // Clear any existing reupload mode first
     clearReuploadMode();
@@ -1452,7 +1384,6 @@ function prepareReupload(fileId, fileName) {
 
 // Show notification
 function showNotification(message, type = "info") {
-    console.log("Notification:", type, message);
     
     // Check if notification container exists, create if not
     let container = document.getElementById("notification-container");
@@ -1692,14 +1623,11 @@ document.head.appendChild(style);
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("DOM fully loaded");
     
     // Detect page type after DOM is ready
     isAdminPage = !!document.getElementById("adminTableBody");
     isCoordinatorPage = !!document.getElementById("coordinatorapprovedTableBody") || !!document.getElementById("coordinatorrejectedTableBody");
     
-    console.log("Page type detected:", isAdminPage ? "Admin Page (Report.html)" : isCoordinatorPage ? "Coordinator Page (ReportManagement.html)" : "Unknown page");
-    console.log("isCoordinatorPage:", isCoordinatorPage);
     
     // Check if modal exists
     debugElement("uploadModal");
@@ -1715,7 +1643,6 @@ document.addEventListener("DOMContentLoaded", function() {
         fileInput.addEventListener("change", function() {
             handleFileSelect(this);
         });
-        console.log("File input change event attached");
     }
 });
 

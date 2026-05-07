@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const isDebug = new URLSearchParams(window.location.search).has('debug');
+    const debugLog = (...args) => {
+        if (isDebug) {
+            console.log(...args);
+        }
+    };
+    const debugWarn = (...args) => {
+        if (isDebug) {
+            console.warn(...args);
+        }
+    };
+
     // ========================
     // PAPER LINES TEXTAREA FUNCTIONS
     // ========================
@@ -103,26 +115,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const reportId = urlParams.get('id');
 
         if (!reportId) {
-            console.log('No ID parameter found. This is a new form.');
+            debugLog('No ID parameter found. This is a new form.');
             return;
         }
 
-        console.log('Loading report ID:', reportId);
+        debugLog('Loading report ID:', reportId);
 
         try {
             const response = await fetch(`get.php?id=${reportId}`);
             const result = await response.json();
 
-            console.log('API Response:', result);
+            debugLog('API Response:', result);
 
             if (result.success && result.report) {
                 populateForm(result.report);
             } else {
-                console.error('Failed to load report:', result.message);
+                debugWarn('Failed to load report:', result.message);
                 alert('Could not load report: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
-            console.error('Error loading report:', error);
+            debugWarn('Error loading report:', error);
             alert('Error loading report data. Please check your connection.');
         }
     }
@@ -131,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // POPULATE FORM WITH DATABASE DATA
     // ========================
     function populateForm(report) {
-        console.log('Populating form with data:', report);
+        debugLog('Populating form with data:', report);
 
         // Populate header fields
         if (report.created_by_name) {document.getElementById('created_by').textContent = report.created_by_name;}
@@ -320,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         
         
-        console.log('Form population complete!');
+        debugLog('Form population complete!');
 
          // Inside your populateForm(report) function:
 

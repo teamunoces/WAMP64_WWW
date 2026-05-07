@@ -8,8 +8,25 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="anti-fouc">
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+        background-color: #f4f7f9;
+    }
+
+    #headerFrame {
+        background-color: #ffffff;
+    }
+
+    #sidebarFrame {
+        background-color: #254911;
+    }
+</style>
     <title>Monthly Accomplishment Report</title>
     <link rel="stylesheet" href="reflection.css">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
 
@@ -40,6 +57,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
          <header>
             <div class="header-content">
                 <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png" alt="SMCC Logo" class="logo-left">
+                <img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png" alt="CES Logo" class="logo-left2">
                 <div class="college-info">
                     <h1>Saint Michael College of Caraga</h1>
                     <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
@@ -186,5 +204,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     <script src="/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/action/action.js"></script>
     <script src="./get.js"></script>
     <script src="./expand.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

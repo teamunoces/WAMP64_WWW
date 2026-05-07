@@ -10,6 +10,22 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="anti-fouc">
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+        background-color: #f4f7f9;
+    }
+
+    #headerFrame {
+        background-color: #ffffff;
+    }
+
+    #sidebarFrame {
+        background-color: #254911;
+    }
+</style>
   <title><?php echo $reportType; ?></title>
   <link rel="stylesheet" href="view.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -115,7 +131,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
         <!-- PROGRAM PLAN TABLE -->
         <section class="table-section">
           <table id="programPlanTable">
-                    <thead>
+            <thead>
                <tr>
                                 <th rowspan="2">Program</th>
                                 <th rowspan="2">Objectives</th>

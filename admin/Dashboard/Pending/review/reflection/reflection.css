@@ -56,7 +56,11 @@ body {
         height: 90px;
         width: auto;
     }
-
+    .logo-left2 {
+        height: 80px;
+        width: auto;
+    }
+    
     .logos-right {
         display: flex;
         gap: 20px;
@@ -398,4 +402,23 @@ input[type="checkbox"] {
 
 section {
     pointer-events: none; /* Disables interaction with the section and its children */  
+}
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body { margin: 0; padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px)); }
+    .container { width: min(100%, 850px); margin: 0 auto; box-sizing: border-box; }
+}
+@media (max-width: 1366px) and (min-width: 769px) {
+    .container { padding: 34px; }
+    .logo-left { height: 76px; }
+    .logo-left2, .logos-right img { height: 68px; }
+    .college-info h1 { font-size: 23px; }
+}
+@media (max-width: 900px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { margin: 0; padding: 80px 14px 28px; }
+    .container { width: 100%; padding: 22px; }
+    .header-content, .checkbox-grid, .answer-block { flex-direction: column; align-items: stretch; }
+    .column { width: 100%; }
 }

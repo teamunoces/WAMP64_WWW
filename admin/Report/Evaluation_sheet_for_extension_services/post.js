@@ -1,3 +1,43 @@
+﻿function showSuccessBanner(message = 'Report submitted successfully!') {
+    let banner = document.getElementById('submissionSuccessBanner');
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'submissionSuccessBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.position = 'fixed';
+        banner.style.top = '78px';
+        banner.style.right = '24px';
+        banner.style.zIndex = '10000';
+        banner.style.maxWidth = '420px';
+        banner.style.padding = '14px 18px';
+        banner.style.borderRadius = '8px';
+        banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)';
+        banner.style.color = '#ffffff';
+        banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)';
+        banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
+        banner.style.fontSize = '14px';
+        banner.style.fontWeight = '700';
+        banner.style.letterSpacing = '0';
+        banner.style.lineHeight = '1.4';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        document.body.appendChild(banner);
+    }
+
+    banner.textContent = message;
+    requestAnimationFrame(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
+    });
+
+    clearTimeout(window.submissionSuccessBannerTimer);
+    window.submissionSuccessBannerTimer = setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+    }, 3500);
+}
 // evaluation.js - SIMPLIFIED VERSION (POST ONLY, NO CALCULATIONS)
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -10,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Check if elements exist
     if (!submitBtn) {
-        console.error("Submit button not found!");
         return;
     }
 
@@ -136,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                alert("Evaluation submitted successfully!");
+                showSuccessBanner("Evaluation submitted successfully!");
                 // Reset form
                 if (form) {
                     form.reset();
@@ -149,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         } catch (err) {
-            console.error(err);
             alert("Error: " + err.message);
         } finally {
             if (submitBtn) {
@@ -183,5 +221,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    console.log("Evaluation system ready (simplified - POST only)");
 });

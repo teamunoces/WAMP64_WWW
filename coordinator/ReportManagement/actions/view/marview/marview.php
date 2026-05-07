@@ -12,6 +12,22 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="anti-fouc">
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+        background-color: #f4f7f9;
+    }
+
+    #headerFrame {
+        background-color: #ffffff;
+    }
+
+    #sidebarFrame {
+        background-color: #254911;
+    }
+</style>
     <title>Monthly Accomplishment Report</title>
     <link rel="stylesheet" href="mar.css">
     <link rel="stylesheet" href="darkmode.css">
@@ -242,9 +258,9 @@ function printReport(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       <script src="./get.js" ></script>
       <script src="/SYSTEM_VERSION_!/coordinator//ReportManagement/actions/js/getapproval.js"></script>
-      <script src="./darkmode.js"></script>
       <script src="./download.js"></script>
       <script src="./print.js"></script>
+      <script src="./darkmode.js"></script>
 
 
 

@@ -1,3 +1,15 @@
+const isDebug = new URLSearchParams(window.location.search).has("debug");
+const debugLog = (...args) => {
+    if (isDebug) {
+        console.log(...args);
+    }
+};
+const debugWarn = (...args) => {
+    if (isDebug) {
+        console.warn(...args);
+    }
+};
+
 async function loadReport() {
     const params = new URLSearchParams(window.location.search);
     let reportId = params.get("id");
@@ -18,7 +30,7 @@ async function loadReport() {
         const response = await fetch(`/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/programdesign/get.php?id=${reportId}`);
         const data = await response.json();
 
-        console.log("Fetched data:", data);
+        debugLog("Fetched data:", data);
 
         if (data.success && data.main) {
             document.getElementById('admincomment').value = data.main.feedback || '';
@@ -58,10 +70,10 @@ async function loadReport() {
                 tableBody.appendChild(tr);
             });
         } else {
-            console.warn("No data returned for this report ID.");
+            debugWarn("No data returned for this report ID.");
         }
     } catch (error) {
-        console.error("Error loading data:", error);
+        debugWarn("Error loading data:", error);
     }
 }
 

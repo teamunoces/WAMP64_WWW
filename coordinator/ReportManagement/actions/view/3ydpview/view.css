@@ -540,3 +540,168 @@ footer {
     pointer-events: none;
 }
 
+/* ===== Laptop / Monitor Responsiveness ===== */
+:root {
+    --sidebar-width: 100px;
+    --header-height: 60px;
+    --page-gutter: clamp(16px, 3vw, 40px);
+    --report-max-width: 1100px;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    overflow-x: hidden;
+}
+
+#sidebarFrame {
+    width: var(--sidebar-width);
+}
+
+#headerFrame {
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+}
+
+.container,
+.admin-comment {
+    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
+    max-width: var(--report-max-width);
+    box-sizing: border-box;
+}
+
+.container {
+    margin-top: calc(var(--header-height) + 40px);
+}
+
+.admin-comment {
+    margin-top: calc(var(--header-height) + 20px);
+}
+
+.college-info {
+    min-width: 0;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+}
+
+table th,
+table td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.document-info {
+    width: min(320px, 100%);
+}
+
+@media (min-width: 1440px) {
+    :root {
+        --report-max-width: 1200px;
+        --page-gutter: 48px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --report-max-width: 1000px;
+        --page-gutter: 24px;
+    }
+
+    .container {
+        padding: 32px;
+    }
+
+    .logo-left,
+    .logo-left2 {
+        height: 78px;
+    }
+
+    .logos-right img {
+        height: 70px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 900px) {
+    .header-content {
+        gap: 12px;
+    }
+
+    .college-info {
+        padding: 0 10px;
+    }
+
+    .college-info h1 {
+        font-size: 20px;
+    }
+
+    .office-title {
+        font-size: 16px;
+    }
+
+    table {
+        min-width: 760px;
+    }
+
+    .approvals-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    body {
+        margin-left: 0;
+    }
+
+    .container,
+    .admin-comment {
+        width: calc(100vw - (var(--page-gutter) * 2));
+    }
+
+    .container {
+        margin-top: calc(var(--header-height) + 20px);
+        padding: 22px;
+    }
+
+    .buttons {
+        position: static;
+        width: calc(100vw - (var(--page-gutter) * 2));
+        margin: calc(var(--header-height) + 15px) auto 0 auto;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .approval-row {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .signature-group {
+        width: 100%;
+    }
+
+    table {
+        min-width: 720px;
+    }
+}
+

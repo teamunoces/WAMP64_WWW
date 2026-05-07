@@ -352,3 +352,71 @@ tr td em {
         height: 12px;
     }
 }
+
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body {
+        padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px));
+    }
+
+    .evaluation-container {
+        width: min(100%, 850px);
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 1366px) and (min-width: 769px) {
+    .evaluation-container {
+        padding: 34px;
+    }
+
+    .logo-left {
+        height: 76px;
+    }
+
+    .logo-left2,
+    .logos-right img {
+        height: 68px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 900px) {
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    body {
+        padding: 80px 14px 28px;
+    }
+
+    .evaluation-container {
+        width: 100%;
+        padding: 22px;
+        overflow-x: auto;
+    }
+
+    .header-content,
+    .checkbox-grid,
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .checkbox-grid .column {
+        width: 100%;
+    }
+
+    table {
+        min-width: 680px;
+    }
+}

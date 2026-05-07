@@ -1,3 +1,43 @@
+function showSuccessBanner(message = 'Report submitted successfully!') {
+    let banner = document.getElementById('submissionSuccessBanner');
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'submissionSuccessBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.position = 'fixed';
+        banner.style.top = '78px';
+        banner.style.right = '24px';
+        banner.style.zIndex = '10000';
+        banner.style.maxWidth = '420px';
+        banner.style.padding = '14px 18px';
+        banner.style.borderRadius = '8px';
+        banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)';
+        banner.style.color = '#ffffff';
+        banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)';
+        banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
+        banner.style.fontSize = '14px';
+        banner.style.fontWeight = '700';
+        banner.style.letterSpacing = '0';
+        banner.style.lineHeight = '1.4';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        document.body.appendChild(banner);
+    }
+
+    banner.textContent = message;
+    requestAnimationFrame(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
+    });
+
+    clearTimeout(window.submissionSuccessBannerTimer);
+    window.submissionSuccessBannerTimer = setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+    }, 3500);
+}
 // post.js
 // Function to get all data from the form fields
 function getFormData() {
@@ -75,10 +115,10 @@ async function submitFormData(endpoint = 'post.php') {
         
         if (result.success) {
             console.log('Data submitted successfully:', result);
-            alert(`Success! ${result.message}\nReport ID: ${result.report_id}`);
+            showSuccessBanner(result.message || "Report submitted successfully!");
             
             // Optional: Clear form after successful submission
-            if (confirm('Form submitted successfully! Do you want to clear the form?')) {
+            if (confirm('Do you want to clear the form?')) {
                 clearForm();
             }
             
@@ -148,7 +188,6 @@ function clearForm() {
     });
     
     console.log('Form cleared successfully');
-    alert('Form has been cleared');
 }
 
 // Function to handle form submission with validation
@@ -170,7 +209,7 @@ async function handleFormSubmission(event) {
     console.log('Report Type:', formData.report_type);
     
     // Submit the data to the server
-    const result = await submitFormData();
+            const result = await submitFormData();
     
     if (result && result.success) {
         // Optional: Trigger any custom events or callbacks

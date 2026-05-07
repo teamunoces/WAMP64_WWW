@@ -1,12 +1,19 @@
 /* ===== Header ===== */
+:root {
+    --sidebar-width: 100px;
+    --header-height: 60px;
+    --page-gutter: clamp(16px, 3vw, 40px);
+    --report-max-width: 1100px;
+}
+
 #headerFrame {
-    height: 60px;
+    height: var(--header-height);
     border: none;
     position: fixed;
     top: 0;
-    left: 100px;
+    left: var(--sidebar-width);
     right: 0;
-    width: calc(100% - 100px);
+    width: calc(100% - var(--sidebar-width));
     z-index: 1000;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -14,7 +21,7 @@
 
 /* ===== Sidebar ===== */
 #sidebarFrame {
-    width: 100px;
+    width: var(--sidebar-width);
     height: 100vh;
     border: none;
     position: fixed;
@@ -58,6 +65,7 @@
 .college-info {
     text-align: center;
     flex-grow: 1;
+    min-width: 0;
     padding: 0 20px;
 }
 
@@ -108,12 +116,14 @@ body {
     background-color: #f4f7f9;
     margin: 0;
     padding: 0;
-    margin-left: 150px; /* Add margin to account for sidebar */
+    margin-left: var(--sidebar-width);
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 1100px;
-    margin: 100px auto 40px auto; /* Centered with auto margins */
+    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
+    max-width: var(--report-max-width);
+    margin: calc(var(--header-height) + 40px) auto 40px auto;
     background: #fff;
     padding: 40px;
     border-radius: 8px;
@@ -171,7 +181,8 @@ input[type="text"]:focus, textarea:focus {
 
 /* ===== Table Section Fixes ===== */
 .table-wrapper {
-    overflow-x: visible; /* Remove horizontal scroll */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     background: #fff;
     border: 1px solid #e2e8f0;
     margin-bottom: 30px;
@@ -192,13 +203,16 @@ table thead th {
 }
 
 table {
+    width: 100%;
     border-collapse: collapse;
     font-family: Calibri, "Calibri (Body)", Arial, sans-serif;
-    border-collapse: collapse;
+    table-layout: fixed;
 }
 
 table th, table td {
     border: 1px solid #000;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 table td textarea {
     font-family: Calibri, "Calibri (Body)", Arial, sans-serif !important;
@@ -498,25 +512,64 @@ table td:first-child textarea {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 1200px) {
-    body {
-        margin-left: 150px;
+@media (min-width: 1440px) {
+    :root {
+        --report-max-width: 1200px;
+        --page-gutter: 48px;
     }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --report-max-width: 1000px;
+        --page-gutter: 24px;
+    }
+
     .container {
-        max-width: 1000px;
+        padding: 32px;
+    }
+
+    .logo-left {
+        height: 78px;
+    }
+
+    .logo-left2,
+    .logos-right img {
+        height: 70px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
     }
 }
 
 @media (max-width: 900px) {
-    body {
-        margin-left: 150px;
+    :root {
+        --page-gutter: 20px;
     }
+
     .container {
-        max-width: 90%;
-        padding: 30px;
+        padding: 28px;
     }
+
+    .header-content {
+        gap: 12px;
+    }
+
+    .college-info {
+        padding: 0 10px;
+    }
+
+    .college-info h1 {
+        font-size: 20px;
+    }
+
+    .office-title {
+        font-size: 16px;
+    }
+
     table {
-        min-width: 700px;
+        min-width: 760px;
     }
 }
 
@@ -532,8 +585,8 @@ table td:first-child textarea {
         margin-left: 0; /* Remove margin when sidebar is hidden */
     }
     .container {
-        margin-top: 80px;
-        width: 90%;
+        margin-top: calc(var(--header-height) + 20px);
+        width: calc(100vw - (var(--page-gutter) * 2));
         padding: 20px;
         margin-left: auto;
         margin-right: auto;
@@ -547,11 +600,40 @@ table td:first-child textarea {
         min-width: unset;
     }
     table {
-        min-width: 600px;
+        min-width: 720px;
     }
 }
 
 @media (max-width: 600px) {
+    :root {
+        --page-gutter: 12px;
+    }
+
+    .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logo-left,
+    .logo-left2,
+    .logos-right img {
+        height: 54px;
+    }
+
+    .college-info {
+        order: 3;
+        flex-basis: 100%;
+        padding: 0;
+    }
+
+    .college-info h1 {
+        font-size: 18px;
+    }
+
+    .college-info p {
+        font-size: 10px;
+    }
+
     .form-actions {
         flex-direction: column;
         align-items: center;
@@ -560,10 +642,10 @@ table td:first-child textarea {
         width: 100%;
     }
     table {
-        min-width: 500px;
+        min-width: 680px;
     }
     .container {
-        width: 95%;
+        width: calc(100vw - (var(--page-gutter) * 2));
         padding: 15px;
     }
 }

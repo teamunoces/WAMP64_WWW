@@ -2,6 +2,18 @@ let reportData = {
     pending: {}
 };
 
+const isDebug = new URLSearchParams(window.location.search).has("debug");
+const debugLog = (...args) => {
+    if (isDebug) {
+        console.log(...args);
+    }
+};
+const debugWarn = (...args) => {
+    if (isDebug) {
+        console.warn(...args);
+    }
+};
+
 const reviewPages = {
     "community needs assessment consolidated report": "./review/cnacr/cnacrreview.php",
     "3-year development plan": "./review/3ydp/3ydpreview.php",
@@ -19,30 +31,30 @@ const reviewPages = {
 
 async function loadReports(status, tableBodyId) {
     try {
-        console.log(`Loading reports with status: ${status}`);
+        debugLog(`Loading reports with status: ${status}`);
         
         const response = await fetch(`/SYSTEM_VERSION_!/coordinator/Dashboard/PHP/getPending.php?status=${encodeURIComponent(status)}`);
         const data = await response.json();
         
-        console.log("Raw response from server:", data);
+        debugLog("Raw response from server:", data);
         
         if (data.error) {
-            console.error("Server Error:", data.error);
+            debugWarn("Server Error:", data.error);
             alert("Server Error: " + data.error);
             return;
         }
         
         // Check debug info
         if (data._debug) {
-            console.log("Debug info:", data._debug);
+            debugLog("Debug info:", data._debug);
             if (data._debug.total_records_found === 0) {
-                console.warn("No records found. Check debug info above.");
+                debugWarn("No records found. Check debug info above.");
             }
         }
         
         // Check if there's a message
         if (data._message) {
-            console.log("Server message:", data._message);
+            debugLog("Server message:", data._message);
         }
         
         reportData[status] = data;
@@ -54,30 +66,29 @@ async function loadReports(status, tableBodyId) {
         Object.entries(data).forEach(([tableName, tableData]) => {
             // Skip debug and message keys
             if (tableName !== '_debug' && tableName !== '_message' && Array.isArray(tableData)) {
-                console.log(`Table ${tableName}: ${tableData.length} records`);
+                debugLog(`Table ${tableName}: ${tableData.length} records`);
                 if (tableData.length > 0) {
                     tablesWithData.push(tableName);
-                    // Log the first record to see its structure
-                    console.log(`Sample record from ${tableName}:`, tableData[0]);
+                    debugLog(`Sample record from ${tableName}:`, tableData[0]);
                 }
                 combined = combined.concat(tableData);
             }
         });
         
-        console.log(`Tables with data: ${tablesWithData.join(', ') || 'none'}`);
-        console.log(`Total combined records: ${combined.length}`);
+        debugLog(`Tables with data: ${tablesWithData.join(', ') || 'none'}`);
+        debugLog(`Total combined records: ${combined.length}`);
         
         if (combined.length === 0) {
-            console.log("No reports to display. Check if:");
-            console.log("1. The user_id in session matches records in database");
-            console.log("2. The status filter is correct");
-            console.log("3. The table columns match the SELECT query");
+            debugLog("No reports to display. Check if:");
+            debugLog("1. The user_id in session matches records in database");
+            debugLog("2. The status filter is correct");
+            debugLog("3. The table columns match the SELECT query");
         }
         
         renderTable(combined, tableBodyId, status);
         
     } catch (error) {
-        console.error("Connection Error:", error);
+        debugWarn("Connection Error:", error);
         alert("Error loading reports: " + error.message);
     }
 }
@@ -85,7 +96,7 @@ async function loadReports(status, tableBodyId) {
 function renderTable(data, tableBodyId, status) {
     const tableBody = document.getElementById(tableBodyId);
     if (!tableBody) {
-        console.error(`Table body with id '${tableBodyId}' not found`);
+        debugWarn(`Table body with id '${tableBodyId}' not found`);
         return;
     }
 
@@ -97,11 +108,10 @@ function renderTable(data, tableBodyId, status) {
         return;
     }
 
-    console.log(`Rendering ${data.length} reports`);
+    debugLog(`Rendering ${data.length} reports`);
     
     tableBody.innerHTML = data.map(report => {
-        // Debug each report
-        console.log("Rendering report:", report);
+        debugLog("Rendering report:", report);
         
         return `
         <tr>
@@ -152,12 +162,12 @@ function viewReport(reportId, reportType, status) {
         const url = `${baseUrl}?id=${encodeURIComponent(reportId)}&status=${encodeURIComponent(status)}&page=pending`;
         window.location.href = url;
     } else {
-        console.error(`No review page found for report type: ${reportType}`);
+        debugWarn(`No review page found for report type: ${reportType}`);
         alert(`Review page not configured for report type: ${reportType}`);
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM loaded, loading reports...");
+    debugLog("DOM loaded, loading reports...");
     loadReports("pending", "pendingTableBody");
 });

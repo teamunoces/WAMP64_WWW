@@ -70,13 +70,13 @@ body {
 .username {
     font-size: 1rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #254911;
     max-width: 150px; /* Prevents long names from breaking layout */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: 0.3px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Better readability on transparent bg */
+    text-shadow: none;
 }
 
 /* Dropdown Menu - Positioned relative to main-header */
@@ -341,20 +341,7 @@ body {
 
 /* For better visibility on dark backgrounds, add a subtle shadow to username */
 .username {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Ensure dropdown menu stands out */
-.dropdown::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    right: 20px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid white;
+    text-shadow: none;
 }
 
 /* Add a subtle shadow to dropdown on mobile for better visibility */

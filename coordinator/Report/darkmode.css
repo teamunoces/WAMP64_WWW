@@ -360,3 +360,31 @@ body.dark-mode .table-container,
 body.dark-mode .modal-content {
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
+
+/* ===== FIX WHITE GAP BELOW HEADER ===== */
+body.dark-mode .dashboard-main,
+body.dark-mode .dashboard-wrapper,
+body.dark-mode .main-content,
+body.dark-mode .content-wrapper {
+    background-color: #121212 !important;
+}
+
+/* Force top spacing area to dark */
+body.dark-mode::after {
+    content: "";
+    position: fixed;
+    top: 60px; /* header height */
+    left: 100px; /* sidebar width */
+    width: calc(100% - 100px);
+    height: 20px;
+    background: #121212;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Remove accidental white backgrounds */
+body.dark-mode .row,
+body.dark-mode .container,
+body.dark-mode .wrapper {
+    background-color: transparent !important;
+}

@@ -1,3 +1,43 @@
+﻿function showSuccessBanner(message = 'Report submitted successfully!') {
+    let banner = document.getElementById('submissionSuccessBanner');
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'submissionSuccessBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.position = 'fixed';
+        banner.style.top = '78px';
+        banner.style.right = '24px';
+        banner.style.zIndex = '10000';
+        banner.style.maxWidth = '420px';
+        banner.style.padding = '14px 18px';
+        banner.style.borderRadius = '8px';
+        banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)';
+        banner.style.color = '#ffffff';
+        banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)';
+        banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
+        banner.style.fontSize = '14px';
+        banner.style.fontWeight = '700';
+        banner.style.letterSpacing = '0';
+        banner.style.lineHeight = '1.4';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        document.body.appendChild(banner);
+    }
+
+    banner.textContent = message;
+    requestAnimationFrame(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
+    });
+
+    clearTimeout(window.submissionSuccessBannerTimer);
+    window.submissionSuccessBannerTimer = setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+    }, 3500);
+}
 async function submitReport() {
     // Manually collect all form data
     const data = {
@@ -49,8 +89,6 @@ async function submitReport() {
         }
     });
     
-    console.log("Final data object:", data);
-    console.log("JSON being sent:", JSON.stringify(data));
     
     try {
         const response = await fetch("post.php", {
@@ -59,19 +97,16 @@ async function submitReport() {
             body: JSON.stringify(data)
         });
         
-        console.log("Response status:", response.status);
         
         // Get the response text first
         const responseText = await response.text();
-        console.log("Raw response:", responseText);
         
         // Try to parse as JSON
         try {
             const result = JSON.parse(responseText);
-            console.log("Parsed response:", result);
             
             if(result.success){
-                alert("Report submitted successfully!");
+                showSuccessBanner("Report submitted successfully!");
                 // Clear all fields after successful submission
                 document.querySelectorAll('textarea, input[type="text"]').forEach(field => {
                     field.value = '';
@@ -79,16 +114,13 @@ async function submitReport() {
             } else {
                 alert("Error: " + (result.error || "Unknown error"));
                 if(result.received) {
-                    console.error("Received data:", result.received);
                 }
             }
         } catch (parseError) {
-            console.error("JSON parse error:", parseError);
             alert("Server returned invalid JSON. Check console for details.");
         }
         
     } catch(err){
-        console.error("Fetch error:", err);
         alert("An unexpected error occurred. Please check the console for details.");
     }
 }

@@ -3,6 +3,17 @@
  */
 
 const API_URL = 'get.php';
+const isDebug = new URLSearchParams(window.location.search).has('debug');
+const debugLog = (...args) => {
+    if (isDebug) {
+        console.log(...args);
+    }
+};
+const debugWarn = (...args) => {
+    if (isDebug) {
+        console.warn(...args);
+    }
+};
 
 // Make currentReportData globally accessible
 window.currentReportData = null;
@@ -22,7 +33,7 @@ async function fetchReflectionData(reportId = null, reportType = null) {
             url += '?' + params.toString();
         }
 
-        console.log('Fetching from URL:', url);
+        debugLog('Fetching from URL:', url);
 
         const response = await fetch(url);
 
@@ -31,12 +42,12 @@ async function fetchReflectionData(reportId = null, reportType = null) {
         }
 
         const result = await response.json();
-        console.log('API Response:', result);
+        debugLog('API Response:', result);
 
         if (result.success && result.data && result.data.length > 0) {
             const report = result.data[0];
 
-            console.log('Report found with ID:', report.id);
+            debugLog('Report found with ID:', report.id);
 
             window.currentReportData = {
                 id: report.id,
@@ -55,24 +66,24 @@ async function fetchReflectionData(reportId = null, reportType = null) {
             populateForm(window.currentReportData);
             return result.data;
         } else {
-            console.log('No data found or invalid response structure');
-            console.log('Result:', result);
+            debugLog('No data found or invalid response structure');
+            debugLog('Result:', result);
             return null;
         }
 
     } catch (error) {
-        console.error('Error fetching data:', error);
+        debugWarn('Error fetching data:', error);
         return null;
     }
 }
 
 function populateForm(data) {
     if (!data) {
-        console.error('No data to populate form');
+        debugWarn('No data to populate form');
         return;
     }
 
-    console.log('Populating form with data:', data);
+    debugLog('Populating form with data:', data);
 
     // Fill beneficiary name
     const beneficiaryInput = document.getElementById('beneficiary_name');
@@ -152,23 +163,23 @@ function populateForm(data) {
         submitButton.style.opacity = '1';
         submitButton.style.cursor = 'pointer';
 
-        console.log('Button enabled - ready to update');
+        debugLog('Button enabled - ready to update');
     }
 
-    console.log('Form populated with report ID:', data.id);
+    debugLog('Form populated with report ID:', data.id);
 }
 
 // Auto-load on page ready
 document.addEventListener('DOMContentLoaded', function () {
     const reportType = window.reportType || "Monthly Accomplishment Report- Reflection Paper";
 
-    console.log('Loading reflection paper for:', reportType);
+    debugLog('Loading reflection paper for:', reportType);
 
     const urlParams = new URLSearchParams(window.location.search);
     const reportId = urlParams.get('id');
 
     if (reportId) {
-        console.log('Loading specific report ID:', reportId);
+        debugLog('Loading specific report ID:', reportId);
         fetchReflectionData(reportId, null);
     } else {
         fetchReflectionData(null, reportType);

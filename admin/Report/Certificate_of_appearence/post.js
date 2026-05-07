@@ -1,3 +1,43 @@
+﻿function showSuccessBanner(message = 'Report submitted successfully!') {
+    let banner = document.getElementById('submissionSuccessBanner');
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'submissionSuccessBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.position = 'fixed';
+        banner.style.top = '78px';
+        banner.style.right = '24px';
+        banner.style.zIndex = '10000';
+        banner.style.maxWidth = '420px';
+        banner.style.padding = '14px 18px';
+        banner.style.borderRadius = '8px';
+        banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)';
+        banner.style.color = '#ffffff';
+        banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)';
+        banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
+        banner.style.fontSize = '14px';
+        banner.style.fontWeight = '700';
+        banner.style.letterSpacing = '0';
+        banner.style.lineHeight = '1.4';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        document.body.appendChild(banner);
+    }
+
+    banner.textContent = message;
+    requestAnimationFrame(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
+    });
+
+    clearTimeout(window.submissionSuccessBannerTimer);
+    window.submissionSuccessBannerTimer = setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+    }, 3500);
+}
 // post.js
 // Function to get all data from the form fields
 function getFormData() {
@@ -23,21 +63,8 @@ function getFormData() {
 // Function to display the collected data
 function displayFormData() {
     const data = getFormData();
-    console.log('Form Data:', data);
     
     // Display in a formatted way
-    console.log('\n=== CERTIFICATE DATA ===');
-    console.log(`Report Type: ${data.report_type}`);
-    console.log(`Name: ${data.participant}`);
-    console.log(`Department: ${data.cert_department}`);
-    console.log(`Activity/Project: ${data.activity_name}`);
-    console.log(`Location: ${data.location}`);
-    console.log(`Date Held: ${data.date_held} ${data.month_held} ${data.year_held}`);
-    console.log(`Location Two: ${data.location_two}`);
-    console.log(`Monitored By: ${data.monitored_by}`);
-    console.log(`Verified By: ${data.verified_by}`);
-    console.log(`Feedback: ${data.feedback}`);
-    console.log('========================\n');
     
     return data;
 }
@@ -49,7 +76,6 @@ async function submitFormData(endpoint = 'post.php') {
     // Validate required fields
     const validation = validateFormData();
     if (!validation.isValid) {
-        console.error('Validation errors:', validation.errors);
         alert('Please fill in all required fields:\n' + validation.errors.join('\n'));
         return null;
     }
@@ -74,22 +100,19 @@ async function submitFormData(endpoint = 'post.php') {
         const result = await response.json();
         
         if (result.success) {
-            console.log('Data submitted successfully:', result);
-            alert(`Success! ${result.message}\nReport ID: ${result.report_id}`);
+            showSuccessBanner(result.message || "Report submitted successfully!");
             
             // Optional: Clear form after successful submission
-            if (confirm('Form submitted successfully! Do you want to clear the form?')) {
+            if (confirm('Do you want to clear the form?')) {
                 clearForm();
             }
             
             return result;
         } else {
-            console.error('Failed to submit data:', result.message);
             alert(`Error: ${result.message}`);
             return null;
         }
     } catch (error) {
-        console.error('Error submitting data:', error);
         alert('Error submitting form. Please check your connection and try again.');
         return null;
     } finally {
@@ -147,8 +170,6 @@ function clearForm() {
         }
     });
     
-    console.log('Form cleared successfully');
-    alert('Form has been cleared');
 }
 
 // Function to handle form submission with validation
@@ -160,14 +181,11 @@ async function handleFormSubmission(event) {
     const validation = validateFormData();
     
     if (!validation.isValid) {
-        console.error('Validation errors:', validation.errors);
         alert('Please fill in all required fields:\n' + validation.errors.join('\n'));
         return false;
     }
     
     const formData = getFormData();
-    console.log('Form data collected successfully:', formData);
-    console.log('Report Type:', formData.report_type);
     
     // Submit the data to the server
     const result = await submitFormData();
@@ -189,7 +207,6 @@ function getReportType() {
 // Function to display report type info
 function displayReportType() {
     const reportType = getReportType();
-    console.log('Current Report Type:', reportType);
     
     // Display in the UI if element exists
     const reportTypeElement = document.getElementById('report_type_display');
@@ -201,7 +218,6 @@ function displayReportType() {
 // Function to set report type dynamically
 function setReportType(type) {
     window.reportType = type;
-    console.log('Report type set to:', type);
     displayReportType();
 }
 
@@ -288,9 +304,6 @@ class FormHandler {
     // Log all data to console
     logData() {
         const data = this.getAllData();
-        console.table(data);
-        console.log('Report Type:', data.report_type);
-        console.log('JSON Output:', this.getJSONData());
     }
     
     // Validate all required fields
@@ -300,7 +313,6 @@ class FormHandler {
         const missing = required.filter(field => !data[field] || !data[field].trim());
         
         if (missing.length > 0) {
-            console.warn('Missing required fields:', missing);
             return {
                 isValid: false,
                 missing: missing
@@ -333,11 +345,8 @@ class FormHandler {
             });
             
             const result = await response.json();
-            console.log('Submission result:', result);
-            console.log('Submitted with Report Type:', data.report_type);
             return result;
         } catch (error) {
-            console.error('Submission error:', error);
             throw error;
         }
     }
@@ -350,13 +359,11 @@ class FormHandler {
                 element.value = '';
             }
         });
-        console.log('Form reset successfully');
     }
     
     // Set endpoint
     setEndpoint(endpoint) {
         this.endpoint = endpoint;
-        console.log('Endpoint set to:', endpoint);
     }
     
     // Fill form with data
@@ -367,7 +374,6 @@ class FormHandler {
                 element.value = data[field];
             }
         });
-        console.log('Form filled with data');
     }
 }
 
@@ -376,18 +382,15 @@ const formHandler = new FormHandler();
 
 // Event listeners setup when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('post.js loaded successfully');
     
     // Find the submit button
     const submitButton = document.querySelector('.submit-button');
     
     if (submitButton) {
-        console.log('Submit button found, attaching event listener');
         // Remove any existing listeners to avoid duplicates
         submitButton.removeEventListener('click', handleFormSubmission);
         submitButton.addEventListener('click', handleFormSubmission);
     } else {
-        console.warn('Submit button not found. Make sure the button has class "submit-button"');
     }
     
     // Optional: Add clear button if exists
@@ -407,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
     displayReportType();
     
     // Log initial form state
-    console.log('Current Report Type from PHP:', getReportType());
     formHandler.logData();
     
     // Add real-time validation on input changes (optional)

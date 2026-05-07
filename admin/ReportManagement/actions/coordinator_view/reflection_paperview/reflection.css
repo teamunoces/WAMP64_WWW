@@ -578,3 +578,26 @@ footer {
     height: 40px;
     width: auto;
 }
+
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body { margin: 0; padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px)); }
+    .container, .admin-comment { width: min(100%, 850px); margin-left: auto; margin-right: auto; }
+    .container { margin-top: 0; box-sizing: border-box; }
+    .admin-comment { margin-top: 0; margin-bottom: 24px; }
+}
+@media (max-width: 1366px) and (min-width: 769px) {
+    .container { padding: 34px; }
+    .logo-left { height: 76px; }
+    .logo-left2, .logos-right img { height: 68px; }
+    .college-info h1 { font-size: 23px; }
+}
+@media (max-width: 900px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { margin: 0; padding: 80px 14px 28px; }
+    .container, .admin-comment { width: 100%; }
+    .container { padding: 22px; }
+    .header-content, .checkbox-grid, .answer-block { flex-direction: column; align-items: stretch; }
+    .column { width: 100%; }
+}

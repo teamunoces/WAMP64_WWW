@@ -8,6 +8,22 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style id="anti-fouc">
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+        background-color: #f4f7f9;
+    }
+
+    #headerFrame {
+        background-color: #ffffff;
+    }
+
+    #sidebarFrame {
+        background-color: #254911;
+    }
+</style>
   <title>3-Year Development Plan</title>
   <link rel="stylesheet" href="3ydpreport.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -83,18 +99,34 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
             <section class="table-section">
                 <div class="table-wrapper">
                     <table id="programPlanTable">
-                        <thead>
+                         <thead>
                             <tr>
-                                <th rowspan="5">Program</th>
-                                <th rowspan="5">Objectives</th>
-                                <th rowspan="5">Strategies and Action Plans</th>
-                                <th rowspan="5">Resources from the School</th>
-                                <th rowspan="5">Resources from the Community</th> 
-                                <th rowspan="5">Budget</th>     
-                                <th rowspan="5">Means of Verification</th>     
-                                <th rowspan="5">Time Frame</th>
-                            </tr>
-                        </thead>
+                                                <th rowspan="2">Program</th>
+                                                <th rowspan="2">Objectives</th>
+                                                <th rowspan="2">Strategies and<br>Action Plans</th>
+                                                <th colspan="3">Resources Needed</th>
+                                                <th rowspan="2">Means of<br>Verification</th>
+                                                <th rowspan="2">Time<br>Frame</th>
+                                            </tr>
+
+                                            <tr>
+                                                <th>
+                                                    Resources from the School<br>
+                                                    (Human Resources,<br>
+                                                    Collaborating Agencies<br>
+                                                    and Equipment)
+                                                </th>
+
+                                                <th>
+                                                    Resources from the Community<br>
+                                                    (Human Resources,<br>
+                                                    Collaborating Agencies<br>
+                                                    and Equipment)
+                                                </th>
+
+                                                <th>Budget and funding</th>
+                                            </tr>
+                            </thead>
                         <tbody>
                             <tr>
                                 <td><textarea rows="5" placeholder="..."></textarea></td>

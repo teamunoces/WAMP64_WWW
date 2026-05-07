@@ -1,4 +1,4 @@
-// Global variables for upload functionality
+﻿// Global variables for upload functionality
 let currentUploadReportId = null;
 let currentUploadTable = null;
 let currentExistingFiles = [];
@@ -9,21 +9,17 @@ const MAX_FILES = 4;
 // Debug function to check if elements exist
 function debugElement(id) {
     const element = document.getElementById(id);
-    console.log(`Element #${id}:`, element ? 'Found' : 'NOT FOUND');
     return element;
 }
 
 async function loadReports() {
-    console.log("loadReports started for Reports.html");
     try {
         const response = await fetch("./php/get.php");
         const data = await response.json();
-        console.log("Reports data loaded:", data);
 
         const adminTableBody = document.getElementById("adminTableBody");
 
         // Debug: Check if table body exists
-        console.log("adminTableBody:", adminTableBody ? 'Found' : 'NOT FOUND');
 
         adminTableBody.innerHTML = "";
 
@@ -75,36 +71,28 @@ async function loadReports() {
         }
 
         attachActionEvents(data);
-        console.log("Action events attached");
 
     } catch (error) {
-        console.error("Error loading reports:", error);
         showNotification("Error loading reports. Please refresh the page.", "error");
     }
 }
 
 function attachActionEvents(data) {
-    console.log("attachActionEvents called");
     
     // Upload icon events (only in admin table)
     const uploadIcons = document.querySelectorAll("#adminTableBody .upload-icon");
-    console.log("Found upload icons:", uploadIcons.length);
     
     uploadIcons.forEach((icon, index) => {
-        console.log(`Attaching event to upload icon ${index}`);
         icon.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Upload icon clicked");
             
             const reportId = icon.getAttribute("data-id");
             const reportTable = icon.getAttribute("data-table");
             
-            console.log("Report ID:", reportId, "Table:", reportTable);
             
             // Find the report details for display
             const report = data.find(r => r.id == reportId && r.source_table === reportTable);
-            console.log("Found report:", report);
             
             // Show upload modal
             showUploadModal(reportId, reportTable, report);
@@ -141,7 +129,6 @@ function attachActionEvents(data) {
                     showNotification("Failed to archive report: " + (result.error || "Unknown error"), "error");
                 }
             } catch (error) {
-                console.error("Archive error:", error);
                 showNotification("Error archiving report", "error");
             }
         });
@@ -160,7 +147,6 @@ function attachActionEvents(data) {
             const report = data.find(r => r.id == reportId && r.source_table === sourceTable);
 
             if (!report) {
-                console.error("Report not found in data array");
                 showNotification("Report not found", "error");
                 return;
             }
@@ -191,16 +177,13 @@ function getViewPath(report) {
 
 // Show upload modal
 function showUploadModal(reportId, reportTable, report = null) {
-    console.log("showUploadModal called with:", reportId, reportTable, report);
     
     const modal = document.getElementById("uploadModal");
     if (!modal) {
-        console.error("Upload modal not found in the DOM");
         alert("Error: Upload modal not found. Please check the HTML.");
         return;
     }
     
-    console.log("Modal found, setting display to block");
     modal.style.display = "block";
     
     const reportTitleSpan = document.getElementById("modalReportTitle");
@@ -270,7 +253,6 @@ function showUploadModal(reportId, reportTable, report = null) {
 
 // Close upload modal
 function closeUploadModal() {
-    console.log("closeUploadModal called");
     const modal = document.getElementById("uploadModal");
     if (modal) {
         modal.style.display = "none";
@@ -304,7 +286,6 @@ function closeUploadModal() {
 
 // Handle file selection
 function handleFileSelect(input) {
-    console.log("handleFileSelect called with files:", input.files.length);
     
     const selectedFilesList = document.getElementById("selectedFilesList");
     if (!selectedFilesList) return;
@@ -463,7 +444,6 @@ function removeSelectedFile(index) {
 
 // Upload files
 async function uploadFiles() {
-    console.log("uploadFiles called");
     
     const fileInput = document.getElementById("fileInput");
     if (!fileInput) {
@@ -542,7 +522,6 @@ async function uploadFiles() {
                 }
             }
         } catch (error) {
-            console.error("Upload error:", error);
             failCount++;
             failedFiles.push(file.name);
             const fileItems = document.querySelectorAll(".selected-file-item");
@@ -573,7 +552,6 @@ async function uploadFiles() {
 
 // Reupload file (replace existing)
 async function reuploadFile(fileId, oldFileName) {
-    console.log("reuploadFile called with:", fileId, oldFileName);
     
     const fileInput = document.getElementById("fileInput");
     if (!fileInput) {
@@ -661,7 +639,6 @@ async function reuploadFile(fileId, oldFileName) {
             showNotification("Replacement failed: " + (result.error || "Unknown error"), "error");
         }
     } catch (error) {
-        console.error("Reupload error:", error);
         showNotification("Error replacing file. Please try again.", "error");
     } finally {
         uploadBtn.disabled = false;
@@ -670,7 +647,6 @@ async function reuploadFile(fileId, oldFileName) {
 
 // Clear reupload mode
 function clearReuploadMode() {
-    console.log("clearReuploadMode called");
     
     // Reset pending reupload variables
     pendingReuploadFileId = null;
@@ -712,7 +688,6 @@ function clearReuploadMode() {
 
 // Load report files
 async function loadReportFiles(reportId, reportTable) {
-    console.log("loadReportFiles called for report:", reportId);
     
     const fileListDiv = document.getElementById("fileList");
     if (!fileListDiv) return;
@@ -721,7 +696,6 @@ async function loadReportFiles(reportId, reportTable) {
     
     try {
         const url = `./php/get_report_files.php?report_id=${reportId}`;
-        console.log("Fetching files from:", url);
         
         const response = await fetch(url);
         
@@ -730,7 +704,6 @@ async function loadReportFiles(reportId, reportTable) {
         }
         
         const result = await response.json();
-        console.log("Files response:", result);
         
         if (result.success) {
             currentExistingFiles = result.files || [];
@@ -746,7 +719,6 @@ async function loadReportFiles(reportId, reportTable) {
                         try {
                             uploadDate = new Date(file.uploaded_at).toLocaleString();
                         } catch (e) {
-                            console.warn("Date parsing error:", e);
                         }
                     }
                     
@@ -799,11 +771,9 @@ async function loadReportFiles(reportId, reportTable) {
                 if (fileInput) fileInput.disabled = false;
             }
         } else {
-            console.error("Server returned error:", result.error);
             fileListDiv.innerHTML = `<p class='error'>Error: ${escapeHtml(result.error || 'Failed to load files')}</p>`;
         }
     } catch (error) {
-        console.error("Error loading files:", error);
         fileListDiv.innerHTML = "<p class='error'>Error loading files. Please try again.</p>";
     }
 }
@@ -820,7 +790,6 @@ function updateFileCount() {
 
 // Prepare for reupload
 function prepareReupload(fileId, fileName) {
-    console.log("prepareReupload called for file:", fileId, fileName);
     
     // Clear any existing reupload mode first
     clearReuploadMode();
@@ -887,7 +856,6 @@ function prepareReupload(fileId, fileName) {
 
 // Show notification
 function showNotification(message, type = "info") {
-    console.log("Notification:", type, message);
     
     // Check if notification container exists, create if not
     let container = document.getElementById("notification-container");
@@ -1127,7 +1095,6 @@ document.head.appendChild(style);
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("DOM fully loaded for Reports.html");
     
     // Check if modal exists
     debugElement("uploadModal");
@@ -1144,7 +1111,6 @@ document.addEventListener("DOMContentLoaded", function() {
         fileInput.addEventListener("change", function() {
             handleFileSelect(this);
         });
-        console.log("File input change event attached");
     }
 });
 

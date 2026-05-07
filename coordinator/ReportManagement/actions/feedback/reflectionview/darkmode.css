@@ -3,20 +3,35 @@
 /* The admin-comment section is EXCLUDED from dark mode - remains original yellow warning style */
 
 body.dark-mode {
-    background-color: #121212;
+    background-color: #121212 !important;
     color: #e0e0e0;
+    margin-right: 0;
 }
 
 /* ===== Frames (Layout Shell) ===== */
 body.dark-mode #sidebarFrame {
-    background: #1e1e1e;
+    background: #121212 !important;
     border-right: 1px solid #333;
 }
 
 body.dark-mode #headerFrame {
-    background: #1e1e1e;
+    display: block;
+    height: 60px !important;
+    background: #121212 !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     border-bottom: 1px solid #333;
+}
+
+body.dark-mode::before {
+    content: "";
+    position: fixed;
+    top: 60px;
+    left: 100px;
+    right: 0;
+    height: 42px;
+    background-color: #121212;
+    pointer-events: none;
+    z-index: 999;
 }
 
 /* ===== Container ===== */

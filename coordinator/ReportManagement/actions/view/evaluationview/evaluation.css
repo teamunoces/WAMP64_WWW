@@ -592,3 +592,52 @@ footer {
         height: 12px;
     }
 }
+/* ===== Laptop / Monitor Responsiveness ===== */
+:root {
+    --sidebar-width: 100px;
+    --header-height: 60px;
+    --page-gutter: clamp(16px, 3vw, 40px);
+    --report-max-width: 1050px;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+#sidebarFrame { width: var(--sidebar-width); }
+#headerFrame { left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
+
+.evaluation-container,
+.admin-comment {
+    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
+    max-width: var(--report-max-width);
+    box-sizing: border-box;
+}
+
+.college-info { min-width: 0; }
+
+table { width: 100%; max-width: 100%; table-layout: fixed; }
+th, td { overflow-wrap: anywhere; word-break: break-word; }
+
+@media (min-width: 1440px) {
+    :root { --report-max-width: 1150px; --page-gutter: 48px; }
+}
+
+@media (max-width: 1200px) {
+    :root { --page-gutter: 24px; }
+    .evaluation-container { padding: 34px; }
+    .logo-left, .logo-left2, .logos-right img { height: 70px; }
+    .college-info h1 { font-size: 23px; }
+}
+
+@media (max-width: 768px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { margin-left: 0; padding: calc(var(--header-height) + 20px) var(--page-gutter) 30px var(--page-gutter); }
+    .evaluation-container, .admin-comment { width: calc(100vw - (var(--page-gutter) * 2)); }
+    .checkbox-grid { flex-direction: column; gap: 8px; }
+    .checkbox-grid .column { width: 100%; }
+    .action-buttons { flex-direction: column; }
+}

@@ -428,3 +428,100 @@ footer {
         padding: 15px;
     }
 }
+
+/* ===== Laptop / Monitor Responsiveness ===== */
+:root {
+    --sidebar-width: 100px;
+    --header-height: 60px;
+    --page-gutter: clamp(16px, 3vw, 40px);
+    --report-max-width: 1100px;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    overflow-x: hidden;
+}
+
+#sidebarFrame {
+    width: var(--sidebar-width);
+}
+
+#headerFrame {
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+}
+
+.form-container {
+    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
+    max-width: var(--report-max-width);
+    box-sizing: border-box;
+    margin-top: calc(var(--header-height) + 40px);
+}
+
+.college-info {
+    min-width: 0;
+}
+
+.program-table,
+table {
+    width: 100%;
+    max-width: 100%;
+}
+
+th,
+td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+@media (min-width: 1440px) {
+    :root {
+        --report-max-width: 1200px;
+        --page-gutter: 48px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --report-max-width: 1000px;
+        --page-gutter: 24px;
+    }
+
+    .form-container {
+        padding: 32px;
+    }
+
+    .logo-left {
+        height: 78px;
+    }
+
+    .logo-left2,
+    .logos-right img {
+        height: 70px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    body {
+        margin-left: 0;
+        padding: 0 var(--page-gutter);
+    }
+
+    .form-container {
+        width: calc(100vw - (var(--page-gutter) * 2));
+        margin-top: calc(var(--header-height) + 20px);
+    }
+}

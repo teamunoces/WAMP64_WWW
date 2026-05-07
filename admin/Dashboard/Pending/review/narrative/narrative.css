@@ -56,7 +56,10 @@ body {
     height: 90px;
     width: auto;
 }
-
+.logo-left2 {
+    height: 80px;
+    width: auto;
+}
 .logos-right {
     display: flex;
     gap: 20px;
@@ -245,4 +248,23 @@ header h1 {
 
 form{
     pointer-events: none;
+}
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body { display: block; padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px)); }
+    .report-container { width: min(100%, 850px); margin: 0 auto; box-sizing: border-box; }
+}
+@media (max-width: 1366px) and (min-width: 769px) {
+    .report-container { padding: 40px; }
+    .logo-left { height: 76px; }
+    .logo-left2, .logos-right img { height: 68px; }
+    .college-info h1 { font-size: 23px; }
+}
+@media (max-width: 900px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { display: block; padding: 80px 14px 28px; }
+    .report-container { width: 100%; padding: 24px; }
+    .header-content { flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .college-info { order: -1; flex-basis: 100%; padding: 0; }
 }

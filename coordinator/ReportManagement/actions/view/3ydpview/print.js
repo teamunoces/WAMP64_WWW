@@ -497,7 +497,6 @@ async function printReport() {
     border-bottom: 1px solid #000 !important;
     padding: 0 0 2px 0;
     margin-bottom: 3px;
-    text-align: left;
     font-weight: normal;
     font-size: 12px;
     text-transform: none;
@@ -548,6 +547,25 @@ async function printReport() {
     font-size: 12px;
     font-weight: bold;
 }
+
+/* created_by_name and dean = left */
+#created_by_name,
+#dean {
+    text-align: left !important;
+}
+
+/* ces_head = right */
+#ces_head {
+    text-align: right !important;
+}
+
+/* vp_acad, vp_admin, school_president = center */
+#vp_acad,
+#vp_admin,
+#school_president {
+    text-align: center !important;
+}
+    
 
     /* ================= DOCUMENT INFO (SMALLER VERSION) ================= */
 .document-info {

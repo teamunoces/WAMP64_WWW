@@ -3,6 +3,17 @@
  */
 
 const API_URL = 'get.php';
+const isDebug = new URLSearchParams(window.location.search).has('debug');
+const debugLog = (...args) => {
+    if (isDebug) {
+        console.log(...args);
+    }
+};
+const debugWarn = (...args) => {
+    if (isDebug) {
+        console.warn(...args);
+    }
+};
 
 // Make currentReportData globally accessible
 window.currentReportData = null;
@@ -22,7 +33,7 @@ async function fetchNarrativeData(reportId = null, reportType = null) {
             url += '?' + params.toString();
         }
         
-        console.log('Fetching from URL:', url);
+        debugLog('Fetching from URL:', url);
         
         const response = await fetch(url);
         
@@ -31,12 +42,12 @@ async function fetchNarrativeData(reportId = null, reportType = null) {
         }
         
         const result = await response.json();
-        console.log('API Response:', result);
+        debugLog('API Response:', result);
         
         if (result.success && result.data && result.data.length > 0) {
             // Get the first report
             const report = result.data[0];
-            console.log('Report found with ID:', report.id);
+            debugLog('Report found with ID:', report.id);
             
             // Store report data globally
             window.currentReportData = {
@@ -60,33 +71,33 @@ async function fetchNarrativeData(reportId = null, reportType = null) {
             populateNarrativeForm(window.currentReportData);
             return result.data;
         } else {
-            console.log('No data found or invalid response structure');
-            console.log('Result:', result);
+            debugLog('No data found or invalid response structure');
+            debugLog('Result:', result);
             return null;
         }
         
     } catch (error) {
-        console.error('Error fetching data:', error);
+        debugWarn('Error fetching data:', error);
         return null;
     }
 }
 
 function populateNarrativeForm(data) {
     if (!data) {
-        console.error('No data to populate form');
+        debugWarn('No data to populate form');
         return;
     }
     
-    console.log('Populating narrative form with data:', data);
+    debugLog('Populating narrative form with data:', data);
     
     // ADD THIS: Display created_by_name in the signature line
     const createdByNameElement = document.getElementById('created_by_name');
     if (createdByNameElement && data.created_by_name) {
         createdByNameElement.textContent = data.created_by_name;
-        console.log('Set created_by_name to:', data.created_by_name);
+        debugLog('Set created_by_name to:', data.created_by_name);
     } else if (createdByNameElement) {
         createdByNameElement.textContent = ''; // Clear if no name
-        console.log('No created_by_name found in data');
+        debugLog('No created_by_name found in data');
     }
     
     // Fill narrate success
@@ -129,7 +140,7 @@ function populateNarrativeForm(data) {
     const adminComment = document.getElementById('admincomment');
     if (adminComment) {
         adminComment.value = data.feedback || '';
-        console.log('Feedback set in admincomment:', data.feedback);
+        debugLog('Feedback set in admincomment:', data.feedback);
     }
     
     // Display admin feedback if exists in container
@@ -152,10 +163,10 @@ function populateNarrativeForm(data) {
         submitButton.textContent = 'Update Report';
         submitButton.style.opacity = '1';
         submitButton.style.cursor = 'pointer';
-        console.log('Button enabled - ready to update');
+        debugLog('Button enabled - ready to update');
     }
     
-    console.log('Form populated with report ID:', data.id);
+    debugLog('Form populated with report ID:', data.id);
 }
 
 function escapeHtml(text) {
@@ -176,7 +187,7 @@ async function getReportsByStatus(status) {
         }
         return [];
     } catch (error) {
-        console.error('Error fetching reports by status:', error);
+        debugWarn('Error fetching reports by status:', error);
         return [];
     }
 }
@@ -192,7 +203,7 @@ async function getAllReports(limit = 50, offset = 0) {
         }
         return [];
     } catch (error) {
-        console.error('Error fetching all reports:', error);
+        debugWarn('Error fetching all reports:', error);
         return [];
     }
 }
@@ -204,10 +215,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const reportType = urlParams.get('type') || "Monthly Accomplishment Report- Narrative Report";
     const reportId = urlParams.get('id');
     
-    console.log('Loading narrative report for:', reportType);
+    debugLog('Loading narrative report for:', reportType);
     
     if (reportId) {
-        console.log('Loading specific report ID:', reportId);
+        debugLog('Loading specific report ID:', reportId);
         fetchNarrativeData(reportId, null);
     } else {
         fetchNarrativeData(null, reportType);

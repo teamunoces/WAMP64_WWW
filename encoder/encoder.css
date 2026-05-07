@@ -109,6 +109,14 @@ header {
     font-size: var(--font-mobile-title);
 }
 
+.saved-data-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
 /* --- Forms --- */
 .form-group {
     margin-bottom: 20px;
@@ -164,6 +172,7 @@ button {
     font-size: 2.5rem;
     color: #bbb;
     line-height: 0.5;
+    padding: 6px;
 }
 
 /* --- Table --- */
@@ -241,7 +250,8 @@ td {
     background: rgba(255, 255, 255, 0.9); /* Slight transparency */
     backdrop-filter: blur(10px); /* Modern blur effect */
     max-width: 900px;
-    margin: 20px;
+    width: calc(100% - 40px);
+    margin: 20px auto 30px;
     padding: 20px;
     border-radius: 20px;
     border: 1px solid rgba(89, 175, 41, 0.2);
@@ -423,6 +433,7 @@ iframe#headerFrame {
     }
     
     .data-entry-section {
+        width: auto;
         margin: 15px;
         padding: 20px;
     }
@@ -461,6 +472,7 @@ iframe#headerFrame {
     }
     
     .data-entry-section {
+        width: auto;
         margin: 10px;
         padding: 15px;
     }

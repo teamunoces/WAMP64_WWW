@@ -37,3 +37,50 @@ body.dark-mode .menu-card {
     background-color: #1e1e1e !important;
     color: white !important;
 }
+/* ===== KEEP HEADER MENU CARD LIGHT MODE ALWAYS ===== */
+body.dark-mode .profile-menu,
+body.dark-mode .profile-menu *,
+body.dark-mode .dropdown-menu,
+body.dark-mode .dropdown-menu *,
+body.dark-mode .menu-card,
+body.dark-mode .menu-card *,
+body.dark-mode .user-menu,
+body.dark-mode .user-menu * {
+    background-color: unset !important;
+    color: unset !important;
+    border-color: unset !important;
+    box-shadow: unset !important;
+}
+
+/* Force the menu box itself to stay white */
+body.dark-mode .profile-menu,
+body.dark-mode .dropdown-menu,
+body.dark-mode .menu-card,
+body.dark-mode .user-menu {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* Force menu text to stay readable */
+body.dark-mode .profile-menu a,
+body.dark-mode .profile-menu span,
+body.dark-mode .profile-menu p,
+body.dark-mode .dropdown-menu a,
+body.dark-mode .dropdown-menu span,
+body.dark-mode .dropdown-menu p,
+body.dark-mode .menu-card a,
+body.dark-mode .menu-card span,
+body.dark-mode .menu-card p,
+body.dark-mode .user-menu a,
+body.dark-mode .user-menu span,
+body.dark-mode .user-menu p {
+    color: #111111 !important;
+}
+
+/* Keep icons visible */
+body.dark-mode .profile-menu i,
+body.dark-mode .dropdown-menu i,
+body.dark-mode .menu-card i,
+body.dark-mode .user-menu i {
+    color: inherit !important;
+}

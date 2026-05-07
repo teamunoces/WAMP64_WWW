@@ -711,3 +711,115 @@ tbody tr td[colspan="5"] {
 .selected-files-list::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
+
+/* =========================================================
+   RESPONSIVE LAYOUT
+========================================================= */
+@media (min-width: 769px) {
+    body {
+        padding: calc(var(--header-h) + 20px) clamp(16px, 2vw, 24px) 24px calc(var(--sidebar-w) + clamp(16px, 2vw, 24px));
+    }
+
+    #headerFrame {
+        left: var(--sidebar-w);
+        width: calc(100% - var(--sidebar-w));
+    }
+
+    #sidebarFrame {
+        width: var(--sidebar-w);
+        transform: translateX(0);
+    }
+
+    .container {
+        width: min(100%, 1200px);
+    }
+}
+
+@media (max-width: 1366px) and (min-width: 769px) {
+    .container {
+        max-width: 1120px;
+        gap: 20px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    th,
+    td {
+        padding: 11px 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1100px) and (min-width: 769px) {
+    .search-section {
+        justify-content: stretch;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: 420px;
+        margin-left: auto;
+    }
+
+    .filter-row {
+        gap: 10px;
+    }
+
+    table {
+        min-width: 720px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: calc(var(--header-h) + 12px) 12px 20px;
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    .container {
+        gap: 16px;
+    }
+
+    .search-section {
+        justify-content: stretch;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .filter-row {
+        align-items: stretch;
+    }
+
+    .label,
+    select {
+        width: 100%;
+    }
+
+    .report-info,
+    .file-item,
+    .selected-file-item {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .modal-content {
+        width: calc(100% - 24px);
+        margin: 20px auto;
+    }
+}

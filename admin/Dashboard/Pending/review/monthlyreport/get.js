@@ -39,14 +39,14 @@ async function loadReport() {
                 const tr = document.createElement('tr');
 
                 tr.innerHTML = `
-                    <td contenteditable="true">${row.date_of_act || ''}</td>
-                    <td contenteditable="true">${row.activities_conducted || ''}</td>
-                    <td contenteditable="true">${row.objectives || ''}</td>
-                    <td contenteditable="true">${row.act_status || ''}</td>
-                    <td contenteditable="true">${row.issues_or_concerns || ''}</td>
-                    <td contenteditable="true">${row.financial_report || ''}</td>
-                    <td contenteditable="true">${row.recommendations || ''}</td>
-                    <td contenteditable="true">${row.plans_for_next_months || ''}</td>
+                    <td>${row.date_of_act || ''}</td>
+                    <td>${row.activities_conducted || ''}</td>
+                    <td>${row.objectives || ''}</td>
+                    <td>${row.act_status || ''}</td>
+                    <td>${row.issues_or_concerns || ''}</td>
+                    <td>${row.financial_report || ''}</td>
+                    <td>${row.recommendations || ''}</td>
+                    <td>${row.plans_for_next_months || ''}</td>
                 `;
 
                 tableBody.appendChild(tr);

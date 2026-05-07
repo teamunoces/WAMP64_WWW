@@ -478,3 +478,26 @@ footer {
     width: 100%;
     text-align: left !important; /* <-- THIS FIXES YOUR ISSUE */
 }
+
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body { display: block; padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px)); }
+    .wrapper, .certificate-container, .admin-comment { width: min(100%, 850px); margin-left: auto; margin-right: auto; }
+    .wrapper { margin-top: 0; margin-bottom: 24px; }
+    .certificate-container { box-sizing: border-box; }
+}
+@media (max-width: 1366px) and (min-width: 769px) {
+    .certificate-container { padding: 46px; }
+    .logo-left { height: 76px; }
+    .logo-left2, .logos-right img { height: 68px; }
+    .college-info h1 { font-size: 23px; }
+}
+@media (max-width: 900px) {
+    #sidebarFrame { transform: translateX(-100%); }
+    #headerFrame { left: 0; width: 100%; }
+    body { display: block; padding: 80px 14px 28px; }
+    .wrapper, .certificate-container, .admin-comment { width: 100%; }
+    .certificate-container { padding: 28px; }
+    .header-content { flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .college-info { order: -1; flex-basis: 100%; padding: 0; }
+}

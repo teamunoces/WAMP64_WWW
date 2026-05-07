@@ -290,3 +290,81 @@ footer {
     height: 40px;
     width: auto;
 }
+
+/* ===== Laptop / PC Responsive Layout ===== */
+@media (min-width: 769px) {
+    body {
+        margin-left: 0;
+        padding: 80px clamp(18px, 2vw, 32px) 40px calc(100px + clamp(18px, 2vw, 32px));
+        display: block;
+    }
+
+    .report-container {
+        width: min(100%, 1000px);
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 1366px) and (min-width: 769px) {
+    .report-container {
+        max-width: 940px;
+        padding: 32px;
+    }
+
+    .header-grid {
+        grid-template-columns: 130px minmax(0, 1fr) 130px minmax(0, 1fr);
+    }
+
+    .logo-left {
+        height: 76px;
+    }
+
+    .logo-left2,
+    .logos-right img {
+        height: 68px;
+    }
+
+    .college-info h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 1100px) and (min-width: 769px) {
+    .header-grid {
+        grid-template-columns: 130px minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebarFrame {
+        transform: translateX(-100%);
+    }
+
+    #headerFrame {
+        left: 0;
+        width: 100%;
+    }
+
+    body {
+        margin-left: 0;
+        padding: 80px 14px 28px;
+    }
+
+    .report-container {
+        width: 100%;
+        padding: 22px;
+    }
+
+    .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .college-info {
+        order: -1;
+        flex-basis: 100%;
+        padding: 0;
+    }
+}
