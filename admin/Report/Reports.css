@@ -20,6 +20,7 @@
     --filter-bg: #ffffff;
 }
 
+html.dark-mode,
 body.dark-mode {
     --bg-body: #0a0c10;
     --bg-container: #181c24;
@@ -37,6 +38,11 @@ body.dark-mode {
     --orange-primary: #fb923c;
     --orange-dark: #f97316;
     --filter-bg: #334155;
+}
+
+html.dark-mode {
+    min-height: 100%;
+    background-color: var(--bg-body);
 }
 
 /* ===== RESET ===== */
@@ -327,6 +333,32 @@ body.dark-mode .filter-row select {
     transition:
         transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
         filter 0.3s ease;
+}
+
+.outer-border > button:not(.card) {
+    display: block;
+    padding: 0;
+    margin: 0;
+    background: transparent !important;
+    border: none;
+    border-radius: 24px;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.outer-border > button:not(.card) {
+    width: 220px;
+    height: 260px;
+    overflow: hidden;
+}
+
+.outer-border > button:not(.card) .card {
+    width: 100%;
+    height: 100%;
 }
 
 .card::before {
@@ -820,6 +852,13 @@ body.dark-mode .selected-file-item.error {
         min-height: 230px;
     }
 
+    .outer-border > button:not(.card) {
+        width: calc(50% - 20px);
+        min-width: 180px;
+        max-width: 220px;
+        height: auto;
+    }
+
     .image-box {
         height: 110px;
     }
@@ -872,6 +911,11 @@ body.dark-mode .selected-file-item.error {
 
 @media (max-width: 640px) {
     .card {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .outer-border > button:not(.card) {
         width: 100%;
         max-width: 280px;
     }
@@ -1046,6 +1090,11 @@ button.card {
         height: 240px;
     }
 
+    .outer-border > button:not(.card) {
+        width: 200px;
+        height: 240px;
+    }
+
     .image-box {
         height: 122px;
     }
@@ -1061,6 +1110,13 @@ button.card {
         width: calc(33.333% - 18px);
         min-width: 180px;
         max-width: 220px;
+    }
+
+    .outer-border > button:not(.card) {
+        width: calc(33.333% - 18px);
+        min-width: 180px;
+        max-width: 220px;
+        height: auto;
     }
 
     .admin-table-container table {

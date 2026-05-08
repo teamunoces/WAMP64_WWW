@@ -101,10 +101,43 @@ function hideMenu() {
     }
 }
 
+function isMenuOpen() {
+    return menu?.classList.contains('show');
+}
+
+function isClickInsideMenu(target) {
+    return !!(menu && target && menu.contains(target));
+}
+
+function isClickOnToggle(target) {
+    return !!(adminToggle && target && adminToggle.contains(target));
+}
+
+function handleOutsideMenuClick(e) {
+    if (!isMenuOpen()) return;
+    if (isClickInsideMenu(e.target) || isClickOnToggle(e.target)) return;
+
+    hideMenu();
+}
+
 adminToggle?.addEventListener('click', (e) => {
     e.stopPropagation();
     menu.classList.contains('show') ? hideMenu() : showMenu();
 });
+
+menu?.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+document.addEventListener('click', handleOutsideMenuClick);
+
+try {
+    if (parent?.document && parent.document !== document) {
+        parent.document.addEventListener('click', handleOutsideMenuClick);
+    }
+} catch (error) {
+    console.warn('Unable to bind parent outside-click handler', error);
+}
 
 /* ================= HEADER UPDATE BASED ON CURRENT PAGE ================= */
 function updateHeaderBasedOnPage() {
@@ -278,8 +311,10 @@ if (modeToggle) {
         parent.postMessage({ type: 'toggle-dark-mode', enabled: isEnabled }, '*');
         
         if (isEnabled) {
+            document.documentElement.classList.add('dark-mode');
             document.body.classList.add('dark-mode');
         } else {
+            document.documentElement.classList.remove('dark-mode');
             document.body.classList.remove('dark-mode');
         }
 
@@ -299,8 +334,10 @@ window.addEventListener('message', (event) => {
         if (modeToggle) modeToggle.checked = isEnabled;
         
         if (isEnabled) {
+            document.documentElement.classList.add('dark-mode');
             document.body.classList.add('dark-mode');
         } else {
+            document.documentElement.classList.remove('dark-mode');
             document.body.classList.remove('dark-mode');
         }
     }
@@ -310,8 +347,12 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
         const savedMode = parent.localStorage.getItem('darkMode');
         if (savedMode === 'enabled') {
+            document.documentElement.classList.add('dark-mode');
             document.body.classList.add('dark-mode');
             if (modeToggle) modeToggle.checked = true;
+        } else {
+            document.documentElement.classList.remove('dark-mode');
+            document.body.classList.remove('dark-mode');
         }
     } catch (e) {
         /* Parent storage might be blocked by browser security */

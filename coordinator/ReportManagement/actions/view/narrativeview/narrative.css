@@ -34,8 +34,8 @@ body {
 
 /* ===== Admin Comment (FIXED) ===== */
 .admin-comment {
-    width: 950px;
-    max-width: 100%;    /* Change from 1150px to 850px */
+    width: 850px;
+    max-width: 100%;
     box-sizing: border-box;
     margin-top: 50px;   /* below header */
     margin-bottom: 20px;
@@ -421,7 +421,7 @@ footer {
     --sidebar-width: 100px;
     --header-height: 60px;
     --page-gutter: clamp(16px, 3vw, 40px);
-    --report-max-width: 950px;
+    --report-max-width: 850px;
 }
 
 body {
@@ -435,15 +435,15 @@ body {
 
 .report-container,
 .admin-comment {
-    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
-    max-width: var(--report-max-width);
+    width: var(--report-max-width);
+    max-width: calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2));
     box-sizing: border-box;
 }
 
 .college-info { min-width: 0; }
 
 @media (min-width: 1440px) {
-    :root { --report-max-width: 1050px; --page-gutter: 48px; }
+    :root { --page-gutter: 48px; }
 }
 
 @media (max-width: 1200px) {

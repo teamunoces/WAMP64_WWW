@@ -34,8 +34,8 @@ body {
 
 /* ===== Admin Comment (FIXED) ===== */
 .admin-comment {
-    width: 950px;
-    max-width: 100%;    /* Change from 1150px to 850px */
+    width: min(100%, 850px);
+    max-width: 850px;
     box-sizing: border-box;
     margin-top: 50px;   /* below header */
     margin-bottom: 20px;

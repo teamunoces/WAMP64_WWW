@@ -2,7 +2,13 @@
 /* Add 'dark-mode' class to body to enable dark theme */
 /* The admin-comment section is EXCLUDED from dark mode - remains original yellow warning style */
 
+html.dark-mode {
+    min-height: 100%;
+    background-color: #121212;
+}
+
 body.dark-mode {
+    min-height: 100vh;
     background-color: #121212;
     color: #e0e0e0;
 }
@@ -20,7 +26,8 @@ body.dark-mode #headerFrame {
 }
 
 /* ===== Container ===== */
-body.dark-mode .container {
+body.dark-mode .container,
+body.dark-mode .form-container {
     background: #1e1e1e;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
@@ -115,6 +122,20 @@ body.dark-mode .answer-block label {
 /* ===== Signature Section ===== */
 body.dark-mode .signature-label {
     color: #b0b0b0;
+}
+
+/* ===== Approvals Section ===== */
+body.dark-mode .approvals,
+body.dark-mode .approvals .label,
+body.dark-mode .approvals .signature-block .name,
+body.dark-mode .approvals .signature-block .title,
+body.dark-mode .ces-head {
+    color: #ffffff;
+}
+
+body.dark-mode #ces_head,
+body.dark-mode .approvals .signature-block .name {
+    border-bottom-color: #ffffff;
 }
 
 /* ===== Translation Underline ===== */
@@ -220,6 +241,7 @@ iframe body.dark-mode {
 
 /* ===== Print Override for Dark Mode ===== */
 @media print {
+    html.dark-mode,
     body.dark-mode {
         background-color: white;
         color: black;

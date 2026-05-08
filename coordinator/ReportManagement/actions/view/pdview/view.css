@@ -541,8 +541,8 @@ body {
 .wrapper,
 .form-container,
 .admin-comment {
-    width: min(var(--report-max-width), calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2)));
-    max-width: var(--report-max-width);
+    width: var(--report-max-width);
+    max-width: calc(100vw - var(--sidebar-width) - (var(--page-gutter) * 2));
     box-sizing: border-box;
 }
 
@@ -551,11 +551,11 @@ body {
 th, td { overflow-wrap: anywhere; word-break: break-word; }
 
 @media (min-width: 1440px) {
-    :root { --report-max-width: 1200px; --page-gutter: 48px; }
+    :root { --page-gutter: 48px; }
 }
 
 @media (max-width: 1200px) {
-    :root { --report-max-width: 1000px; --page-gutter: 24px; }
+    :root { --page-gutter: 24px; }
     .form-container { padding: 32px; }
     .logo-left, .logo-left2, .logos-right img { height: 70px; }
     .college-info h1 { font-size: 23px; }

@@ -241,14 +241,18 @@ footer {
 /*__________________________________________________BUTTON___________________________________________*/
 .button-container {
     display: flex;
-    justify-content: space-between; /* Pushes buttons to opposite sides */
-    gap: 200px; /* Optional spacing between buttons */
+    justify-content: center;
+    align-items: center;
+    gap: clamp(18px, 7vw, 90px);
+    flex-wrap: wrap;
     margin-top: 30px; /* spacing from top */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Keep individual button styling */
 .rejectbtn, .approvebtn, .needFixes{
-    padding: 12px 60px;
+    padding: 12px 24px;
     border-radius: 50px;
     border: none;
     color: #ffffff;
@@ -259,7 +263,8 @@ footer {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     box-shadow: 0 4px 15px rgba(61, 112, 37, 0.3);
-    width: fit-content;
+    width: clamp(150px, 20%, 180px);
+    min-width: 0;
 }
 
 /* Optional: different colors for reject/approve */
@@ -340,4 +345,11 @@ section{
     .certificate-container { padding: 28px; }
     .header-content { flex-wrap: wrap; justify-content: center; gap: 12px; }
     .college-info { order: -1; flex-basis: 100%; padding: 0; }
+    .button-container { gap: 16px; }
+    .rejectbtn, .approvebtn, .needFixes { width: min(100%, 180px); }
+}
+
+@media (max-width: 560px) {
+    .button-container { flex-direction: column; }
+    .rejectbtn, .approvebtn, .needFixes { width: 100%; }
 }

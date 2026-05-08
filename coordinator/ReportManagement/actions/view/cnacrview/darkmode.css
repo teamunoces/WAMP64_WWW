@@ -157,7 +157,7 @@ body.dark-mode .form-group {
 }
 /* ===== FIX WHITE GAPS ===== */
 
-html,
+html.dark-mode,
 body.dark-mode{
     background:#121212 !important;
 }
@@ -204,7 +204,7 @@ body.dark-mode #sidebarFrame{
 
 /* ===== FIX WHITE GAPS ===== */
 
-html,
+html.dark-mode,
 body.dark-mode{
     background:#1a1a1a !important;
 }

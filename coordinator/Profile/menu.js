@@ -98,20 +98,46 @@ function hideMenu() {
     if (injectedStyle && parent?.document) {
         parent.document.head.removeChild(injectedStyle);
         injectedStyle = null;
-    }
-    
-    // Optional: Remove Font Awesome when menu hides
-    // Uncomment if you want to clean up
-    if (injectedFontAwesome && parent?.document) {
-  parent.document.head.removeChild(injectedFontAwesome);
-        injectedFontAwesome = null;
-    }
+        }
+}
+
+function isMenuOpen() {
+    return menu?.classList.contains('show');
+}
+
+function isClickInsideMenu(target) {
+    return !!(menu && target && menu.contains(target));
+}
+
+function isClickOnToggle(target) {
+    return !!(adminToggle && target && adminToggle.contains(target));
+}
+
+function handleOutsideMenuClick(e) {
+    if (!isMenuOpen()) return;
+    if (isClickInsideMenu(e.target) || isClickOnToggle(e.target)) return;
+
+    hideMenu();
 }
 
 adminToggle?.addEventListener('click', (e) => {
     e.stopPropagation();
     menu.classList.contains('show') ? hideMenu() : showMenu();
 });
+
+menu?.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+document.addEventListener('click', handleOutsideMenuClick);
+
+try {
+    if (parent?.document && parent.document !== document) {
+        parent.document.addEventListener('click', handleOutsideMenuClick);
+    }
+} catch (error) {
+    console.warn('Unable to bind parent outside-click handler', error);
+}
 
 /* ================= HEADER UPDATE BASED ON CURRENT PAGE ================= */
 function updateHeaderBasedOnPage() {

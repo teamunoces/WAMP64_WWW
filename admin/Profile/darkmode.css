@@ -1,5 +1,6 @@
 /* DARK MODE GLOBAL STYLES */
 
+html.dark-mode,
 body.dark-mode {
     background-color: #121212 !important;
     color: #f5f5f5 !important;
@@ -34,53 +35,34 @@ body.dark-mode .header-title {
 }
 
 body.dark-mode .menu-card {
-    background-color: #1e1e1e !important;
-    color: white !important;
-}
-/* ===== KEEP HEADER MENU CARD LIGHT MODE ALWAYS ===== */
-body.dark-mode .profile-menu,
-body.dark-mode .profile-menu *,
-body.dark-mode .dropdown-menu,
-body.dark-mode .dropdown-menu *,
-body.dark-mode .menu-card,
-body.dark-mode .menu-card *,
-body.dark-mode .user-menu,
-body.dark-mode .user-menu * {
-    background-color: unset !important;
-    color: unset !important;
-    border-color: unset !important;
-    box-shadow: unset !important;
-}
-
-/* Force the menu box itself to stay white */
-body.dark-mode .profile-menu,
-body.dark-mode .dropdown-menu,
-body.dark-mode .menu-card,
-body.dark-mode .user-menu {
     background-color: #ffffff !important;
-    color: #111111 !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28) !important;
 }
 
-/* Force menu text to stay readable */
-body.dark-mode .profile-menu a,
-body.dark-mode .profile-menu span,
-body.dark-mode .profile-menu p,
-body.dark-mode .dropdown-menu a,
-body.dark-mode .dropdown-menu span,
-body.dark-mode .dropdown-menu p,
+body.dark-mode .menu-card .menu-text,
 body.dark-mode .menu-card a,
 body.dark-mode .menu-card span,
 body.dark-mode .menu-card p,
-body.dark-mode .user-menu a,
-body.dark-mode .user-menu span,
-body.dark-mode .user-menu p {
-    color: #111111 !important;
+body.dark-mode .menu-card div {
+    color: #111827 !important;
 }
 
-/* Keep icons visible */
-body.dark-mode .profile-menu i,
-body.dark-mode .dropdown-menu i,
-body.dark-mode .menu-card i,
-body.dark-mode .user-menu i {
-    color: inherit !important;
+body.dark-mode .menu-card .menu-item {
+    background-color: transparent !important;
+}
+
+body.dark-mode .menu-card .menu-item:hover {
+    background-color: #f3f4f6 !important;
+}
+
+body.dark-mode .menu-card .icon-circle {
+    background-color: #e6ebff !important;
+    color: #111827 !important;
+}
+
+body.dark-mode .menu-card .icon-logout {
+    background-color: #ffe1e1 !important;
+    color: #111827 !important;
 }

@@ -4,6 +4,10 @@ body.dark-mode {
     color: #e5e7eb;
 }
 
+html.dark-mode {
+    background-color: #121212;
+}
+
 body.dark-mode #headerFrame,
 body.dark-mode #sidebarFrame {
     background: #1f2937;

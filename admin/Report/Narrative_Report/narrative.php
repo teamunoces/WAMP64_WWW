@@ -26,6 +26,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 </style>
     <title>Monthly Accomplishment Report Form</title>
     <link rel="stylesheet" href="narrative.css">
+    <link rel="stylesheet" href="./darkmode.css">
 </head>
 <body>
    <!-- Header -->
@@ -98,5 +99,6 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 
     <script src="./expand.js"></script>
     <script src="./post.js"></script>
+    <script src="./darkmode.js"></script>
 </body>
 </html>

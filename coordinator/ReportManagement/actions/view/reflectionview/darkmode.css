@@ -192,10 +192,14 @@ body.dark-mode .doc-header td.value input::placeholder {
 /* These styles remain exactly as original - no dark mode applied whatsoever */
 body.dark-mode .admin-comment {
     width: 100%; 
-    max-width: 930px;
+    max-width: 850px;
     box-sizing: border-box;
     display: block;
     margin: 80px auto 30px auto;
+}
+
+body.dark-mode .admin-comment-label {
+    color: #ffffff !important;
 }
 
 body.dark-mode #admincomment {

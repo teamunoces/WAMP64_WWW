@@ -241,7 +241,7 @@ body.dark-mode .footer-bottom {
 /* Preserving original styling exactly - remains centered and yellow */
 .admin-comment {
     width: 100%; 
-    max-width: 990px;
+    max-width: 900px;
     box-sizing: border-box;
     display: block;
     margin: 50px auto 40px auto;
@@ -268,7 +268,7 @@ body.dark-mode .footer-bottom {
 /* Ensure dark mode does NOT affect admin comment */
 body.dark-mode .admin-comment {
     width: 100%; 
-    max-width: 990px;
+    max-width: 900px;
     box-sizing: border-box;
     display: block;
     margin: 50px auto 40px auto;

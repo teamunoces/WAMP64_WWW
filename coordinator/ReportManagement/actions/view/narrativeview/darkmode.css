@@ -195,7 +195,7 @@ body.dark-mode .doc-header td.value input::placeholder {
 /* ===== ADMIN COMMENT - EXCLUDED FROM DARK MODE ===== */
 /* Preserving original styling exactly - remains centered and yellow */
 .admin-comment {
-    width: 950px;
+    width: 850px;
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 50px;
@@ -223,7 +223,7 @@ body.dark-mode .doc-header td.value input::placeholder {
 
 /* Ensure dark mode does NOT affect admin comment */
 body.dark-mode .admin-comment {
-    width: 950px;
+    width: 850px;
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 50px;
