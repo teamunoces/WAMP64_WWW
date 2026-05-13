@@ -155,7 +155,7 @@ body.dark-mode .btn-submit {
 }
 
 /* ===== FIX WHITE GAPS AROUND FIXED HEADER/SIDEBAR ===== */
-html,
+html.dark-mode,
 body.dark-mode {
     background: #000000 !important;
 }

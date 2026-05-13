@@ -180,7 +180,7 @@ body.dark-mode .table_form .delete-row-btn {
 /* ===== FIX WHITE GAPS FOR THIS PAGE ===== */
 
 /* Entire page background */
-html,
+html.dark-mode,
 body.dark-mode {
     background: #000000 !important;
 }

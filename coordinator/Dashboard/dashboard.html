@@ -68,21 +68,61 @@
 
                 </div>
                 
+                <!-- 3-Year Development Plan Progress -->
+                <section class="development-plan-section">
+                    <div class="plan-toolbar">
+                        <h2>3-YEAR DEVELOPMENT PLAN PROGRESS</h2>
+                        <div class="plan-year-filter">
+                            <label for="planYearFilter">Year:</label>
+                            <select id="planYearFilter">
+                                <option value="all">All Years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="plan-status-stage">
+                        <div class="plan-status-title">STATUS</div>
+                        <div class="plan-timeline" id="planTimeline">
+                            <div class="plan-empty-state">Loading development plans...</div>
+                        </div>
+                    </div>
+
+                    <div class="plan-program-panel">
+                        <div class="plan-panel-heading">PLAN</div>
+                        <div id="planProgramList" class="plan-program-list">
+                            <div class="plan-empty-state">Select a plan to view its programs.</div>
+                        </div>
+                    </div>
+                </section>
+
                <!-- PENDING -->
                   <section class="card-section">
                       <div class="header-banner green">PENDING APPROVAL</div>
 
                       <div class="table-outer">
                           <div class="filter-row">
-                              <span class="type-badge green">Type:</span>
-                              <select id="pendingTypeFilter" onchange="applyFilter('pending', 'pendingTableBody')">
-                                  <option value="All">All Types</option>
-                                  <option value="Community Needs Assessment Consolidated Report">Community Needs Assessment Consolidated Report</option>
-                                  <option value="3-year Development Plan">3-year Development Plan</option>
-                                  <option value="Program Design">Program Design</option>    
-                                  <option value="Departamental Planned Initiative Report">Departamental Planned Initiative Report</option>
-                                  <option value="Monthly Report">Monthly Accomplishment Report</option>
-                              </select>
+                              <div class="filter-group">
+                                  <span class="type-badge green">Type:</span>
+                                  <select id="pendingTypeFilter" onchange="applyFilter('pending', 'pendingTableBody')">
+                                      <option value="All">All Types</option>
+                                      <option value="Community Needs Assessment Consolidated Report">Community Needs Assessment Consolidated Report</option>
+                                      <option value="3-year Development Plan">3-year Development Plan</option>
+                                      <option value="Program Design">Program Design</option>    
+                                      <option value="Departmental Planned Initiative Report">Departmental Planned Initiative Report</option>
+                                      <option value="Monthly Accomplishment Report">Monthly Accomplishment Report</option>
+                                  </select>
+                              </div>
+                              <div class="filter-group">
+                                  <span class="type-badge green">From:</span>
+                                  <input type="date" id="pendingDateFrom" onchange="applyFilter('pending', 'pendingTableBody')">
+                              </div>
+                              <div class="filter-group">
+                                  <span class="type-badge green">To:</span>
+                                  <input type="date" id="pendingDateTo" onchange="applyFilter('pending', 'pendingTableBody')">
+                              </div>
+                              <button type="button" id="pendingShowAllBtn" class="show-all-btn" onclick="showAllReports('pending', 'pendingTableBody')">
+                                  Show All
+                              </button>
                           </div>
 
                           <table class="report-table">
@@ -105,10 +145,12 @@
                           </table>
                       </div>
                   </section>
+                  
             </main>
         </div>
     </div>
     <script src="/SYSTEM_VERSION_!/coordinator/Dashboard/JS/getPending.js"></script>
+    <script src="/SYSTEM_VERSION_!/coordinator/Dashboard/JS/getplan.js?v=20260513g"></script>
     <script src="/SYSTEM_VERSION_!/coordinator/Dashboard/barangay-table.js"></script>
     <script src="/SYSTEM_VERSION_!/coordinator/Dashboard/darkmode.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

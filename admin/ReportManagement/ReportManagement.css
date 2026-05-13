@@ -106,8 +106,17 @@ body {
     margin-bottom: 20px; 
     display: flex; 
     align-items: center; 
-    gap: 15px;
-    flex-wrap: wrap;
+    gap: 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
 }
 
 .label { 
@@ -125,6 +134,7 @@ select {
     padding: 8px 15px; 
     border-radius: 6px; 
     min-width: 200px;
+    max-width: 300px;
     background: var(--bg-card); 
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -139,6 +149,49 @@ select:focus {
 
 .select-red:focus {
     border-color: var(--red-primary);
+}
+
+.filter-row input[type="date"] {
+    min-height: 36px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    min-width: 145px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    outline: none;
+}
+
+.show-all-btn {
+    min-height: 36px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.show-all-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+.show-all-btn:active {
+    transform: scale(0.98);
+}
+
+.green-btn {
+    background: var(--green-primary);
+}
+
+.red-btn {
+    background: var(--red-primary);
 }
 
 .table-header {
@@ -287,12 +340,20 @@ tbody tr td[colspan="5"] {
     }
     
     .filter-row {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
     }
-    
-    select {
-        width: 100%;
+
+    .filter-group {
+        width: auto;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    select,
+    .filter-row input[type="date"],
+    .show-all-btn {
+        width: auto;
     }
     
     .actions {

@@ -2,6 +2,11 @@ let reportData = {
     pending: {}
 };
 
+const DEFAULT_REPORT_LIMIT = 5;
+const showAllState = {
+    pending: false
+};
+
 const isDebug = new URLSearchParams(window.location.search).has("debug");
 const debugLog = (...args) => {
     if (isDebug) {
@@ -85,11 +90,94 @@ async function loadReports(status, tableBodyId) {
             debugLog("3. The table columns match the SELECT query");
         }
         
-        renderTable(combined, tableBodyId, status);
+        renderDashboardReports(status, tableBodyId);
         
     } catch (error) {
         debugWarn("Connection Error:", error);
         alert("Error loading reports: " + error.message);
+    }
+}
+
+function getCombinedReports(status) {
+    const dataObj = reportData[status] || {};
+    let combined = [];
+
+    Object.entries(dataObj).forEach(([tableName, tableData]) => {
+        if (tableName !== '_debug' && tableName !== '_message' && Array.isArray(tableData)) {
+            combined = combined.concat(tableData);
+        }
+    });
+
+    return combined;
+}
+
+function getReportTime(report) {
+    if (!report || !report.date) {
+        return 0;
+    }
+
+    const dateMatch = String(report.date).match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}:\d{2}))?/);
+    const normalizedDate = dateMatch
+        ? `${dateMatch[1]}T${dateMatch[2] || "00:00:00"}`
+        : String(report.date).replace(' ', 'T');
+    const parsedDate = new Date(normalizedDate);
+
+    return Number.isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
+}
+
+function getDateOnly(reportDate) {
+    if (!reportDate) {
+        return "";
+    }
+
+    return String(reportDate).split(/[ T]/)[0];
+}
+
+function getFilterValues() {
+    return {
+        type: (document.getElementById("pendingTypeFilter")?.value || "All").toLowerCase(),
+        dateFrom: document.getElementById("pendingDateFrom")?.value || "",
+        dateTo: document.getElementById("pendingDateTo")?.value || ""
+    };
+}
+
+function filterReports(reports) {
+    const { type, dateFrom, dateTo } = getFilterValues();
+
+    return reports.filter(report => {
+        const reportType = (report.type || "").toLowerCase();
+        const reportDate = getDateOnly(report.date);
+        const matchesType = type === "all" || reportType === type;
+        const matchesFrom = !dateFrom || (reportDate && reportDate >= dateFrom);
+        const matchesTo = !dateTo || (reportDate && reportDate <= dateTo);
+
+        return matchesType && matchesFrom && matchesTo;
+    });
+}
+
+function hasActiveFilter() {
+    const { type, dateFrom, dateTo } = getFilterValues();
+    return type !== "all" || dateFrom !== "" || dateTo !== "";
+}
+
+function renderDashboardReports(status, tableBodyId) {
+    const reports = getCombinedReports(status)
+        .sort((first, second) => getReportTime(second) - getReportTime(first));
+    const filteredReports = filterReports(reports);
+    const shouldLimit = !showAllState[status] && !hasActiveFilter();
+    const visibleReports = shouldLimit
+        ? filteredReports.slice(0, DEFAULT_REPORT_LIMIT)
+        : filteredReports;
+
+    renderTable(visibleReports, tableBodyId, status);
+    updateShowAllButton(status);
+}
+
+function updateShowAllButton(status) {
+    const showAllButton = document.getElementById(`${status}ShowAllBtn`);
+
+    if (showAllButton) {
+        showAllButton.textContent = showAllState[status] ? "Show Latest" : "Show All";
     }
 }
 
@@ -103,7 +191,7 @@ function renderTable(data, tableBodyId, status) {
     if (!Array.isArray(data) || data.length === 0) {
         tableBody.innerHTML =
             `<tr>
-                <td colspan="7" class="no-reports">No pending reports found for user ID: ${data._debug?.user_id_from_session || 'unknown'}</td>
+                <td colspan="6" class="no-reports">No pending reports found.</td>
             </tr>`;
         return;
     }
@@ -127,31 +215,30 @@ function renderTable(data, tableBodyId, status) {
 }
 
 function applyFilter(status, tableBodyId) {
-    const filterId = "pendingTypeFilter";
-    
-    const selected = document
-        .getElementById(filterId)
-        .value
-        .toLowerCase();
+    showAllState[status] = false;
+    renderDashboardReports(status, tableBodyId);
+}
 
-    let combined = [];
+function showAllReports(status, tableBodyId) {
+    const typeFilter = document.getElementById("pendingTypeFilter");
+    const dateFromFilter = document.getElementById("pendingDateFrom");
+    const dateToFilter = document.getElementById("pendingDateTo");
+    const shouldShowAll = !showAllState[status];
 
-    const dataObj = reportData[status] || {};
-
-    for (let table in dataObj) {
-        if (table !== '_debug' && table !== '_message' && Array.isArray(dataObj[table])) {
-            combined = combined.concat(dataObj[table]);
-        }
+    if (typeFilter) {
+        typeFilter.value = "All";
     }
 
-    const filtered =
-        selected === "all"
-            ? combined
-            : combined.filter(r =>
-                (r.type || "").toLowerCase() === selected
-            );
+    if (dateFromFilter) {
+        dateFromFilter.value = "";
+    }
 
-    renderTable(filtered, tableBodyId, status);
+    if (dateToFilter) {
+        dateToFilter.value = "";
+    }
+
+    showAllState[status] = shouldShowAll;
+    renderDashboardReports(status, tableBodyId);
 }
 
 function viewReport(reportId, reportType, status) {

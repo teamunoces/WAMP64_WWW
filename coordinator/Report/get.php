@@ -42,6 +42,11 @@ $coordinatorTables = [
     "pd_main",
     "mar_header",
     "dpir",
+    "program_monitoring_form",
+    "evaluation_reports",
+    "cert_appearance",
+    "reflection_paper",
+    "narrative_report",
 ];
 
 while ($tableRow = $tablesResult->fetch_array()) {

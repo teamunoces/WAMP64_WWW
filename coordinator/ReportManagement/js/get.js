@@ -8,11 +8,42 @@ let currentUploadReportId = null;
 let currentUploadTable = null;
 let currentExistingFiles = []; // Track existing files
 const MAX_FILES = 4; // Maximum number of files allowed
+const DEFAULT_REPORT_LIMIT = 5;
+const showAllState = {
+    approved: false,
+    needfix: false,
+    rejected: false
+};
+
+const sectionConfig = {
+    approved: {
+        tableBodyId: "approvedTableBody",
+        sectionSelector: ".section-green",
+        reports: () => approvedReports,
+        noDataMessage: "No approved reports found.",
+        includeUpload: true
+    },
+    needfix: {
+        tableBodyId: "needfixTableBody",
+        sectionSelector: ".section-Orange",
+        reports: () => needFixReports,
+        noDataMessage: "No reports needing fix found.",
+        includeUpload: false
+    },
+    rejected: {
+        tableBodyId: "rejectedTableBody",
+        sectionSelector: ".section-red",
+        reports: () => rejectedReports,
+        noDataMessage: "No rejected reports found.",
+        includeUpload: false
+    }
+};
 
 async function loadReports() {
     try {
         
-        const response = await fetch("/SYSTEM_VERSION_!/coordinator/ReportManagement/php/get.php");
+        const reportEndpoint = window.reportDataEndpoint || "/SYSTEM_VERSION_!/coordinator/ReportManagement/php/get.php";
+        const response = await fetch(reportEndpoint);
         const data = await response.json();
 
         if (!Array.isArray(data) || data.length === 0) {
@@ -84,144 +115,138 @@ function displayNoReportsMessage() {
     if (rejectedTable) rejectedTable.innerHTML = noDataRow;
 }
 
-// Render Approved table with its own filter
-function renderApprovedTable() {
-    const tableBody = document.getElementById("approvedTableBody");
-    if (!tableBody) return;
-    
-    const filterSelect = document.querySelector('.section-green .filter-row select');
-    const selectedType = filterSelect ? filterSelect.value : 'All type';
-    
-    tableBody.innerHTML = "";
-    
-    // Filter reports based on selected type
-    let filteredReports = approvedReports;
-    if (selectedType !== 'All type') {
-        filteredReports = approvedReports.filter(report => report.displayType === selectedType);
+function getReportTime(report) {
+    if (!report || !report.created_at) {
+        return 0;
     }
-    
-    if (filteredReports.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No approved reports found.</td></tr>`;
-        return;
-    }
-    
-    // Build HTML for filtered reports
-    let html = "";
-    filteredReports.forEach(report => {
-        const formattedDate = report.created_at?.split(" ")[0] || "N/A";
-        
-        html += `
-            <tr data-report-id="${report.id}" data-table="${report.source_table}">
-                <td>${report.displayType}</td>
-                <td>${report.title || 'N/A'}</td>
-                <td>${report.department || 'N/A'}</td>
-                <td>${formattedDate}</td>
-               <td>
-                    <div class="actions">
-                        <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                        <i class="fas fa-cloud-upload-alt upload-icon" data-id="${report.id}" data-table="${report.source_table}" title="Upload/Manage PDFs"></i>
-                        <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                    </div>
-                </td>
-            </tr>`;
-    });
-    
-    tableBody.innerHTML = html;
-    
-    // Attach events only to this section's icons
-    attachSectionEvents(tableBody);
+
+    const dateMatch = String(report.created_at).match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}:\d{2}))?/);
+    const normalizedDate = dateMatch
+        ? `${dateMatch[1]}T${dateMatch[2] || "00:00:00"}`
+        : String(report.created_at).replace(" ", "T");
+    const parsedDate = new Date(normalizedDate);
+
+    return Number.isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
 }
 
-// Render Need Fix table with its own filter
-function renderNeedFixTable() {
-    const tableBody = document.getElementById("needfixTableBody");
-    if (!tableBody) return;
-    
-    const filterSelect = document.querySelector('.section-Orange .filter-row select');
-    const selectedType = filterSelect ? filterSelect.value : 'All type';
-    
-    tableBody.innerHTML = "";
-    
-    // Filter reports based on selected type
-    let filteredReports = needFixReports;
-    if (selectedType !== 'All type') {
-        filteredReports = needFixReports.filter(report => report.displayType === selectedType);
+function getReportDateOnly(report) {
+    if (!report || !report.created_at) {
+        return "";
     }
-    
-    if (filteredReports.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No reports needing fix found.</td></tr>`;
-        return;
-    }
-    
-    // Build HTML for filtered reports
-    let html = "";
-    filteredReports.forEach(report => {
-        const formattedDate = report.created_at?.split(" ")[0] || "N/A";
-        
-        html += `
-            <tr data-report-id="${report.id}" data-table="${report.source_table}">
-                <td>${report.displayType}</td>
-                <td>${report.title || 'N/A'}</td>
-                <td>${report.department || 'N/A'}</td>
-                <td>${formattedDate}</td>
-                <td class="actions">
-                    <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                    <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
-                </td>
-            </tr>`;
-    });
-    
-    tableBody.innerHTML = html;
-    
-    // Attach events only to this section's icons
-    attachSectionEvents(tableBody);
+
+    return String(report.created_at).split(/[ T]/)[0];
 }
 
-// Render Rejected table with its own filter
-function renderRejectedTable() {
-    const tableBody = document.getElementById("rejectedTableBody");
-    if (!tableBody) return;
-    
-    const filterSelect = document.querySelector('.section-red .filter-row select');
-    const selectedType = filterSelect ? filterSelect.value : 'All type';
-    
-    tableBody.innerHTML = "";
-    
-    // Filter reports based on selected type
-    let filteredReports = rejectedReports;
-    if (selectedType !== 'All type') {
-        filteredReports = rejectedReports.filter(report => report.displayType === selectedType);
+function getSectionFilterValues(section) {
+    const config = sectionConfig[section];
+    const sectionElement = config ? document.querySelector(config.sectionSelector) : null;
+    const typeFilter = sectionElement?.querySelector(".filter-row select");
+    const dateFromFilter = document.getElementById(`${section}DateFrom`);
+    const dateToFilter = document.getElementById(`${section}DateTo`);
+
+    return {
+        type: typeFilter ? typeFilter.value : "All type",
+        dateFrom: dateFromFilter ? dateFromFilter.value : "",
+        dateTo: dateToFilter ? dateToFilter.value : ""
+    };
+}
+
+function sectionHasActiveFilter(section) {
+    const { type, dateFrom, dateTo } = getSectionFilterValues(section);
+    return type !== "All type" || dateFrom !== "" || dateTo !== "";
+}
+
+function getFilteredSectionReports(section) {
+    const config = sectionConfig[section];
+    if (!config) {
+        return [];
     }
-    
-    if (filteredReports.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No rejected reports found.</td></tr>`;
+
+    const { type, dateFrom, dateTo } = getSectionFilterValues(section);
+
+    return config.reports()
+        .slice()
+        .sort((first, second) => getReportTime(second) - getReportTime(first))
+        .filter(report => {
+            const reportDate = getReportDateOnly(report);
+            const matchesType = type === "All type" || report.displayType === type;
+            const matchesFrom = !dateFrom || (reportDate && reportDate >= dateFrom);
+            const matchesTo = !dateTo || (reportDate && reportDate <= dateTo);
+
+            return matchesType && matchesFrom && matchesTo;
+        });
+}
+
+function renderReportTable(section) {
+    const config = sectionConfig[section];
+    if (!config) {
         return;
     }
-    
-    // Build HTML for filtered reports
-    let html = "";
-    filteredReports.forEach(report => {
-        const formattedDate = report.created_at?.split(" ")[0] || "N/A";
-        
-        html += `
+
+    const tableBody = document.getElementById(config.tableBodyId);
+    if (!tableBody) {
+        return;
+    }
+
+    const filteredReports = getFilteredSectionReports(section);
+    const shouldLimit = !showAllState[section] && !sectionHasActiveFilter(section);
+    const visibleReports = shouldLimit
+        ? filteredReports.slice(0, DEFAULT_REPORT_LIMIT)
+        : filteredReports;
+
+    if (visibleReports.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">${config.noDataMessage}</td></tr>`;
+        updateShowAllButton(section);
+        return;
+    }
+
+    tableBody.innerHTML = visibleReports.map(report => {
+        const formattedDate = getReportDateOnly(report) || "N/A";
+        const uploadIcon = config.includeUpload
+            ? `<i class="fas fa-cloud-upload-alt upload-icon" data-id="${report.id}" data-table="${report.source_table}" title="Upload/Manage PDFs"></i>`
+            : "";
+
+        return `
             <tr data-report-id="${report.id}" data-table="${report.source_table}">
                 <td>${report.displayType}</td>
-                <td>${report.title || 'N/A'}</td>
-                <td>${report.department || 'N/A'}</td>
+                <td>${report.title || "N/A"}</td>
+                <td>${report.department || "N/A"}</td>
                 <td>${formattedDate}</td>
                 <td>
                     <div class="actions">
                         <i class="far fa-eye view-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
+                        ${uploadIcon}
                         <i class="fas fa-archive archive-icon" data-id="${report.id}" data-table="${report.source_table}"></i>
                     </div>
                 </td>
             </tr>`;
-    });
-    
-    tableBody.innerHTML = html;
-    
-    // Attach events only to this section's icons
+    }).join("");
+
     attachSectionEvents(tableBody);
+    updateShowAllButton(section);
+}
+
+function updateShowAllButton(section) {
+    const showAllButton = document.getElementById(`${section}ShowAllBtn`);
+
+    if (showAllButton) {
+        showAllButton.textContent = showAllState[section] ? "Show Latest" : "Show All";
+    }
+}
+
+// Render Approved table with its own filter
+function renderApprovedTable() {
+    renderReportTable("approved");
+}
+
+// Render Need Fix table with its own filter
+function renderNeedFixTable() {
+    renderReportTable("needfix");
+}
+
+// Render Rejected table with its own filter
+function renderRejectedTable() {
+    renderReportTable("rejected");
 }
 
 // Attach events to icons within a specific section
@@ -1123,52 +1148,79 @@ function prepareReupload(fileId, fileName) {
 
 // Initialize filter event listeners for each section independently
 function initFilterListeners() {
-    // Approved section filter
-    const approvedFilter = document.querySelector('.section-green .filter-row select');
-    if (approvedFilter) {
-        approvedFilter.addEventListener('change', function() {
-            renderApprovedTable();
+    Object.keys(sectionConfig).forEach(section => {
+        const config = sectionConfig[section];
+        const sectionElement = document.querySelector(config.sectionSelector);
+        const controls = [
+            sectionElement?.querySelector(".filter-row select"),
+            document.getElementById(`${section}DateFrom`),
+            document.getElementById(`${section}DateTo`)
+        ];
+
+        controls.forEach(control => {
+            if (!control || control.dataset.filterBound === "true") {
+                return;
+            }
+
+            control.dataset.filterBound = "true";
+            control.addEventListener("change", function() {
+                showAllState[section] = false;
+                renderReportTable(section);
+            });
         });
+    });
+}
+
+function showAllSectionReports(section) {
+    const config = sectionConfig[section];
+    const sectionElement = config ? document.querySelector(config.sectionSelector) : null;
+    const typeFilter = sectionElement?.querySelector(".filter-row select");
+    const dateFromFilter = document.getElementById(`${section}DateFrom`);
+    const dateToFilter = document.getElementById(`${section}DateTo`);
+    const shouldShowAll = !showAllState[section];
+
+    if (typeFilter) {
+        typeFilter.value = "All type";
     }
-    
-    // Need Fix section filter
-    const needFixFilter = document.querySelector('.section-Orange .filter-row select');
-    if (needFixFilter) {
-        needFixFilter.addEventListener('change', function() {
-            renderNeedFixTable();
-        });
+
+    if (dateFromFilter) {
+        dateFromFilter.value = "";
     }
-    
-    // Rejected section filter
-    const rejectedFilter = document.querySelector('.section-red .filter-row select');
-    if (rejectedFilter) {
-        rejectedFilter.addEventListener('change', function() {
-            renderRejectedTable();
-        });
+
+    if (dateToFilter) {
+        dateToFilter.value = "";
     }
+
+    showAllState[section] = shouldShowAll;
+    renderReportTable(section);
 }
 
 // Reset filter for a specific section
 function resetSectionFilter(section) {
-    if (section === 'approved') {
-        const filter = document.querySelector('.section-green .filter-row select');
-        if (filter) filter.value = 'All type';
-        renderApprovedTable();
-    } else if (section === 'needfix') {
-        const filter = document.querySelector('.section-Orange .filter-row select');
-        if (filter) filter.value = 'All type';
-        renderNeedFixTable();
-    } else if (section === 'rejected') {
-        const filter = document.querySelector('.section-red .filter-row select');
-        if (filter) filter.value = 'All type';
-        renderRejectedTable();
-    }
+    const config = sectionConfig[section];
+    const sectionElement = config ? document.querySelector(config.sectionSelector) : null;
+    const filter = sectionElement?.querySelector(".filter-row select");
+    const dateFromFilter = document.getElementById(`${section}DateFrom`);
+    const dateToFilter = document.getElementById(`${section}DateTo`);
+
+    if (filter) filter.value = 'All type';
+    if (dateFromFilter) dateFromFilter.value = "";
+    if (dateToFilter) dateToFilter.value = "";
+
+    showAllState[section] = false;
+    renderReportTable(section);
 }
 
 // Reset all filters
 function resetAllFilters() {
     document.querySelectorAll('.filter-row select').forEach(select => {
         if (select) select.value = 'All type';
+    });
+    document.querySelectorAll('.filter-row input[type="date"]').forEach(input => {
+        if (input) input.value = "";
+    });
+    Object.keys(showAllState).forEach(section => {
+        showAllState[section] = false;
     });
     renderApprovedTable();
     renderNeedFixTable();

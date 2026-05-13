@@ -5,6 +5,22 @@ let currentExistingFiles = [];
 let pendingReuploadFileId = null;
 let pendingReuploadFileName = null;
 const MAX_FILES = 4;
+const DEFAULT_REPORT_LIMIT = 5;
+let adminReports = [];
+let showAllAdminState = false;
+
+const typeMap = {
+    "cnacr": "CNACR",
+    "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
+    "3ydp": "3 Year Development Plan",
+    "pd_main": "Program Design",
+    "mar_header": "Monthly Accomplishment Report",
+    "program_monitoring_form": "Program Monitoring Form",
+    "evaluation_reports": "Evaluation Sheet for Extension Services",
+    "cert_appearance": "Certificate of Appearance",
+    "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+    "narrative_report": "Monthly Accomplishment Report- Narrative Report"
+};
 
 // Debug function to check if elements exist
 function debugElement(id) {
@@ -14,7 +30,7 @@ function debugElement(id) {
 
 async function loadReports() {
     try {
-        const response = await fetch("./php/get.php");
+        const response = await fetch("/SYSTEM_VERSION_!/admin/ReportManagement/php/get.php");
         const data = await response.json();
 
         const adminTableBody = document.getElementById("adminTableBody");
@@ -28,53 +44,129 @@ async function loadReports() {
             return;
         }
 
-        data.forEach((report, index) => {
-            let formattedDate = report.created_at 
-                ? new Date(report.created_at).toLocaleDateString() 
-                : "N/A";
+        adminReports = data
+            .filter(report => (report.role || "unknown").toLowerCase() === "admin")
+            .map(report => ({
+                ...report,
+                displayType: typeMap[report.source_table] || report.source_table
+            }));
 
-            const typeMap = {
-                "cnacr": "CNACR",
-                "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
-                "3ydp": "3 Year Development Plan",
-                "pd_main": "Program Design",
-                "mar_header": "Monthly Accomplishment Report"
-            };
-
-            const typeName = typeMap[report.source_table] || report.source_table;
-
-            // Role and status handling
-            const role = report.role ? report.role.toLowerCase() : 'unknown';
-            const status = report.status ? report.status.toLowerCase() : '';
-
-            if (role === 'admin') {
-                // Admin table with upload icon
-                const rowHTML = `
-                <tr data-index="${index}" data-id="${report.id}" data-source-table="${report.source_table}">
-                    <td>${typeName}</td>
-                    <td>${report.title || 'N/A'}</td>
-                    <td>${report.department || 'N/A'}</td>
-                    <td>${formattedDate}</td>
-                    <td class="actions">
-                        <i class="far fa-eye view-icon" data-id="${report.id}" data-source-table="${report.source_table}" style="cursor: pointer; margin-right: 10px;"></i>
-                        <i class="fas fa-upload upload-icon" data-id="${report.id}" data-table="${report.source_table}" style="cursor: pointer; margin-right: 10px; color: #2e7d32;"></i>
-                        <i class="fas fa-archive archive-icon" style="cursor: pointer; color: #f44336;"></i>
-                    </td>
-                </tr>
-                `;
-                adminTableBody.innerHTML += rowHTML;
-            }
-        });
-
-        if (adminTableBody.innerHTML === "") {
-            adminTableBody.innerHTML = `<tr><td colspan="5">No admin reports found.</td></tr>`;
-        }
-
-        attachActionEvents(data);
+        renderAdminTable();
 
     } catch (error) {
         showNotification("Error loading reports. Please refresh the page.", "error");
     }
+}
+
+function getReportTime(report) {
+    if (!report || !report.created_at) {
+        return 0;
+    }
+
+    const dateMatch = String(report.created_at).match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}:\d{2}))?/);
+    const normalizedDate = dateMatch
+        ? `${dateMatch[1]}T${dateMatch[2] || "00:00:00"}`
+        : String(report.created_at).replace(" ", "T");
+    const parsedDate = new Date(normalizedDate);
+
+    return Number.isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
+}
+
+function getReportDateOnly(report) {
+    if (!report || !report.created_at) {
+        return "";
+    }
+
+    return String(report.created_at).split(/[ T]/)[0];
+}
+
+function getAdminFilterValues() {
+    return {
+        type: document.getElementById("adminFilterSelect")?.value || "All type",
+        dateFrom: document.getElementById("adminDateFrom")?.value || "",
+        dateTo: document.getElementById("adminDateTo")?.value || ""
+    };
+}
+
+function hasActiveAdminFilter() {
+    const { type, dateFrom, dateTo } = getAdminFilterValues();
+    return type !== "All type" || dateFrom !== "" || dateTo !== "";
+}
+
+function getFilteredAdminReports() {
+    const { type, dateFrom, dateTo } = getAdminFilterValues();
+
+    return adminReports
+        .slice()
+        .sort((first, second) => getReportTime(second) - getReportTime(first))
+        .filter(report => {
+            const reportDate = getReportDateOnly(report);
+            const matchesType = type === "All type" || report.displayType === type;
+            const matchesFrom = !dateFrom || (reportDate && reportDate >= dateFrom);
+            const matchesTo = !dateTo || (reportDate && reportDate <= dateTo);
+
+            return matchesType && matchesFrom && matchesTo;
+        });
+}
+
+function renderAdminTable() {
+    const adminTableBody = document.getElementById("adminTableBody");
+    if (!adminTableBody) {
+        return;
+    }
+
+    const filteredReports = getFilteredAdminReports();
+    const visibleReports = !showAllAdminState && !hasActiveAdminFilter()
+        ? filteredReports.slice(0, DEFAULT_REPORT_LIMIT)
+        : filteredReports;
+
+    if (visibleReports.length === 0) {
+        adminTableBody.innerHTML = `<tr><td colspan="5">No admin reports found.</td></tr>`;
+        updateShowAllButton();
+        return;
+    }
+
+    adminTableBody.innerHTML = visibleReports.map((report, index) => {
+        const formattedDate = getReportDateOnly(report) || "N/A";
+
+        return `
+            <tr data-index="${index}" data-id="${report.id}" data-source-table="${report.source_table}">
+                <td data-label="Type">${report.displayType}</td>
+                <td data-label="Title">${report.title || "N/A"}</td>
+                <td data-label="Department">${report.department || "N/A"}</td>
+                <td data-label="Date Archive">${formattedDate}</td>
+                <td data-label="Action" class="actions">
+                    <i class="far fa-eye view-icon" data-id="${report.id}" data-source-table="${report.source_table}" style="cursor: pointer; margin-right: 10px;"></i>
+                    <i class="fas fa-upload upload-icon" data-id="${report.id}" data-table="${report.source_table}" style="cursor: pointer; margin-right: 10px; color: #2e7d32;"></i>
+                    <i class="fas fa-archive archive-icon" style="cursor: pointer; color: #f44336;"></i>
+                </td>
+            </tr>`;
+    }).join("");
+
+    updateShowAllButton();
+    attachActionEvents(visibleReports);
+}
+
+function updateShowAllButton() {
+    const showAllButton = document.getElementById("adminShowAllBtn");
+
+    if (showAllButton) {
+        showAllButton.textContent = showAllAdminState ? "Show Latest" : "Show All";
+    }
+}
+
+function showAllAdminReports() {
+    const shouldShowAll = !showAllAdminState;
+    const typeFilter = document.getElementById("adminFilterSelect");
+    const dateFromFilter = document.getElementById("adminDateFrom");
+    const dateToFilter = document.getElementById("adminDateTo");
+
+    if (typeFilter) typeFilter.value = "All type";
+    if (dateFromFilter) dateFromFilter.value = "";
+    if (dateToFilter) dateToFilter.value = "";
+
+    showAllAdminState = shouldShowAll;
+    renderAdminTable();
 }
 
 function attachActionEvents(data) {
@@ -112,7 +204,7 @@ function attachActionEvents(data) {
             if (!confirm("Are you sure you want to archive this report?")) return;
 
             try {
-                const response = await fetch("./php/archive.php", {
+                const response = await fetch("/SYSTEM_VERSION_!/admin/ReportManagement/php/archive.php", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
@@ -496,7 +588,7 @@ async function uploadFiles() {
                 fileItems[i].querySelector(".file-status").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
             }
             
-            const response = await fetch("./php/upload.php", {
+            const response = await fetch("/SYSTEM_VERSION_!/admin/ReportManagement/php/upload.php", {
                 method: "POST",
                 body: formData
             });
@@ -603,7 +695,7 @@ async function reuploadFile(fileId, oldFileName) {
     formData.append("replace", "true");
     
     try {
-        const response = await fetch("./php/upload.php", {
+        const response = await fetch("/SYSTEM_VERSION_!/admin/ReportManagement/php/upload.php", {
             method: "POST",
             body: formData
         });
@@ -695,7 +787,7 @@ async function loadReportFiles(reportId, reportTable) {
     fileListDiv.innerHTML = "<p class='loading'><i class='fas fa-spinner fa-spin'></i> Loading files...</p>";
     
     try {
-        const url = `./php/get_report_files.php?report_id=${reportId}`;
+        const url = `/SYSTEM_VERSION_!/admin/ReportManagement/php/get_report_files.php?report_id=${reportId}`;
         
         const response = await fetch(url);
         
@@ -1104,6 +1196,16 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Load reports
     loadReports();
+
+    ["adminFilterSelect", "adminDateFrom", "adminDateTo"].forEach(id => {
+        const filter = document.getElementById(id);
+        if (filter) {
+            filter.addEventListener("change", function() {
+                showAllAdminState = false;
+                renderAdminTable();
+            });
+        }
+    });
     
     // Add file input change event listener
     const fileInput = document.getElementById("fileInput");
@@ -1122,3 +1224,4 @@ window.reuploadFile = reuploadFile;
 window.removeSelectedFile = removeSelectedFile;
 window.showNotification = showNotification;
 window.clearReuploadMode = clearReuploadMode;
+window.showAllAdminReports = showAllAdminReports;

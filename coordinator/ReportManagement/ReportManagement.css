@@ -149,7 +149,16 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
 }
 
 .label {
@@ -176,6 +185,7 @@ select {
     padding: 8px 20px;
     border-radius: 40px;
     min-width: 150px;
+    max-width: 300px;
     background: var(--bg-card);
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -188,6 +198,54 @@ select {
 
 select:hover {
     border-color: var(--orange-primary);
+}
+
+.filter-row input[type="date"] {
+    min-height: 35px;
+    padding: 8px 14px;
+    border-radius: 40px;
+    min-width: 145px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    font-weight: 500;
+    outline: none;
+}
+
+.filter-row input[type="date"]:hover {
+    border-color: var(--orange-primary);
+}
+
+.show-all-btn {
+    min-height: 35px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 40px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.show-all-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+}
+
+.show-all-btn:active {
+    transform: scale(0.98);
+}
+
+.green-btn {
+    background: var(--green-primary);
+}
+
+.red-btn {
+    background: var(--red-primary);
 }
 
 /* =========================================================
@@ -976,6 +1034,19 @@ td:last-child {
 
     .filter-row {
         gap: 12px;
+        align-items: center;
+    }
+
+    .filter-group {
+        width: auto;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .filter-row select,
+    .filter-row input[type="date"],
+    .show-all-btn {
+        width: auto;
     }
 }
 
