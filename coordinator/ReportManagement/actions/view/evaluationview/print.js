@@ -154,98 +154,85 @@ async function printReport() {
         outline: none !important;
         box-shadow: none !important;
     }
-
     .header-content {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 5px !important;
-        flex-wrap: nowrap !important;
-        margin: 0 0 8px 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        width: 100%;
+        gap: 12px;
     }
 
-    .logo-left,
+    .logo-left {
+        height: 90px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
+
     .logo-left2 {
-        height: 78px !important;
-        width: auto !important;
-        max-width: 14% !important;
-        flex: 0 0 auto !important;
-        object-fit: contain !important;
+        height: 80px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
     }
 
     .logos-right {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        gap: 4px !important;
-        flex: 0 0 23% !important;
-        width: 23% !important;
-        max-width: 23% !important;
-        min-width: 0 !important;
-        overflow: hidden !important;
-        margin-right: 2mm !important;
-        transform: translateX(-3mm) !important;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        flex: 0 0 auto;
     }
 
     .logos-right img {
-        height: 82px !important;
-        width: auto !important;
-        max-width: 48% !important;
-        object-fit: contain !important;
-        display: block !important;
-        flex: 0 1 auto !important;
+        height: 80px;
+        width: auto;
+        display: block;
     }
 
     .college-info {
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
-        max-width: 49% !important;
-        text-align: center !important;
-        padding: 0 3px !important;
-        overflow: hidden !important;
-        overflow-wrap: break-word !important;
-        word-break: normal !important;
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 18px;
     }
 
     .college-info h1 {
         font-family: "Times New Roman", Times, serif !important;
         color: #4f81bd !important;
-        font-size: 21px !important;
-        margin: 0 !important;
-        font-weight: normal !important;
-        line-height: 1.1 !important;
-        text-decoration: none !important;
+        font-size: 24px;
+        margin: 0;
+        font-weight: normal;
+        line-height: 1.2;
     }
 
     .college-info p {
-        font-size: 9.5px !important;
-        margin: 1px 0 !important;
-        line-height: 1.2 !important;
+        font-size: 11px;
+        margin: 1px 0;
+        color: #333333 !important;
+        line-height: 1.3;
     }
 
     .college-info a {
-        font-size: 9.5px !important;
-        word-break: break-word !important;
+        font-size: 12px;
+        color: #0000ee !important;
+        text-decoration: underline;
     }
 
     .office-title {
-        text-align: center !important;
-        font-size: 16px !important;
+        text-align: center;
+        font-size: 16px;
         color: #595959 !important;
-        font-weight: bold !important;
-        margin: 4px 0 !important;
-        text-transform: uppercase !important;
+        font-weight: bold;
+        margin: 12px 0 4px 0;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
     }
 
     .double-line {
         border-top: 4px double #4f81bd !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 0;
     }
-
     header h1,
     #report_title {
         display: block !important;

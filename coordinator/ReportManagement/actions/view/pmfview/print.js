@@ -212,89 +212,85 @@ async function printReport() {
             max-width: 100% !important;
             overflow: hidden !important;
         }
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        width: 100%;
+        gap: 12px;
+    }
 
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            width: 100% !important;
-            max-width: 100% !important;
-            gap: 8px;
-            overflow: hidden !important;
-        }
+    .logo-left {
+        height: 90px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-        .logo-left {
-            height: 82px;
-            width: auto;
-            flex-shrink: 0;
-        }
+    .logo-left2 {
+        height: 80px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-        .logo-left2 {
-            height: 74px;
-            width: auto;
-            flex-shrink: 0;
-        }
+    .logos-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        flex: 0 0 auto;
+    }
 
-        .logos-right {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: flex-end;
-            flex-shrink: 0;
-        }
+    .logos-right img {
+        height: 80px;
+        width: auto;
+        display: block;
+    }
 
-        .logos-right img {
-            height: 70px;
-            width: auto;
-            flex-shrink: 0;
-        }
+    .college-info {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 18px;
+    }
 
-        .college-info {
-            text-align: center;
-            flex: 1 1 auto;
-            min-width: 0;
-            padding: 0 6px;
-        }
+    .college-info h1 {
+        font-family: "Times New Roman", Times, serif !important;
+        color: #4f81bd !important;
+        font-size: 24px;
+        margin: 0;
+        font-weight: normal;
+        line-height: 1.2;
+    }
 
-        .college-info h1 {
-            font-family: "Times New Roman", Times, serif;
-            color: #4f81bd !important;
-            font-size: 23px;
-            margin: 0;
-            font-weight: normal;
-            line-height: 1.15;
-            white-space: normal;
-        }
+    .college-info p {
+        font-size: 11px;
+        margin: 1px 0;
+        color: #333333 !important;
+        line-height: 1.3;
+    }
 
-        .college-info p {
-            font-size: 10.5px;
-            margin: 2px 0;
-            color: #333 !important;
-            line-height: 1.25;
-        }
+    .college-info a {
+        font-size: 12px;
+        color: #0000ee !important;
+        text-decoration: underline;
+    }
 
-        .college-info a {
-            font-size: 12px;
-            color: #0000EE !important;
-            text-decoration: underline;
-        }
+    .office-title {
+        text-align: center;
+        font-size: 16px;
+        color: #595959 !important;
+        font-weight: bold;
+        margin: 12px 0 4px 0;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
 
-        .office-title {
-            text-align: center;
-            font-size: 18px;
-            color: #595959 !important;
-            font-weight: bold;
-            margin: 14px 0 5px 0;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .double-line {
-            border-top: 4px double #4f81bd !important;
-            margin-bottom: 20px;
-        }
-
+    .double-line {
+        border-top: 4px double #4f81bd !important;
+        margin-bottom: 0;
+    }
         /* Main Content */
         .form-container,
         .form-content,
@@ -848,7 +844,7 @@ async function printReport() {
                 min-height: 0 !important;
             }
         }
-    </style>
+</style>
 </head>
 <body>
     <div id="print-container">

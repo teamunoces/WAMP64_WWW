@@ -197,81 +197,85 @@ function printReport() {
                 outline: none !important;
                 box-shadow: none !important;
             }
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        width: 100%;
+        gap: 12px;
+    }
 
-            .header-content {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 98%;
-                gap: 12px;
-                flex-wrap: nowrap;
-                margin: 0 0 10px 0 !important;
-                padding: 0 !important;
-            }
+    .logo-left {
+        height: 90px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-            .logo-left {
-                height: 90px;
-                width: auto;
-                flex: 0 0 auto;
-            }
+    .logo-left2 {
+        height: 80px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-            .logos-right {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-                flex: 0 0 auto;
-            }
+    .logos-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        flex: 0 0 auto;
+    }
 
-            .logos-right img {
-                height: 80px;
-                width: auto;
-            }
+    .logos-right img {
+        height: 80px;
+        width: auto;
+        display: block;
+    }
 
-            .college-info {
-                text-align: center;
-                flex: 1 1 auto;
-                padding: 0 10px;
-            }
+    .college-info {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 18px;
+    }
 
-            .college-info h1 {
-                font-family: "Times New Roman", Times, serif;
-                color: #4f81bd !important;
-                font-size: 26px;
-                margin: 0;
-                font-weight: normal;
-                line-height: 1.2;
-            }
+    .college-info h1 {
+        font-family: "Times New Roman", Times, serif !important;
+        color: #4f81bd !important;
+        font-size: 24px;
+        margin: 0;
+        font-weight: normal;
+        line-height: 1.2;
+    }
 
-            .college-info p {
-                font-size: 11px;
-                margin: 2px 0;
-                color: #333;
-                line-height: 1.3;
-            }
+    .college-info p {
+        font-size: 11px;
+        margin: 1px 0;
+        color: #333333 !important;
+        line-height: 1.3;
+    }
 
-            .college-info a {
-                font-size: 13px;
-                color: #0000EE !important;
-                text-decoration: underline;
-                word-break: break-all;
-            }
+    .college-info a {
+        font-size: 12px;
+        color: #0000ee !important;
+        text-decoration: underline;
+    }
 
-            .office-title {
-                text-align: center;
-                font-size: 18px;
-                color: #595959 !important;
-                font-weight: bold;
-                margin: 5px 0;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-            }
+    .office-title {
+        text-align: center;
+        font-size: 16px;
+        color: #595959 !important;
+        font-weight: bold;
+        margin: 12px 0 4px 0;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
 
-            .double-line {
-                border-top: 4px double #4f81bd !important;
-                margin-bottom: 15px;
-            }
-
-            header h1 {
+    .double-line {
+        border-top: 4px double #4f81bd !important;
+        margin-bottom: 0;
+    }            header h1 {
                 text-align: center;
                 font-size: 18px;
                 text-decoration: underline;

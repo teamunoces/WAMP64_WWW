@@ -358,3 +358,404 @@ iframe {
 img, svg, iframe {
   max-width: 100%;
 }
+
+/* ===== 3-YEAR DEVELOPMENT PLAN MONITOR ===== */
+.development-plan-monitor {
+  margin-top: 34px;
+  background: #ffffff;
+  border: 1px solid #e6e9e4;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.plan-monitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 22px 24px;
+  background: #f8faf7;
+  border-bottom: 1px solid #dde4d8;
+}
+
+.monitor-kicker {
+  color: #38761d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.plan-monitor-header h2 {
+  color: #1f2b1c;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.monitor-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 14px;
+  width: min(520px, 100%);
+}
+
+.monitor-field {
+  display: grid;
+  gap: 7px;
+}
+
+.monitor-field span {
+  color: #40513b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.monitor-field select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cfd8c9;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f2b1c;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 16px;
+  outline: none;
+}
+
+.monitor-field select:disabled {
+  color: #858585;
+  cursor: not-allowed;
+  background: #eeeeee;
+}
+
+.monitor-field select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(85, 166, 48, 0.18), 0 5px 12px rgba(0, 0, 0, 0.08);
+}
+
+.monitor-empty-state {
+  margin: 22px 24px;
+  padding: 26px;
+  text-align: center;
+  color: #586354;
+  background: #f4f6f2;
+  border: 1px dashed #b8c7af;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.plan-dashboard {
+  padding-top: 8px;
+}
+
+.status-title {
+  width: min(138px, calc(100% - 32px));
+  margin: 0 auto 28px;
+  padding: 12px 20px;
+  border: 1px solid #9da99a;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 9px 18px rgba(0, 0, 0, 0.16);
+  color: #273323;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.status-overview {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 0 30px 30px;
+}
+
+.status-overview::before {
+  content: "";
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #dbe3d8;
+  z-index: 0;
+}
+
+.status-item {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.progress-ring {
+  --progress: 0%;
+  --ring-color: #3f912c;
+  position: relative;
+  width: 96px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ring-color);
+  border: 0;
+  box-shadow: 0 13px 22px rgba(0, 0, 0, 0.22);
+}
+
+.progress-ring::before {
+  display: none;
+}
+
+.progress-ring.incomplete {
+  --ring-color: #c91631;
+  background: var(--ring-color);
+}
+
+.progress-ring.progress {
+  --ring-color: #dfa600;
+  background: var(--ring-color);
+}
+
+.progress-ring.upcoming {
+  --ring-color: #ffffff;
+  background: #ffffff;
+  border: 1px solid #d6ded2;
+}
+
+.progress-value {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.progress-value strong {
+  display: none;
+}
+
+.progress-value span {
+  max-width: 76px;
+  color: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: center;
+}
+
+.progress-ring.upcoming .progress-value {
+  color: #687064;
+}
+
+.plan-toggle,
+.plan-pill {
+  min-width: 84px;
+  border: 1px solid #c4cec0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+  color: #111111;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 15px;
+  text-align: center;
+}
+
+.plan-toggle {
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.plan-toggle:hover,
+.plan-toggle.active {
+  background: #55a630;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.plan-banner {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #3d8f22;
+  box-shadow: 6px 5px 8px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.plan-details {
+  margin: 16px auto 28px;
+  width: min(930px, calc(100% - 48px));
+  border: 1px solid #505050;
+  background: #ffffff;
+  box-shadow: 9px 8px 9px rgba(0, 0, 0, 0.23);
+  padding: 20px 6px;
+}
+
+.plan-detail-card {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.7fr) minmax(170px, 1.1fr) minmax(280px, 4.2fr);
+  min-height: 120px;
+  border: 1px solid #4d4d4d;
+  background: #ffffff;
+  box-shadow: 9px 8px 8px rgba(0, 0, 0, 0.2);
+}
+
+.plan-detail-card > * {
+  padding: 18px 10px;
+}
+
+.plan-detail-card .plan-pill {
+  align-self: center;
+  justify-self: center;
+  min-width: 76px;
+  padding: 6px 10px;
+}
+
+.program-title {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  background: #d9d9d9;
+  border-left: 1px solid #4d4d4d;
+  border-right: 1px solid #4d4d4d;
+}
+
+.program-title span,
+.objective-box span {
+  color: #000000;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.program-title strong {
+  align-self: center;
+  color: #111111;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.objective-box {
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  background: #ffffff;
+}
+
+.objective-box p {
+  color: #111111;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+}
+
+body.dark-mode .development-plan-monitor,
+body.dark-mode .plan-monitor-header,
+body.dark-mode .status-title,
+body.dark-mode .progress-ring::before,
+body.dark-mode .plan-details,
+body.dark-mode .plan-detail-card,
+body.dark-mode .objective-box,
+body.dark-mode .plan-toggle,
+body.dark-mode .plan-pill,
+body.dark-mode .monitor-field select {
+  background: #ffffff;
+}
+
+body.dark-mode .development-plan-monitor,
+body.dark-mode .plan-monitor-header h2,
+body.dark-mode .monitor-field span,
+body.dark-mode .monitor-empty-state,
+body.dark-mode .status-title,
+body.dark-mode .progress-value,
+body.dark-mode .plan-toggle,
+body.dark-mode .plan-pill,
+body.dark-mode .program-title span,
+body.dark-mode .program-title strong,
+body.dark-mode .objective-box span,
+body.dark-mode .objective-box p,
+body.dark-mode .monitor-field select {
+  color: #111111;
+}
+
+body.dark-mode .monitor-kicker {
+  color: #38761d;
+}
+
+body.dark-mode .plan-toggle:hover,
+body.dark-mode .plan-toggle.active {
+  background: #55a630;
+  color: #ffffff;
+}
+
+body.dark-mode .progress-ring .progress-value {
+  color: #ffffff;
+}
+
+body.dark-mode .progress-ring.upcoming .progress-value {
+  color: #687064;
+}
+
+@media (max-width: 900px) {
+  .plan-monitor-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .monitor-filters {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .status-overview {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .status-overview::before {
+    display: none;
+  }
+
+  .plan-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .program-title {
+    border: 0;
+    border-top: 1px solid #4d4d4d;
+    border-bottom: 1px solid #4d4d4d;
+  }
+
+  .plan-details {
+    width: calc(100% - 30px);
+  }
+}
+
+@media (max-width: 520px) {
+  .development-plan-monitor {
+    margin-top: 24px;
+  }
+
+  .plan-monitor-header {
+    padding: 18px 16px;
+  }
+
+  .plan-monitor-header h2 {
+    font-size: 21px;
+  }
+
+  .progress-ring {
+    width: 88px;
+  }
+}

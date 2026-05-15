@@ -154,89 +154,85 @@ async function printReport() {
     }
 
 /* ===== HEADER FIX (NO OVERFLOW) ===== */
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        width: 100%;
+        gap: 12px;
+    }
 
-.header-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 98% !important;
-    margin-bottom: 10px !important;
-    gap: 10px !important;
-}
+    .logo-left {
+        height: 90px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-/* LEFT LOGOS */
-.left-logos {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    flex: 0 0 auto !important;
-    max-width: 155px !important; /* prevents overflow */
-}
+    .logo-left2 {
+        height: 80px;
+        width: auto;
+        display: block;
+        flex: 0 0 auto;
+    }
 
-.logo-left {
-    height: 85px !important;
-    width: auto !important;
-}
+    .logos-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        flex: 0 0 auto;
+    }
 
-.logo-left2 {
-    height: 75px !important;
-    width: auto !important;
-}
+    .logos-right img {
+        height: 80px;
+        width: auto;
+        display: block;
+    }
 
-/* CENTER TEXT (IMPORTANT FIX) */
-.college-info {
-    flex: 1 1 auto !important;
-    min-width: 0 !important; /* 🔥 prevents pushing layout */
-    text-align: center !important;
-    padding: 0 10px !important;
-}
+    .college-info {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 18px;
+    }
 
-.college-info h1 {
-    font-family: "Times New Roman", Times, serif !important;
-    color: #4f81bd !important;
-    font-size: 22px !important;
-    margin: 0 !important;
-    line-height: 1.2 !important;
-}
+    .college-info h1 {
+        font-family: "Times New Roman", Times, serif !important;
+        color: #4f81bd !important;
+        font-size: 24px;
+        margin: 0;
+        font-weight: normal;
+        line-height: 1.2;
+    }
 
-.college-info p {
-    font-size: 10px !important;
-    margin: 1px 0 !important;
-    line-height: 1.2 !important;
-}
+    .college-info p {
+        font-size: 11px;
+        margin: 1px 0;
+        color: #333333 !important;
+        line-height: 1.3;
+    }
 
-.college-info a {
-    font-size: 10px !important;
-}
+    .college-info a {
+        font-size: 12px;
+        color: #0000ee !important;
+        text-decoration: underline;
+    }
 
-/* RIGHT LOGOS */
-.logos-right {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 6px !important;
-    flex: 0 0 auto !important;
-    max-width: 135px !important; /* prevents overflow */
-}
+    .office-title {
+        text-align: center;
+        font-size: 16px;
+        color: #595959 !important;
+        font-weight: bold;
+        margin: 12px 0 4px 0;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
 
-.logos-right img {
-    height: 65px !important;
-    width: auto !important;
-}
-
-/* OFFICE TITLE */
-.office-title {
-    text-align: center !important;
-    font-size: 15px !important;
-    font-weight: bold !important;
-    margin: 10px 0 4px 0 !important;
-}
-
-/* LINE */
-.double-line {
-    border-top: 3px double #4f81bd !important;
-}
-
+    .double-line {
+        border-top: 4px double #4f81bd !important;
+        margin-bottom: 0;
+    }
     .report-title {
         display: block !important;
         visibility: visible !important;

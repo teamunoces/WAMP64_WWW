@@ -41,7 +41,17 @@ try {
             $_SESSION['department'] = $user['department'];
             $_SESSION['dean'] = $user['dean']; // ✅ Now works!
 
-            
+            // Method 1: Use the command exactly as it works in PowerShell
+            $command = '"c:/python313/python.exe" "c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/AI.py" 2>&1';
+            $output = shell_exec($command);
+
+            if ($output === null) {
+                error_log("Python script execution failed - no output");
+            } elseif (trim($output) === '') {
+                error_log("Python script executed but produced no output");
+            } else {
+                error_log("Python script output: " . $output);
+            }
 
             echo json_encode(['success' => true, 'role' => $user['role']]);
             exit();

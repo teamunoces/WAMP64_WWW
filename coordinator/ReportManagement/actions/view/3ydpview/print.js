@@ -127,35 +127,39 @@ async function printReport() {
         outline: none !important;
         box-shadow: none !important;
     }
-
     .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 10px;
         width: 100%;
+        gap: 12px;
     }
 
     .logo-left {
         height: 90px;
         width: auto;
         display: block;
+        flex: 0 0 auto;
     }
 
     .logo-left2 {
         height: 80px;
         width: auto;
         display: block;
+        flex: 0 0 auto;
     }
 
     .logos-right {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        gap: 20px;
+        flex: 0 0 auto;
     }
 
     .logos-right img {
-        height: 75px;
+        height: 80px;
         width: auto;
         display: block;
     }
@@ -202,7 +206,6 @@ async function printReport() {
         border-top: 4px double #4f81bd !important;
         margin-bottom: 0;
     }
-
     .print-footer-inner {
         display: flex;
         align-items: flex-end;

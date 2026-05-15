@@ -163,3 +163,59 @@ body.dark-mode .dept-card::before,
 body.dark-mode .dept-card::after {
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
+
+/* ===== 3-YEAR DEVELOPMENT PLAN MONITOR DARK MODE ===== */
+body.dark-mode .development-plan-monitor,
+body.dark-mode .plan-monitor-header,
+body.dark-mode .status-title,
+body.dark-mode .progress-ring::before,
+body.dark-mode .plan-details,
+body.dark-mode .plan-detail-card,
+body.dark-mode .objective-box,
+body.dark-mode .plan-toggle,
+body.dark-mode .plan-pill,
+body.dark-mode .monitor-field select {
+    background: #ffffff;
+}
+
+body.dark-mode .development-plan-monitor,
+body.dark-mode .plan-monitor-header h2,
+body.dark-mode .monitor-field span,
+body.dark-mode .monitor-empty-state,
+body.dark-mode .status-title,
+body.dark-mode .progress-value,
+body.dark-mode .plan-toggle,
+body.dark-mode .plan-pill,
+body.dark-mode .program-title span,
+body.dark-mode .program-title strong,
+body.dark-mode .objective-box span,
+body.dark-mode .objective-box p,
+body.dark-mode .monitor-field select {
+    color: #111111;
+}
+
+body.dark-mode .monitor-kicker {
+    color: #38761d;
+}
+
+body.dark-mode .monitor-empty-state {
+    background: #f4f6f2;
+}
+
+body.dark-mode .program-title {
+    background: #d9d9d9;
+}
+
+body.dark-mode .plan-banner,
+body.dark-mode .plan-toggle:hover,
+body.dark-mode .plan-toggle.active {
+    color: #ffffff;
+}
+
+body.dark-mode .progress-ring .progress-value {
+    color: #ffffff;
+}
+
+body.dark-mode .progress-ring.upcoming .progress-value {
+    color: #687064;
+}
