@@ -539,6 +539,30 @@ footer,
         page-break-inside: avoid;
         break-inside: avoid;
     }
+
+    .approvals-container,
+    .approvals-container *,
+    .approvals,
+    .approvals * {
+        font-weight: bold !important;
+    }
+
+    .approvals-container .signature-line,
+    .approvals-container .name-underlined,
+    .approvals .signature-line,
+    .approvals .name-underlined,
+    .approvals .signature-block .name,
+    .approvals #ces_head {
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 180px !important;
+        max-width: 100% !important;
+        padding: 0 12px 2px 12px !important;
+        border-bottom: 1px solid #000 !important;
+        text-decoration: none !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
 }
 </style>
 </head>

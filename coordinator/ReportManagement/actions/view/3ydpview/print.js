@@ -121,7 +121,11 @@ async function printReport() {
     }
 
     .print-footer-wrap {
+        min-height: 14mm;
         padding: 8px 0 0 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
         background: #ffffff !important;
         border: none !important;
         outline: none !important;
@@ -156,6 +160,7 @@ async function printReport() {
         justify-content: flex-end;
         gap: 20px;
         flex: 0 0 auto;
+        margin-right: 10px;
     }
 
     .logos-right img {
@@ -211,6 +216,7 @@ async function printReport() {
         align-items: flex-end;
         justify-content: flex-end;
         width: 100%;
+        min-height: 100%;
         padding-bottom: 4px;
     }
 
@@ -657,6 +663,37 @@ async function printReport() {
 .document-info,
 .document-info * {
     font-size: 15px !important;
+}
+
+.approvals-container,
+.approvals-container * {
+    font-weight: bold !important;
+}
+
+.approvals-container .signature-line,
+.approvals-container .name-underlined {
+    display: inline-block;
+    width: auto !important;
+    min-width: 180px;
+    max-width: 100%;
+    padding: 0 12px 2px 12px;
+    border-bottom: 1px solid #000 !important;
+    text-decoration: none !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.approvals-container .signature-line {
+    text-align: inherit;
+    text-transform: uppercase;
+}
+
+.approvals-container .name-underlined {
+    text-align: center;
+}
+
+.print-layout > tfoot > tr > td {
+    vertical-align: bottom !important;
 }
     @media print {
         html,

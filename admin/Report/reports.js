@@ -256,12 +256,17 @@ function getViewPath(report) {
     const type = report.source_table.toLowerCase().trim();
 
     const viewMappings = {
-        "cnacr": "actions/admin_view/resultview/cnacrview.php",
-        "coordinator_cnacr": "actions/admin_view/coor_cnacrview/cnacrview.php",
-        "3ydp": "actions/admin_view/3ydpview/3ydpview.php",
-        "pd_main": "actions/admin_view/pdview/view.php",
-        "mar_header": "actions/admin_view/marview/marview.php",
-        "default": "actions/admin_view/defaultview/view.php"
+        "cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/resultview/cnacrview.php",
+        "coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coor_cnacrview/cnacrview.php",
+        "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",
+        "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/pdview/pdview.php",
+        "mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
+        "program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
+        "evaluation_reports": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
+        "cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coaview/coaview.php",
+        "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
+        "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
+        "default": null
     };
 
     return viewMappings[type] || viewMappings.default;

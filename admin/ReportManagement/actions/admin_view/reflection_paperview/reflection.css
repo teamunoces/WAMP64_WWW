@@ -383,74 +383,92 @@ input[type="checkbox"] {
 /* ===== Approvals Section ===== */
 .approvals {
     width: 100%;
-    margin-top: 55px;
+    max-width: none;
+    margin: 50px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
     font-family: "Calibri", "Calibri Light", Arial, sans-serif;
-    font-size: 12pt;
+    font-size: 10pt;
     color: #333;
 }
 
-.approvals .label {
+.approvals .label,
+.signature-block .label {
     font-weight: bold;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
 }
 
 .ces-head-block {
     width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     text-align: left;
-    margin-left: 10px;
-    margin-bottom: 65px;
 }
 
 #ces_head {
-    display: block;
-    width: 255px;
+    display: inline-block;
+    width: auto;
+    min-width: 180px;
+    max-width: 260px;
     border-bottom: 1px solid #000;
     text-align: center;
-    font-weight: normal;
+    font-weight: bold;
     text-transform: uppercase;
-    padding-bottom: 2px;
-    margin-bottom: 8px;
+    padding: 0 12px 2px 12px;
+    margin-bottom: 0;
 }
 
 .ces-head {
     display: block;
+    margin-top: 6px;
     font-weight: bold;
     text-align: left;
+    border: none !important;
 }
 
 .approvals .signature-block {
     width: 100%;
-    text-align: left;
-    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 0;
 }
 
 .approvals .signature-block .name,
 .approvals .signature-block .title {
-    display: block;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
 
 .approvals .signature-block .name {
-    width: 365px;
+    display: inline-block;
+    width: auto;
+    min-width: 260px;
+    max-width: 340px;
     border-bottom: 1px solid #000;
     font-weight: bold;
     text-transform: uppercase;
-    padding-bottom: 2px;
-    margin-bottom: 10px;
+    padding: 0 15px 2px 15px;
+    margin-bottom: 5px;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .approvals .signature-block .title {
+    margin-top: 6px;
     font-weight: bold;
 }
 
 .approvals .signature-block + .signature-block {
-    margin-top: -10px;
+    margin-top: 0;
 }
 
 .approvals .signature-block:last-child {
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 .name {
@@ -542,4 +560,30 @@ footer {
 .footer-logos img {
     height: 40px;
     width: auto;
+}
+.approvals,
+.approvals * {
+    font-weight: bold !important;
+}
+
+.approvals #ces_head,
+.approvals .signature-block .name {
+    display: inline-block !important;
+    width: auto !important;
+    border-bottom: 1px solid #000 !important;
+    text-decoration: none !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+}
+
+.approvals #ces_head {
+    min-width: 180px !important;
+    max-width: 260px !important;
+    padding: 0 12px 2px 12px !important;
+}
+
+.approvals .signature-block .name {
+    min-width: 260px !important;
+    max-width: 340px !important;
+    padding: 0 15px 2px 15px !important;
 }

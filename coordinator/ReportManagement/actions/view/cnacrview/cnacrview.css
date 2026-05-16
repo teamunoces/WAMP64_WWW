@@ -288,14 +288,15 @@ footer {
 .approvals-container {
     font-family: Arial, sans-serif;
     width: 100%;
-    max-width: 900px;
-    margin: 40px auto 0 auto;
+    max-width: none;
+    margin: 40px 0 0 0;
     color: #000;
 }
 
 .approval-row {
     display: flex;
     justify-content: space-between;
+    width: 100%;
     margin-bottom: 20px;
 }
 
@@ -734,4 +735,21 @@ th,
     .border-right {
         border-right: none;
     }
+}
+
+.approvals-container,
+.approvals-container * {
+    font-weight: bold !important;
+}
+
+.approvals-container .signature-line {
+    display: inline-block;
+    width: auto;
+    min-width: 180px;
+    max-width: 100%;
+    padding: 0 12px 2px 12px;
+    border-bottom: 1.5px solid #000 !important;
+    text-align: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }

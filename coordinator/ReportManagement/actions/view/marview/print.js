@@ -163,18 +163,27 @@ async function printReport() {
         gap: 12px;
     }
 
-    .logo-left {
-        height: 90px;
-        width: auto;
-        display: block;
+    .left-logos {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
         flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .logo-left {
+        height: 90px !important;
+        width: auto !important;
+        display: block !important;
+        flex: 0 0 auto !important;
     }
 
     .logo-left2 {
-        height: 80px;
-        width: auto;
-        display: block;
-        flex: 0 0 auto;
+        height: 80px !important;
+        width: auto !important;
+        display: block !important;
+        flex: 0 0 auto !important;
     }
 
     .logos-right {
@@ -567,6 +576,24 @@ async function printReport() {
             padding: 0 !important;
             background: #fff !important;
         }
+    }
+
+    .approvals-container,
+    .approvals-container * {
+        font-weight: bold !important;
+    }
+
+    .approvals-container .signature-line,
+    .approvals-container .name-underlined {
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 180px !important;
+        max-width: 100% !important;
+        padding: 0 12px 2px 12px !important;
+        border-bottom: 1px solid #000 !important;
+        text-decoration: none !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
     }
 </style>
 </head>

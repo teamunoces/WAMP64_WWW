@@ -572,6 +572,24 @@ async function printReport() {
             background: #fff !important;
         }
     }
+
+    .approvals-container,
+    .approvals-container * {
+        font-weight: bold !important;
+    }
+
+    .approvals-container .signature-line,
+    .approvals-container .name-underlined {
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 180px !important;
+        max-width: 100% !important;
+        padding: 0 12px 2px 12px !important;
+        border-bottom: 1px solid #000 !important;
+        text-decoration: none !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
 </style>
 </head>
 

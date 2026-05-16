@@ -17,13 +17,17 @@ async function printReport() {
     const printClone = evaluationContainer.cloneNode(true);
     fixFormStatesForPrint(printClone);
 
-    const headerElements = [...printClone.querySelectorAll('header')];
     const footerElement = printClone.querySelector('footer');
     const formElement = printClone.querySelector('#evaluationForm');
+    const reportTitle =
+        printClone.querySelector('header h1')?.textContent?.trim() ||
+        'EVALUATION SHEET FOR EXTENSION SERVICES';
 
-    const headerHTML = headerElements.map(header => header.outerHTML).join('');
+    const headerHTML = buildPrintHeaderHtml();
     const footerHTML = footerElement ? footerElement.outerHTML : '';
-    const formHTML = formElement ? formElement.outerHTML : '';
+    const formHTML = formElement
+        ? `<h1 id="report_title">${escapeHtml(reportTitle)}</h1>${formElement.outerHTML}`
+        : '';
 
     const iframe = document.createElement('iframe');
     iframe.id = 'print-iframe';
@@ -134,6 +138,14 @@ async function printReport() {
         overflow: hidden !important;
     }
 
+    .print-page-header {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
     .print-footer {
         padding-top: 8px !important;
         overflow: hidden !important;
@@ -159,42 +171,51 @@ async function printReport() {
         align-items: center;
         justify-content: space-between;
         margin-bottom: 10px;
-        width: 100%;
-        gap: 12px;
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 10px;
     }
 
     .logo-left {
-        height: 90px;
-        width: auto;
-        display: block;
-        flex: 0 0 auto;
+        height: 72px !important;
+        width: auto !important;
+        max-width: 82px !important;
+        display: block !important;
+        flex: 0 0 auto !important;
+        object-fit: contain !important;
     }
 
     .logo-left2 {
-        height: 80px;
-        width: auto;
-        display: block;
-        flex: 0 0 auto;
+        height: 64px !important;
+        width: auto !important;
+        max-width: 74px !important;
+        display: block !important;
+        flex: 0 0 auto !important;
+        object-fit: contain !important;
     }
 
     .logos-right {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 20px;
-        flex: 0 0 auto;
+        gap: 10px;
+        flex: 0 0 auto !important;
+        margin-right: 10px;
     }
 
     .logos-right img {
-        height: 80px;
-        width: auto;
-        display: block;
+        height: 64px !important;
+        width: auto !important;
+        max-width: 74px !important;
+        display: block !important;
+        object-fit: contain !important;
     }
 
     .college-info {
         text-align: center;
-        flex-grow: 1;
-        padding: 0 18px;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        padding: 0 10px;
     }
 
     .college-info h1 {
@@ -608,6 +629,24 @@ async function printReport() {
             background: white !important;
         }
     }
+
+    .approvals-container,
+    .approvals-container * {
+        font-weight: bold !important;
+    }
+
+    .approvals-container .signature-line,
+    .approvals-container .name-underlined {
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 180px !important;
+        max-width: 100% !important;
+        padding: 0 12px 2px 12px !important;
+        border-bottom: 1px solid #000 !important;
+        text-decoration: none !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
 </style>
 </head>
 
@@ -729,6 +768,61 @@ function fixFormStatesForPrint(cloneElement) {
             input.setAttribute('value', input.value || '');
         }
     });
+}
+
+function buildPrintHeaderHtml() {
+    const leftLogo =
+        document.querySelector('.logo-left')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/smcclogo.png';
+
+    const leftLogo2 =
+        document.querySelector('.logo-left2')?.src ||
+        '/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/Ceslogo.png';
+
+    const rightLogos = Array.from(document.querySelectorAll('.logos-right img'))
+        .map(img => img.src)
+        .filter(Boolean);
+
+    const officeTitle =
+        document.querySelector('.office-title')?.textContent?.trim() ||
+        'OFFICE OF THE COMMUNITY EXTENSION SERVICES';
+
+    const collegeInfoNode = document.querySelector('.college-info');
+    const collegeInfoHtml = collegeInfoNode
+        ? collegeInfoNode.innerHTML
+        : `
+            <h1>Saint Michael College of Caraga</h1>
+            <p>Brgy. 4, Nasipit, Agusan del Norte, Philippines</p>
+            <p>District 8, Brgy. Triangulo, Nasipit, Agusan del Norte, Philippines</p>
+            <p>Tel Nos. +63 085 343-3251 / +63 085 283-3113</p>
+            <a href="http://www.smccnasipit.edu.ph">www.smccnasipit.edu.ph</a>
+        `;
+
+    const rightLogoHtml = rightLogos.length
+        ? rightLogos.map(src => `<img src="${escapeHtml(src)}" alt="Logo">`).join('')
+        : `<img src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/images/ISOlogo.png" alt="SOCOTEC Logo">`;
+
+    return `
+        <div class="print-page-header">
+            <div class="header-content">
+                <img src="${escapeHtml(leftLogo)}" alt="SMCC Logo" class="logo-left">
+                <img src="${escapeHtml(leftLogo2)}" alt="CES Logo" class="logo-left2">
+                <div class="college-info">${collegeInfoHtml}</div>
+                <div class="logos-right">${rightLogoHtml}</div>
+            </div>
+            <h2 class="office-title">${escapeHtml(officeTitle)}</h2>
+            <div class="double-line"></div>
+        </div>
+    `;
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 function waitForImages(doc) {

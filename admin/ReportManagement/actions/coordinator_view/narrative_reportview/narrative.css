@@ -442,3 +442,20 @@ footer {
     .header-content { flex-wrap: wrap; justify-content: center; gap: 12px; }
     .college-info { order: -1; flex-basis: 100%; padding: 0; }
 }
+
+.approvals-container,
+.approvals-container * {
+    font-weight: bold !important;
+}
+
+.approvals-container .signature-line {
+    display: inline-block;
+    width: auto;
+    min-width: 180px;
+    max-width: 100%;
+    padding: 0 12px 2px 12px;
+    border-bottom: 1.5px solid #000 !important;
+    text-align: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

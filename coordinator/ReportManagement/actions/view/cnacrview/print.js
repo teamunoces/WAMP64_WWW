@@ -226,6 +226,7 @@ function printReport() {
         justify-content: flex-end;
         gap: 20px;
         flex: 0 0 auto;
+        margin-right: 10px;
     }
 
     .logos-right img {
@@ -486,6 +487,24 @@ function printReport() {
                 break-after: avoid-page;
                 orphans: 3;
                 widows: 3;
+            }
+
+            .approvals-container,
+            .approvals-container * {
+                font-weight: bold !important;
+            }
+
+            .approvals-container .signature-line,
+            .approvals-container .name-underlined {
+                display: inline-block !important;
+                width: auto !important;
+                min-width: 180px !important;
+                max-width: 100% !important;
+                padding: 0 12px 2px 12px !important;
+                border-bottom: 1px solid #000 !important;
+                text-decoration: none !important;
+                white-space: normal !important;
+                overflow-wrap: anywhere !important;
             }
         }
     `;
