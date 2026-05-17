@@ -33,6 +33,56 @@ if(!$data) {
 $data['created_by_name'] = $_SESSION['name'];
 $data['role'] = $_SESSION['role'];
 $data['user_id'] = $_SESSION['user_id'];
+$department = $_SESSION['department'] ?? '';
+
+$approval_defaults = [
+    'dean' => $_SESSION['dean'] ?? '',
+    'ces_head' => '',
+    'ces_head_suffix' => '',
+    'vp_acad' => '',
+    'vp_acad_suffix' => '',
+    'vp_admin' => '',
+    'vp_admin_suffix' => '',
+    'school_president' => '',
+    'school_president_suffix' => ''
+];
+
+$approval_stmt = $conn->prepare("
+    SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+           vp_admin, vp_admin_suffix, school_president, school_president_suffix
+    FROM approval_db.approvals
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+if (($_SESSION['role'] ?? '') === 'admin') {
+    $approval_stmt->execute();
+    $approval_result = $approval_stmt->get_result();
+} else {
+    $approval_result = false;
+}
+if ($approval_result && $approval_row = $approval_result->fetch_assoc()) {
+    $approval_defaults = array_merge($approval_defaults, $approval_row);
+}
+$approval_stmt->close();
+
+$document_defaults = [
+    'issue_status' => '',
+    'revision_number' => '',
+    'date_effective' => '',
+    'approved_by' => ''
+];
+
+$document_result = $conn->query("
+    SELECT issue_status, revision_number, date_effective, approved_by
+    FROM approval_db.document_info
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+if ($document_result && $document_row = $document_result->fetch_assoc()) {
+    $document_defaults = array_merge($document_defaults, $document_row);
+}
+
+$data = array_merge($data, $approval_defaults, $document_defaults);
 
 // Set defaults for required fields if not present
 $defaults = [

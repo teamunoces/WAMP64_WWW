@@ -46,6 +46,7 @@ async function loadReport() {
             document.getElementById('vp_acad').textContent = data.main.vp_acad || '';
             document.getElementById('vp_admin').textContent = data.main.vp_admin || '';
             document.getElementById('school_president').textContent = data.main.school_president || '';
+            displayApprovalDocumentInfo(data.main);
 
             const tableBody = document.querySelector('.program-table tbody');
             tableBody.innerHTML = '';
@@ -78,3 +79,39 @@ async function loadReport() {
 }
 
 document.addEventListener("DOMContentLoaded", loadReport);
+
+
+function formatNameWithSuffix(name, suffix) {
+    const cleanName = String(name || '').trim();
+    const cleanSuffix = String(suffix || '').trim();
+
+    if (!cleanName) return cleanSuffix;
+    if (!cleanSuffix) return cleanName;
+
+    return `${cleanName}, ${cleanSuffix}`;
+}
+
+function setTextIfExists(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value || '';
+}
+
+function setInputByNameIfExists(name, value) {
+    const element = document.querySelector(`[name="${name}"]`);
+    if (element) element.value = value || '';
+}
+
+function displayApprovalDocumentInfo(report) {
+    if (!report) return;
+
+    setTextIfExists('dean', report.dean || '');
+    setTextIfExists('ces_head', formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+    setTextIfExists('vp_acad', formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+    setTextIfExists('vp_admin', formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+    setTextIfExists('school_president', formatNameWithSuffix(report.school_president, report.school_president_suffix));
+
+    setInputByNameIfExists('issue_status', report.issue_status);
+    setInputByNameIfExists('revision_number', report.revision_number);
+    setInputByNameIfExists('date_effective', report.date_effective);
+    setInputByNameIfExists('approved_by', report.approved_by);
+}

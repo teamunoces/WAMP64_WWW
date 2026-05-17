@@ -98,8 +98,48 @@ try {
     $created_by_name = $_SESSION['name'] ?? '';
     $user_role = $_SESSION['role'] ?? '';
     $user_department = $_SESSION['department'] ?? '';
-    $dean = $_SESSION['dean'] ?? '';
     $user_id = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
+
+    $approvalData = [
+        'dean' => $_SESSION['dean'] ?? '',
+        'ces_head' => '',
+        'ces_head_suffix' => '',
+        'vp_acad' => '',
+        'vp_acad_suffix' => '',
+        'vp_admin' => '',
+        'vp_admin_suffix' => '',
+        'school_president' => '',
+        'school_president_suffix' => ''
+    ];
+
+    $approvalStmt = $pdo->prepare("
+        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+               vp_admin, vp_admin_suffix, school_president, school_president_suffix
+        FROM approval_db.approvals
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    $approvalStmt->execute();
+    if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
+        $approvalData = array_merge($approvalData, $approvalRow);
+    }
+
+    $documentInfo = [
+        'issue_status' => '',
+        'revision_number' => '',
+        'date_effective' => '',
+        'approved_by' => ''
+    ];
+
+    $documentStmt = $pdo->query("
+        SELECT issue_status, revision_number, date_effective, approved_by
+        FROM approval_db.document_info
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if ($documentRow = $documentStmt->fetch(PDO::FETCH_ASSOC)) {
+        $documentInfo = array_merge($documentInfo, $documentRow);
+    }
     
     // Validate required session data
     if (empty($created_by_name)) {
@@ -127,6 +167,18 @@ try {
         user_id,
         status,
         archived,
+        ces_head,
+        ces_head_suffix,
+        vp_acad,
+        vp_acad_suffix,
+        vp_admin,
+        vp_admin_suffix,
+        school_president,
+        school_president_suffix,
+        issue_status,
+        revision_number,
+        date_effective,
+        approved_by,
         created_at
     ) VALUES (
         :type,
@@ -144,6 +196,18 @@ try {
         :user_id,
         :status,
         :archived,
+        :ces_head,
+        :ces_head_suffix,
+        :vp_acad,
+        :vp_acad_suffix,
+        :vp_admin,
+        :vp_admin_suffix,
+        :school_president,
+        :school_president_suffix,
+        :issue_status,
+        :revision_number,
+        :date_effective,
+        :approved_by,
         NOW()
     )";
     
@@ -162,10 +226,22 @@ try {
         ':created_by_name' => $created_by_name,
         ':role' => $user_role,
         ':department' => $user_department,
-        ':dean' => $dean,
+        ':dean' => $approvalData['dean'],
         ':user_id' => $user_id,
         ':status' => 'pending',  // Default status for new submissions
-        ':archived' => 'not archived'
+        ':archived' => 'not archived',
+        ':ces_head' => $approvalData['ces_head'],
+        ':ces_head_suffix' => $approvalData['ces_head_suffix'],
+        ':vp_acad' => $approvalData['vp_acad'],
+        ':vp_acad_suffix' => $approvalData['vp_acad_suffix'],
+        ':vp_admin' => $approvalData['vp_admin'],
+        ':vp_admin_suffix' => $approvalData['vp_admin_suffix'],
+        ':school_president' => $approvalData['school_president'],
+        ':school_president_suffix' => $approvalData['school_president_suffix'],
+        ':issue_status' => $documentInfo['issue_status'],
+        ':revision_number' => $documentInfo['revision_number'],
+        ':date_effective' => $documentInfo['date_effective'],
+        ':approved_by' => $documentInfo['approved_by']
     ]);
     
     if (!$result) {
@@ -189,7 +265,7 @@ try {
             'submitted_by' => $created_by_name,
             'department' => $user_department,
             'role' => $user_role,
-            'dean' => $dean
+            'dean' => $approvalData['dean']
         ]
     ]);
     

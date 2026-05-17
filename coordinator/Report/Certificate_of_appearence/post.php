@@ -49,8 +49,48 @@ try {
     $createdBy = $_SESSION['name'] ?? 'Unknown User';
     $role = $_SESSION['role'] ?? 'N/A';
     $user_id = $_SESSION['user_id'] ?? '0';
-    $dean = $_SESSION['dean'] ?? 'N/A';
     $department = $_SESSION['department'] ?? 'N/A';
+
+    $approvalData = [
+        'dean' => $_SESSION['dean'] ?? '',
+        'ces_head' => '',
+        'ces_head_suffix' => '',
+        'vp_acad' => '',
+        'vp_acad_suffix' => '',
+        'vp_admin' => '',
+        'vp_admin_suffix' => '',
+        'school_president' => '',
+        'school_president_suffix' => ''
+    ];
+
+    $approvalStmt = $pdo->prepare("
+        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+               vp_admin, vp_admin_suffix, school_president, school_president_suffix
+        FROM approval_db.approvals
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    $approvalStmt->execute();
+    if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
+        $approvalData = array_merge($approvalData, $approvalRow);
+    }
+
+    $documentInfo = [
+        'issue_status' => '',
+        'revision_number' => '',
+        'date_effective' => '',
+        'approved_by' => ''
+    ];
+
+    $documentStmt = $pdo->query("
+        SELECT issue_status, revision_number, date_effective, approved_by
+        FROM approval_db.document_info
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if ($documentRow = $documentStmt->fetch()) {
+        $documentInfo = array_merge($documentInfo, $documentRow);
+    }
     
     // ===== Get report type from input =====
     $reportType = $input['report_type'] ?? 'Certificate of Appearance';
@@ -61,10 +101,14 @@ try {
     // Insert into cert_appearance table
     $sql = "INSERT INTO cert_appearance 
             (type, participant, cert_department, activity_name, location, date_held, month_held, year_held, location_two, 
-             monitored_by, verified_by, created_by_name, feedback, status, role, user_id, dean, department, archived) 
+             monitored_by, verified_by, created_by_name, feedback, status, role, user_id, dean, department, archived,
+             ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix, school_president,
+             school_president_suffix, issue_status, revision_number, date_effective, approved_by) 
             VALUES 
             (:type, :participant, :cert_department, :activity_name, :location, :date_held, :month_held, :year_held, :location_two, 
-             :monitored_by, :verified_by, :created_by_name, :feedback, :status, :role, :user_id, :dean, :department, :archived)";
+             :monitored_by, :verified_by, :created_by_name, :feedback, :status, :role, :user_id, :dean, :department, :archived,
+             :ces_head, :ces_head_suffix, :vp_acad, :vp_acad_suffix, :vp_admin, :vp_admin_suffix, :school_president,
+             :school_president_suffix, :issue_status, :revision_number, :date_effective, :approved_by)";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -84,9 +128,21 @@ try {
         ':status'            => 'pending', // Default status
         ':role'              => $role,
         ':user_id'           => $user_id,
-        ':dean'              => $dean,
+        ':dean'              => $approvalData['dean'],
         ':department'        => $department,
-        ':archived'          => 'not archived'
+        ':archived'          => 'not archived',
+        ':ces_head'          => $approvalData['ces_head'],
+        ':ces_head_suffix'   => $approvalData['ces_head_suffix'],
+        ':vp_acad'           => $approvalData['vp_acad'],
+        ':vp_acad_suffix'    => $approvalData['vp_acad_suffix'],
+        ':vp_admin'          => $approvalData['vp_admin'],
+        ':vp_admin_suffix'   => $approvalData['vp_admin_suffix'],
+        ':school_president'  => $approvalData['school_president'],
+        ':school_president_suffix' => $approvalData['school_president_suffix'],
+        ':issue_status'      => $documentInfo['issue_status'],
+        ':revision_number'   => $documentInfo['revision_number'],
+        ':date_effective'    => $documentInfo['date_effective'],
+        ':approved_by'       => $documentInfo['approved_by']
     ]);
     
     $reportId = $pdo->lastInsertId();

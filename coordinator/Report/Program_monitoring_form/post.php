@@ -113,6 +113,49 @@ function formatDate($dateStr) {
 $type = $data['reportType'] ?? 'Program Monitoring Form';
 $department = $_SESSION['department'] ?? $_SESSION['user_department'] ?? '';
 
+$approvalData = [
+    'dean' => $_SESSION['dean'] ?? '',
+    'ces_head' => '',
+    'ces_head_suffix' => '',
+    'vp_acad' => '',
+    'vp_acad_suffix' => '',
+    'vp_admin' => '',
+    'vp_admin_suffix' => '',
+    'school_president' => '',
+    'school_president_suffix' => ''
+];
+
+$approvalStmt = $conn->prepare("
+    SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+           vp_admin, vp_admin_suffix, school_president, school_president_suffix
+    FROM approval_db.approvals
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+$approvalStmt->execute();
+$approvalResult = $approvalStmt->get_result();
+if ($approvalRow = $approvalResult->fetch_assoc()) {
+    $approvalData = array_merge($approvalData, $approvalRow);
+}
+$approvalStmt->close();
+
+$documentInfo = [
+    'issue_status' => '',
+    'revision_number' => '',
+    'date_effective' => '',
+    'approved_by' => ''
+];
+
+$documentResult = $conn->query("
+    SELECT issue_status, revision_number, date_effective, approved_by
+    FROM approval_db.document_info
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
+    $documentInfo = array_merge($documentInfo, $documentRow);
+}
+
 $programTitle = trim($data['header']['programTitle'] ?? '');
 $activityConducted = trim($data['header']['activityConducted'] ?? '');
 $location = trim($data['header']['location'] ?? '');
@@ -254,7 +297,6 @@ foreach ($recommendationsData as $rec) {
 $createdByName =$_SESSION['name'] ?? 'Unknown User';
 $userRole = $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
 $userId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
-$dean = $_SESSION['dean'] ?? $_SESSION['department_head'] ?? '';
 
 $status = 'pending';
 $archived = 'not archived';
@@ -292,7 +334,9 @@ $sql = "INSERT INTO program_monitoring_form (
     rec1_applicability, rec2_applicability, rec3_applicability,
     rec4_applicability, rec5_applicability, rec6_applicability, rec7_applicability,
     other_recommendations,
-    created_by_name, feedback, status, archived, role, user_id, dean
+    created_by_name, feedback, status, archived, role, user_id, dean,
+    ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix,
+    school_president, school_president_suffix, issue_status, revision_number, date_effective, approved_by
 ) VALUES (
     ?, ?, ?, ?, ?,
     ?, ?, ?,
@@ -311,7 +355,9 @@ $sql = "INSERT INTO program_monitoring_form (
     ?, ?, ?,
     ?, ?, ?, ?,
     ?,
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?
 )";
 
 $stmt = $conn->prepare($sql);
@@ -327,9 +373,9 @@ if (!$stmt) {
     exit();
 }
 
-// Count carefully: there must be exactly 49 's' for 49 '?'
+$paramTypes = str_repeat("s", 61);
 $stmt->bind_param(
-    "sssssssssssssssssssssssssssssssssssssssssssssssss", // Ensure 49 's' here
+    $paramTypes,
     $type, 
     $department, 
     $programTitle, 
@@ -359,7 +405,19 @@ $stmt->bind_param(
     $archived, 
     $userRole, 
     $userId, 
-    $dean
+    $approvalData['dean'],
+    $approvalData['ces_head'],
+    $approvalData['ces_head_suffix'],
+    $approvalData['vp_acad'],
+    $approvalData['vp_acad_suffix'],
+    $approvalData['vp_admin'],
+    $approvalData['vp_admin_suffix'],
+    $approvalData['school_president'],
+    $approvalData['school_president_suffix'],
+    $documentInfo['issue_status'],
+    $documentInfo['revision_number'],
+    $documentInfo['date_effective'],
+    $documentInfo['approved_by']
 );
 
 if ($stmt->execute()) {

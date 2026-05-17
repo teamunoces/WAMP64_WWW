@@ -17,6 +17,11 @@ try {
 
     $conn->set_charset("utf8");
 
+function mergeApprovalDocumentInfo($conn, $row) {
+    return $row;
+}
+
+
     if (isset($_GET['id'])) {
         $reportId = intval($_GET['id']);
         
@@ -30,6 +35,7 @@ try {
         $result = $stmt->get_result();
 
         if ($report = $result->fetch_assoc()) {
+            $report = mergeApprovalDocumentInfo($conn, $report);
             // Format ratings into a single object for easier frontend consumption
             $ratings = [];
             for ($i = 1; $i <= 15; $i++) {
@@ -56,6 +62,7 @@ try {
         
         $reports = [];
         while ($report = $result->fetch_assoc()) {
+            $report = mergeApprovalDocumentInfo($conn, $report);
             // Format ratings for each report
             $ratings = [];
             for ($i = 1; $i <= 15; $i++) {

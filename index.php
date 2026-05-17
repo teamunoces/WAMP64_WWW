@@ -3,27 +3,44 @@ session_start();
 
 require_once 'C:/wamp64/www/SYSTEM_VERSION_!/includes/config.php';
 
-if (isset($_SESSION['user_id'])) {
-    // Use the exact same command that works in PowerShell
+function runAiRecommendationScriptForAllowedRole($role) {
+    if (!in_array($role, ['admin', 'coordinator'], true)) {
+        return;
+    }
+
     $pythonPath = 'c:/python313/python.exe';
     $scriptPath = 'c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/AI.py';
-    
-    // Method 1: Use the command exactly as it works in PowerShell
-    $command = '"c:/python313/python.exe" "c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/AI.py" 2>&1';
-    $output = shell_exec($command);
-    
-    // Method 2 (Alternative): Use escapeshellcmd instead of escapeshellarg
-    // $command = escapeshellcmd('c:/python313/python.exe') . ' ' . escapeshellcmd($scriptPath) . ' 2>&1';
-    // $output = shell_exec($command);
-    
-    // Debug - check if it worked
-    if ($output === null) {
-        error_log("Python script execution failed - no output");
-    } elseif (trim($output) === '') {
-        error_log("Python script executed but produced no output");
-    } else {
-        error_log("Python script output: " . $output);
+    $startupScript = 'c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/start_ai_server.bat';
+
+    if (!file_exists($pythonPath) || !file_exists($scriptPath) || !file_exists($startupScript)) {
+        error_log("Python startup skipped. Missing python or script path.");
+        return;
     }
+
+    $connection = @fsockopen('127.0.0.1', 5000, $errno, $errstr, 1);
+    if ($connection) {
+        fclose($connection);
+        error_log("Python AI recommendation script is already running.");
+        return;
+    }
+
+    if (PHP_OS_FAMILY === 'Windows') {
+        $command = 'cmd /C start /B "" "' . $startupScript . '"';
+    } else {
+        $command = escapeshellarg($pythonPath) . ' ' . escapeshellarg($scriptPath) . ' > /dev/null 2>&1 &';
+    }
+
+    $process = @popen($command, 'r');
+    if (is_resource($process)) {
+        pclose($process);
+        error_log("Python AI recommendation script started for role: " . $role);
+    } else {
+        error_log("Python AI recommendation script failed to start for role: " . $role);
+    }
+}
+
+if (isset($_SESSION['user_id'])) {
+    runAiRecommendationScriptForAllowedRole($_SESSION['role'] ?? '');
     
     // Your redirect logic
     switch ($_SESSION['role']) {

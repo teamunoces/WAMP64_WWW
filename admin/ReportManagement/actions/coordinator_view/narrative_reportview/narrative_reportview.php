@@ -190,6 +190,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     <script src="./get.js"></script>
     <script src="./download.js"></script>
     <script src="./darkmode.js"></script>
-    <script src="./print.js"></script>
+    <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/narrativeview/print.js"></script>
+    
 </body>
 </html>

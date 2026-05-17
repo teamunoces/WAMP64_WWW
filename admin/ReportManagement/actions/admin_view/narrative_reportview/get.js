@@ -52,6 +52,18 @@ async function fetchNarrativeData(reportId = null, reportType = null) {
                 role: report.role,
                 user_id: report.user_id,
                 dean: report.dean,
+                ces_head: report.ces_head,
+                ces_head_suffix: report.ces_head_suffix,
+                vp_acad: report.vp_acad,
+                vp_acad_suffix: report.vp_acad_suffix,
+                vp_admin: report.vp_admin,
+                vp_admin_suffix: report.vp_admin_suffix,
+                school_president: report.school_president,
+                school_president_suffix: report.school_president_suffix,
+                issue_status: report.issue_status,
+                revision_number: report.revision_number,
+                date_effective: report.date_effective,
+                approved_by: report.approved_by,
                 department: report.department,
                 created_at: report.created_at,
                 archived: report.archived
@@ -78,6 +90,8 @@ function populateNarrativeForm(data) {
     }
     
     console.log('Populating narrative form with data:', data);
+
+    displayApprovalDocumentInfo(data);
     
     // Display created_by_name in the signature line
     const createdByNameElement = document.getElementById('created_by_name');
@@ -166,6 +180,43 @@ function populateNarrativeForm(data) {
     }
     
     console.log('Form populated with report ID:', data.id);
+}
+
+function formatNameWithSuffix(name, suffix) {
+    const cleanName = String(name || '').trim();
+    const cleanSuffix = String(suffix || '').trim();
+
+    if (!cleanName) return cleanSuffix;
+    if (!cleanSuffix) return cleanName;
+    return `${cleanName}, ${cleanSuffix}`;
+}
+
+function setTextIfExists(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value || '';
+    }
+}
+
+function setInputByNameIfExists(name, value) {
+    const element = document.querySelector(`input[name="${name}"]`);
+    if (element) {
+        element.value = value || '';
+    }
+}
+
+function displayApprovalDocumentInfo(report) {
+    if (!report) return;
+
+    setTextIfExists('dean', report.dean || '');
+    setTextIfExists('ces_head', formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+    setTextIfExists('vp_acad', formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+    setTextIfExists('vp_admin', formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+    setTextIfExists('school_president', formatNameWithSuffix(report.school_president, report.school_president_suffix));
+    setInputByNameIfExists('issue_status', report.issue_status);
+    setInputByNameIfExists('revision_number', report.revision_number);
+    setInputByNameIfExists('date_effective', report.date_effective);
+    setInputByNameIfExists('approved_by', report.approved_by);
 }
 
 function escapeHtml(text) {

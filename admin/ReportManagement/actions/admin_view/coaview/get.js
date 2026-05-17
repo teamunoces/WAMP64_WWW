@@ -115,35 +115,7 @@ function populateFormFields(report) {
         console.warn('Element with id "created_by_name" not found');
     }
     
-    // Populate dean (this is a DIV in your HTML, so use textContent)
-    const deanElement = document.getElementById('dean');
-    if (deanElement) {
-        deanElement.textContent = report.dean || '';
-        console.log('Dean set to:', report.dean);
-    } else {
-        console.warn('Element with id "dean" not found');
-    }
-    
-    // Populate other approval fields if they exist in the report
-    const cesHeadElement = document.getElementById('ces_head');
-    if (cesHeadElement && report.ces_head) {
-        cesHeadElement.textContent = report.ces_head;
-    }
-    
-    const vpAcadElement = document.getElementById('vp_acad');
-    if (vpAcadElement && report.vp_acad) {
-        vpAcadElement.textContent = report.vp_acad;
-    }
-    
-    const vpAdminElement = document.getElementById('vp_admin');
-    if (vpAdminElement && report.vp_admin) {
-        vpAdminElement.textContent = report.vp_admin;
-    }
-    
-    const schoolPresidentElement = document.getElementById('school_president');
-    if (schoolPresidentElement && report.school_president) {
-        schoolPresidentElement.textContent = report.school_president;
-    }
+    displayApprovalDocumentInfo(report);
     
     // Populate admin comment if it exists
     const adminCommentField = document.getElementById('admincomment');
@@ -165,4 +137,41 @@ function populateFormFields(report) {
         created_at: report.created_at,
         dean: report.dean
     });
+}
+
+function formatNameWithSuffix(name, suffix) {
+    const cleanName = String(name || '').trim();
+    const cleanSuffix = String(suffix || '').trim();
+
+    if (!cleanName) return cleanSuffix;
+    if (!cleanSuffix) return cleanName;
+    return `${cleanName}, ${cleanSuffix}`;
+}
+
+function setTextIfExists(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value || '';
+    }
+}
+
+function setInputByNameIfExists(name, value) {
+    const element = document.querySelector(`input[name="${name}"]`);
+    if (element) {
+        element.value = value || '';
+    }
+}
+
+function displayApprovalDocumentInfo(report) {
+    if (!report) return;
+
+    setTextIfExists('dean', report.dean || '');
+    setTextIfExists('ces_head', formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+    setTextIfExists('vp_acad', formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+    setTextIfExists('vp_admin', formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+    setTextIfExists('school_president', formatNameWithSuffix(report.school_president, report.school_president_suffix));
+    setInputByNameIfExists('issue_status', report.issue_status);
+    setInputByNameIfExists('revision_number', report.revision_number);
+    setInputByNameIfExists('date_effective', report.date_effective);
+    setInputByNameIfExists('approved_by', report.approved_by);
 }

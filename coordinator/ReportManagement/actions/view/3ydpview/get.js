@@ -52,10 +52,10 @@ async function loadReport() {
         setText("dean", project.dean);
 
         // Optional: display these too if they exist in 3ydp table
-        setText("ces_head", project.ces_head);
-        setText("vp_acad", project.vp_acad);
-        setText("vp_admin", project.vp_admin);
-        setText("school_president", project.school_president);
+        setText("ces_head", formatNameWithSuffix(project.ces_head, project.ces_head_suffix));
+        setText("vp_acad", formatNameWithSuffix(project.vp_acad, project.vp_acad_suffix));
+        setText("vp_admin", formatNameWithSuffix(project.vp_admin, project.vp_admin_suffix));
+        setText("school_president", formatNameWithSuffix(project.school_president, project.school_president_suffix));
 
         // Optional document info fields
         setInputByName("issue_status", project.issue_status);
@@ -96,6 +96,16 @@ function setText(id, value) {
 
     element.textContent = value || "";
     element.style.textAlign = "left";
+}
+
+function formatNameWithSuffix(name, suffix) {
+    const cleanName = String(name || "").trim();
+    const cleanSuffix = String(suffix || "").trim();
+
+    if (!cleanName) return cleanSuffix;
+    if (!cleanSuffix) return cleanName;
+
+    return `${cleanName}, ${cleanSuffix}`;
 }
 
 function setInputByName(name, value) {

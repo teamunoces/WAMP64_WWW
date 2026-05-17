@@ -6,6 +6,42 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
+function runAiRecommendationScriptForAllowedRole($role) {
+    if (!in_array($role, ['admin', 'coordinator'], true)) {
+        return;
+    }
+
+    $pythonPath = 'c:/python313/python.exe';
+    $scriptPath = 'c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/AI.py';
+    $startupScript = 'c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/start_ai_server.bat';
+
+    if (!file_exists($pythonPath) || !file_exists($scriptPath) || !file_exists($startupScript)) {
+        error_log("Python startup skipped. Missing python or script path.");
+        return;
+    }
+
+    $connection = @fsockopen('127.0.0.1', 5000, $errno, $errstr, 1);
+    if ($connection) {
+        fclose($connection);
+        error_log("Python AI recommendation script is already running.");
+        return;
+    }
+
+    if (PHP_OS_FAMILY === 'Windows') {
+        $command = 'cmd /C start /B "" "' . $startupScript . '"';
+    } else {
+        $command = escapeshellarg($pythonPath) . ' ' . escapeshellarg($scriptPath) . ' > /dev/null 2>&1 &';
+    }
+
+    $process = @popen($command, 'r');
+    if (is_resource($process)) {
+        pclose($process);
+        error_log("Python AI recommendation script started for role: " . $role);
+    } else {
+        error_log("Python AI recommendation script failed to start for role: " . $role);
+    }
+}
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 $username = trim($data['username'] ?? '');
@@ -41,17 +77,7 @@ try {
             $_SESSION['department'] = $user['department'];
             $_SESSION['dean'] = $user['dean']; // ✅ Now works!
 
-            // Method 1: Use the command exactly as it works in PowerShell
-            $command = '"c:/python313/python.exe" "c:/wamp64/www/SYSTEM_VERSION_!/coordinator/Report/3ydpreport/AI_RECOMMENDATION/AI.py" 2>&1';
-            $output = shell_exec($command);
-
-            if ($output === null) {
-                error_log("Python script execution failed - no output");
-            } elseif (trim($output) === '') {
-                error_log("Python script executed but produced no output");
-            } else {
-                error_log("Python script output: " . $output);
-            }
+            runAiRecommendationScriptForAllowedRole($user['role']);
 
             echo json_encode(['success' => true, 'role' => $user['role']]);
             exit();

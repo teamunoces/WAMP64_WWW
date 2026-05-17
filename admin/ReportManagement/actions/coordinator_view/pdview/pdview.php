@@ -253,7 +253,7 @@ $reportId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '';
     <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/js/getapproval.js"></script>
     <script src="./download.js"></script>
     <script src="./darkmode.js"></script>
-    <script src="./print.js"></script>
+    <script src="/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pdview/print.js"></script>
 
 </body>
 </html>

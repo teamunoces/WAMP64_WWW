@@ -173,22 +173,22 @@ async function printReport() {
         margin-bottom: 10px;
         width: 100% !important;
         max-width: 100% !important;
-        gap: 10px;
+        gap: 8px;
     }
 
     .logo-left {
-        height: 72px !important;
+        height: 86px !important;
         width: auto !important;
-        max-width: 82px !important;
+        max-width: 96px !important;
         display: block !important;
         flex: 0 0 auto !important;
         object-fit: contain !important;
     }
 
     .logo-left2 {
-        height: 64px !important;
+        height: 80px !important;
         width: auto !important;
-        max-width: 74px !important;
+        max-width: 90px !important;
         display: block !important;
         flex: 0 0 auto !important;
         object-fit: contain !important;
@@ -198,15 +198,15 @@ async function printReport() {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 10px;
+        gap: 8px;
         flex: 0 0 auto !important;
-        margin-right: 10px;
+        margin-right: 6px;
     }
 
     .logos-right img {
-        height: 64px !important;
+        height: 78px !important;
         width: auto !important;
-        max-width: 74px !important;
+        max-width: 92px !important;
         display: block !important;
         object-fit: contain !important;
     }
@@ -215,7 +215,7 @@ async function printReport() {
         text-align: center;
         flex: 1 1 auto !important;
         min-width: 0 !important;
-        padding: 0 10px;
+        padding: 0 8px;
     }
 
     .college-info h1 {

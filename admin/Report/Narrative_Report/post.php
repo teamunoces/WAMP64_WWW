@@ -33,7 +33,6 @@ if (empty($narrate_success) || empty($provide_data) || empty($identify_problems)
 $created_by_name = $_SESSION['name'] ?? '';
 $role = $_SESSION['role'] ?? '';
 $user_id = $_SESSION['user_id'] ?? '';
-$dean = $_SESSION['dean'] ?? '';
 $department = $_SESSION['department'] ?? '';
 
 // Database connection
@@ -45,6 +44,49 @@ $password = '';  // Change this
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $approvalData = [
+        'dean' => $_SESSION['dean'] ?? '',
+        'ces_head' => '',
+        'ces_head_suffix' => '',
+        'vp_acad' => '',
+        'vp_acad_suffix' => '',
+        'vp_admin' => '',
+        'vp_admin_suffix' => '',
+        'school_president' => '',
+        'school_president_suffix' => ''
+    ];
+
+    $approvalStmt = $pdo->prepare("
+        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+               vp_admin, vp_admin_suffix, school_president, school_president_suffix
+        FROM approval_db.approvals
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $approvalStmt->execute();
+        if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
+            $approvalData = array_merge($approvalData, $approvalRow);
+        }
+    }
+
+    $documentInfo = [
+        'issue_status' => '',
+        'revision_number' => '',
+        'date_effective' => '',
+        'approved_by' => ''
+    ];
+
+    $documentStmt = $pdo->query("
+        SELECT issue_status, revision_number, date_effective, approved_by
+        FROM approval_db.document_info
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if ($documentRow = $documentStmt->fetch(PDO::FETCH_ASSOC)) {
+        $documentInfo = array_merge($documentInfo, $documentRow);
+    }
     
     // Prepare INSERT statement
     $sql = "INSERT INTO narrative_report (
@@ -60,7 +102,19 @@ try {
                 department,
                 status,
                 archived,
-                feedback
+                feedback,
+                ces_head,
+                ces_head_suffix,
+                vp_acad,
+                vp_acad_suffix,
+                vp_admin,
+                vp_admin_suffix,
+                school_president,
+                school_president_suffix,
+                issue_status,
+                revision_number,
+                date_effective,
+                approved_by
             ) VALUES (
                 :type, 
                 :narrate_success, 
@@ -74,7 +128,19 @@ try {
                 :department,
                 'pending',
                 'not archived',
-                ''
+                '',
+                :ces_head,
+                :ces_head_suffix,
+                :vp_acad,
+                :vp_acad_suffix,
+                :vp_admin,
+                :vp_admin_suffix,
+                :school_president,
+                :school_president_suffix,
+                :issue_status,
+                :revision_number,
+                :date_effective,
+                :approved_by
             )";
     
     $stmt = $pdo->prepare($sql);
@@ -87,8 +153,20 @@ try {
         ':created_by_name' => $created_by_name,
         ':role' => $role,
         ':user_id' => $user_id,
-        ':dean' => $dean,
-        ':department' => $department
+        ':dean' => $approvalData['dean'],
+        ':department' => $department,
+        ':ces_head' => $approvalData['ces_head'],
+        ':ces_head_suffix' => $approvalData['ces_head_suffix'],
+        ':vp_acad' => $approvalData['vp_acad'],
+        ':vp_acad_suffix' => $approvalData['vp_acad_suffix'],
+        ':vp_admin' => $approvalData['vp_admin'],
+        ':vp_admin_suffix' => $approvalData['vp_admin_suffix'],
+        ':school_president' => $approvalData['school_president'],
+        ':school_president_suffix' => $approvalData['school_president_suffix'],
+        ':issue_status' => $documentInfo['issue_status'],
+        ':revision_number' => $documentInfo['revision_number'],
+        ':date_effective' => $documentInfo['date_effective'],
+        ':approved_by' => $documentInfo['approved_by']
     ]);
     
     echo json_encode([

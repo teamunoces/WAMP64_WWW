@@ -16,6 +16,11 @@ try {
     exit;
 }
 
+
+function mergeApprovalDocumentInfo($pdo, $row) {
+    return $row;
+}
+
 // Get parameters
 $reportId = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $reportType = isset($_GET['type']) ? $_GET['type'] : null;
@@ -63,6 +68,10 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if ($results) {
+        foreach ($results as &$row) {
+            $row = mergeApprovalDocumentInfo($pdo, $row);
+        }
+        unset($row);
         echo json_encode([
             'success' => true,
             'data' => $results

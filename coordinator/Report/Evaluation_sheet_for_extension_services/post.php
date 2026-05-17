@@ -107,8 +107,50 @@ $q15_rating = isset($data['ratings']['q15']) ? intval($data['ratings']['q15']) :
 $createdByName = $_SESSION['name'] ?? 'Unknown User';
 $userRole = $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
 $userId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
-$dean = $_SESSION['dean'] ?? $_SESSION['department_head'] ?? '';
 $department = $_SESSION['department'] ?? $_SESSION['user_department'] ?? '';
+
+$approvalData = [
+    'dean' => $_SESSION['dean'] ?? '',
+    'ces_head' => '',
+    'ces_head_suffix' => '',
+    'vp_acad' => '',
+    'vp_acad_suffix' => '',
+    'vp_admin' => '',
+    'vp_admin_suffix' => '',
+    'school_president' => '',
+    'school_president_suffix' => ''
+];
+
+$approvalStmt = $conn->prepare("
+    SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+           vp_admin, vp_admin_suffix, school_president, school_president_suffix
+    FROM approval_db.approvals
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+$approvalStmt->execute();
+$approvalResult = $approvalStmt->get_result();
+if ($approvalRow = $approvalResult->fetch_assoc()) {
+    $approvalData = array_merge($approvalData, $approvalRow);
+}
+$approvalStmt->close();
+
+$documentInfo = [
+    'issue_status' => '',
+    'revision_number' => '',
+    'date_effective' => '',
+    'approved_by' => ''
+];
+
+$documentResult = $conn->query("
+    SELECT issue_status, revision_number, date_effective, approved_by
+    FROM approval_db.document_info
+    ORDER BY updated_at DESC
+    LIMIT 1
+");
+if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
+    $documentInfo = array_merge($documentInfo, $documentRow);
+}
 
 // Status and archive flags
 $status = 'pending';
@@ -146,7 +188,9 @@ $sql = "INSERT INTO evaluation_reports (
     q6_rating, q7_rating, q8_rating, q9_rating, q10_rating,
     q11_rating, q12_rating, q13_rating, q14_rating, q15_rating,
     evaluated_by, signature, evaluation_date,
-    created_by_name, status, archived, role, user_id, dean, department
+    created_by_name, status, archived, role, user_id, dean, department,
+    ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix,
+    school_president, school_president_suffix, issue_status, revision_number, date_effective, approved_by
 ) VALUES (
     ?,
     ?, ?, ?,
@@ -154,7 +198,9 @@ $sql = "INSERT INTO evaluation_reports (
     ?, ?, ?, ?, ?,
     ?, ?, ?, ?, ?,
     ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?
 )";
 
 $stmt = $conn->prepare($sql);
@@ -170,9 +216,9 @@ if (!$stmt) {
     exit();
 }
 
-
+$paramTypes = "ssss" . str_repeat("i", 15) . str_repeat("s", 22);
 $stmt->bind_param(
-    "ssssiiiiiiiiiiiiiiissssssssss",
+    $paramTypes,
     $type,
     $venue,
     $implementing_department,
@@ -200,8 +246,20 @@ $stmt->bind_param(
     $archived,
     $userRole,
     $userId,
-    $dean,
-    $department
+    $approvalData['dean'],
+    $department,
+    $approvalData['ces_head'],
+    $approvalData['ces_head_suffix'],
+    $approvalData['vp_acad'],
+    $approvalData['vp_acad_suffix'],
+    $approvalData['vp_admin'],
+    $approvalData['vp_admin_suffix'],
+    $approvalData['school_president'],
+    $approvalData['school_president_suffix'],
+    $documentInfo['issue_status'],
+    $documentInfo['revision_number'],
+    $documentInfo['date_effective'],
+    $documentInfo['approved_by']
 );
 
 if ($stmt->execute()) {

@@ -14,6 +14,35 @@ document.addEventListener('DOMContentLoaded', () => {
         el.textContent = value;
     }
 
+    function formatNameWithSuffix(name, suffix) {
+        const cleanName = String(name || '').trim();
+        const cleanSuffix = String(suffix || '').trim();
+
+        if (!cleanName) return cleanSuffix;
+        if (!cleanSuffix) return cleanName;
+        return `${cleanName}, ${cleanSuffix}`;
+    }
+
+    function setInputByName(name, value) {
+        const el = document.querySelector(`input[name="${name}"]`);
+        if (!el) return;
+        el.value = value || '';
+    }
+
+    function displayApprovalDocumentInfo(report) {
+        if (!report) return;
+
+        setText('dean', report.dean || '');
+        setText('ces_head', formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+        setText('vp_acad', formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+        setText('vp_admin', formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+        setText('school_president', formatNameWithSuffix(report.school_president, report.school_president_suffix));
+        setInputByName('issue_status', report.issue_status);
+        setInputByName('revision_number', report.revision_number);
+        setInputByName('date_effective', report.date_effective);
+        setInputByName('approved_by', report.approved_by);
+    }
+
     function setCheckbox(selector, checked) {
         const el = document.querySelector(selector);
         if (!el) return;
@@ -162,9 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Populating form:', report);
 
         // Optional fields - safe even if IDs do not exist
-        setText('dean', report.dean);
         setText('created_by', report.created_by_name);
         setValue('admincomment', report.feedback);
+        displayApprovalDocumentInfo(report);
 
         // Header fields
         setValue('programTitle', report.program_title);
@@ -329,19 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
             otherRec.value = report.other_recommendations;
             autoExpand(otherRec);
         }
-
-        // ========================
-        // DOCUMENT INFO
-        // ========================
-        const issueStatus = document.querySelector('input[name="issue_status"]');
-        const revisionNumber = document.querySelector('input[name="revision_number"]');
-        const dateEffective = document.querySelector('input[name="date_effective"]');
-        const approvedBy = document.querySelector('input[name="approved_by"]');
-
-        if (issueStatus && report.issue_status) issueStatus.value = report.issue_status;
-        if (revisionNumber && report.revision_number) revisionNumber.value = report.revision_number;
-        if (dateEffective && report.date_effective) dateEffective.value = report.date_effective;
-        if (approvedBy && report.approved_by) approvedBy.value = report.approved_by;
 
         // Keep checkboxes visible/high contrast
         document.querySelectorAll('input[type="checkbox"]').forEach(cb => {

@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function populateFormFields(report) {
+    displayApprovalDocumentInfo(report);
     const fieldMappings = {
         participant: report.participant || "",
         cert_department: report.cert_department || "",
@@ -80,10 +81,10 @@ function populateFormFields(report) {
 
     setElementText("created_by_name", report.created_by_name || "");
     setElementText("dean", report.dean || "");
-    setElementText("ces_head", report.ces_head || "");
-    setElementText("vp_acad", report.vp_acad || "");
-    setElementText("vp_admin", report.vp_admin || "");
-    setElementText("school_president", report.school_president || "");
+    setElementText("ces_head", formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+    setElementText("vp_acad", formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+    setElementText("vp_admin", formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+    setElementText("school_president", formatNameWithSuffix(report.school_president, report.school_president_suffix));
 
     const adminCommentField = document.getElementById("admincomment");
 
@@ -118,4 +119,39 @@ function setElementText(id, value) {
     if (!element) return;
 
     element.textContent = value || "";
+}
+
+function formatNameWithSuffix(name, suffix) {
+    const cleanName = String(name || '').trim();
+    const cleanSuffix = String(suffix || '').trim();
+
+    if (!cleanName) return cleanSuffix;
+    if (!cleanSuffix) return cleanName;
+
+    return `${cleanName}, ${cleanSuffix}`;
+}
+
+function setTextIfExists(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value || '';
+}
+
+function setInputByNameIfExists(name, value) {
+    const element = document.querySelector(`[name="${name}"]`);
+    if (element) element.value = value || '';
+}
+
+function displayApprovalDocumentInfo(report) {
+    if (!report) return;
+
+    setTextIfExists('dean', report.dean || '');
+    setTextIfExists('ces_head', formatNameWithSuffix(report.ces_head, report.ces_head_suffix));
+    setTextIfExists('vp_acad', formatNameWithSuffix(report.vp_acad, report.vp_acad_suffix));
+    setTextIfExists('vp_admin', formatNameWithSuffix(report.vp_admin, report.vp_admin_suffix));
+    setTextIfExists('school_president', formatNameWithSuffix(report.school_president, report.school_president_suffix));
+
+    setInputByNameIfExists('issue_status', report.issue_status);
+    setInputByNameIfExists('revision_number', report.revision_number);
+    setInputByNameIfExists('date_effective', report.date_effective);
+    setInputByNameIfExists('approved_by', report.approved_by);
 }

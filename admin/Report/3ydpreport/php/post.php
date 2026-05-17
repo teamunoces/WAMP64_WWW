@@ -15,7 +15,69 @@ try {
     $department = $_SESSION['department'];
     $role = $_SESSION['role'];
     $user_id = $_SESSION['user_id'];
-    $dean = $_SESSION['dean'] ?? 'N/A';
+
+    // --- Approval data scoped to the user's department ---
+    $approvalConn = new mysqli("localhost", "root", "", "approval_db");
+    if ($approvalConn->connect_error) throw new Exception($approvalConn->connect_error);
+
+    $approvalData = [
+        'dean' => $_SESSION['dean'] ?? '',
+        'ces_head' => '',
+        'ces_head_suffix' => '',
+        'vp_acad' => '',
+        'vp_acad_suffix' => '',
+        'vp_admin' => '',
+        'vp_admin_suffix' => '',
+        'school_president' => '',
+        'school_president_suffix' => ''
+    ];
+
+    $approvalStmt = $approvalConn->prepare("
+        SELECT
+            ces_head,
+            ces_head_suffix,
+            vp_acad,
+            vp_acad_suffix,
+            vp_admin,
+            vp_admin_suffix,
+            school_president,
+            school_president_suffix
+        FROM approvals
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $approvalStmt->execute();
+        $approvalResult = $approvalStmt->get_result();
+    } else {
+        $approvalResult = false;
+    }
+    if ($approvalResult && $approvalRow = $approvalResult->fetch_assoc()) {
+        $approvalData = array_merge($approvalData, $approvalRow);
+    }
+    $approvalStmt->close();
+
+    $documentInfo = [
+        'issue_status' => '',
+        'revision_number' => '',
+        'date_effective' => '',
+        'approved_by' => ''
+    ];
+
+    $documentResult = $approvalConn->query("
+        SELECT
+            issue_status,
+            revision_number,
+            date_effective,
+            approved_by
+        FROM document_info
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
+        $documentInfo = array_merge($documentInfo, $documentRow);
+    }
+    $approvalConn->close();
 
     $input = file_get_contents("php://input");
     $data = json_decode($input, true);
@@ -32,10 +94,36 @@ try {
 
     // --- Insert main report ---
     $stmt = $conn->prepare("INSERT INTO `3ydp`
-        (type, title_of_project, description_of_project, general_objectives, program_justification, beneficiaries, program_plan_text, created_by_name, department, role, user_id, dean)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (
+            type,
+            title_of_project,
+            description_of_project,
+            general_objectives,
+            program_justification,
+            beneficiaries,
+            program_plan_text,
+            created_by_name,
+            department,
+            role,
+            user_id,
+            dean,
+            ces_head,
+            ces_head_suffix,
+            vp_acad,
+            vp_acad_suffix,
+            vp_admin,
+            vp_admin_suffix,
+            school_president,
+            school_president_suffix,
+            issue_status,
+            revision_number,
+            date_effective,
+            approved_by
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $paramTypes = str_repeat("s", 24);
     $stmt->bind_param(
-        "ssssssssssis",
+        $paramTypes,
         $type,
         $title,
         $description,
@@ -47,7 +135,19 @@ try {
         $department,
         $role,
         $user_id,
-        $dean
+        $approvalData['dean'],
+        $approvalData['ces_head'],
+        $approvalData['ces_head_suffix'],
+        $approvalData['vp_acad'],
+        $approvalData['vp_acad_suffix'],
+        $approvalData['vp_admin'],
+        $approvalData['vp_admin_suffix'],
+        $approvalData['school_president'],
+        $approvalData['school_president_suffix'],
+        $documentInfo['issue_status'],
+        $documentInfo['revision_number'],
+        $documentInfo['date_effective'],
+        $documentInfo['approved_by']
     );
     $stmt->execute();
     $report_id = $conn->insert_id;

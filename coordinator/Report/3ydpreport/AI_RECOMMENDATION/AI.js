@@ -20,6 +20,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const recommendationContainer = document.getElementById('recommendation-container'); 
     const recommendationList = document.getElementById('recommendation-list');
     const aiSearchInput = document.getElementById('ai-input');
+    const AI_SERVER_URL = "http://127.0.0.1:5000";
+
+    async function waitForAiServer(timeoutMs = 90000) {
+        const startedAt = Date.now();
+
+        while (Date.now() - startedAt < timeoutMs) {
+            try {
+                const response = await fetch(`${AI_SERVER_URL}/health`, { cache: "no-store" });
+                if (response.ok) {
+                    return true;
+                }
+            } catch (error) {
+                // The server may still be loading the AI model after login.
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+
+        return false;
+    }
     
         recommendationButton.addEventListener('click', async function () {
             const aiInputValue = aiSearchInput.value.trim();
@@ -35,7 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
             recommendationButton.disabled = true;
             
             try {
-                const response = await fetch("http://127.0.0.1:5000/recommend", {
+                recommendationButton.innerHTML = "<span>Starting AI server...</span>";
+                const serverReady = await waitForAiServer();
+
+                if (!serverReady) {
+                    throw new Error("AI server did not become ready on port 5000.");
+                }
+
+                recommendationButton.innerHTML = "<span>AI is Analyzing...</span>";
+                const response = await fetch(`${AI_SERVER_URL}/recommend`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     // Sending the query (which is now never empty)
@@ -134,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
         } catch (error) {
             console.error("Fetch Error:", error);
-            alert("Could not connect to the AI server. Make sure it's running on port 5000.");
+            alert("Could not connect to the AI server. Please log in again or check AI_RECOMMENDATION/ai_server.log.");
         } finally {
             recommendationButton.innerHTML = "💡 Get AI-Generated Recommendations";
             recommendationButton.disabled = false;

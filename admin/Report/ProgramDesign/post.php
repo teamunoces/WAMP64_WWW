@@ -23,13 +23,60 @@ try {
     $createdBy = $_SESSION['name'] ?? 'Unknown User';
     $role = $_SESSION['role'] ?? 'N/A';
     $user_id = $_SESSION['user_id'] ?? '0'; // Ensure it matches your login session key
-    $dean = $_SESSION['dean'] ?? 'N/A';
+    $sessionDepartment = $_SESSION['department'] ?? '';
+
+    $approvalData = [
+        'dean' => $_SESSION['dean'] ?? '',
+        'ces_head' => '',
+        'ces_head_suffix' => '',
+        'vp_acad' => '',
+        'vp_acad_suffix' => '',
+        'vp_admin' => '',
+        'vp_admin_suffix' => '',
+        'school_president' => '',
+        'school_president_suffix' => ''
+    ];
+
+    $approvalStmt = $pdo->prepare("
+        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
+               vp_admin, vp_admin_suffix, school_president, school_president_suffix
+        FROM approval_db.approvals
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        $approvalStmt->execute();
+        if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
+            $approvalData = array_merge($approvalData, $approvalRow);
+        }
+    }
+
+    $documentInfo = [
+        'issue_status' => '',
+        'revision_number' => '',
+        'date_effective' => '',
+        'approved_by' => ''
+    ];
+
+    $documentStmt = $pdo->query("
+        SELECT issue_status, revision_number, date_effective, approved_by
+        FROM approval_db.document_info
+        ORDER BY updated_at DESC
+        LIMIT 1
+    ");
+    if ($documentRow = $documentStmt->fetch()) {
+        $documentInfo = array_merge($documentInfo, $documentRow);
+    }
     
 
     // 1. Insert into pd_main with role and user_id
     $sqlMain = "INSERT INTO pd_main 
-    (type, department, title_of_activity, participants, location, created_by_name, feedback, status, role, user_id, dean) 
-    VALUES (:type, :department, :title_of_activity, :participants, :location, :created_by_name, :feedback, :status, :role, :user_id, :dean)";
+    (type, department, title_of_activity, participants, location, created_by_name, feedback, status, role, user_id, dean,
+     ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix, school_president,
+     school_president_suffix, issue_status, revision_number, date_effective, approved_by) 
+    VALUES (:type, :department, :title_of_activity, :participants, :location, :created_by_name, :feedback, :status, :role, :user_id, :dean,
+     :ces_head, :ces_head_suffix, :vp_acad, :vp_acad_suffix, :vp_admin, :vp_admin_suffix, :school_president,
+     :school_president_suffix, :issue_status, :revision_number, :date_effective, :approved_by)";
     
     $stmtMain = $pdo->prepare($sqlMain);
     $stmtMain->execute([
@@ -43,7 +90,19 @@ try {
         ':status'            => $_POST['status'] ?? 'pending',
         ':role'              => $role,
         ':user_id'           => $user_id,
-        ':dean'              => $dean
+        ':dean'              => $approvalData['dean'],
+        ':ces_head'          => $approvalData['ces_head'],
+        ':ces_head_suffix'   => $approvalData['ces_head_suffix'],
+        ':vp_acad'           => $approvalData['vp_acad'],
+        ':vp_acad_suffix'    => $approvalData['vp_acad_suffix'],
+        ':vp_admin'          => $approvalData['vp_admin'],
+        ':vp_admin_suffix'   => $approvalData['vp_admin_suffix'],
+        ':school_president'  => $approvalData['school_president'],
+        ':school_president_suffix' => $approvalData['school_president_suffix'],
+        ':issue_status'      => $documentInfo['issue_status'],
+        ':revision_number'   => $documentInfo['revision_number'],
+        ':date_effective'    => $documentInfo['date_effective'],
+        ':approved_by'       => $documentInfo['approved_by']
     ]);
 
 $reportId = $pdo->lastInsertId();
