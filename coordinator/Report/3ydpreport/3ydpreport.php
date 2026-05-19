@@ -25,7 +25,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
     }
 </style>
   <title>3-Year Development Plan</title>
-  <link rel="stylesheet" href="3ydpreport.css">
+  <link rel="stylesheet" href="3ydpreport.css?v=20260519g">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="darkmode.css">
 </head>
@@ -60,6 +60,14 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
         <header>
             <h1>3-Year Development Plan</h1>
         </header>
+
+        <div id="draftNotice" class="draft-notice" hidden>
+            <span>You have an unfinished draft.</span>
+            <div class="draft-notice-actions">
+                <button type="button" id="resumeDraftBtn">Resume Work</button>
+                <button type="button" id="closeDraftNoticeBtn" class="draft-notice-close" aria-label="Close draft notice">×</button>
+            </div>
+        </div>
 
         <form>
             <!-- Project Details -->
@@ -148,10 +156,11 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
 
             <!-- Submit Buttons -->
             <div class="form-actions">
-                <button type="submit" class="btn btn-submit">Submit</button>
+                <button type="button" class="btn btn-draft">Save Draft</button>
                 <button type="button" class="btn btn-clear">Clear</button>
+                <button type="submit" class="btn btn-submit">Submit</button>
                 <button type="button" class="btn recommendation-btn">
-                    💡Recommendations
+                    AI Recommendations
                 </button>
             </div>
         </form>
@@ -172,7 +181,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
     console.log(reportType);
     </script>
     <script src="./AI_RECOMMENDATION/AI.js" defer></script>
-    <script src="./js/post.js" defer></script>
+    <script src="./js/post.js?v=20260519f" defer></script>
     <script src="paperlines.js"></script>
     <script src="./darkmode.js"></script>
 </body>

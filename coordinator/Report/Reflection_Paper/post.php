@@ -1,283 +1,79 @@
 <?php
-// post.php
-// Handles saving reflection paper data to the database
-
 session_start();
-
-// Set response headers
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
+require_once __DIR__ . '/../shared/report_draft.php';
+
+const REFLECTION_REPORT_TYPE = 'Monthly Accomplishment Report- Reflection Paper';
+
+function clean_reflection_value($value): string {
+    return trim((string) ($value ?? ''));
 }
 
-// Check if user is logged in
-if (!isset($_SESSION['name']) || !isset($_SESSION['role'])) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'User not authenticated. Please login first.'
-    ]);
-    exit();
-}
-
-// Check if request method is POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Invalid request method. Only POST is allowed.'
-    ]);
-    exit();
-}
-
-// Get JSON input
-$inputJSON = file_get_contents('php://input');
-$input = json_decode($inputJSON, true);
-
-// Validate JSON input
-if (!$input) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Invalid JSON input'
-    ]);
-    exit();
-}
-
-// Define required fields
-$requiredFields = ['beneficiary_name', 'implementing_department'];
-$missingFields = [];
-
-foreach ($requiredFields as $field) {
-    if (empty($input[$field])) {
-        $missingFields[] = $field;
+function transform_reflection_payload(array $input): array {
+    $extensionServices = $input['extension_services'] ?? '';
+    if (is_array($extensionServices)) {
+        $extensionServices = implode(', ', array_filter(array_map('trim', $extensionServices)));
     }
-}
 
-if (!empty($missingFields)) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Missing required fields: ' . implode(', ', $missingFields)
-    ]);
-    exit();
+    return [
+        'action' => $input['action'] ?? 'submit',
+        'draft_id' => $input['draft_id'] ?? null,
+        'type' => clean_reflection_value($input['report_type'] ?? $input['type'] ?? REFLECTION_REPORT_TYPE),
+        'beneficiary_name' => clean_reflection_value($input['beneficiary_name'] ?? ''),
+        'implementing_department' => clean_reflection_value($input['implementing_department'] ?? ''),
+        'extension_services' => clean_reflection_value($extensionServices),
+        'answer_one' => clean_reflection_value($input['answer_one'] ?? ''),
+        'answer_two' => clean_reflection_value($input['answer_two'] ?? ''),
+        'answer_three' => clean_reflection_value($input['answer_three'] ?? ''),
+        'beneficiary_signature' => clean_reflection_value($input['beneficiary_signature'] ?? '')
+    ];
 }
-
-// Optional: Validate at least one extension service is selected
-if (empty($input['extension_services'])) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Please select at least one extension service type.'
-    ]);
-    exit();
-}
-
-// Database connection
-$host = 'localhost';
-$dbname = 'ces_reports_db';
-$username = 'root'; // Change to your database username
-$password = '';     // Change to your database password
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Sanitize input data
-    $beneficiary_name = htmlspecialchars(strip_tags(trim($input['beneficiary_name'])));
-    $implementing_department = htmlspecialchars(strip_tags(trim($input['implementing_department'])));
-    $extension_services = htmlspecialchars(strip_tags(trim($input['extension_services'] ?? '')));
-    $answer_one = htmlspecialchars(strip_tags(trim($input['answer_one'] ?? '')));
-    $answer_two = htmlspecialchars(strip_tags(trim($input['answer_two'] ?? '')));
-    $answer_three = htmlspecialchars(strip_tags(trim($input['answer_three'] ?? '')));
-    $beneficiary_signature = htmlspecialchars(strip_tags(trim($input['beneficiary_signature'] ?? '')));
-    $report_type = htmlspecialchars(strip_tags(trim($input['report_type'] ?? 'Monthly Accomplishment Report- Reflection Paper')));
-    
-    // Get session data
-    $created_by_name = $_SESSION['name'] ?? '';
-    $user_role = $_SESSION['role'] ?? '';
-    $user_department = $_SESSION['department'] ?? '';
-    $user_id = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
+    $pdo = draft_pdo();
+    $data = transform_reflection_payload(draft_input());
+    $action = $data['action'];
 
-    $approvalData = [
-        'dean' => $_SESSION['dean'] ?? '',
-        'ces_head' => '',
-        'ces_head_suffix' => '',
-        'vp_acad' => '',
-        'vp_acad_suffix' => '',
-        'vp_admin' => '',
-        'vp_admin_suffix' => '',
-        'school_president' => '',
-        'school_president_suffix' => ''
-    ];
-
-    $approvalStmt = $pdo->prepare("
-        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
-               vp_admin, vp_admin_suffix, school_president, school_president_suffix
-        FROM approval_db.approvals
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-    $approvalStmt->execute();
-    if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
-        $approvalData = array_merge($approvalData, $approvalRow);
-    }
-
-    $documentInfo = [
-        'issue_status' => '',
-        'revision_number' => '',
-        'date_effective' => '',
-        'approved_by' => ''
-    ];
-
-    $documentStmt = $pdo->query("
-        SELECT issue_status, revision_number, date_effective, approved_by
-        FROM approval_db.document_info
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-    if ($documentRow = $documentStmt->fetch(PDO::FETCH_ASSOC)) {
-        $documentInfo = array_merge($documentInfo, $documentRow);
-    }
-    
-    // Validate required session data
-    if (empty($created_by_name)) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Session error: User name not found.'
+    if ($action === 'get_draft') {
+        $draft = draft_get_main($pdo, 'reflection_paper');
+        draft_json([
+            'success' => true,
+            'user_id' => (string) ($_SESSION['user_id'] ?? ''),
+            'draft' => $draft
         ]);
-        exit();
     }
-    
-    // Prepare SQL statement matching your table structure
-    $sql = "INSERT INTO reflection_paper (
-        type,
-        beneficiary_name,
-        implementing_department,
-        extension_services,
-        answer_one,
-        answer_two,
-        answer_three,
-        beneficiary_signature,
-        created_by_name,
-        role,
-        department,
-        dean,
-        user_id,
-        status,
-        archived,
-        ces_head,
-        ces_head_suffix,
-        vp_acad,
-        vp_acad_suffix,
-        vp_admin,
-        vp_admin_suffix,
-        school_president,
-        school_president_suffix,
-        issue_status,
-        revision_number,
-        date_effective,
-        approved_by,
-        created_at
-    ) VALUES (
-        :type,
-        :beneficiary_name,
-        :implementing_department,
-        :extension_services,
-        :answer_one,
-        :answer_two,
-        :answer_three,
-        :beneficiary_signature,
-        :created_by_name,
-        :role,
-        :department,
-        :dean,
-        :user_id,
-        :status,
-        :archived,
-        :ces_head,
-        :ces_head_suffix,
-        :vp_acad,
-        :vp_acad_suffix,
-        :vp_admin,
-        :vp_admin_suffix,
-        :school_president,
-        :school_president_suffix,
-        :issue_status,
-        :revision_number,
-        :date_effective,
-        :approved_by,
-        NOW()
-    )";
-    
-    $stmt = $pdo->prepare($sql);
-    
-    // Execute with all parameters
-    $result = $stmt->execute([
-        ':type' => $report_type,
-        ':beneficiary_name' => $beneficiary_name,
-        ':implementing_department' => $implementing_department,
-        ':extension_services' => $extension_services,
-        ':answer_one' => $answer_one,
-        ':answer_two' => $answer_two,
-        ':answer_three' => $answer_three,
-        ':beneficiary_signature' => $beneficiary_signature,
-        ':created_by_name' => $created_by_name,
-        ':role' => $user_role,
-        ':department' => $user_department,
-        ':dean' => $approvalData['dean'],
-        ':user_id' => $user_id,
-        ':status' => 'pending',  // Default status for new submissions
-        ':archived' => 'not archived',
-        ':ces_head' => $approvalData['ces_head'],
-        ':ces_head_suffix' => $approvalData['ces_head_suffix'],
-        ':vp_acad' => $approvalData['vp_acad'],
-        ':vp_acad_suffix' => $approvalData['vp_acad_suffix'],
-        ':vp_admin' => $approvalData['vp_admin'],
-        ':vp_admin_suffix' => $approvalData['vp_admin_suffix'],
-        ':school_president' => $approvalData['school_president'],
-        ':school_president_suffix' => $approvalData['school_president_suffix'],
-        ':issue_status' => $documentInfo['issue_status'],
-        ':revision_number' => $documentInfo['revision_number'],
-        ':date_effective' => $documentInfo['date_effective'],
-        ':approved_by' => $documentInfo['approved_by']
-    ]);
-    
-    if (!$result) {
-        throw new Exception('Failed to insert data into database');
+
+    if ($action === 'submit') {
+        if ($data['beneficiary_name'] === '') {
+            draft_json(['success' => false, 'message' => 'Beneficiary name is required.'], 400);
+        }
+
+        if ($data['implementing_department'] === '') {
+            draft_json(['success' => false, 'message' => 'Implementing department is required.'], 400);
+        }
+
+        if ($data['extension_services'] === '') {
+            draft_json(['success' => false, 'message' => 'Please select at least one extension service type.'], 400);
+        }
     }
-    
-    // Get the inserted ID
-    $insertedId = $pdo->lastInsertId();
-    
-    // Return success response
-    echo json_encode([
-        'success' => true,
-        'message' => 'Report submitted successfully!',
-        'data' => [
-            'id' => $insertedId,
-            'beneficiary_name' => $beneficiary_name,
-            'implementing_department' => $implementing_department,
-            'extension_services' => $extension_services,
-            'status' => 'pending',
-            'submitted_at' => date('Y-m-d H:i:s'),
-            'submitted_by' => $created_by_name,
-            'department' => $user_department,
-            'role' => $user_role,
-            'dean' => $approvalData['dean']
-        ]
-    ]);
-    
-} catch (PDOException $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database error: Unable to save report. Please try again later.'
-    ]);
-} catch (Exception $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'An unexpected error occurred. Please try again later.'
-    ]);
+
+    if ($action === 'save_draft' || $action === 'submit') {
+        $reportId = draft_save_main($pdo, 'reflection_paper', $data, [
+            'default_type' => REFLECTION_REPORT_TYPE
+        ]);
+
+        draft_json([
+            'success' => true,
+            'message' => $action === 'save_draft' ? 'Draft saved successfully.' : 'Report submitted successfully!',
+            'draft_id' => $reportId,
+            'report_id' => $reportId,
+            'user_id' => (string) ($_SESSION['user_id'] ?? '')
+        ]);
+    }
+
+    draft_json(['success' => false, 'message' => 'Invalid action.'], 400);
+} catch (Throwable $e) {
+    draft_json(['success' => false, 'message' => $e->getMessage()], 500);
 }
 ?>

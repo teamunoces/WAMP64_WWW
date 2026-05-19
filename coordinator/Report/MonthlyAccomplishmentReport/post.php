@@ -1,142 +1,43 @@
-<?php
-
+﻿<?php
 session_start();
 header('Content-Type: application/json');
+require_once __DIR__ . '/../shared/report_draft.php';
 
-$host = 'localhost';
-$db   = 'ces_reports_db';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
+function save_mar_details(PDO $pdo, int $reportId, array $rows): void {
+    $pdo->prepare('DELETE FROM mar_table WHERE report_id = ?')->execute([$reportId]);
+    $stmt = $pdo->prepare('INSERT INTO mar_table (report_id, date_of_act, activities_conducted, objectives, act_status, issues_or_concerns, financial_report, recommendations, plans_for_next_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    foreach ($rows as $row) {
+        if (trim(($row['date_of_act'] ?? '') . ($row['activities_conducted'] ?? '')) === '') continue;
+        $stmt->execute([$reportId, $row['date_of_act'] ?? '', $row['activities_conducted'] ?? '', $row['objectives'] ?? '', $row['act_status'] ?? '', $row['issues_or_concerns'] ?? '', $row['financial_report'] ?? '', $row['recommendations'] ?? '', $row['plans_for_next_months'] ?? '']);
+    }
+}
+function load_mar_details(PDO $pdo, int $reportId): array {
+    $stmt = $pdo->prepare('SELECT date_of_act, activities_conducted, objectives, act_status, issues_or_concerns, financial_report, recommendations, plans_for_next_months FROM mar_table WHERE report_id = ? ORDER BY id ASC');
+    $stmt->execute([$reportId]);
+    return $stmt->fetchAll();
+}
 try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-
-    // ===== Get logged-in user's info =====
-    $createdBy = $_SESSION['name'] ?? 'Unknown User';
-    $role = $_SESSION['role'] ?? 'N/A';
-    $user_id = $_SESSION['user_id'] ?? '0'; // Ensure it matches your login session key
-    $sessionDepartment = $_SESSION['department'] ?? '';
-
-    $approvalData = [
-        'dean' => $_SESSION['dean'] ?? '',
-        'ces_head' => '',
-        'ces_head_suffix' => '',
-        'vp_acad' => '',
-        'vp_acad_suffix' => '',
-        'vp_admin' => '',
-        'vp_admin_suffix' => '',
-        'school_president' => '',
-        'school_president_suffix' => ''
-    ];
-
-    $approvalStmt = $pdo->prepare("
-        SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
-               vp_admin, vp_admin_suffix, school_president, school_president_suffix
-        FROM approval_db.approvals
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-    $approvalStmt->execute();
-    if ($approvalRow = $approvalStmt->fetch(PDO::FETCH_ASSOC)) {
-        $approvalData = array_merge($approvalData, $approvalRow);
+    $pdo = draft_pdo();
+    $data = draft_input();
+    $action = $data['action'] ?? 'submit';
+    if ($action === 'get_draft') {
+        $draft = draft_get_main($pdo, 'mar_header');
+        if ($draft) $draft['rows'] = load_mar_details($pdo, (int) $draft['id']);
+        draft_json(['success' => true, 'user_id' => (string) ($_SESSION['user_id'] ?? ''), 'draft' => $draft]);
     }
-
-    $documentInfo = [
-        'issue_status' => '',
-        'revision_number' => '',
-        'date_effective' => '',
-        'approved_by' => ''
-    ];
-
-    $documentStmt = $pdo->query("
-        SELECT issue_status, revision_number, date_effective, approved_by
-        FROM approval_db.document_info
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-    if ($documentRow = $documentStmt->fetch()) {
-        $documentInfo = array_merge($documentInfo, $documentRow);
+    if ($action === 'save_draft' || $action === 'submit') {
+        $rows = is_array($data['rows'] ?? null) ? $data['rows'] : [];
+        unset($data['rows']);
+        $data['type'] = $data['type'] ?? 'Monthly Accomplishment Report';
+        $pdo->beginTransaction();
+        $reportId = draft_save_main($pdo, 'mar_header', $data, ['default_type' => 'Monthly Accomplishment Report']);
+        save_mar_details($pdo, $reportId, $rows);
+        $pdo->commit();
+        draft_json(['success' => true, 'message' => $action === 'save_draft' ? 'Draft saved successfully.' : 'Report submitted successfully.', 'draft_id' => $reportId, 'report_id' => $reportId, 'user_id' => (string) ($_SESSION['user_id'] ?? '')]);
     }
-    
-
-
-    // 1. Insert into main_header with role and user_id
-    $sqlMain = "INSERT INTO mar_header 
-    (type, department, month, title_act, location, benefeciaries, created_by_name, feedback, status, role, user_id, dean,
-     ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix, school_president,
-     school_president_suffix, issue_status, revision_number, date_effective, approved_by) 
-    VALUES (:type, :department, :month, :title_act, :location, :benefeciaries, :created_by_name, :feedback, :status, :role, :user_id, :dean,
-     :ces_head, :ces_head_suffix, :vp_acad, :vp_acad_suffix, :vp_admin, :vp_admin_suffix, :school_president,
-     :school_president_suffix, :issue_status, :revision_number, :date_effective, :approved_by)";
-    
-    $stmtMain = $pdo->prepare($sqlMain);
-    $stmtMain->execute([
-        ':type'              => $_POST['type'] ?? 'Monthly Accomplishment Report',
-        ':department'        => $_POST['department'] ?? '',
-        ':month'             => $_POST['month'] ?? '',
-        ':title_act'         => $_POST['title_act'] ?? '',
-        ':location'          => $_POST['location'] ?? '',
-        ':benefeciaries'     => $_POST['benefeciaries'] ?? '',     
-        ':created_by_name'   => $createdBy,
-        ':feedback'          => $_POST['feedback'] ?? '',
-        ':status'            => $_POST['status'] ?? 'pending',
-        ':role'              => $role,
-        ':user_id'           => $user_id,
-        ':dean'              => $approvalData['dean'],
-        ':ces_head'          => $approvalData['ces_head'],
-        ':ces_head_suffix'   => $approvalData['ces_head_suffix'],
-        ':vp_acad'           => $approvalData['vp_acad'],
-        ':vp_acad_suffix'    => $approvalData['vp_acad_suffix'],
-        ':vp_admin'          => $approvalData['vp_admin'],
-        ':vp_admin_suffix'   => $approvalData['vp_admin_suffix'],
-        ':school_president'  => $approvalData['school_president'],
-        ':school_president_suffix' => $approvalData['school_president_suffix'],
-        ':issue_status'      => $documentInfo['issue_status'],
-        ':revision_number'   => $documentInfo['revision_number'],
-        ':date_effective'    => $documentInfo['date_effective'],
-        ':approved_by'       => $documentInfo['approved_by']
-    ]);
-
-    $reportId = $pdo->lastInsertId();
-
-    // 2. Insert into mar_table
-    if (!empty($_POST['date_of_act'])) {
-        $sqlDetail = "INSERT INTO mar_table
-        (report_id, date_of_act, activities_conducted, objectives, act_status, issues_or_concerns, financial_report, recommendations, plans_for_next_months)
-        VALUES
-        (:report_id, :date_of_act, :activities_conducted, :objectives, :act_status, :issues_or_concerns, :financial_report, :recommendations, :plans_for_next_months)";
-        
-        $stmtDetail = $pdo->prepare($sqlDetail);
-
-        foreach ($_POST['date_of_act'] as $i => $date) {
-            if (empty($_POST['date_of_act'][$i]) && empty($_POST['activities_conducted'][$i])) continue;
-
-            $stmtDetail->execute([
-                ':report_id'            => $reportId,
-                ':date_of_act'          => $_POST['date_of_act'][$i] ?? '',
-                ':activities_conducted' => $_POST['activities_conducted'][$i] ?? '',
-                ':objectives'           => $_POST['objectives'][$i] ?? '',
-                ':act_status'           => $_POST['act_status'][$i] ?? '',
-                ':issues_or_concerns'   => $_POST['issues_or_concerns'][$i] ?? '',
-                ':financial_report'     => $_POST['financial_report'][$i] ?? '',
-                ':recommendations'      => $_POST['recommendations'][$i] ?? '',
-                ':plans_for_next_months'=> $_POST['plans_for_next_months'][$i] ?? ''
-            ]);
-        }
-    }
-
-    echo "Data successfully inserted! Report ID: $reportId";
-
-} catch (\PDOException $e) {
-    http_response_code(500);
-    echo "Database error: " . $e->getMessage();
+    draft_json(['success' => false, 'message' => 'Invalid action.'], 400);
+} catch (Throwable $e) {
+    if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
+    draft_json(['success' => false, 'message' => $e->getMessage()], 500);
 }
 ?>

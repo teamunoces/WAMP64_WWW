@@ -26,6 +26,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
 </style>
     <title>Monthly Accomplishment Report</title>
     <link rel="stylesheet" href="reflection.css">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260519f">
     <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
@@ -181,7 +182,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
     <script src="./expand.js"></script>
-    <script src="./post.js"></script>
+    <script src="../shared/draft-utils.js?v=20260519j"></script>
+    <script src="./post.js?v=20260519j"></script>
     <script src="./darkmode.js"></script>
 </body>
 </html>

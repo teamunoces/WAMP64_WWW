@@ -1,333 +1,67 @@
-function showSuccessBanner(message = 'Report submitted successfully!') {
+﻿function showSuccessBanner(message = 'Report submitted successfully!') {
     let banner = document.getElementById('submissionSuccessBanner');
-
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.id = 'submissionSuccessBanner';
-        banner.setAttribute('role', 'status');
-        banner.style.position = 'fixed';
-        banner.style.top = '78px';
-        banner.style.right = '24px';
-        banner.style.zIndex = '10000';
-        banner.style.maxWidth = '420px';
-        banner.style.padding = '14px 18px';
-        banner.style.borderRadius = '8px';
-        banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)';
-        banner.style.color = '#ffffff';
-        banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)';
-        banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
-        banner.style.fontSize = '14px';
-        banner.style.fontWeight = '700';
-        banner.style.letterSpacing = '0';
-        banner.style.lineHeight = '1.4';
-        banner.style.opacity = '0';
-        banner.style.transform = 'translateY(-10px)';
-        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-        document.body.appendChild(banner);
-    }
-
-    banner.textContent = message;
-    requestAnimationFrame(() => {
-        banner.style.opacity = '1';
-        banner.style.transform = 'translateY(0)';
-    });
-
-    clearTimeout(window.submissionSuccessBannerTimer);
-    window.submissionSuccessBannerTimer = setTimeout(() => {
-        banner.style.opacity = '0';
-        banner.style.transform = 'translateY(-10px)';
-    }, 3500);
+    if (!banner) { banner = document.createElement('div'); banner.id = 'submissionSuccessBanner'; banner.setAttribute('role', 'status'); banner.style.position = 'fixed'; banner.style.top = '78px'; banner.style.right = '24px'; banner.style.zIndex = '10000'; banner.style.maxWidth = '420px'; banner.style.padding = '14px 18px'; banner.style.borderRadius = '8px'; banner.style.background = 'linear-gradient(135deg, #59AF29 0%, #254911 100%)'; banner.style.color = '#fff'; banner.style.boxShadow = '0 10px 24px rgba(37, 73, 17, 0.28)'; banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif'; banner.style.fontSize = '14px'; banner.style.fontWeight = '700'; banner.style.lineHeight = '1.4'; banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease'; document.body.appendChild(banner); }
+    banner.textContent = message; requestAnimationFrame(() => { banner.style.opacity = '1'; banner.style.transform = 'translateY(0)'; }); clearTimeout(window.submissionSuccessBannerTimer); window.submissionSuccessBannerTimer = setTimeout(() => { banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; }, 3500);
 }
 document.addEventListener('DOMContentLoaded', () => {
-    // FIXED: Use querySelector for class, not getElementById
     const submitBtn = document.querySelector('.submit-button');
+    function autoExpand(textarea) { textarea.style.height = 'auto'; textarea.style.height = `${textarea.scrollHeight}px`; }
+    document.querySelectorAll('textarea').forEach(textarea => textarea.addEventListener('input', () => autoExpand(textarea)));
+    document.querySelectorAll('.naCheck, .yesCheck').forEach(box => box.addEventListener('change', function() { if (!this.checked) return; const other = this.classList.contains('naCheck') ? '.yesCheck' : '.naCheck'; document.querySelector(`${other}[data-row="${this.dataset.row}"]`).checked = false; }));
+    document.querySelectorAll('.recYes, .recNa').forEach(box => box.addEventListener('change', function() { if (!this.checked) return; const other = this.classList.contains('recYes') ? '.recNa' : '.recYes'; document.querySelector(`${other}[data-rec="${this.dataset.rec}"]`).checked = false; }));
+    document.querySelectorAll('.followUp').forEach(field => field.addEventListener('input', function() { const val = this.value.toUpperCase(); this.value = val.startsWith('Y') ? 'Y' : (val.startsWith('N') ? 'N' : val.slice(0, 1)); }));
 
-    // ========================
-    // PAPER LINES TEXTAREA FUNCTIONS
-    // ========================
-    function autoExpand(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = (textarea.scrollHeight) + 'px';
-    }
-
-    function handleTab(e) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            const start = e.target.selectionStart;
-            const end = e.target.selectionEnd;
-            e.target.value = e.target.value.substring(0, start) + "    " + e.target.value.substring(end);
-            e.target.selectionStart = e.target.selectionEnd = start + 4;
-            autoExpand(e.target);
-        }
-    }
-
-    function initializePaperLines() {
-        const textareas = document.querySelectorAll('.paper-lines');
-        textareas.forEach(el => {
-            autoExpand(el);
-            el.addEventListener('input', function() { autoExpand(this); });
-            el.addEventListener('keydown', handleTab);
-        });
-    }
-
-    // ========================
-    // MUTUAL EXCLUSIVITY
-    // ========================
-    function setupMutualExclusion() {
-        const naChecks = document.querySelectorAll('.naCheck');
-        const yesChecks = document.querySelectorAll('.yesCheck');
-
-        naChecks.forEach(naCheck => {
-            naCheck.addEventListener('change', function() {
-                if (this.checked) {
-                    const rowId = this.getAttribute('data-row');
-                    const correspondingYes = document.querySelector(`.yesCheck[data-row="${rowId}"]`);
-                    if (correspondingYes) correspondingYes.checked = false;
-                }
-            });
-        });
-
-        yesChecks.forEach(yesCheck => {
-            yesCheck.addEventListener('change', function() {
-                if (this.checked) {
-                    const rowId = this.getAttribute('data-row');
-                    const correspondingNa = document.querySelector(`.naCheck[data-row="${rowId}"]`);
-                    if (correspondingNa) correspondingNa.checked = false;
-                }
-            });
-        });
-    }
-
-    function setupRecommendationExclusion() {
-        const recYesList = document.querySelectorAll('.recYes');
-        const recNaList = document.querySelectorAll('.recNa');
-
-        recYesList.forEach(recYes => {
-            recYes.addEventListener('change', function() {
-                if (this.checked) {
-                    const rowIdx = this.getAttribute('data-rec');
-                    const sameRowNa = document.querySelector(`.recNa[data-rec="${rowIdx}"]`);
-                    if (sameRowNa) sameRowNa.checked = false;
-                }
-            });
-        });
-
-        recNaList.forEach(recNa => {
-            recNa.addEventListener('change', function() {
-                if (this.checked) {
-                    const rowIdx = this.getAttribute('data-rec');
-                    const sameRowYes = document.querySelector(`.recYes[data-rec="${rowIdx}"]`);
-                    if (sameRowYes) sameRowYes.checked = false;
-                }
-            });
-        });
-    }
-
-    // ========================
-    // COLLECT ALL FORM DATA
-    // ========================
     function collectFormData() {
         const headerData = {
-            programTitle: document.getElementById('programTitle')?.value || '',
-            activityConducted: document.getElementById('activityConducted')?.value || '',
-            location: document.getElementById('location')?.value || '',
-            beneficiaries: document.getElementById('beneficiaries')?.value || '',
-            dateOfMonitoring: document.getElementById('monitoringDate')?.value || '',
-            monitoredBy: document.getElementById('monitoredBy')?.value || ''
+            programTitle: document.getElementById('programTitle')?.value || '', activityConducted: document.getElementById('activityConducted')?.value || '', location: document.getElementById('location')?.value || '', beneficiaries: document.getElementById('beneficiaries')?.value || '', dateOfMonitoring: document.getElementById('monitoringDate')?.value || '', monitoredBy: document.getElementById('monitoredBy')?.value || ''
         };
-
         const issuesList = [];
-        const issueRows = document.querySelectorAll('#issuesTable tbody tr');
-        
-        for (let i = 0; i < issueRows.length - 1; i++) {
-            const row = issueRows[i];
-            const naChecked = row.querySelector('.naCheck')?.checked || false;
-            const yesChecked = row.querySelector('.yesCheck')?.checked || false;
-            const indicatorText = row.querySelector('td:nth-child(3)')?.innerText.trim() || '';
-            const followUpValue = row.querySelector('.followUp')?.value.trim() || '';
-
-            issuesList.push({
-                indicator: indicatorText,
-                status: naChecked ? 'N/A' : (yesChecked ? 'YES' : 'Not marked'),
-                followUpRequired: followUpValue.toUpperCase()
-            });
-        }
-        
-        const otherIssuesText = document.getElementById('otherIssues')?.value || '';
-        issuesList.push({
-            indicator: 'Others (Please Specify)',
-            status: 'Specified',
-            details: otherIssuesText,
-            followUpRequired: ''
+        document.querySelectorAll('#issuesTable tbody tr').forEach((row) => {
+            const indicator = row.querySelector('td:nth-child(3)')?.innerText.trim() || '';
+            if (!indicator) return;
+            issuesList.push({ indicator, status: row.querySelector('.naCheck')?.checked ? 'N/A' : (row.querySelector('.yesCheck')?.checked ? 'YES' : 'Not marked'), followUpRequired: row.querySelector('.followUp')?.value.trim().toUpperCase() || '', details: document.getElementById('otherIssues')?.value || '' });
         });
-
-        const feedbackList = [];
-        const feedbackTypes = ['positive', 'negative', 'suggestions'];
-
-        feedbackTypes.forEach(type => {
-            const checkBox = document.querySelector(`.feedbackCheck[data-feedback="${type}"]`);
-            const summaryElem = document.querySelector(`.feedbackSummary[data-feedback="${type}"]`);
-            const actionElem = document.querySelector(`.feedbackAction[data-feedback="${type}"]`);
-            
-            const summary = summaryElem?.value?.trim() || '';
-            const action = actionElem?.value?.trim() || '';
-            const isChecked = checkBox?.checked || false;
-            
-            if (isChecked || summary || action) {
-                let feedbackTypeText = '';
-                if (type === 'positive') feedbackTypeText = 'Positive Feedback';
-                else if (type === 'negative') feedbackTypeText = 'Negative Feedback';
-                else feedbackTypeText = 'Suggestions for Improvement';
-                
-                feedbackList.push({
-                    feedbackType: feedbackTypeText,
-                    isChecked: isChecked,
-                    summary: summary,
-                    actionsToImprove: action
-                });
-            }
-        });
-
-        const recommendations = [];
-        const recRows = document.querySelectorAll('#recommendationsTable tbody tr');
-        
-        recRows.forEach((row) => {
-            const recYes = row.querySelector('.recYes')?.checked || false;
-            const recNa = row.querySelector('.recNa')?.checked || false;
-            const recommendationText = row.querySelector('td:nth-child(2)')?.innerText.trim() || '';
-            let applicability = '';
-            if (recYes) applicability = 'Yes';
-            else if (recNa) applicability = 'N/A';
-            else applicability = 'Not specified';
-            
-            recommendations.push({
-                recommendation: recommendationText,
-                applicability: applicability
-            });
-        });
-
-        const otherRecommendationsTextarea = document.querySelector('.footer-notes .paper-lines');
-        const otherRecommendations = otherRecommendationsTextarea?.value || '';
-
-        return {
-            reportType: window.reportType || 'Program Monitoring Form',
-            timestamp: new Date().toLocaleString(),
-            header: headerData,
-            issuesAndChallenges: issuesList,
-            participantFeedback: feedbackList,
-            actionsForNextActivity: {
-                standardRecommendations: recommendations,
-                otherRecommendations: otherRecommendations
-            }
-        };
+        const participantFeedback = ['positive','negative','suggestions'].map(type => ({ feedbackType: type === 'positive' ? 'Positive Feedback' : (type === 'negative' ? 'Negative Feedback' : 'Suggestions for Improvement'), isChecked: document.querySelector(`.feedbackCheck[data-feedback="${type}"]`)?.checked || false, summary: document.querySelector(`.feedbackSummary[data-feedback="${type}"]`)?.value || '', actionsToImprove: document.querySelector(`.feedbackAction[data-feedback="${type}"]`)?.value || '' }));
+        const standardRecommendations = Array.from(document.querySelectorAll('#recommendationsTable tbody tr')).map(row => ({ recommendation: row.querySelector('td:nth-child(2)')?.innerText.trim() || '', applicability: row.querySelector('.recYes')?.checked ? 'Yes' : (row.querySelector('.recNa')?.checked ? 'N/A' : 'Not specified') }));
+        return { reportType: window.reportType || 'Program Monitoring Form', header: headerData, issuesAndChallenges: issuesList, participantFeedback, actionsForNextActivity: { standardRecommendations, otherRecommendations: document.querySelector('.footer-notes .paper-lines')?.value || '' } };
     }
+    function fillForm(data) {
+        const set = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+        set('programTitle', data.program_title); set('activityConducted', data.activity_conducted); set('location', data.location); set('beneficiaries', data.beneficiaries); set('monitoringDate', data.monitoring_date); set('monitoredBy', data.monitored_by); set('otherIssues', data.issue9_other_specify);
+        const issuePrefixes = ['issue1_low_participation','issue2_resource_constraints','issue3_lack_coordination','issue4_cultural_barriers','issue5_sustainability','issue6_inadequate_monitoring','issue7_limited_training','issue8_mismanagement'];
+        issuePrefixes.forEach((prefix, index) => { const status = data[`${prefix}_status`]; const na = document.querySelector(`.naCheck[data-row="${index}"]`); const yes = document.querySelector(`.yesCheck[data-row="${index}"]`); const follow = document.querySelector(`.followUp[data-row="${index}"]`); if (na) na.checked = status === 'N/A'; if (yes) yes.checked = status === 'YES'; if (follow) follow.value = data[`${prefix}_follow_up`] || ''; });
+        ['positive','negative','suggestions'].forEach(type => { const cb = document.querySelector(`.feedbackCheck[data-feedback="${type}"]`); const summary = document.querySelector(`.feedbackSummary[data-feedback="${type}"]`); const action = document.querySelector(`.feedbackAction[data-feedback="${type}"]`); if (cb) cb.checked = Number(data[`${type}_feedback_checked`]) === 1; if (summary) summary.value = data[`${type}_feedback_summary`] || ''; if (action) action.value = data[`${type}_feedback_action`] || ''; });
+        for (let i = 1; i <= 7; i++) { const value = data[`rec${i}_applicability`]; const yes = document.querySelector(`.recYes[data-rec="${i - 1}"]`); const na = document.querySelector(`.recNa[data-rec="${i - 1}"]`); if (yes) yes.checked = value === 'Yes'; if (na) na.checked = value === 'N/A'; }
+        const other = document.querySelector('.footer-notes .paper-lines'); if (other) other.value = data.other_recommendations || '';
+    }
+    function resetForm() { document.querySelectorAll('input[type="text"], textarea').forEach(input => input.value = ''); document.querySelectorAll('input[type="checkbox"]').forEach(box => box.checked = false); }
+    const draftManager = ReportDrafts.create({ storageKey: 'program_monitoring_form', collect: collectFormData, fill: fillForm, clear: resetForm });
+    draftManager.checkDatabaseDraft();
+    submitBtn?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const data = draftManager.applySubmitMeta(collectFormData());
 
-    // Auto-expand for textareas
-    const textareas = document.querySelectorAll('.feedbackSummary, .feedbackAction, #otherIssues');
-    textareas.forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-        if (textarea.value) {
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
-    });
-
-    // ========================
-    // SUBMIT: Send to Backend
-    // ========================
-    async function handleSubmit(e) {
-        if (e) e.preventDefault();
-        
-        const formData = collectFormData();
-        
-        console.log("Form Data Collected:", formData);
-        
-        // Show loading state
-        if (submitBtn) {
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-        }
-        
         try {
             const response = await fetch('post.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
             });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showSuccessBanner('Report submitted successfully!');
-                
-                // Optional: Reset form after successful submission
-                if (confirm('Would you like to reset the form for a new entry?')) {
-                    resetForm();
-                }
-            } else {
-                throw new Error(result.message || 'Submission failed');
+            const text = await response.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (error) {
+                throw new Error(text || 'Server returned an invalid response.');
             }
+
+            if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed.');
+            draftManager.completeSubmit();
+            showSuccessBanner(result.message || 'Report submitted successfully!');
+            resetForm();
         } catch (error) {
-            console.error('Submission error:', error);
-            alert('Error: ' + error.message + '\n\nPlease check console for details.');
-        } finally {
-            if (submitBtn) {
-                submitBtn.textContent = 'Submit';
-                submitBtn.disabled = false;
-            }
+            alert(`Error: ${error.message}`);
         }
-    }
-    
-    function resetForm() {
-        // Clear all text inputs
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-            if (input.type !== 'checkbox') input.value = '';
-        });
-        
-        // Clear all textareas
-        document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.value = '';
-            textarea.style.height = 'auto';
-        });
-        
-        // Uncheck all checkboxes
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // Clear follow-up fields
-        document.querySelectorAll('.followUp').forEach(field => {
-            field.value = '';
-        });
-        
-    }
-
-    function setupFollowUpAutoFormat() {
-        const followUpFields = document.querySelectorAll('.followUp');
-        followUpFields.forEach(field => {
-            field.addEventListener('input', function() {
-                let val = this.value.toUpperCase();
-                if (val === 'Y' || val === 'N' || val === 'YES' || val === 'NO') {
-                    this.value = (val === 'Y' || val === 'YES') ? 'Y' : 'N';
-                } else if (val.length > 1) {
-                    this.value = val.charAt(0);
-                }
-            });
-        });
-    }
-
-    function initialize() {
-        if (submitBtn) submitBtn.addEventListener('click', handleSubmit);
-        
-        setupMutualExclusion();
-        setupRecommendationExclusion();
-        setupFollowUpAutoFormat();
-        initializePaperLines();
-    }
-
-    initialize();
+    });
 });

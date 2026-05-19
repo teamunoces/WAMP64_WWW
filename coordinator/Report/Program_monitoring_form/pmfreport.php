@@ -26,6 +26,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
 </style>
     <title>Program Monitoring Form</title>
     <link rel="stylesheet" href="pmf.css">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260519f">
     <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
@@ -74,7 +75,7 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
 
 
         <header>
-            <h2>Program Monitoring Form</h2>
+            <h2>PROGRAM MONITORING FORM</h2>
             <div class="header-info">
                 <div class="input-group">
                     <label>Program Title:</label>
@@ -271,7 +272,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
     
 
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="./post.js"></script>
+    <script src="../shared/draft-utils.js?v=20260519i"></script>
+    <script src="./post.js?v=20260519h"></script>
     <script src="./darkmode.js"></script>
 </body>
 </html>
