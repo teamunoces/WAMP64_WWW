@@ -27,7 +27,7 @@
         
 
         <div class="header-right">
-            <img src="../../login/images/ces.png" alt="School Logo" class="admin-logo">
+            <img src="../../login/images/ces.png" alt="School Logo" class="admin-logo" id="profilePicture">
             <div class="notification-icon" id="notificationBell">
                 <i class="fa-solid fa-bell"></i>
                 <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
@@ -145,6 +145,9 @@ fetch("./session_user.php")
     .then(response => response.json())
     .then(data => {
         document.getElementById("admin-toggle").textContent = data.username;
+        if (data.profile_picture) {
+            document.getElementById("profilePicture").src = data.profile_picture;
+        }
     })
     .catch(error => console.error("Error fetching user:", error));
 </script>

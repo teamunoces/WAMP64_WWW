@@ -219,3 +219,117 @@ body.dark-mode .progress-ring .progress-value {
 body.dark-mode .progress-ring.upcoming .progress-value {
     color: #687064;
 }
+
+/* ===== TRUE DARK MODE: 3-YEAR DEVELOPMENT PLAN MONITOR ===== */
+body.dark-mode .development-plan-monitor {
+    background: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55) !important;
+    color: #e4e4e4 !important;
+}
+
+body.dark-mode .development-plan-monitor .plan-monitor-header {
+    background: #2c6e2c !important;
+    border-bottom: 1px solid #355d35 !important;
+}
+
+body.dark-mode .development-plan-monitor .monitor-kicker,
+body.dark-mode .development-plan-monitor .plan-monitor-header h2 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .development-plan-monitor .monitor-field span {
+    color: #c8e6b5 !important;
+}
+
+body.dark-mode .development-plan-monitor .monitor-field select {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #e4e4e4 !important;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.dark-mode .development-plan-monitor .monitor-field select:disabled {
+    background: #1a1a1a !important;
+    color: #888 !important;
+}
+
+body.dark-mode .development-plan-monitor .monitor-empty-state {
+    background: #222 !important;
+    border: 1px dashed #4b6f3d !important;
+    color: #b8d9aa !important;
+}
+
+body.dark-mode .development-plan-monitor .plan-dashboard {
+    background: #1e1e1e !important;
+}
+
+body.dark-mode .development-plan-monitor .status-title,
+body.dark-mode .development-plan-monitor .plan-toggle,
+body.dark-mode .development-plan-monitor .plan-pill {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e4e4e4 !important;
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.dark-mode .development-plan-monitor .status-overview::before {
+    background: #555 !important;
+}
+
+body.dark-mode .development-plan-monitor .plan-toggle:hover,
+body.dark-mode .development-plan-monitor .plan-toggle.active {
+    background: #55a630 !important;
+    border-color: #6cc24a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .development-plan-monitor .progress-ring {
+    border: 1px solid #555 !important;
+    box-shadow: 0 13px 22px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .development-plan-monitor .progress-ring.upcoming {
+    background: #2a2a2a !important;
+    border-color: #555 !important;
+}
+
+body.dark-mode .development-plan-monitor .progress-ring .progress-value,
+body.dark-mode .development-plan-monitor .progress-ring .progress-value span {
+    color: #ffffff !important;
+}
+
+body.dark-mode .development-plan-monitor .progress-ring.upcoming .progress-value,
+body.dark-mode .development-plan-monitor .progress-ring.upcoming .progress-value span {
+    color: #e4e4e4 !important;
+}
+
+body.dark-mode .development-plan-monitor .plan-banner {
+    background: #2c6e2c !important;
+    color: #ffffff !important;
+    box-shadow: 6px 5px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.dark-mode .development-plan-monitor .plan-details,
+body.dark-mode .development-plan-monitor .plan-detail-card,
+body.dark-mode .development-plan-monitor .objective-box {
+    background: #222 !important;
+    border-color: #444 !important;
+    color: #e4e4e4 !important;
+    box-shadow: 9px 8px 9px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.dark-mode .development-plan-monitor .program-title {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .development-plan-monitor .program-title span,
+body.dark-mode .development-plan-monitor .objective-box span {
+    color: #b8d9aa !important;
+}
+
+body.dark-mode .development-plan-monitor .program-title strong,
+body.dark-mode .development-plan-monitor .objective-box p {
+    color: #e4e4e4 !important;
+}

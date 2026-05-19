@@ -54,7 +54,7 @@ if (empty($username) || empty($password)) {
 
 try {
     // ✅ FIXED: Added 'dean' to SELECT query
-    $stmt = $pdo->prepare("SELECT id, username, name, password, role, department, dean FROM users WHERE username = ?");
+    $stmt = $pdo->prepare("SELECT id, username, name, password, role, department, dean, is_active FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -67,6 +67,11 @@ try {
         }
 
         if ($valid) {
+            if ((int) $user['is_active'] !== 1) {
+                echo json_encode(['success' => false, 'message' => 'This account is inactive. Please contact your administrator.']);
+                exit();
+            }
+
             session_start();
             
             // ✅ dean is now available in $user and stored in session

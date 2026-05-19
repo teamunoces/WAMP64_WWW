@@ -32,7 +32,7 @@ try {
     $types = "";
     $params = [];
 
-    $where[] = "LOWER(p.status) = 'approve'";
+    $where[] = "LOWER(p.status) IN ('approve', 'approved')";
 
     if ($year !== 'all' && preg_match('/^\d{4}$/', $year)) {
         $where[] = "YEAR(p.created_at) = ?";
@@ -145,7 +145,7 @@ try {
     $yearTypes = "";
     $yearParams = [];
 
-    $yearWhere[] = "LOWER(status) = 'approve'";
+    $yearWhere[] = "LOWER(status) IN ('approve', 'approved')";
 
     if ($hasUserId && $currentUserId !== null) {
         $yearWhere[] = "user_id = ?";

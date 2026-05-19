@@ -10,11 +10,14 @@ $accountsDb = new mysqli("localhost", "root", "", "accounts");
 $department = trim($_GET['department'] ?? '');
 $coordinatorId = trim($_GET['coordinator_id'] ?? '');
 
-$allowedDepartments = ["ELEM", "SHS", "CBMA", "STHM", "CCIS", "CCJE", "CAS", "CTE", "CSF", "LRC"];
+$allowedDepartments = ["ELEMENTARY", "JHS", "SHS", "CBMA", "CBM", "CTHM", "CCIS", "CCJE", "CAS", "CTE", "CSF", "CCF", "LRC"];
 $departmentAliases = [
+    "ELEMENTARY" => ["ELEMENTARY", "ELEM"],
     "CBMA" => ["CBMA", "CBM"],
-    "STHM" => ["STHM", "CTHM"],
-    "CSF" => ["CSF", "CCF"]
+    "CBM" => ["CBMA", "CBM"],
+    "CTHM" => ["CTHM"],
+    "CSF" => ["CSF", "CCF"],
+    "CCF" => ["CSF", "CCF"]
 ];
 
 function sendPlanResponse($payload, $statusCode = 200) {
@@ -86,7 +89,7 @@ try {
     $departmentsToMatch = $departmentAliases[$department] ?? [$department];
     $departmentPlaceholders = implode(",", array_fill(0, count($departmentsToMatch), "?"));
     $where = [
-        "LOWER(p.status) = 'approve'",
+        "LOWER(p.status) IN ('approve', 'approved')",
         "p.department IN ($departmentPlaceholders)"
     ];
     $types = str_repeat("s", count($departmentsToMatch));
@@ -142,7 +145,8 @@ try {
             report_id,
             program,
             objectives,
-            $progressColumn
+            $progressColumn,
+            program_status
         FROM `3ydp_programs`
         WHERE report_id = ?
         ORDER BY id ASC
@@ -164,7 +168,8 @@ try {
             "id" => $programRow['id'],
             "program" => $programRow['program'] ?: "Untitled Program",
             "objectives" => $programRow['objectives'] ?: "No objective provided.",
-            "progress" => $programRow['progress'] ?: "Not Started"
+            "progress" => $programRow['progress'] ?: ($programRow['program_status'] ?: "Not Started"),
+            "program_status" => $programRow['program_status'] ?: null
         ];
     }
 

@@ -19,6 +19,19 @@ const debugWarn = (...args) => {
     }
 };
 
+function onDashboardReady(callback, requiredSelector) {
+    if (!requiredSelector || document.querySelector(requiredSelector)) {
+        callback();
+        return;
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", callback);
+    } else {
+        callback();
+    }
+}
+
 const reviewPages = {
     "community needs assessment consolidated report": "./review/cnacr/cnacrreview.php",
     "3-year development plan": "./review/3ydp/3ydpreview.php",
@@ -254,7 +267,7 @@ function viewReport(reportId, reportType, status) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+onDashboardReady(() => {
     debugLog("DOM loaded, loading reports...");
     loadReports("pending", "pendingTableBody");
-});
+}, "#pendingTableBody");

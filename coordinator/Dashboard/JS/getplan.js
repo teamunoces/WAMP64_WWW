@@ -28,6 +28,19 @@ const progressState = {
     }
 };
 
+function onDashboardReady(callback, requiredSelector) {
+    if (!requiredSelector || document.querySelector(requiredSelector)) {
+        callback();
+        return;
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", callback);
+    } else {
+        callback();
+    }
+}
+
 function normalizeProgress(value) {
     const status = String(value || "Not Started").toLowerCase().trim();
 
@@ -330,7 +343,7 @@ function escapePlanHtml(value) {
         .replace(/'/g, "&#039;");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+onDashboardReady(() => {
     const yearFilter = document.getElementById("planYearFilter");
 
     if (yearFilter) {
@@ -341,4 +354,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadDevelopmentPlans();
-});
+}, "#planTimeline");

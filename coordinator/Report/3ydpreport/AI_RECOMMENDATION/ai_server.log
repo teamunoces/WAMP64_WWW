@@ -1,0 +1,78 @@
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Loading model...
+Model loaded on cpu
+Loading recommendations and computing embeddings...
+Batches:   0%|          | 0/12 [00:00<?, ?it/s]Batches:   8%|8         | 1/12 [00:00<00:05,  1.95it/s]Batches:  17%|#6        | 2/12 [00:00<00:04,  2.09it/s]Batches:  25%|##5       | 3/12 [00:01<00:04,  2.18it/s]Batches:  33%|###3      | 4/12 [00:01<00:03,  2.18it/s]Batches:  42%|####1     | 5/12 [00:02<00:03,  2.30it/s]Batches:  50%|#####     | 6/12 [00:02<00:02,  2.33it/s]Batches:  58%|#####8    | 7/12 [00:03<00:02,  2.32it/s]Batches:  67%|######6   | 8/12 [00:03<00:01,  2.35it/s]Batches:  75%|#######5  | 9/12 [00:03<00:01,  2.44it/s]Batches:  83%|########3 | 10/12 [00:04<00:00,  2.50it/s]Batches:  92%|#########1| 11/12 [00:04<00:00,  2.67it/s]Batches: 100%|##########| 12/12 [00:04<00:00,  3.15it/s]Batches: 100%|##########| 12/12 [00:04<00:00,  2.51it/s]
+Loaded 371 recommendations in 4.86 seconds
+ * Serving Flask app 'AI'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+127.0.0.1 - - [19/May/2026 09:31:37] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:37] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:37] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:44] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:44] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:44] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:56] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:56] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:31:56] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:04] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:04] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:04] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:06] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:06] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:09] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:09] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:12] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:12] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:33] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:33] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:32:33] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:04] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:04] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:04] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:13] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:13] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:33:13] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:34:37] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:34:37] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 09:34:37] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:28] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:28] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:28] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:31] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:31] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:34] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:34] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:34] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:43] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:43] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 11:14:43] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:09] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:09] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:32] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:32] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:03:32] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:37:04] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:37:04] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 13:37:04] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:02:12] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:02:12] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:02:12] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:31:08] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:31:08] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [19/May/2026 14:31:08] "POST /recommend HTTP/1.1" 200 -
+Loading model...
+Model loaded on cpu
+Loading recommendations and computing embeddings...
+Batches:   0%|          | 0/12 [00:00<?, ?it/s]Batches:   8%|8         | 1/12 [00:00<00:09,  1.19it/s]Batches:  17%|#6        | 2/12 [00:01<00:05,  1.67it/s]Batches:  25%|##5       | 3/12 [00:01<00:04,  1.97it/s]Batches:  33%|###3      | 4/12 [00:02<00:03,  2.12it/s]Batches:  42%|####1     | 5/12 [00:02<00:03,  2.25it/s]Batches:  50%|#####     | 6/12 [00:02<00:02,  2.44it/s]Batches:  58%|#####8    | 7/12 [00:03<00:02,  2.32it/s]Batches:  67%|######6   | 8/12 [00:03<00:01,  2.39it/s]Batches:  75%|#######5  | 9/12 [00:04<00:01,  2.48it/s]Batches:  83%|########3 | 10/12 [00:04<00:00,  2.48it/s]Batches:  92%|#########1| 11/12 [00:04<00:00,  2.45it/s]Batches: 100%|##########| 12/12 [00:05<00:00,  2.86it/s]Batches: 100%|##########| 12/12 [00:05<00:00,  2.35it/s]
+Loaded 373 recommendations in 5.21 seconds
+ * Serving Flask app 'AI'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
