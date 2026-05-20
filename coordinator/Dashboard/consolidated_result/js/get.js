@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectedYear = yearSelect.value;
         
         // Only load data if both are selected and barangay is not 'select'
-        if (selectedBarangay && selectedBarangay !== 'select' && selectedYear && selectedYear !== 'all') {
+        if (selectedBarangay && selectedBarangay.toLowerCase() !== 'select location' && selectedBarangay !== 'select' && selectedYear && selectedYear !== 'all') {
             loadBarangayData(selectedBarangay, selectedYear);
         } else {
             clearAllTables();
@@ -39,7 +39,80 @@ document.addEventListener("DOMContentLoaded", () => {
     yearSelect.addEventListener('change', function() {
         checkAndLoadData();
     });
+
+    initCustomSelect(barangaySelect);
+    initCustomSelect(yearSelect);
 });
+
+function initCustomSelect(select) {
+    if (!select || select.dataset.customized === 'true') return;
+
+    select.dataset.customized = 'true';
+    select.classList.add('native-select-hidden');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'custom-select';
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'custom-select-trigger';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+
+    const list = document.createElement('div');
+    list.className = 'custom-select-list';
+    list.setAttribute('role', 'listbox');
+
+    const updateTrigger = () => {
+        const selectedOption = select.options[select.selectedIndex];
+        trigger.textContent = selectedOption ? selectedOption.text : 'SELECT';
+    };
+
+    Array.from(select.options).forEach((option) => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'custom-select-option';
+        item.textContent = option.text;
+        item.dataset.value = option.value;
+        item.setAttribute('role', 'option');
+
+        item.addEventListener('click', () => {
+            select.value = option.value;
+            updateTrigger();
+            wrapper.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        list.appendChild(item);
+    });
+
+    trigger.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select.open').forEach((openSelect) => {
+            if (openSelect !== wrapper) {
+                openSelect.classList.remove('open');
+                openSelect.querySelector('.custom-select-trigger')?.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        const isOpen = wrapper.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!wrapper.contains(event.target)) {
+            wrapper.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    select.addEventListener('change', updateTrigger);
+    updateTrigger();
+
+    select.parentNode.insertBefore(wrapper, select.nextSibling);
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(list);
+}
 
 function loadBarangayData(barangay, selectedYear) {
     // Show loading state

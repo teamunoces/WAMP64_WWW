@@ -4,8 +4,8 @@ ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 
-$reportsDb = new mysqli("localhost", "root", "", "ces_reports_db");
-$accountsDb = new mysqli("localhost", "root", "", "accounts");
+$reportsDb = new mysqli("localhost", "root", "", "ces_database");
+$accountsDb = new mysqli("localhost", "root", "", "ces_database");
 
 $department = trim($_GET['department'] ?? '');
 $coordinatorId = trim($_GET['coordinator_id'] ?? '');
@@ -73,8 +73,8 @@ try {
         ], 404);
     }
 
-    $tableCheck = $reportsDb->query("SHOW TABLES LIKE '3ydp'");
-    $programTableCheck = $reportsDb->query("SHOW TABLES LIKE '3ydp_programs'");
+    $tableCheck = $reportsDb->query("SHOW TABLES LIKE 'report_3ydp'");
+    $programTableCheck = $reportsDb->query("SHOW TABLES LIKE 'report_3ydp_programs'");
 
     if (!$tableCheck || $tableCheck->num_rows === 0 || !$programTableCheck || $programTableCheck->num_rows === 0) {
         sendPlanResponse([
@@ -83,8 +83,8 @@ try {
         ]);
     }
 
-    $hasUserId = $reportsDb->query("SHOW COLUMNS FROM `3ydp` LIKE 'user_id'")->num_rows > 0;
-    $hasProgress = $reportsDb->query("SHOW COLUMNS FROM `3ydp_programs` LIKE 'progress'")->num_rows > 0;
+    $hasUserId = $reportsDb->query("SHOW COLUMNS FROM `report_3ydp` LIKE 'user_id'")->num_rows > 0;
+    $hasProgress = $reportsDb->query("SHOW COLUMNS FROM `report_3ydp_programs` LIKE 'progress'")->num_rows > 0;
 
     $departmentsToMatch = $departmentAliases[$department] ?? [$department];
     $departmentPlaceholders = implode(",", array_fill(0, count($departmentsToMatch), "?"));
@@ -114,7 +114,7 @@ try {
             p.department,
             p.status,
             p.created_at
-        FROM `3ydp` p
+        FROM `report_3ydp` p
         $whereSql
         ORDER BY p.created_at DESC, p.id DESC
         LIMIT 1
@@ -147,7 +147,7 @@ try {
             objectives,
             $progressColumn,
             program_status
-        FROM `3ydp_programs`
+        FROM `report_3ydp_programs`
         WHERE report_id = ?
         ORDER BY id ASC
         LIMIT 3

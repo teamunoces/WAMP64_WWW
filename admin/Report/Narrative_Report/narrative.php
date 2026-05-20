@@ -25,7 +25,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
     }
 </style>
     <title>Monthly Accomplishment Report Form</title>
-    <link rel="stylesheet" href="narrative.css">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260520a">
+    <link rel="stylesheet" href="narrative.css?v=20260520a">
     <link rel="stylesheet" href="./darkmode.css">
 </head>
 <body>
@@ -92,13 +93,16 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Monthly 
             </ol>
         </form>
 
-          <div>
+          <div class="form-actions">
+                <button type="button" class="draft-button">Save Draft</button>
+                <button type="button" class="clear-button">Clear</button>
                 <button type="submit" class="submit-button">Submit</button>
             </div>
     </div>
 
     <script src="./expand.js"></script>
-    <script src="./post.js"></script>
+    <script src="../shared/draft-utils.js?v=20260520a"></script>
+    <script src="./post.js?v=20260520a"></script>
     <script src="./darkmode.js"></script>
 </body>
 </html>

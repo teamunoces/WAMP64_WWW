@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "ces_reports_db";
+$dbname = "ces_database";
 
 // Define arrays
 $departments = ["CCIS", "CTHM", "CAS", "CBM", "JHS", "SHS", "CTE", "CCJE", "CCF", "ELEM"];
@@ -20,15 +20,15 @@ $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
 
 // Document types and their corresponding tables
 $documents = [
-    "3-Year Development Plan" => "3ydp",
-    "Community Needs Assessment Consolidated Report" => "coordinator_cnacr",
-    "Monthly Accomplishment Report" => "mar_header",
-    "Program Design" => "pd_main",
-    "Program Monitoring Form" => "program_monitoring_form",
-    "Evaluation Sheet for Extension Services" => "evaluation_reports",
-    "Certificate of Appearance" => "cert_appearance",
-    "Monthly Accomplishment Report- Reflection Paper" => "reflection_paper",
-    "Monthly Accomplishment Report- Narrative Report" => "narrative_report"
+    "3-Year Development Plan" => "report_3ydp",
+    "Community Needs Assessment Consolidated Report" => "report_coordinator_cnacr",
+    "Monthly Accomplishment Report" => "report_mar_header",
+    "Program Design" => "report_pd_main",
+    "Program Monitoring Form" => "report_program_monitoring_form",
+    "Evaluation Sheet for Extension Services" => "report_evaluation",
+    "Certificate of Appearance" => "report_cert_appearance",
+    "Monthly Accomplishment Report- Reflection Paper" => "report_reflection_paper",
+    "Monthly Accomplishment Report- Narrative Report" => "report_narrative"
 ];
 
 // Update docKeys to match ALL documents (9 keys)

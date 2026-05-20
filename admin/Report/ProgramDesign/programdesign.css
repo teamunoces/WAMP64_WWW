@@ -310,10 +310,32 @@ footer {
     width: auto;
 }
 
+/* Report Actions */
+.form-actions {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin: 30px 0 40px;
+}
+
+.form-actions .draft-button {
+    justify-self: start;
+}
+
+.form-actions .clear-button {
+    justify-self: center;
+}
+
+.form-actions .submit-button {
+    justify-self: end;
+}
+
 /* Submit Button */
 .submit-button {
-    display: block;
-    padding: 6px 30px;
+    display: inline-block;
+    padding: 12px 30px;
     border-radius: 50px;
     border: 1px solid #1a1a1a;
     background: linear-gradient(to right, #63b32e, #3d7025);
@@ -324,14 +346,25 @@ footer {
     text-align: center;
     transition: opacity 0.2s ease;
     cursor: pointer;
-    margin-top: 30px;
-    margin-bottom: 40px;
-    margin-left: auto; /* Align right */
-    width: fit-content;
+    margin: 0;
+    min-width: 150px;
 }
 
 .submit-button:hover {
     opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+    .form-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions .draft-button,
+    .form-actions .clear-button,
+    .form-actions .submit-button {
+        justify-self: stretch;
+        width: 100%;
+    }
 }
 
 /* ===== Print Optimization ===== */

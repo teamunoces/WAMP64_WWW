@@ -1,4 +1,5 @@
 let reportData = { 'pending': {}, 'need fix': {} };
+const allowedStatuses = new Set(['pending', 'need fix']);
 
 const reviewPages = {
     "community needs assessment consolidated report": "/SYSTEM_VERSION_!/admin/Dashboard/Pending/review/coordinator/cnacr_coordinator.php",
@@ -15,8 +16,11 @@ const reviewPages = {
 };
 
 async function loadReports(status, tableBodyId) {
+    status = normalizeStatus(status);
+    if (!status) return;
+
     try {
-        const response = await fetch(`/SYSTEM_VERSION_!/admin/Dashboard/Pending/php/getPending.php?status=${status}`);
+        const response = await fetch(`/SYSTEM_VERSION_!/admin/Dashboard/Pending/php/getPending.php?status=${encodeURIComponent(status)}`);
         const rawText = await response.text();
 
         try {
@@ -43,6 +47,13 @@ function renderTable(data, tableBodyId, status) {
     const tableBody = document.getElementById(tableBodyId);
     if (!tableBody) return;
 
+    data = Array.isArray(data)
+        ? data.filter(report => {
+            const hasType = String(report.type || '').trim() !== '';
+            return hasType && normalizeStatus(report.status || status) === status;
+        })
+        : [];
+
     if (!Array.isArray(data) || data.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6" class="no-reports">No reports found.</td></tr>`;
         return;
@@ -56,7 +67,7 @@ function renderTable(data, tableBodyId, status) {
             <td>${report.department || 'N/A'}</td>
             <td>${report.date || 'N/A'}</td>
             <td>
-                <i class="fas fa-eye green-text" style="cursor:pointer" 
+                <i class="fas fa-eye ${status === 'need fix' ? 'red-text' : 'green-text'}" style="cursor:pointer" 
                 onclick="viewReport('${report.id || ''}', '${report.type || ''}', '${status}')"></i>
             </td>
         </tr>
@@ -64,6 +75,9 @@ function renderTable(data, tableBodyId, status) {
 }
 
 function applyFilter(status, tableBodyId) {
+    status = normalizeStatus(status);
+    if (!status) return;
+
     const filterId = status === 'pending' ? 'pendingTypeFilter' : 'needFixTypeFilter';
     const val = document.getElementById(filterId).value.toLowerCase();
 
@@ -80,6 +94,9 @@ function applyFilter(status, tableBodyId) {
 }
 
 function viewReport(id, type, status) {
+    status = normalizeStatus(status);
+    if (!status) return;
+
     const typeLower = (type || '').toLowerCase();
 
     if (status === 'need fix') {
@@ -132,6 +149,11 @@ function viewReport(id, type, status) {
     } else {
         alert("Review page not found");
     }
+}
+
+function normalizeStatus(status) {
+    const normalized = String(status || '').trim().toLowerCase();
+    return allowedStatuses.has(normalized) ? normalized : '';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -26,8 +26,9 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
     }
 </style>
     <title>Program Design Form - SMCC</title>
-    <link rel="stylesheet" href="programdesign.css">
-    <link rel="stylesheet" href="darkmode.css">">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260520a">
+    <link rel="stylesheet" href="programdesign.css?v=20260520a">
+    <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
 
@@ -138,8 +139,10 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
 
                     <!-- submit button-->
 
-                        <div>
-                            <button type="submit" class="submit-button">Save</button>
+                        <div class="form-actions">
+                            <button type="button" class="draft-button">Save Draft</button>
+                            <button type="button" class="clear-button">Clear</button>
+                            <button type="submit" class="submit-button">Submit</button>
                         </div>
 
         <footer>
@@ -151,7 +154,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Program 
         </footer>
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="./post.js" ></script>
+    <script src="../shared/draft-utils.js?v=20260520a"></script>
+    <script src="./post.js?v=20260520a" ></script>
     <script src="./darkmode.js"></script>
 </body>
 </html>

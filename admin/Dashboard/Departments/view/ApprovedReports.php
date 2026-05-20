@@ -16,7 +16,7 @@ if (empty($department)) {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "ces_reports_db";
+$dbname = "ces_database";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -33,10 +33,10 @@ $conn->set_charset("utf8mb4");
 function getAttachments($conn, $report_id) {
     $attachments = [];
     
-    // Check if report_files table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'report_files'");
+    // Check if coordinator_report_files table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'coordinator_report_files'");
     if ($table_check && $table_check->num_rows > 0) {
-        $sql = "SELECT * FROM report_files WHERE report_id = ?";
+        $sql = "SELECT * FROM coordinator_report_files WHERE report_id = ?";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
             $stmt->bind_param("i", $report_id);
@@ -55,23 +55,23 @@ function getAttachments($conn, $report_id) {
 // Function to get report type based on table
 function getReportType($table_name) {
     switch($table_name) {
-        case '3ydp':
+        case 'report_3ydp':
             return '3-Year Development Plan';
-        case 'coordinator_cnacr':
+        case 'report_coordinator_cnacr':
             return 'Community Needs Assessment Consolidated Report';
-        case 'mar_header':
+        case 'report_mar_header':
             return 'Monthly Accomplishment Report';
-        case 'pd_main':
+        case 'report_pd_main':
             return 'Program Design';
-        case 'program_monitoring_form':
+        case 'report_program_monitoring_form':
             return 'Program Monitoring Form';
-        case 'cert_appearance':
+        case 'report_cert_appearance':
             return 'Certificate of Appearance';
-        case 'evaluation_reports':
+        case 'report_evaluation':
             return 'Evaluation Sheet for Extension Services';
-        case 'reflection_paper':
+        case 'report_reflection_paper':
             return 'Monthly Accomplishment Report- Reflection Paper';
-        case 'narrative_report':
+        case 'report_narrative':
             return 'Monthly Accomplishment Report- Narrative Report';
         default:
             return ucfirst(str_replace('_', ' ', $table_name));
@@ -90,12 +90,12 @@ function getTableColumns($conn, $tableName) {
     return $columns;
 }
 
-// Function to fetch reports from 3ydp table
+// Function to fetch reports from report_3ydp table
 function fetchFrom3ydp($conn, $department) {
     $reports = [];
     
     // Get actual columns
-    $columns = getTableColumns($conn, '3ydp');
+    $columns = getTableColumns($conn, 'report_3ydp');
     
     // Determine which columns exist
     $title_col = in_array('title_of_project', $columns) ? 'title_of_project' : (in_array('title', $columns) ? 'title' : null);
@@ -112,13 +112,13 @@ function fetchFrom3ydp($conn, $department) {
         'status',
         'role',
         'department',
-        "'3ydp' as source_table"
+        "'report_3ydp' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
     
     $sql = "SELECT $select_sql 
-            FROM `3ydp` 
+            FROM `report_3ydp` 
             WHERE department = ? 
             AND status = 'approve'
             AND role = 'coordinator'
@@ -139,12 +139,12 @@ function fetchFrom3ydp($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from coordinator_cnacr table
+// Function to fetch reports from report_coordinator_cnacr table
 function fetchFromCoordinatorCNACR($conn, $department) {
     $reports = [];
     
     // Get actual columns
-    $columns = getTableColumns($conn, 'coordinator_cnacr');
+    $columns = getTableColumns($conn, 'report_coordinator_cnacr');
     
     // Determine which columns exist
     $title_col = in_array('title_of_program', $columns) ? 'title_of_program' : (in_array('title', $columns) ? 'title' : null);
@@ -161,13 +161,13 @@ function fetchFromCoordinatorCNACR($conn, $department) {
         'status',
         'role',
         'department',
-        "'coordinator_cnacr' as source_table"
+        "'report_coordinator_cnacr' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
     
     $sql = "SELECT $select_sql 
-            FROM `coordinator_cnacr` 
+            FROM `report_coordinator_cnacr` 
             WHERE department = ? 
             AND status = 'approve'
             AND role = 'coordinator'
@@ -188,12 +188,12 @@ function fetchFromCoordinatorCNACR($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from mar_header table
+// Function to fetch reports from report_mar_header table
 function fetchFromMARHeader($conn, $department) {
     $reports = [];
     
     // Get actual columns
-    $columns = getTableColumns($conn, 'mar_header');
+    $columns = getTableColumns($conn, 'report_mar_header');
     
     // MAR Header might have different column names
     $title_col = null;
@@ -252,7 +252,7 @@ function fetchFromMARHeader($conn, $department) {
     $select_fields[] = in_array('status', $columns) ? 'status' : "'approve' as status";
     $select_fields[] = in_array('role', $columns) ? 'role' : "'coordinator' as role";
     $select_fields[] = in_array('department', $columns) ? 'department' : "'$department' as department";
-    $select_fields[] = "'mar_header' as source_table";
+    $select_fields[] = "'report_mar_header' as source_table";
     
     $select_sql = implode(', ', $select_fields);
     
@@ -277,7 +277,7 @@ function fetchFromMARHeader($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `mar_header` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_mar_header` $where_sql";
     
     // Add ORDER BY if created_at exists
     if (in_array('created_at', $columns)) {
@@ -301,12 +301,12 @@ function fetchFromMARHeader($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from pd_main table
+// Function to fetch reports from report_pd_main table
 function fetchFromPDMain($conn, $department) {
     $reports = [];
     
     // Get actual columns
-    $columns = getTableColumns($conn, 'pd_main');
+    $columns = getTableColumns($conn, 'report_pd_main');
     
     // Determine which columns exist
     $title_col = in_array('title_of_activity', $columns) ? 'title_of_activity' : (in_array('program_title', $columns) ? 'program_title' : null);
@@ -323,7 +323,7 @@ function fetchFromPDMain($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'pd_main' as source_table"
+        "'report_pd_main' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -349,7 +349,7 @@ function fetchFromPDMain($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `pd_main` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_pd_main` $where_sql";
     
     if (in_array('created_at', $columns)) {
         $sql .= " ORDER BY created_at DESC";
@@ -372,17 +372,17 @@ function fetchFromPDMain($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from program_monitoring_form table
+// Function to fetch reports from report_program_monitoring_form table
 function fetchFromProgramMonitoringForm($conn, $department) {
     $reports = [];
     
     // Check if table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'program_monitoring_form'");
+    $table_check = $conn->query("SHOW TABLES LIKE 'report_program_monitoring_form'");
     if (!$table_check || $table_check->num_rows === 0) {
         return $reports;
     }
     
-    $columns = getTableColumns($conn, 'program_monitoring_form');
+    $columns = getTableColumns($conn, 'report_program_monitoring_form');
     
     // Determine which columns exist
     $title_col = in_array('program_title', $columns) ? 'program_title' : 
@@ -405,7 +405,7 @@ function fetchFromProgramMonitoringForm($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'program_monitoring_form' as source_table"
+        "'report_program_monitoring_form' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -431,7 +431,7 @@ function fetchFromProgramMonitoringForm($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `program_monitoring_form` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_program_monitoring_form` $where_sql";
     
     // Add ORDER BY
     if (in_array('created_at', $columns)) {
@@ -457,17 +457,17 @@ function fetchFromProgramMonitoringForm($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from cert_appearance table
+// Function to fetch reports from report_cert_appearance table
 function fetchFromCertAppearance($conn, $department) {
     $reports = [];
     
     // Check if table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'cert_appearance'");
+    $table_check = $conn->query("SHOW TABLES LIKE 'report_cert_appearance'");
     if (!$table_check || $table_check->num_rows === 0) {
         return $reports;
     }
     
-    $columns = getTableColumns($conn, 'cert_appearance');
+    $columns = getTableColumns($conn, 'report_cert_appearance');
     
     // Determine which columns exist
     $title_col = in_array('activity_title', $columns) ? 'activity_title' : 
@@ -490,7 +490,7 @@ function fetchFromCertAppearance($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'cert_appearance' as source_table"
+        "'report_cert_appearance' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -516,7 +516,7 @@ function fetchFromCertAppearance($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `cert_appearance` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_cert_appearance` $where_sql";
     
     // Add ORDER BY
     if (in_array('created_at', $columns)) {
@@ -542,17 +542,17 @@ function fetchFromCertAppearance($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from evaluation_reports table
+// Function to fetch reports from report_evaluation table
 function fetchFromEvaluationReports($conn, $department) {
     $reports = [];
     
     // Check if table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'evaluation_reports'");
+    $table_check = $conn->query("SHOW TABLES LIKE 'report_evaluation'");
     if (!$table_check || $table_check->num_rows === 0) {
         return $reports;
     }
     
-    $columns = getTableColumns($conn, 'evaluation_reports');
+    $columns = getTableColumns($conn, 'report_evaluation');
     
     // Determine which columns exist
     $title_col = in_array('program_name', $columns) ? 'program_name' : 
@@ -576,7 +576,7 @@ function fetchFromEvaluationReports($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'evaluation_reports' as source_table"
+        "'report_evaluation' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -602,7 +602,7 @@ function fetchFromEvaluationReports($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `evaluation_reports` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_evaluation` $where_sql";
     
     // Add ORDER BY
     if (in_array('created_at', $columns)) {
@@ -628,17 +628,17 @@ function fetchFromEvaluationReports($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from reflection_paper table
+// Function to fetch reports from report_reflection_paper table
 function fetchFromReflectionPaper($conn, $department) {
     $reports = [];
     
     // Check if table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'reflection_paper'");
+    $table_check = $conn->query("SHOW TABLES LIKE 'report_reflection_paper'");
     if (!$table_check || $table_check->num_rows === 0) {
         return $reports;
     }
     
-    $columns = getTableColumns($conn, 'reflection_paper');
+    $columns = getTableColumns($conn, 'report_reflection_paper');
     
     // Determine which columns exist
     $title_col = in_array('reflection_title', $columns) ? 'reflection_title' : 
@@ -662,7 +662,7 @@ function fetchFromReflectionPaper($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'reflection_paper' as source_table"
+        "'report_reflection_paper' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -688,7 +688,7 @@ function fetchFromReflectionPaper($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `reflection_paper` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_reflection_paper` $where_sql";
     
     // Add ORDER BY
     if (in_array('created_at', $columns)) {
@@ -714,17 +714,17 @@ function fetchFromReflectionPaper($conn, $department) {
     return $reports;
 }
 
-// Function to fetch reports from narrative_report table
+// Function to fetch reports from report_narrative table
 function fetchFromNarrativeReport($conn, $department) {
     $reports = [];
     
     // Check if table exists
-    $table_check = $conn->query("SHOW TABLES LIKE 'narrative_report'");
+    $table_check = $conn->query("SHOW TABLES LIKE 'report_narrative'");
     if (!$table_check || $table_check->num_rows === 0) {
         return $reports;
     }
     
-    $columns = getTableColumns($conn, 'narrative_report');
+    $columns = getTableColumns($conn, 'report_narrative');
     
     // Determine which columns exist
     $title_col = in_array('report_title', $columns) ? 'report_title' : 
@@ -748,7 +748,7 @@ function fetchFromNarrativeReport($conn, $department) {
         in_array('status', $columns) ? 'status' : "'approve' as status",
         in_array('role', $columns) ? 'role' : "'coordinator' as role",
         in_array('department', $columns) ? 'department' : "'$department' as department",
-        "'narrative_report' as source_table"
+        "'report_narrative' as source_table"
     ];
     
     $select_sql = implode(', ', $select_fields);
@@ -774,7 +774,7 @@ function fetchFromNarrativeReport($conn, $department) {
     
     $where_sql = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
     
-    $sql = "SELECT $select_sql FROM `narrative_report` $where_sql";
+    $sql = "SELECT $select_sql FROM `report_narrative` $where_sql";
     
     // Add ORDER BY
     if (in_array('created_at', $columns)) {
@@ -838,47 +838,47 @@ while ($row = $tables_check->fetch_array()) {
 }
 
 // Fetch from each table if it exists
-if (in_array('3ydp', $existing_tables)) {
+if (in_array('report_3ydp', $existing_tables)) {
     $reports = fetchFrom3ydp($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('coordinator_cnacr', $existing_tables)) {
+if (in_array('report_coordinator_cnacr', $existing_tables)) {
     $reports = fetchFromCoordinatorCNACR($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('mar_header', $existing_tables)) {
+if (in_array('report_mar_header', $existing_tables)) {
     $reports = fetchFromMARHeader($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('pd_main', $existing_tables)) {
+if (in_array('report_pd_main', $existing_tables)) {
     $reports = fetchFromPDMain($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('program_monitoring_form', $existing_tables)) {
+if (in_array('report_program_monitoring_form', $existing_tables)) {
     $reports = fetchFromProgramMonitoringForm($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('cert_appearance', $existing_tables)) {
+if (in_array('report_cert_appearance', $existing_tables)) {
     $reports = fetchFromCertAppearance($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('evaluation_reports', $existing_tables)) {
+if (in_array('report_evaluation', $existing_tables)) {
     $reports = fetchFromEvaluationReports($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('reflection_paper', $existing_tables)) {
+if (in_array('report_reflection_paper', $existing_tables)) {
     $reports = fetchFromReflectionPaper($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }
 
-if (in_array('narrative_report', $existing_tables)) {
+if (in_array('report_narrative', $existing_tables)) {
     $reports = fetchFromNarrativeReport($conn, $department);
     $all_reports = array_merge($all_reports, $reports);
 }

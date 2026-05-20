@@ -27,7 +27,8 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
     }
 </style>
     <title>Community Needs Assessment Report</title>
-    <link rel="stylesheet" href="cnacr.css">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260520a">
+    <link rel="stylesheet" href="cnacr.css?v=20260520a">
     <link rel="stylesheet" href="darkmode.css">
 </head>
 <body>
@@ -212,7 +213,9 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
 
 
           <div class="form-actions">
-                <button type="submit" class="submit-button" onclick="submitReport()">Save</button>
+                <button type="button" class="draft-button">Save Draft</button>
+                <button type="button" class="clear-button">Clear</button>
+                <button type="submit" class="submit-button">Submit</button>
           </div>
         
 
@@ -236,7 +239,8 @@ $repottype = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Community
     </div>
 
     <script src="./darkmode.js"></script>
-    <SCript src="./post.js"></SCript>
+    <script src="../shared/draft-utils.js?v=20260520a"></script>
+    <script src="./post.js?v=20260520a"></script>
     <script src="./actions.js"></script>
 
 </body>

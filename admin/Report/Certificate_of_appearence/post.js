@@ -1,6 +1,5 @@
 ﻿function showSuccessBanner(message = 'Report submitted successfully!') {
     let banner = document.getElementById('submissionSuccessBanner');
-
     if (!banner) {
         banner = document.createElement('div');
         banner.id = 'submissionSuccessBanner';
@@ -18,449 +17,60 @@
         banner.style.fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
         banner.style.fontSize = '14px';
         banner.style.fontWeight = '700';
-        banner.style.letterSpacing = '0';
         banner.style.lineHeight = '1.4';
         banner.style.opacity = '0';
         banner.style.transform = 'translateY(-10px)';
         banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
         document.body.appendChild(banner);
     }
-
     banner.textContent = message;
-    requestAnimationFrame(() => {
-        banner.style.opacity = '1';
-        banner.style.transform = 'translateY(0)';
-    });
-
+    requestAnimationFrame(() => { banner.style.opacity = '1'; banner.style.transform = 'translateY(0)'; });
     clearTimeout(window.submissionSuccessBannerTimer);
-    window.submissionSuccessBannerTimer = setTimeout(() => {
-        banner.style.opacity = '0';
-        banner.style.transform = 'translateY(-10px)';
-    }, 3500);
+    window.submissionSuccessBannerTimer = setTimeout(() => { banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; }, 3500);
 }
-// post.js
-// Function to get all data from the form fields
-function getFormData() {
-    // Get all input values using their IDs
-    const formData = {
-        participant: document.getElementById('name')?.value || document.getElementById('participant')?.value || '',
-        cert_department: document.getElementById('cert_department')?.value || '',
-        activity_name: document.getElementById('activity_name')?.value || '',
-        location: document.getElementById('location')?.value || '',
-        date_held: document.getElementById('date_held')?.value || '',
-        month_held: document.getElementById('month_held')?.value || '',
-        year_held: document.getElementById('year_held')?.value || '',
-        location_two: document.getElementById('location_two')?.value || '',
-        monitored_by: document.getElementById('monitored_by')?.value || '',
-        verified_by: document.getElementById('verified_by')?.value || '',
-        report_type: window.reportType || 'Certificate of Appearance', // Get report type from global variable
-        feedback: document.getElementById('feedback')?.value || ''
-    };
-    
-    return formData;
-}
-
-// Function to display the collected data
-function displayFormData() {
-    const data = getFormData();
-    
-    // Display in a formatted way
-    
-    return data;
-}
-
-// Function to submit data to server
-async function submitFormData(endpoint = 'post.php') {
-    const data = getFormData();
-    
-    // Validate required fields
-    const validation = validateFormData();
-    if (!validation.isValid) {
-        alert('Please fill in all required fields:\n' + validation.errors.join('\n'));
-        return null;
-    }
-    
-    // Show loading indicator
-    const submitButton = document.querySelector('.submit-button');
-    const originalButtonText = submitButton ? submitButton.textContent : 'Submit';
-    if (submitButton) {
-        submitButton.textContent = 'Submitting...';
-        submitButton.disabled = true;
-    }
-    
-    try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            showSuccessBanner(result.message || "Report submitted successfully!");
-            
-            // Optional: Clear form after successful submission
-            if (confirm('Do you want to clear the form?')) {
-                clearForm();
-            }
-            
-            return result;
-        } else {
-            alert(`Error: ${result.message}`);
-            return null;
-        }
-    } catch (error) {
-        alert('Error submitting form. Please check your connection and try again.');
-        return null;
-    } finally {
-        // Restore button
-        if (submitButton) {
-            submitButton.textContent = originalButtonText;
-            submitButton.disabled = false;
-        }
-    }
-}
-
-// Function to validate form data
-function validateFormData() {
-    const data = getFormData();
-    const errors = [];
-    
-    if (!data.participant || !data.participant.trim()) errors.push('Participant Name is required');
-    if (!data.cert_department || !data.cert_department.trim()) errors.push('Department is required');
-    if (!data.activity_name || !data.activity_name.trim()) errors.push('Activity/Project name is required');
-    if (!data.location || !data.location.trim()) errors.push('Location is required');
-    if (!data.date_held || !data.date_held.trim()) errors.push('Date is required');
-    if (!data.month_held || !data.month_held.trim()) errors.push('Month is required');
-    if (!data.year_held || !data.year_held.trim()) errors.push('Year is required');
-    if (!data.location_two || !data.location_two.trim()) errors.push('Location two is required');
-    if (!data.monitored_by || !data.monitored_by.trim()) errors.push('Monitored by is required');
-    if (!data.verified_by || !data.verified_by.trim()) errors.push('Verified by is required');
-    
+function field(id) { return document.getElementById(id); }
+function collectCertificate() {
     return {
-        isValid: errors.length === 0,
-        errors: errors
+        report_type: window.reportType || 'Certificate of Appearance',
+        participant: field('participant')?.value || field('name')?.value || '',
+        cert_department: field('cert_department')?.value || '',
+        activity_name: field('activity_name')?.value || '',
+        location: field('location')?.value || '',
+        date_held: field('date_held')?.value || '',
+        month_held: field('month_held')?.value || '',
+        year_held: field('year_held')?.value || '',
+        location_two: field('location_two')?.value || '',
+        monitored_by: field('monitored_by')?.value || '',
+        verified_by: field('verified_by')?.value || '',
+        feedback: ''
     };
 }
-
-// Function to clear all form fields
-function clearForm() {
-    const fields = [
-        'name',
-        'participant',
-        'cert_department',
-        'activity_name',
-        'location',
-        'date_held',
-        'month_held',
-        'year_held',
-        'location_two',
-        'monitored_by',
-        'verified_by',
-        'feedback'
-    ];
-    
-    fields.forEach(fieldId => {
-        const element = document.getElementById(fieldId);
-        if (element) {
-            element.value = '';
-        }
+function fillCertificate(data) {
+    ['participant','cert_department','activity_name','location','date_held','month_held','year_held','location_two','monitored_by','verified_by'].forEach(id => {
+        if (field(id)) field(id).value = data[id] || '';
     });
-    
 }
-
-// Function to handle form submission with validation
-async function handleFormSubmission(event) {
-    if (event) {
-        event.preventDefault();
-    }
-    
-    const validation = validateFormData();
-    
-    if (!validation.isValid) {
-        alert('Please fill in all required fields:\n' + validation.errors.join('\n'));
-        return false;
-    }
-    
-    const formData = getFormData();
-    
-    // Submit the data to the server
-    const result = await submitFormData();
-    
-    if (result && result.success) {
-        // Optional: Trigger any custom events or callbacks
-        const customEvent = new CustomEvent('formSubmitted', { detail: result });
-        document.dispatchEvent(customEvent);
-    }
-    
-    return result;
-}
-
-// Function to get report type
-function getReportType() {
-    return window.reportType || 'Certificate of Appearance';
-}
-
-// Function to display report type info
-function displayReportType() {
-    const reportType = getReportType();
-    
-    // Display in the UI if element exists
-    const reportTypeElement = document.getElementById('report_type_display');
-    if (reportTypeElement) {
-        reportTypeElement.textContent = reportType;
-    }
-}
-
-// Function to set report type dynamically
-function setReportType(type) {
-    window.reportType = type;
-    displayReportType();
-}
-
-// Enhanced FormHandler class with full support
-class FormHandler {
-    constructor() {
-        this.formFields = [
-            'name',
-            'participant',
-            'cert_department',
-            'activity_name',
-            'location',
-            'date_held',
-            'month_held',
-            'year_held',
-            'location_two',
-            'monitored_by',
-            'verified_by',
-            'feedback'
-        ];
-        this.endpoint = 'post.php';
-    }
-    
-    // Get all form data as an object including report type
-    getAllData() {
-        const data = {};
-        this.formFields.forEach(field => {
-            const element = document.getElementById(field);
-            data[field] = element ? element.value : '';
-        });
-        
-        // Handle mapping for different field names
-        const mappedData = {
-            participant: data.name || data.participant,
-            cert_department: data.cert_department,
-            activity_name: data.activity_name,
-            location: data.location,
-            date_held: data.date_held,
-            month_held: data.month_held,
-            year_held: data.year_held,
-            location_two: data.location_two,
-            monitored_by: data.monitored_by,
-            verified_by: data.verified_by,
-            report_type: window.reportType || 'Certificate of Appearance',
-            feedback: data.feedback
-        };
-        
-        return mappedData;
-    }
-    
-    // Get data as FormData object (for file uploads)
-    getFormData() {
-        const formData = new FormData();
-        const data = this.getAllData();
-        
-        Object.keys(data).forEach(key => {
-            if (data[key] !== undefined && data[key] !== null) {
-                formData.append(key, data[key]);
-            }
-        });
-        
-        return formData;
-    }
-    
-    // Get data as URLSearchParams (for application/x-www-form-urlencoded)
-    getURLEncodedData() {
-        const data = this.getAllData();
-        const params = new URLSearchParams();
-        
-        Object.keys(data).forEach(key => {
-            if (data[key] !== undefined && data[key] !== null) {
-                params.append(key, data[key]);
-            }
-        });
-        
-        return params;
-    }
-    
-    // Convert data to JSON string
-    getJSONData() {
-        return JSON.stringify(this.getAllData(), null, 2);
-    }
-    
-    // Log all data to console
-    logData() {
-        const data = this.getAllData();
-    }
-    
-    // Validate all required fields
-    validate() {
-        const data = this.getAllData();
-        const required = ['participant', 'cert_department', 'activity_name', 'monitored_by', 'verified_by'];
-        const missing = required.filter(field => !data[field] || !data[field].trim());
-        
-        if (missing.length > 0) {
-            return {
-                isValid: false,
-                missing: missing
-            };
-        }
-        
-        return {
-            isValid: true,
-            missing: []
-        };
-    }
-    
-    // Submit data to server
-    async submit(endpoint = null) {
-        const validation = this.validate();
-        if (!validation.isValid) {
-            throw new Error(`Please fill in all required fields: ${validation.missing.join(', ')}`);
-        }
-        
-        const data = this.getAllData();
-        const submitEndpoint = endpoint || this.endpoint;
-        
-        try {
-            const response = await fetch(submitEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-    
-    // Reset all form fields
-    reset() {
-        this.formFields.forEach(field => {
-            const element = document.getElementById(field);
-            if (element) {
-                element.value = '';
-            }
-        });
-    }
-    
-    // Set endpoint
-    setEndpoint(endpoint) {
-        this.endpoint = endpoint;
-    }
-    
-    // Fill form with data
-    fillForm(data) {
-        Object.keys(data).forEach(field => {
-            const element = document.getElementById(field);
-            if (element && data[field] !== undefined) {
-                element.value = data[field];
-            }
-        });
-    }
-}
-
-// Initialize the form handler
-const formHandler = new FormHandler();
-
-// Event listeners setup when DOM is loaded
+function clearCertificate() { document.querySelectorAll('input, textarea').forEach(el => el.value = ''); }
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Find the submit button
-    const submitButton = document.querySelector('.submit-button');
-    
-    if (submitButton) {
-        // Remove any existing listeners to avoid duplicates
-        submitButton.removeEventListener('click', handleFormSubmission);
-        submitButton.addEventListener('click', handleFormSubmission);
-    } else {
-    }
-    
-    // Optional: Add clear button if exists
-    const clearButton = document.getElementById('clearBtn');
-    if (clearButton) {
-        clearButton.removeEventListener('click', clearForm);
-        clearButton.addEventListener('click', clearForm);
-    }
-    
-    // Add reset button if exists
-    const resetButton = document.getElementById('resetBtn');
-    if (resetButton) {
-        resetButton.addEventListener('click', () => formHandler.reset());
-    }
-    
-    // Display report type info
-    displayReportType();
-    
-    // Log initial form state
-    formHandler.logData();
-    
-    // Add real-time validation on input changes (optional)
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            // Optional: Real-time validation feedback
-            if (input.value.trim() === '') {
-                input.style.borderColor = '#ff6b6b';
-            } else {
-                input.style.borderColor = '#4ecdc4';
+    const draftManager = ReportDrafts.create({ storageKey: 'certificate_of_appearance', collect: collectCertificate, fill: fillCertificate, clear: clearCertificate });
+    draftManager.checkDatabaseDraft();
+    document.querySelector('.submit-button')?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const data = draftManager.applySubmitMeta(collectCertificate());
+        try {
+            const response = await fetch('post.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            const responseText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                throw new Error(responseText || 'Submission failed.');
             }
-        });
-        
-        input.addEventListener('blur', () => {
-            // Reset border color on blur
-            input.style.borderColor = '';
-        });
-    });
-    
-    // Add keyboard shortcut for submit (Ctrl+Enter)
-    document.addEventListener('keydown', (event) => {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-            event.preventDefault();
-            handleFormSubmission(event);
-        }
+            if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed.');
+            draftManager.completeSubmit();
+            showSuccessBanner(result.message || 'Report submitted successfully!');
+            clearCertificate();
+        } catch (error) { alert(`Error: ${error.message}`); }
     });
 });
-
-// Make functions available globally
-window.getFormData = getFormData;
-window.displayFormData = displayFormData;
-window.submitFormData = submitFormData;
-window.validateFormData = validateFormData;
-window.clearForm = clearForm;
-window.handleFormSubmission = handleFormSubmission;
-window.getReportType = getReportType;
-window.setReportType = setReportType;
-window.formHandler = formHandler;
-
-// Export functions if using modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        getFormData,
-        displayFormData,
-        submitFormData,
-        validateFormData,
-        clearForm,
-        handleFormSubmission,
-        getReportType,
-        setReportType,
-        FormHandler
-    };
-}

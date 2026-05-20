@@ -72,7 +72,6 @@
         if (!actionBar && submitButton && submitButton.parentNode) {
             if (submitButton.parentElement && submitButton.parentElement.classList.contains("form-actions")) {
                 actionBar = submitButton.parentElement;
-                actionBar.classList.add("report-action-bar");
             } else {
                 actionBar = document.createElement("div");
                 actionBar.className = "report-action-bar";
@@ -87,7 +86,6 @@
             draftButton.className = "draft-button";
             draftButton.textContent = "Save Draft";
         }
-        draftButton.classList.add("draft-button");
         draftButton.type = "button";
 
         let clearButton = document.querySelector(".clear-button");
@@ -96,19 +94,12 @@
             clearButton.className = "clear-button";
             clearButton.textContent = "Clear";
         }
-        clearButton.classList.add("clear-button");
         clearButton.type = "button";
-        if (submitButton) {
-            submitButton.classList.add("submit-button");
-        }
 
         if (actionBar) {
-            actionBar.classList.add("report-action-bar");
-            actionBar.insertBefore(draftButton, actionBar.firstChild);
-            actionBar.insertBefore(clearButton, draftButton.nextSibling);
-            if (submitButton) {
-                actionBar.insertBefore(submitButton, clearButton.nextSibling);
-            }
+            if (!actionBar.contains(draftButton)) actionBar.appendChild(draftButton);
+            if (!actionBar.contains(clearButton)) actionBar.appendChild(clearButton);
+            if (submitButton && !actionBar.contains(submitButton)) actionBar.appendChild(submitButton);
         }
 
         return { notice, resumeButton, closeNoticeButton, draftButton, clearButton };

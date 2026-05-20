@@ -25,7 +25,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
     }
 </style>
   <title>3-Year Development Plan</title>
-  <link rel="stylesheet" href="3ydpreport.css">
+  <link rel="stylesheet" href="../shared/draft.css?v=20260520a">
+  <link rel="stylesheet" href="3ydpreport.css?v=20260520a">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="darkmode.css">
 </head>
@@ -148,10 +149,11 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
 
             <!-- Submit Buttons -->
             <div class="form-actions">
-                <button type="submit" class="btn btn-submit">Save</button>
-                <button type="button" class="btn btn-clear">Clear</button>
+                <button type="button" class="btn btn-draft draft-button">Save Draft</button>
+                <button type="button" class="btn btn-clear clear-button">Clear</button>
+                <button type="submit" class="btn btn-submit submit-button">Submit</button>
                 <button type="button" class="btn recommendation-btn">
-                    💡Recommendations
+                    AI Recommendations
                 </button>
             </div>
         </form>
@@ -171,8 +173,9 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
     const reportType = "<?php echo $reportType; ?>";
     console.log(reportType);
     </script>
-    <script src="./AI_RECOMMENDATION/AI.js" defer></script>
-    <script src="./js/post.js" defer></script>
+    <script src="./AI_RECOMMENDATION/AI.js?v=20260520a" defer></script>
+    <script src="../shared/draft-utils.js?v=20260520a" defer></script>
+    <script src="./js/post.js?v=20260520a" defer></script>
     <script src="paperlines.js"></script>
     <script src="./darkmode.js"></script>
 </body>

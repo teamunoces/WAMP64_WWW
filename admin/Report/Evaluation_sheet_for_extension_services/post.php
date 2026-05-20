@@ -1,293 +1,75 @@
 <?php
-/**
- * save_evaluation_report.php
- * Receives JSON data from Evaluation Report Form and saves to evaluation_reports table
- */
-
-// Enable error reporting for debugging (disable in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-
-// Set headers for JSON response
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed. Use POST.']);
-    exit();
-}
-
-// Get JSON input
-$jsonInput = file_get_contents('php://input');
-$data = json_decode($jsonInput, true);
-
-// Validate JSON
-if ($data === null) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Invalid JSON data received']);
-    exit();
-}
-
-// Database configuration
-$dbConfig = [
-    'host' => 'localhost',
-    'username' => 'root',
-    'password' => '',
-    'database' => 'ces_reports_db'
-];
-
-// Database connection
-$conn = new mysqli(
-    $dbConfig['host'],
-    $dbConfig['username'],
-    $dbConfig['password'],
-    $dbConfig['database']
-);
-
-// Check connection
-if ($conn->connect_error) {
-    error_log("DB Connection Error: " . $conn->connect_error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database connection error. Please try again later.'
-    ]);
-    exit();
-}
-
-// Set charset
-$conn->set_charset("utf8mb4");
-
-// Start session to get user info
 session_start();
+header('Content-Type: application/json');
+require_once __DIR__ . '/../shared/report_draft.php';
 
-// ========================
-// EXTRACT DATA FROM JSON
-// ========================
+function transform_evaluation_payload(array $data): array {
+    $ratings = is_array($data['ratings'] ?? null) ? $data['ratings'] : [];
 
-// Basic information
-$type = $data['type'] ?? '';
-$venue = $data['venue'] ?? '';
-$implementing_department = $data['implementing_department'] ?? '';
-$serviceTypes = is_array($data['serviceTypes']) ? implode(', ', $data['serviceTypes']) : ($data['serviceTypes'] ?? '');
-$evaluatedBy = $data['evaluatedBy'] ?? '';
-$signature = $data['signature'] ?? '';
-$evaluationDate = $data['evaluationDate'] ?? '';
-$feedback = $data['feedback'] ?? '';  // Now optional, will be empty if not provided
+    $payload = [
+        'action' => $data['action'] ?? 'submit',
+        'draft_id' => $data['draft_id'] ?? null,
+        'type' => $data['type'] ?? 'Evaluation Sheet for Extension Services',
+        'venue' => $data['venue'] ?? '',
+        'implementing_department' => $data['implementing_department'] ?? '',
+        'service_types' => is_array($data['serviceTypes'] ?? null)
+            ? implode(', ', $data['serviceTypes'])
+            : ($data['serviceTypes'] ?? $data['service_types'] ?? ''),
+        'evaluated_by' => $data['evaluatedBy'] ?? $data['evaluated_by'] ?? '',
+        'signature' => $data['signature'] ?? '',
+        'evaluation_date' => $data['evaluationDate'] ?? $data['evaluation_date'] ?? ''
+    ];
 
-// Extract ratings (questions 1-15)
-$q1_rating = isset($data['ratings']['q1']) ? intval($data['ratings']['q1']) : null;
-$q2_rating = isset($data['ratings']['q2']) ? intval($data['ratings']['q2']) : null;
-$q3_rating = isset($data['ratings']['q3']) ? intval($data['ratings']['q3']) : null;
-$q4_rating = isset($data['ratings']['q4']) ? intval($data['ratings']['q4']) : null;
-$q5_rating = isset($data['ratings']['q5']) ? intval($data['ratings']['q5']) : null;
-$q6_rating = isset($data['ratings']['q6']) ? intval($data['ratings']['q6']) : null;
-$q7_rating = isset($data['ratings']['q7']) ? intval($data['ratings']['q7']) : null;
-$q8_rating = isset($data['ratings']['q8']) ? intval($data['ratings']['q8']) : null;
-$q9_rating = isset($data['ratings']['q9']) ? intval($data['ratings']['q9']) : null;
-$q10_rating = isset($data['ratings']['q10']) ? intval($data['ratings']['q10']) : null;
-$q11_rating = isset($data['ratings']['q11']) ? intval($data['ratings']['q11']) : null;
-$q12_rating = isset($data['ratings']['q12']) ? intval($data['ratings']['q12']) : null;
-$q13_rating = isset($data['ratings']['q13']) ? intval($data['ratings']['q13']) : null;
-$q14_rating = isset($data['ratings']['q14']) ? intval($data['ratings']['q14']) : null;
-$q15_rating = isset($data['ratings']['q15']) ? intval($data['ratings']['q15']) : null;
+    for ($i = 1; $i <= 15; $i++) {
+        $key = 'q' . $i;
+        $column = $key . '_rating';
+        $payload[$column] = isset($ratings[$key]) && $ratings[$key] !== null && $ratings[$key] !== ''
+            ? (int) $ratings[$key]
+            : ($data[$column] ?? null);
+    }
 
-// User information from session
-$createdByName = $_SESSION['name'] ?? 'Unknown User';
-$userRole = $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
-$userId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
-$department = $_SESSION['department'] ?? $_SESSION['user_department'] ?? '';
-
-$approvalData = [
-    'dean' => $_SESSION['dean'] ?? '',
-    'ces_head' => '',
-    'ces_head_suffix' => '',
-    'vp_acad' => '',
-    'vp_acad_suffix' => '',
-    'vp_admin' => '',
-    'vp_admin_suffix' => '',
-    'school_president' => '',
-    'school_president_suffix' => ''
-];
-
-$approvalStmt = $conn->prepare("
-    SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
-           vp_admin, vp_admin_suffix, school_president, school_president_suffix
-    FROM approval_db.approvals
-    ORDER BY updated_at DESC
-    LIMIT 1
-");
-if (($_SESSION['role'] ?? '') === 'admin') {
-    $approvalStmt->execute();
-    $approvalResult = $approvalStmt->get_result();
-} else {
-    $approvalResult = false;
-}
-if ($approvalResult && $approvalRow = $approvalResult->fetch_assoc()) {
-    $approvalData = array_merge($approvalData, $approvalRow);
-}
-$approvalStmt->close();
-
-$documentInfo = [
-    'issue_status' => '',
-    'revision_number' => '',
-    'date_effective' => '',
-    'approved_by' => ''
-];
-
-$documentResult = $conn->query("
-    SELECT issue_status, revision_number, date_effective, approved_by
-    FROM approval_db.document_info
-    ORDER BY updated_at DESC
-    LIMIT 1
-");
-if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
-    $documentInfo = array_merge($documentInfo, $documentRow);
+    return $payload;
 }
 
-// Status and archive flags
-$status = 'pending';
-$archived = 'not archived';
+try {
+    $pdo = draft_pdo();
+    $data = transform_evaluation_payload(draft_input());
+    $action = $data['action'] ?? 'submit';
 
-// Validate required fields
-if (empty($venue)) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Venue is required'
-    ]);
-    $conn->close();
-    exit();
+    if ($action === 'get_draft') {
+        $draft = draft_get_main($pdo, 'evaluation_reports');
+        draft_json([
+            'success' => true,
+            'user_id' => (string) ($_SESSION['user_id'] ?? ''),
+            'draft' => $draft
+        ]);
+    }
+
+    if ($action === 'submit') {
+        if (trim((string) ($data['venue'] ?? '')) === '') {
+            draft_json(['success' => false, 'message' => 'Venue is required'], 400);
+        }
+        if (trim((string) ($data['evaluated_by'] ?? '')) === '') {
+            draft_json(['success' => false, 'message' => 'Evaluated by is required'], 400);
+        }
+    }
+
+    if ($action === 'save_draft' || $action === 'submit') {
+        $reportId = draft_save_main($pdo, 'evaluation_reports', $data, [
+            'default_type' => 'Evaluation Sheet for Extension Services'
+        ]);
+
+        draft_json([
+            'success' => true,
+            'message' => $action === 'save_draft' ? 'Draft saved successfully.' : 'Evaluation submitted successfully.',
+            'draft_id' => $reportId,
+            'report_id' => $reportId,
+            'user_id' => (string) ($_SESSION['user_id'] ?? '')
+        ]);
+    }
+
+    draft_json(['success' => false, 'message' => 'Invalid action.'], 400);
+} catch (Throwable $e) {
+    draft_json(['success' => false, 'message' => $e->getMessage()], 500);
 }
-
-if (empty($evaluatedBy)) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Evaluated by is required'
-    ]);
-    $conn->close();
-    exit();
-}
-
-// ========================
-// BUILD AND EXECUTE SQL
-// ========================
-
-$sql = "INSERT INTO evaluation_reports (
-    type,
-    venue, implementing_department, service_types,
-    q1_rating, q2_rating, q3_rating, q4_rating, q5_rating,
-    q6_rating, q7_rating, q8_rating, q9_rating, q10_rating,
-    q11_rating, q12_rating, q13_rating, q14_rating, q15_rating,
-    evaluated_by, signature, evaluation_date,
-    created_by_name, status, archived, role, user_id, dean, department,
-    ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix,
-    school_president, school_president_suffix, issue_status, revision_number, date_effective, approved_by
-) VALUES (
-    ?,
-    ?, ?, ?,
-    ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?,
-    ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?
-)";
-
-$stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    error_log("SQL Prepare Error: " . $conn->error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database error. Please try again later.'
-    ]);
-    $conn->close();
-    exit();
-}
-
-$paramTypes = "ssss" . str_repeat("i", 15) . str_repeat("s", 22);
-$stmt->bind_param(
-    $paramTypes,
-    $type,
-    $venue,
-    $implementing_department,
-    $serviceTypes,
-    $q1_rating,
-    $q2_rating,
-    $q3_rating,
-    $q4_rating,
-    $q5_rating,
-    $q6_rating,
-    $q7_rating,
-    $q8_rating,
-    $q9_rating,
-    $q10_rating,
-    $q11_rating,
-    $q12_rating,
-    $q13_rating,
-    $q14_rating,
-    $q15_rating,
-    $evaluatedBy,
-    $signature,
-    $evaluationDate,
-    $createdByName,
-    $status,
-    $archived,
-    $userRole,
-    $userId,
-    $approvalData['dean'],
-    $department,
-    $approvalData['ces_head'],
-    $approvalData['ces_head_suffix'],
-    $approvalData['vp_acad'],
-    $approvalData['vp_acad_suffix'],
-    $approvalData['vp_admin'],
-    $approvalData['vp_admin_suffix'],
-    $approvalData['school_president'],
-    $approvalData['school_president_suffix'],
-    $documentInfo['issue_status'],
-    $documentInfo['revision_number'],
-    $documentInfo['date_effective'],
-    $documentInfo['approved_by']
-);
-
-if ($stmt->execute()) {
-    $insertedId = $conn->insert_id;
-    error_log("Evaluation report submitted successfully - ID: $insertedId, Venue: $venue, By: $evaluatedBy");
-    
-    echo json_encode([
-        'success' => true,
-        'message' => 'Evaluation Report submitted successfully',
-        'report_id' => $insertedId,
-        'submission_date' => date('Y-m-d H:i:s'),
-        'venue' => $venue,
-        'status' => $status
-    ]);
-} else {
-    error_log("Database Insert Error: " . $stmt->error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to save report. Please try again.',
-        'error' => $stmt->error
-    ]);
-}
-
-$stmt->close();
-$conn->close();
 ?>

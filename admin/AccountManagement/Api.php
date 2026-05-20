@@ -1,7 +1,7 @@
 <?php
 // Database connection
 $host = 'localhost';
-$dbname = 'accounts';
+$dbname = 'ces_database';
 $username = 'root';
 $password = '';
 

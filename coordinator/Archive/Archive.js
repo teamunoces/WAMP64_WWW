@@ -40,7 +40,7 @@ $(document).ready(function () {
                 reportBody.append('<tr><td colspan="6">No archived reports found.</td></tr>');
             } else {
                 data.archived_reports.forEach(report => {
-                    const typeName = typeMap[report.source_table] || report.source_table;
+                    const typeName = report.type || typeMap[report.source_table] || report.source_table;
                     reportBody.append(`
                         <tr>
                             <td>${escapeHtml(typeName.toUpperCase())}</td>

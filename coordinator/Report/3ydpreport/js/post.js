@@ -44,18 +44,7 @@ function showSuccessBanner(message = 'Report submitted successfully!') {
     const addRowBtn = document.querySelector(".add-row-btn");
     const deleteRowBtn = document.querySelector(".delete-row-btn");
     const submitBtn = document.querySelector(".btn-submit");
-    const draftBtn = document.querySelector(".btn-draft");
-    const clearBtn = document.querySelector(".btn-clear");
-    const draftNotice = document.getElementById("draftNotice");
-    const resumeDraftBtn = document.getElementById("resumeDraftBtn");
-    const closeDraftNoticeBtn = document.getElementById("closeDraftNoticeBtn");
     const form = document.querySelector("form");
-
-    let currentDraftId = null;
-    let currentUserId = null;
-    let localStorageKey = null;
-    let autosaveTimer = null;
-    let databaseDraft = null;
 
     function getBlankRowHtml() {
         return `
@@ -93,14 +82,13 @@ function showSuccessBanner(message = 'Report submitted successfully!') {
 
         return {
             action,
-            draft_id: currentDraftId,
             title_of_project: document.getElementById("title_of_project").value,
             description_of_project: document.getElementById("description_of_project").value,
             general_objectives: document.getElementById("general_objectives").value,
             program_justification: document.getElementById("program_justification").value,
             beneficiaries: document.getElementById("beneficiaries").value,
             program_plan_text: document.getElementById("program_plan").value,
-            report_type: reportType,
+            report_type: window.reportType || reportType || "3-year Development Plan",
             programPlanTable: Array.from(rows).map(row => {
                 const cells = row.querySelectorAll("textarea, input");
 
@@ -153,43 +141,7 @@ function showSuccessBanner(message = 'Report submitted successfully!') {
         form.reset();
         table.tBodies[0].innerHTML = getBlankRowHtml();
         attachTextareaAutoExpand(table.tBodies[0]);
-        currentDraftId = null;
-    }
-
-    function setLocalStorageKey(userId) {
-        currentUserId = userId;
-        localStorageKey = `draft_data_${userId}`;
-    }
-
-    function saveLocalDraft() {
-        if (!localStorageKey || !currentDraftId) {
-            return;
-        }
-
-        localStorage.setItem(localStorageKey, JSON.stringify({
-            saved_at: new Date().toISOString(),
-            draft_id: currentDraftId,
-            data: collectFormData("local_autosave")
-        }));
-    }
-
-    function startLocalAutosave() {
-        stopLocalAutosave();
-        saveLocalDraft();
-        autosaveTimer = setInterval(saveLocalDraft, 30000);
-    }
-
-    function stopLocalAutosave() {
-        if (autosaveTimer) {
-            clearInterval(autosaveTimer);
-            autosaveTimer = null;
-        }
-    }
-
-    function clearLocalDraft() {
-        if (localStorageKey) {
-            localStorage.removeItem(localStorageKey);
-        }
+        resizeAllTextareas();
     }
 
     async function postJson(payload) {
@@ -198,28 +150,20 @@ function showSuccessBanner(message = 'Report submitted successfully!') {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
-        const result = await response.json();
+        const text = await response.text();
+        let result;
+
+        try {
+            result = JSON.parse(text);
+        } catch (error) {
+            throw new Error(text || "Server returned an invalid response.");
+        }
 
         if (!response.ok || !result.success) {
             throw new Error(result.message || "Request failed.");
         }
 
         return result;
-    }
-
-    async function checkDatabaseDraft() {
-        try {
-            const result = await postJson({ action: "get_draft" });
-            setLocalStorageKey(result.user_id);
-
-            if (result.draft) {
-                databaseDraft = result.draft;
-                currentDraftId = Number(result.draft.id);
-                draftNotice.hidden = false;
-            }
-        } catch (error) {
-            console.warn("Draft check failed:", error);
-        }
     }
 
     addRowBtn.addEventListener("click", () => {
@@ -242,65 +186,28 @@ function showSuccessBanner(message = 'Report submitted successfully!') {
         }
     });
 
-    resumeDraftBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!databaseDraft) {
-            return;
-        }
-
-        fillForm(databaseDraft);
-        currentDraftId = Number(databaseDraft.id);
-        draftNotice.hidden = true;
-        startLocalAutosave();
-        showSuccessBanner("Draft loaded. Local auto-save is now active.");
-    });
-
-    closeDraftNoticeBtn?.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        draftNotice.hidden = true;
-    });
-
-    draftBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        try {
-            const result = await postJson(collectFormData("save_draft"));
-            currentDraftId = Number(result.draft_id);
-            setLocalStorageKey(result.user_id);
-            startLocalAutosave();
-            draftNotice.hidden = true;
-            showSuccessBanner(result.message || "Draft saved successfully.");
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
+    const draftManager = ReportDrafts.create({
+        storageKey: "3ydp",
+        endpoint: "./php/post.php",
+        collect: collectFormData,
+        fill: fillForm,
+        clear: resetForm
     });
 
     submitBtn.addEventListener("click", async function(e) {
         e.preventDefault();
+        e.stopPropagation();
 
         try {
-            const result = await postJson(collectFormData("submit"));
+            const result = await postJson(draftManager.applySubmitMeta(collectFormData("submit")));
             showSuccessBanner(result.message || "Report submitted successfully!");
-            stopLocalAutosave();
-            clearLocalDraft();
+            draftManager.completeSubmit();
             resetForm();
-            draftNotice.hidden = true;
-            databaseDraft = null;
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     });
 
-    clearBtn.addEventListener("click", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        resetForm();
-    });
-
     attachTextareaAutoExpand();
-    checkDatabaseDraft();
+    draftManager.checkDatabaseDraft();
 })();

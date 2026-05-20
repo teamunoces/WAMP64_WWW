@@ -17,14 +17,14 @@ try {
         throw new Exception("Invalid progress value.");
     }
 
-    $conn = new mysqli("localhost", "root", "", "ces_reports_db");
+    $conn = new mysqli("localhost", "root", "", "ces_database");
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
 
     $conn->set_charset("utf8mb4");
 
-    $stmt = $conn->prepare("UPDATE `3ydp_programs` SET progress = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE `report_3ydp_programs` SET progress = ? WHERE id = ?");
     if (!$stmt) {
         throw new Exception("Failed to prepare update: " . $conn->error);
     }

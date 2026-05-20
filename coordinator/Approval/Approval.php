@@ -16,9 +16,9 @@ $pass = "";
 
 try {
 
-    // approval database
+    // CES database
     $pdo = new PDO(
-        "mysql:host=$host;dbname=approval_db;charset=utf8mb4",
+        "mysql:host=$host;dbname=ces_database;charset=utf8mb4",
         $user,
         $pass,
         [
@@ -73,14 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             throw new Exception("Cannot load approval data because no department was found in the session.");
         }
 
-        /* ---------- GET DEAN FROM accounts.users ---------- */
+        /* ---------- GET DEAN FROM ces_database.users ---------- */
 
         $dean = "";
 
         if (isset($_SESSION['user_id'])) {
 
             $accountsPDO = new PDO(
-                "mysql:host=$host;dbname=accounts;charset=utf8mb4",
+                "mysql:host=$host;dbname=ces_database;charset=utf8mb4",
                 $user,
                 $pass,
                 [
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 vp_admin_suffix,
                 school_president,
                 school_president_suffix
-            FROM coordinator_approvals
+            FROM approvals_coordinator
             WHERE department = :department
             ORDER BY updated_at DESC
             LIMIT 1
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 revision_number,
                 date_effective,
                 approved_by
-            FROM document_info
+            FROM approvals_document_info
             ORDER BY updated_at DESC
             LIMIT 1
         ");
@@ -196,7 +196,7 @@ try {
 
     $pdo->beginTransaction();
 
-    /* ---------- SAVE DEAN INTO accounts.users ---------- */
+    /* ---------- SAVE DEAN INTO ces_database.users ---------- */
 
     $dean = trim($data["dean"] ?? "");
     $department = trim($_SESSION["department"] ?? "");
@@ -210,7 +210,7 @@ try {
     }
 
     $accountsPDO = new PDO(
-        "mysql:host=$host;dbname=accounts;charset=utf8mb4",
+        "mysql:host=$host;dbname=ces_database;charset=utf8mb4",
         $user,
         $pass,
         [
@@ -248,7 +248,7 @@ try {
 
     $existingApproval = fetchPreparedRow($pdo, "
         SELECT id
-        FROM coordinator_approvals
+        FROM approvals_coordinator
         WHERE department = :department
         ORDER BY updated_at DESC
         LIMIT 1
@@ -258,7 +258,7 @@ try {
 
     if ($existingApproval) {
         $stmt = $pdo->prepare("
-            UPDATE coordinator_approvals
+            UPDATE approvals_coordinator
             SET
                 dean = :dean,
                 ces_head = :ces_head,
@@ -278,7 +278,7 @@ try {
         ]));
     } else {
         $stmt = $pdo->prepare("
-            INSERT INTO coordinator_approvals (
+            INSERT INTO approvals_coordinator (
                 dean,
                 ces_head,
                 ces_head_suffix,
@@ -310,7 +310,7 @@ try {
     /* ---------- DOCUMENT INFO ---------- */
 
     $stmt = $pdo->prepare("
-        INSERT INTO document_info (
+        INSERT INTO approvals_document_info (
             id,
             issue_status,
             revision_number,

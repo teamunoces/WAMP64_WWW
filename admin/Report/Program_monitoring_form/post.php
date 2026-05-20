@@ -1,451 +1,146 @@
 <?php
-/**
- * save_pmf_report.php
- * Receives JSON data from Program Monitoring Form and saves to database
- */
-
-// Enable error reporting for debugging (disable in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-
-// Set headers for JSON response
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed. Use POST.']);
-    exit();
-}
-
-// Get JSON input
-$jsonInput = file_get_contents('php://input');
-$data = json_decode($jsonInput, true);
-
-// Validate JSON
-if ($data === null) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Invalid JSON data received']);
-    exit();
-}
-
-// Database configuration
-$dbConfig = [
-    'host' => 'localhost',
-    'username' => 'root',
-    'password' => '',
-    'database' => 'ces_reports_db'
-];
-
-// Database connection
-$conn = new mysqli(
-    $dbConfig['host'],
-    $dbConfig['username'],
-    $dbConfig['password'],
-    $dbConfig['database']
-);
-
-// Check connection
-if ($conn->connect_error) {
-    error_log("DB Connection Error: " . $conn->connect_error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database connection error. Please try again later.'
-    ]);
-    exit();
-}
-
-// Set charset
-$conn->set_charset("utf8mb4");
-
-// Start session to get user info
 session_start();
+header('Content-Type: application/json');
+require_once __DIR__ . '/../shared/report_draft.php';
 
-// ========================
-// HELPER FUNCTIONS
-// ========================
-
-function getIssueStatus($naChecked, $yesChecked) {
-    if ($naChecked) return 'N/A';
-    if ($yesChecked) return 'YES';
-    return 'Not marked';
-}
-
-function getFollowUpValue($followUpInput) {
-    $val = strtoupper(trim($followUpInput));
-    if ($val === 'Y' || $val === 'YES') return 'Y';
-    if ($val === 'N' || $val === 'NO') return 'N';
-    return null;
-}
-
-function getRecApplicability($yesChecked, $naChecked) {
-    if ($yesChecked) return 'Yes';
-    if ($naChecked) return 'N/A';
-    return 'Not specified';
-}
-
-function formatDate($dateStr) {
-    if (empty($dateStr)) {
+function pmf_date(?string $date): ?string {
+    $date = trim((string) $date);
+    if ($date === '') {
         return null;
     }
-    $timestamp = strtotime($dateStr);
-    if ($timestamp !== false) {
-        return date('Y-m-d', $timestamp);
+
+    $timestamp = strtotime($date);
+    return $timestamp === false ? null : date('Y-m-d', $timestamp);
+}
+
+function pmf_follow_up($value): ?string {
+    $value = strtoupper(trim((string) $value));
+    if ($value === 'Y' || $value === 'YES') {
+        return 'Y';
+    }
+    if ($value === 'N' || $value === 'NO') {
+        return 'N';
     }
     return null;
 }
 
-// ========================
-// EXTRACT DATA FROM JSON
-// ========================
-
-$type = $data['reportType'] ?? 'Program Monitoring Form';
-$department = $_SESSION['department'] ?? $_SESSION['user_department'] ?? '';
-
-$approvalData = [
-    'dean' => $_SESSION['dean'] ?? '',
-    'ces_head' => '',
-    'ces_head_suffix' => '',
-    'vp_acad' => '',
-    'vp_acad_suffix' => '',
-    'vp_admin' => '',
-    'vp_admin_suffix' => '',
-    'school_president' => '',
-    'school_president_suffix' => ''
-];
-
-$approvalStmt = $conn->prepare("
-    SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
-           vp_admin, vp_admin_suffix, school_president, school_president_suffix
-    FROM approval_db.approvals
-    ORDER BY updated_at DESC
-    LIMIT 1
-");
-if (($_SESSION['role'] ?? '') === 'admin') {
-    $approvalStmt->execute();
-    $approvalResult = $approvalStmt->get_result();
-} else {
-    $approvalResult = false;
-}
-if ($approvalResult && $approvalRow = $approvalResult->fetch_assoc()) {
-    $approvalData = array_merge($approvalData, $approvalRow);
-}
-$approvalStmt->close();
-
-$documentInfo = [
-    'issue_status' => '',
-    'revision_number' => '',
-    'date_effective' => '',
-    'approved_by' => ''
-];
-
-$documentResult = $conn->query("
-    SELECT issue_status, revision_number, date_effective, approved_by
-    FROM approval_db.document_info
-    ORDER BY updated_at DESC
-    LIMIT 1
-");
-if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
-    $documentInfo = array_merge($documentInfo, $documentRow);
+function pmf_issue_status($status): string {
+    return in_array($status, ['N/A', 'YES', 'Not marked'], true) ? $status : 'Not marked';
 }
 
-$programTitle = trim($data['header']['programTitle'] ?? '');
-$activityConducted = trim($data['header']['activityConducted'] ?? '');
-$location = trim($data['header']['location'] ?? '');
-$beneficiaries = trim($data['header']['beneficiaries'] ?? '');
-$monitoringDate = formatDate($data['header']['dateOfMonitoring'] ?? '');
-$monitoredBy = trim($data['header']['monitoredBy'] ?? '');
+function pmf_rec_status($status): string {
+    return in_array($status, ['Yes', 'N/A', 'Not specified'], true) ? $status : 'Not specified';
+}
 
-$issuesData = $data['issuesAndChallenges'] ?? [];
+function transform_pmf_payload(array $data): array {
+    $header = is_array($data['header'] ?? null) ? $data['header'] : [];
 
-// Initialize issue variables
-$issue1Status = 'Not marked';
-$issue1FollowUp = null;
-$issue2Status = 'Not marked';
-$issue2FollowUp = null;
-$issue3Status = 'Not marked';
-$issue3FollowUp = null;
-$issue4Status = 'Not marked';
-$issue4FollowUp = null;
-$issue5Status = 'Not marked';
-$issue5FollowUp = null;
-$issue6Status = 'Not marked';
-$issue6FollowUp = null;
-$issue7Status = 'Not marked';
-$issue7FollowUp = null;
-$issue8Status = 'Not marked';
-$issue8FollowUp = null;
-$issue9OtherSpecify = '';
+    $payload = [
+        'action' => $data['action'] ?? 'submit',
+        'draft_id' => $data['draft_id'] ?? null,
+        'type' => $data['reportType'] ?? $data['type'] ?? 'Program Monitoring Form',
+        'program_title' => trim((string) ($header['programTitle'] ?? '')),
+        'activity_conducted' => trim((string) ($header['activityConducted'] ?? '')),
+        'location' => trim((string) ($header['location'] ?? '')),
+        'beneficiaries' => trim((string) ($header['beneficiaries'] ?? '')),
+        'monitoring_date' => pmf_date($header['dateOfMonitoring'] ?? ''),
+        'monitored_by' => trim((string) ($header['monitoredBy'] ?? ''))
+    ];
 
-foreach ($issuesData as $issue) {
-    $indicator = $issue['indicator'] ?? '';
-    $status = $issue['status'] ?? 'Not marked';
-    $followUp = $issue['followUpRequired'] ?? '';
-    
-    $naChecked = ($status === 'N/A');
-    $yesChecked = ($status === 'YES');
-    $followUpValue = getFollowUpValue($followUp);
-    
-    if (strpos($indicator, 'Low Participation') !== false) {
-        $issue1Status = getIssueStatus($naChecked, $yesChecked);
-        $issue1FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Resource Constraints') !== false) {
-        $issue2Status = getIssueStatus($naChecked, $yesChecked);
-        $issue2FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Lack of Proper Coordination') !== false) {
-        $issue3Status = getIssueStatus($naChecked, $yesChecked);
-        $issue3FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Cultural and Social Barriers') !== false) {
-        $issue4Status = getIssueStatus($naChecked, $yesChecked);
-        $issue4FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Sustainability Challenges') !== false) {
-        $issue5Status = getIssueStatus($naChecked, $yesChecked);
-        $issue5FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Inadequate Monitoring') !== false) {
-        $issue6Status = getIssueStatus($naChecked, $yesChecked);
-        $issue6FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Limited Training') !== false) {
-        $issue7Status = getIssueStatus($naChecked, $yesChecked);
-        $issue7FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Mismanagement') !== false) {
-        $issue8Status = getIssueStatus($naChecked, $yesChecked);
-        $issue8FollowUp = $followUpValue;
-    } elseif (strpos($indicator, 'Others') !== false) {
-        $issue9OtherSpecify = $issue['details'] ?? '';
+    $issueMap = [
+        'Low Participation' => 'issue1_low_participation',
+        'Resource Constraints' => 'issue2_resource_constraints',
+        'Lack of Proper Coordination' => 'issue3_lack_coordination',
+        'Cultural and Social Barriers' => 'issue4_cultural_barriers',
+        'Sustainability Challenges' => 'issue5_sustainability',
+        'Inadequate Monitoring' => 'issue6_inadequate_monitoring',
+        'Limited Training' => 'issue7_limited_training',
+        'Mismanagement' => 'issue8_mismanagement'
+    ];
+
+    foreach ($issueMap as $prefix) {
+        $payload[$prefix . '_status'] = 'Not marked';
+        $payload[$prefix . '_follow_up'] = null;
     }
-}
+    $payload['issue9_other_specify'] = '';
 
-// Feedback data
-$feedbackData = $data['participantFeedback'] ?? [];
+    foreach ((array) ($data['issuesAndChallenges'] ?? []) as $issue) {
+        $indicator = $issue['indicator'] ?? '';
+        if (strpos($indicator, 'Others') !== false) {
+            $payload['issue9_other_specify'] = $issue['details'] ?? '';
+            continue;
+        }
 
-$positiveChecked = 0;
-$positiveSummary = '';
-$positiveAction = '';
-$negativeChecked = 0;
-$negativeSummary = '';
-$negativeAction = '';
-$suggestionsChecked = 0;
-$suggestionsSummary = '';
-$suggestionsAction = '';
-
-foreach ($feedbackData as $feedback) {
-    $fbType = $feedback['feedbackType'] ?? '';
-    $isChecked = $feedback['isChecked'] ?? false;
-    $summary = $feedback['summary'] ?? '';
-    $action = $feedback['actionsToImprove'] ?? '';
-    
-    if (strpos($fbType, 'Positive') !== false) {
-        $positiveChecked = $isChecked ? 1 : 0;
-        $positiveSummary = $summary;
-        $positiveAction = $action;
-    } elseif (strpos($fbType, 'Negative') !== false) {
-        $negativeChecked = $isChecked ? 1 : 0;
-        $negativeSummary = $summary;
-        $negativeAction = $action;
-    } elseif (strpos($fbType, 'Suggestions') !== false) {
-        $suggestionsChecked = $isChecked ? 1 : 0;
-        $suggestionsSummary = $summary;
-        $suggestionsAction = $action;
+        foreach ($issueMap as $needle => $prefix) {
+            if (strpos($indicator, $needle) !== false) {
+                $payload[$prefix . '_status'] = pmf_issue_status($issue['status'] ?? 'Not marked');
+                $payload[$prefix . '_follow_up'] = pmf_follow_up($issue['followUpRequired'] ?? '');
+            }
+        }
     }
-}
 
-
-
-// Recommendations data
-$recommendationsData = $data['actionsForNextActivity']['standardRecommendations'] ?? [];
-$otherRecommendations = $data['actionsForNextActivity']['otherRecommendations'] ?? '';
-
-$rec1Applicability = 'Not specified';
-$rec2Applicability = 'Not specified';
-$rec3Applicability = 'Not specified';
-$rec4Applicability = 'Not specified';
-$rec5Applicability = 'Not specified';
-$rec6Applicability = 'Not specified';
-$rec7Applicability = 'Not specified';
-
-foreach ($recommendationsData as $rec) {
-    $recommendation = $rec['recommendation'] ?? '';
-    $applicability = $rec['applicability'] ?? 'Not specified';
-    $yesChecked = ($applicability === 'Yes');
-    $naChecked = ($applicability === 'N/A');
-    
-    if (strpos($recommendation, 'Raise awareness') !== false) {
-        $rec1Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Diversify funding') !== false) {
-        $rec2Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Define roles') !== false) {
-        $rec3Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Involve the community') !== false) {
-        $rec4Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Secure ongoing funding') !== false) {
-        $rec5Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Set clear goals') !== false) {
-        $rec6Applicability = getRecApplicability($yesChecked, $naChecked);
-    } elseif (strpos($recommendation, 'Offer continuous training') !== false) {
-        $rec7Applicability = getRecApplicability($yesChecked, $naChecked);
+    foreach (['positive', 'negative', 'suggestions'] as $type) {
+        $payload[$type . '_feedback_checked'] = 0;
+        $payload[$type . '_feedback_summary'] = '';
+        $payload[$type . '_feedback_action'] = '';
     }
+
+    foreach ((array) ($data['participantFeedback'] ?? []) as $feedback) {
+        $typeText = $feedback['feedbackType'] ?? '';
+        $key = strpos($typeText, 'Negative') !== false
+            ? 'negative'
+            : (strpos($typeText, 'Suggestions') !== false ? 'suggestions' : 'positive');
+
+        $payload[$key . '_feedback_checked'] = !empty($feedback['isChecked']) ? 1 : 0;
+        $payload[$key . '_feedback_summary'] = $feedback['summary'] ?? '';
+        $payload[$key . '_feedback_action'] = $feedback['actionsToImprove'] ?? '';
+    }
+
+    $recommendations = $data['actionsForNextActivity']['standardRecommendations'] ?? [];
+    for ($i = 1; $i <= 7; $i++) {
+        $payload['rec' . $i . '_applicability'] = 'Not specified';
+    }
+    foreach ((array) $recommendations as $index => $recommendation) {
+        if ($index < 7) {
+            $payload['rec' . ($index + 1) . '_applicability'] = pmf_rec_status($recommendation['applicability'] ?? 'Not specified');
+        }
+    }
+
+    $payload['other_recommendations'] = $data['actionsForNextActivity']['otherRecommendations'] ?? '';
+
+    return $payload;
 }
 
-// User information from session
-$createdByName =$_SESSION['name'] ?? 'Unknown User';
-$userRole = $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
-$userId = $_SESSION['user_id'] ?? $_SESSION['id'] ?? '';
+try {
+    $pdo = draft_pdo();
+    $data = transform_pmf_payload(draft_input());
+    $action = $data['action'] ?? 'submit';
 
-$status = 'pending';
-$archived = 'not archived';
+    if ($action === 'get_draft') {
+        $draft = draft_get_main($pdo, 'program_monitoring_form');
+        draft_json([
+            'success' => true,
+            'user_id' => (string) ($_SESSION['user_id'] ?? ''),
+            'draft' => $draft
+        ]);
+    }
 
-// Validate required fields
-if (empty($programTitle)) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Program Title is required'
-    ]);
-    $conn->close();
-    exit();
+    if ($action === 'save_draft' || $action === 'submit') {
+        $reportId = draft_save_main($pdo, 'program_monitoring_form', $data, [
+            'default_type' => 'Program Monitoring Form'
+        ]);
+
+        draft_json([
+            'success' => true,
+            'message' => $action === 'save_draft' ? 'Draft saved successfully.' : 'Report submitted successfully.',
+            'draft_id' => $reportId,
+            'report_id' => $reportId,
+            'user_id' => (string) ($_SESSION['user_id'] ?? '')
+        ]);
+    }
+
+    draft_json(['success' => false, 'message' => 'Invalid action.'], 400);
+} catch (Throwable $e) {
+    draft_json(['success' => false, 'message' => $e->getMessage()], 500);
 }
-
-// ========================
-// BUILD AND EXECUTE SQL
-// ========================
-
-$sql = "INSERT INTO program_monitoring_form (
-    type, department, program_title, activity_conducted, location, 
-    beneficiaries, monitoring_date, monitored_by,
-    issue1_low_participation_status, issue1_follow_up,
-    issue2_resource_constraints_status, issue2_follow_up,
-    issue3_lack_coordination_status, issue3_follow_up,
-    issue4_cultural_barriers_status, issue4_follow_up,
-    issue5_sustainability_status, issue5_follow_up,
-    issue6_inadequate_monitoring_status, issue6_follow_up,
-    issue7_limited_training_status, issue7_follow_up,
-    issue8_mismanagement_status, issue8_follow_up,
-    issue9_other_specify,
-    positive_feedback_checked, positive_feedback_summary, positive_feedback_action,
-    negative_feedback_checked, negative_feedback_summary, negative_feedback_action,
-    suggestions_feedback_checked, suggestions_feedback_summary, suggestions_feedback_action,
-    rec1_applicability, rec2_applicability, rec3_applicability,
-    rec4_applicability, rec5_applicability, rec6_applicability, rec7_applicability,
-    other_recommendations,
-    created_by_name, feedback, status, archived, role, user_id, dean,
-    ces_head, ces_head_suffix, vp_acad, vp_acad_suffix, vp_admin, vp_admin_suffix,
-    school_president, school_president_suffix, issue_status, revision_number, date_effective, approved_by
-) VALUES (
-    ?, ?, ?, ?, ?,
-    ?, ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?, ?,
-    ?,
-    ?, ?, ?,
-    ?, ?, ?,
-    ?, ?, ?,
-    ?, ?, ?,
-    ?, ?, ?, ?,
-    ?,
-    ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?
-)";
-
-$stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    error_log("SQL Prepare Error: " . $conn->error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database error. Please try again later.'
-    ]);
-    $conn->close();
-    exit();
-}
-
-$paramTypes = str_repeat("s", 61);
-$stmt->bind_param(
-    $paramTypes,
-    $type, 
-    $department, 
-    $programTitle, 
-    $activityConducted, 
-    $location,
-    $beneficiaries, 
-    $monitoringDate, 
-    $monitoredBy,
-    $issue1Status, $issue1FollowUp,
-    $issue2Status, $issue2FollowUp,
-    $issue3Status, $issue3FollowUp,
-    $issue4Status, $issue4FollowUp,
-    $issue5Status, $issue5FollowUp,
-    $issue6Status, $issue6FollowUp,
-    $issue7Status, $issue7FollowUp,
-    $issue8Status, $issue8FollowUp,
-    $issue9OtherSpecify,
-    $positiveChecked, $positiveSummary, $positiveAction,
-    $negativeChecked, $negativeSummary, $negativeAction,
-    $suggestionsChecked, $suggestionsSummary, $suggestionsAction,
-    $rec1Applicability, $rec2Applicability, $rec3Applicability,
-    $rec4Applicability, $rec5Applicability, $rec6Applicability, $rec7Applicability,
-    $otherRecommendations,
-    $createdByName, 
-    $feedbackText, 
-    $status, 
-    $archived, 
-    $userRole, 
-    $userId, 
-    $approvalData['dean'],
-    $approvalData['ces_head'],
-    $approvalData['ces_head_suffix'],
-    $approvalData['vp_acad'],
-    $approvalData['vp_acad_suffix'],
-    $approvalData['vp_admin'],
-    $approvalData['vp_admin_suffix'],
-    $approvalData['school_president'],
-    $approvalData['school_president_suffix'],
-    $documentInfo['issue_status'],
-    $documentInfo['revision_number'],
-    $documentInfo['date_effective'],
-    $documentInfo['approved_by']
-);
-
-if ($stmt->execute()) {
-    $insertedId = $conn->insert_id;
-    error_log("Report submitted successfully - ID: $insertedId, Program: $programTitle, By: $createdByName");
-    
-    echo json_encode([
-        'success' => true,
-        'message' => 'Program Monitoring Form submitted successfully',
-        'report_id' => $insertedId,
-        'submission_date' => date('Y-m-d H:i:s'),
-        'program_title' => $programTitle,
-        'status' => $status
-    ]);
-} else {
-    error_log("Database Insert Error: " . $stmt->error);
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to save report. Please try again.',
-        'error' => $stmt->error
-    ]);
-}
-
-$stmt->close();
-$conn->close();
 ?>

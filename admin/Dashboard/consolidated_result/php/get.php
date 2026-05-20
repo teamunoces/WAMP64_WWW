@@ -1,15 +1,19 @@
 <?php
 $surveyHost = 'localhost';
-$surveyDBName = 'questionnaire';
+$surveyDBName = 'ces_database';
 $surveyUser = 'root';
 $surveyPass = '';
 
 $demoHost = 'localhost';
-$demoDBName = 'demographic_totals';
+$demoDBName = 'ces_database';
 $demoUser = 'root';
 $demoPass = '';
 
 header('Content-Type: application/json');
+
+function quoteIdentifier(string $identifier): string {
+    return '`' . str_replace('`', '``', $identifier) . '`';
+}
 
 try {
     // Connect to survey database
@@ -23,6 +27,60 @@ try {
     // Get selected barangay and year from GET parameters
     $barangay = $_GET['barangay'] ?? '';
     $barangay = strtolower($barangay); // normalize
+
+    $surveyTables = [
+        'aclan' => 'survey_aclan',
+        'amontay' => 'survey_amontay',
+        'ataatahon' => 'survey_ataatahon',
+        'barangay1' => 'survey_barangay1',
+        'barangay2' => 'survey_barangay2',
+        'barangay3' => 'survey_barangay3',
+        'barangay4' => 'survey_barangay4',
+        'barangay5' => 'survey_barangay5',
+        'barangay6' => 'survey_barangay6',
+        'barangay7' => 'survey_barangay7',
+        'camagong' => 'survey_camagong',
+        'cubicubi' => 'survey_cubicubi',
+        'culit' => 'survey_culit',
+        'jaguimitan' => 'survey_jaguimitan',
+        'kinajabangan' => 'survey_kinajabangan',
+        'kinabjangan' => 'survey_kinajabangan',
+        'punta' => 'survey_punta',
+        'santaana' => 'survey_santaana',
+        'talisay' => 'survey_talisay',
+        'triangulo' => 'survey_triangulo'
+    ];
+
+    $demoTables = [
+        'aclan' => 'demograph_aclan',
+        'amontay' => 'demograph_amontay',
+        'ataatahon' => 'demograph_ataatahon',
+        'barangay1' => 'demograph_barangay1',
+        'barangay2' => 'demograph_barangay2',
+        'barangay3' => 'demograph_barangay3',
+        'barangay4' => 'demograph_barangay4',
+        'barangay5' => 'demograph_barangay5',
+        'barangay6' => 'demograph_barangay6',
+        'barangay7' => 'demograph_barangay7',
+        'camagong' => 'demograph_camagong',
+        'cubicubi' => 'demograph_cubicubi',
+        'culit' => 'demograph_culit',
+        'jaguimitan' => 'demograph_jaguimitan',
+        'kinajabangan' => 'demograph_kinajabangan',
+        'kinabjangan' => 'demograph_kinajabangan',
+        'punta' => 'demograph_punta',
+        'santaana' => 'demograph_santaana',
+        'talisay' => 'demograph_talisay',
+        'triangulo' => 'demograph_triangulo'
+    ];
+
+    if (!isset($surveyTables[$barangay], $demoTables[$barangay])) {
+        echo json_encode(['error' => 'Invalid barangay']);
+        exit;
+    }
+
+    $surveyTableSql = quoteIdentifier($surveyTables[$barangay]);
+    $demoTableSql = quoteIdentifier($demoTables[$barangay]);
     
     $year = $_GET['year'] ?? 'all';
     $yearCondition = "";
@@ -46,12 +104,12 @@ try {
     // -------- TABLE 1. POPULATION & HOUSEHOLDS (with year filter) --------
     if ($year !== 'all' && is_numeric($year)) {
         // Get demographics for specific year
-        $query = "SELECT population, households FROM $barangay WHERE YEAR(created_at) = ? LIMIT 1";
+        $query = "SELECT population, households FROM $demoTableSql WHERE YEAR(created_at) = ? LIMIT 1";
         $stmt = $demoPdo->prepare($query);
         $stmt->execute([$year]);
     } else {
         // Get the most recent demographics when 'all' is selected
-        $query = "SELECT population, households FROM $barangay ORDER BY created_at DESC LIMIT 1";
+        $query = "SELECT population, households FROM $demoTableSql ORDER BY created_at DESC LIMIT 1";
         $stmt = $demoPdo->prepare($query);
         $stmt->execute();
     }
@@ -65,7 +123,7 @@ try {
     ];
 
     // -------- TOTAL RESPONDENTS --------
-    $query = "SELECT COUNT(*) AS total FROM $barangay WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) AS total FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $totalRespondents = (int)($stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
@@ -85,7 +143,7 @@ try {
     ];
 
     // total answered religion (exclude null)
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE religion IS NOT NULL AND religion != '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE religion IS NOT NULL AND religion != '' $yearCondition";
     $totalStmt = $surveyPdo->prepare($query);
     $totalStmt->execute($params);
     $total = (int)$totalStmt->fetchColumn();
@@ -94,7 +152,7 @@ try {
 
     /* -------- PREDEFINED RELIGIONS -------- */
     foreach ($types as $t){
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE religion = ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE religion = ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -112,7 +170,7 @@ try {
     /* -------- TYPED OTHER RELIGIONS AS ONE ROW -------- */
     $query = "
         SELECT Other_religion, COUNT(*) AS total
-        FROM `$barangay`
+        FROM $surveyTableSql
         WHERE Other_religion IS NOT NULL
         AND Other_religion != ''
         $yearCondition
@@ -149,12 +207,12 @@ try {
 
     // -------- TABLE 3. SOURCE OF INCOME --------
     $incomeData = [];
-    $query = "SELECT COUNT(*) AS total FROM $barangay WHERE family_livelihood IS NOT NULL AND family_livelihood != '' $yearCondition";
+    $query = "SELECT COUNT(*) AS total FROM $surveyTableSql WHERE family_livelihood IS NOT NULL AND family_livelihood != '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $incomeData[] = ['source' => 'family_livelihood', 'total' => (int)$stmt->fetch(PDO::FETCH_ASSOC)['total']];
     
-    $query = "SELECT COUNT(*) AS total FROM $barangay WHERE business_type IS NOT NULL AND business_type != '' $yearCondition";
+    $query = "SELECT COUNT(*) AS total FROM $surveyTableSql WHERE business_type IS NOT NULL AND business_type != '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $incomeData[] = ['source' => 'Business', 'total' => (int)$stmt->fetch(PDO::FETCH_ASSOC)['total']];
@@ -178,7 +236,7 @@ try {
             SELECT 
             SUM(CASE WHEN husband_salary = '$value' THEN 1 ELSE 0 END) AS bana,
             SUM(CASE WHEN wife_salary = '$value' THEN 1 ELSE 0 END) AS asawa
-            FROM $barangay
+            FROM $surveyTableSql
             WHERE 1=1 $yearCondition
         ";
         $stmt = $surveyPdo->prepare($query);
@@ -205,7 +263,7 @@ try {
     $educationLevels = ["Elementary", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 12", "College Level", "Wala nag Eskwela"];
     $educationData = [];
     foreach ($educationLevels as $level) {
-        $query = "SELECT COUNT(*) AS total FROM $barangay WHERE children_grade LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) AS total FROM $surveyTableSql WHERE children_grade LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$level%"], $params);
         $stmt->execute($stmtParams);
@@ -245,7 +303,7 @@ try {
     $ageData = [];
 
     foreach ($ageGroups as $label => $value) {
-        $query = "SELECT COUNT(*) AS total FROM $barangay WHERE children_age_groups = ? $yearCondition";
+        $query = "SELECT COUNT(*) AS total FROM $surveyTableSql WHERE children_age_groups = ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$value], $params);
         $stmt->execute($stmtParams);
@@ -268,7 +326,7 @@ try {
     $types = ["Oo","Wala"];
 
     // total answered
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE family_health_issue IS NOT NULL AND family_health_issue != '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE family_health_issue IS NOT NULL AND family_health_issue != '' $yearCondition";
     $totalStmt = $surveyPdo->prepare($query);
     $totalStmt->execute($params);
     $total = (int)$totalStmt->fetchColumn();
@@ -277,7 +335,7 @@ try {
 
     /* ---------- Oo + Wala ---------- */
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE family_health_issue = ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE family_health_issue = ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -300,7 +358,7 @@ try {
     unset($row);
 
     /* ---------- Others (always last, no rank) ---------- */
-    $query = "SELECT SUM(family_health_issue_count) FROM `$barangay` WHERE family_health_issue_count IS NOT NULL AND family_health_issue_count != '' $yearCondition";
+    $query = "SELECT SUM(family_health_issue_count) FROM $surveyTableSql WHERE family_health_issue_count IS NOT NULL AND family_health_issue_count != '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $othersTotal = (int)$stmt->fetchColumn();
@@ -332,7 +390,7 @@ try {
     $healthData = [];
 
     foreach ($healthColumns as $label => $col) {
-        $query = "SELECT AVG($col) AS avg_rank, COUNT($col) AS total FROM `$barangay` WHERE $col IS NOT NULL AND $col <> '' $yearCondition";
+        $query = "SELECT AVG($col) AS avg_rank, COUNT($col) AS total FROM $surveyTableSql WHERE $col IS NOT NULL AND $col <> '' $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -357,13 +415,13 @@ try {
 
     // --------TABLE 9 toilet type --------
     $types = ["Flush","Antipolo","Water-sealed","Walay CR"];
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
 
-    $data['toilet'] = array_map(function($t) use ($surveyPdo,$barangay,$total,$yearCondition,$params){
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE toilet_type=? $yearCondition";
+    $data['toilet'] = array_map(function($t) use ($surveyPdo,$surveyTableSql,$total,$yearCondition,$params){
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE toilet_type=? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -386,13 +444,13 @@ try {
 
     // -------------------- TABLE 10 waste disposal-------------
     $types = ["Compost Pit","Koleksyon sa Basura"];
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
 
-    $data['waste'] = array_map(function($t) use ($surveyPdo,$barangay,$total,$yearCondition,$params){
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE waste_disposal=? $yearCondition";
+    $data['waste'] = array_map(function($t) use ($surveyPdo,$surveyTableSql,$total,$yearCondition,$params){
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE waste_disposal=? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -427,7 +485,7 @@ try {
     ];
 
     // total respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -436,7 +494,7 @@ try {
 
     // 1️⃣ Count predefined problems
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE main_district_problem LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE main_district_problem LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$t%"], $params);
         $stmt->execute($stmtParams);
@@ -450,7 +508,7 @@ try {
     }
 
     // 2️⃣ Count ALL typed answers as "Others"
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE other_main_district_problem IS NOT NULL AND other_main_district_problem <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE other_main_district_problem IS NOT NULL AND other_main_district_problem <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $others = (int)$stmt->fetchColumn();
@@ -472,13 +530,13 @@ try {
 
     // --------------------TABLE 12. Peace and Order-------------
     $types = ["Oo","Wala"];
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
 
-    $data['peace'] = array_map(function($t) use ($surveyPdo,$barangay,$total,$yearCondition,$params){
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE peace_and_order_issue=? $yearCondition";
+    $data['peace'] = array_map(function($t) use ($surveyPdo,$surveyTableSql,$total,$yearCondition,$params){
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE peace_and_order_issue=? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -503,7 +561,7 @@ try {
     $types = ["Oo", "Wala"];
 
     // count only answered respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE tanod_training IS NOT NULL AND tanod_training != '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE tanod_training IS NOT NULL AND tanod_training != '' $yearCondition";
     $totalStmt = $surveyPdo->prepare($query);
     $totalStmt->execute($params);
     $total = (int)$totalStmt->fetchColumn();
@@ -511,7 +569,7 @@ try {
     $data['necessity'] = [];
 
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE tanod_training = ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE tanod_training = ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -552,7 +610,7 @@ try {
     $needData = [];
 
     foreach ($needColumns as $label => $col) {
-        $query = "SELECT COALESCE(AVG($col),0) AS avg_rank, COUNT($col) AS total FROM `$barangay` WHERE $col IS NOT NULL AND $col != '' $yearCondition";
+        $query = "SELECT COALESCE(AVG($col),0) AS avg_rank, COUNT($col) AS total FROM $surveyTableSql WHERE $col IS NOT NULL AND $col != '' $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -591,7 +649,7 @@ try {
     $seminarData = [];
 
     foreach ($seminarColumns as $label => $col) {
-        $query = "SELECT AVG($col) AS avg_rank, COUNT($col) AS total FROM `$barangay` WHERE $col IS NOT NULL AND $col <> '' $yearCondition";
+        $query = "SELECT AVG($col) AS avg_rank, COUNT($col) AS total FROM $surveyTableSql WHERE $col IS NOT NULL AND $col <> '' $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -622,7 +680,7 @@ try {
     ];
 
     // total respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -631,7 +689,7 @@ try {
 
     // 1️⃣ Count predefined problems
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE district_training_needs LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE district_training_needs LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$t%"], $params);
         $stmt->execute($stmtParams);
@@ -645,7 +703,7 @@ try {
     }
 
     // 2️⃣ Count ALL typed answers as "Others"
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE other_district_training_needs IS NOT NULL AND other_district_training_needs <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE other_district_training_needs IS NOT NULL AND other_district_training_needs <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $others = (int)$stmt->fetchColumn();
@@ -675,7 +733,7 @@ try {
     ];
 
     // total respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -684,7 +742,7 @@ try {
 
     // 1️⃣ Count predefined problems
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE religious_activities LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE religious_activities LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$t%"], $params);
         $stmt->execute($stmtParams);
@@ -698,7 +756,7 @@ try {
     }
 
     // 2️⃣ Count ALL typed answers as "Others"
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE other_religious_activities IS NOT NULL AND other_religious_activities <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE other_religious_activities IS NOT NULL AND other_religious_activities <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $others = (int)$stmt->fetchColumn();
@@ -728,7 +786,7 @@ try {
     ];
 
     // total respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -737,7 +795,7 @@ try {
 
     // 1️⃣ Count predefined problems
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE important_religious_activities LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE important_religious_activities LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$t%"], $params);
         $stmt->execute($stmtParams);
@@ -751,7 +809,7 @@ try {
     }
 
     // 2️⃣ Count ALL typed answers as "Others"
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE other_important_religious_activities IS NOT NULL AND other_important_religious_activities <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE other_important_religious_activities IS NOT NULL AND other_important_religious_activities <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $others = (int)$stmt->fetchColumn();
@@ -779,7 +837,7 @@ try {
     ];
 
     // total respondents
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -788,7 +846,7 @@ try {
 
     // 1️⃣ Count predefined problems
     foreach ($types as $t) {
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE spiritual_growth LIKE ? $yearCondition";
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE spiritual_growth LIKE ? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge(["%$t%"], $params);
         $stmt->execute($stmtParams);
@@ -802,7 +860,7 @@ try {
     }
 
     // 2️⃣ Count ALL typed answers as "Others"
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE other_spiritual_growth IS NOT NULL AND other_spiritual_growth <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE other_spiritual_growth IS NOT NULL AND other_spiritual_growth <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $others = (int)$stmt->fetchColumn();
@@ -824,13 +882,13 @@ try {
 
     // -------------------- TABLE 20. KA PILA SILA MAG AMPO -------------
     $types = ["Adlaw-adlaw ","Kada Semana","Kada bulan","Panagsa ra"];
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE 1=1 $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE 1=1 $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
 
-    $data['freq'] = array_map(function($t) use ($surveyPdo,$barangay,$total,$yearCondition,$params){
-        $query = "SELECT COUNT(*) FROM `$barangay` WHERE spiritual_activity_frequency=? $yearCondition";
+    $data['freq'] = array_map(function($t) use ($surveyPdo,$surveyTableSql,$total,$yearCondition,$params){
+        $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE spiritual_activity_frequency=? $yearCondition";
         $stmt = $surveyPdo->prepare($query);
         $stmtParams = array_merge([$t], $params);
         $stmt->execute($stmtParams);
@@ -853,7 +911,7 @@ try {
 
     // -------- TABLE 21. HELP NEEDED IN THE COMMUNITY --------
     // Get total number of non-empty responses
-    $query = "SELECT COUNT(*) FROM `$barangay` WHERE barangay_needs IS NOT NULL AND barangay_needs <> '' $yearCondition";
+    $query = "SELECT COUNT(*) FROM $surveyTableSql WHERE barangay_needs IS NOT NULL AND barangay_needs <> '' $yearCondition";
     $stmt = $surveyPdo->prepare($query);
     $stmt->execute($params);
     $total = $stmt->fetchColumn();
@@ -861,7 +919,7 @@ try {
     // Get counts per unique response
     $query = "
         SELECT barangay_needs, COUNT(*) AS total_count
-        FROM `$barangay`
+        FROM $surveyTableSql
         WHERE barangay_needs IS NOT NULL AND barangay_needs <> ''
         $yearCondition
         GROUP BY barangay_needs
@@ -895,3 +953,4 @@ try {
     echo json_encode(['error'=>$e->getMessage()]);
 }
 ?>
+

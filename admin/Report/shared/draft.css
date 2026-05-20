@@ -61,8 +61,7 @@
 
 .draft-button,
 .clear-button,
-.report-action-bar .submit-button,
-.report-action-bar .btn-submit {
+.report-action-bar .submit-button {
     border: 0;
     border-radius: 8px;
     min-width: 150px;
@@ -86,15 +85,14 @@
 
 .draft-button:hover,
 .clear-button:hover,
-.report-action-bar .submit-button:hover,
-.report-action-bar .btn-submit:hover {
+.report-action-bar .submit-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(37, 73, 17, 0.24);
 }
 
 .report-action-bar {
     display: grid;
-    grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 20px;
     width: 100%;
@@ -102,35 +100,22 @@
 }
 
 .draft-button {
-    order: 1;
-    grid-column: 1;
     justify-self: start;
     background: linear-gradient(135deg, #f6a319 0%, #bf7c00 100%);
     color: #fff;
 }
 
 .clear-button {
-    order: 2;
-    grid-column: 2;
     justify-self: center;
     background: linear-gradient(135deg, #eeeeee 0%, #c9c9c9 100%);
     color: #333;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
 }
 
-.report-action-bar .submit-button,
-.report-action-bar .btn-submit {
-    order: 3;
-    grid-column: 3;
+.report-action-bar .submit-button {
     justify-self: end;
     background: linear-gradient(135deg, #59AF29 0%, #254911 100%);
     color: #fff;
-}
-
-.report-action-bar .recommendation-btn {
-    order: 4;
-    grid-column: 1 / -1;
-    justify-self: center;
 }
 
 @media (max-width: 640px) {
@@ -140,15 +125,8 @@
 
     .draft-button,
     .clear-button,
-    .report-action-bar .submit-button,
-    .report-action-bar .btn-submit {
-        grid-column: 1;
+    .report-action-bar .submit-button {
         justify-self: stretch;
         width: 100%;
-    }
-
-    .report-action-bar .recommendation-btn {
-        grid-column: 1;
-        justify-self: stretch;
     }
 }

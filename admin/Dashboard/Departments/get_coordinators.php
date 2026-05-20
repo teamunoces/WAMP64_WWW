@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 $servername = "localhost";
 $username = "root";
 $password = "";
-$accountsDbName = "accounts";
+$accountsDbName = "ces_database";
 
 $department = trim($_GET['department'] ?? '');
 $allowedDepartments = ["ELEMENTARY", "JHS", "SHS", "CBMA", "CBM", "CTHM", "CCIS", "CCJE", "CAS", "CTE", "CSF", "CCF", "LRC"];

@@ -2,440 +2,202 @@
 session_start();
 header('Content-Type: application/json');
 
-function sendJson($payload, $statusCode = 200) {
-    http_response_code($statusCode);
-    echo json_encode($payload);
-    exit;
+require_once __DIR__ . '/../../shared/report_draft.php';
+
+const THREE_YEAR_REPORT_TYPE = '3-year Development Plan';
+
+function clean_3ydp_value($value): string {
+    return trim((string) ($value ?? ''));
 }
 
-function requireLogin() {
-    if (!isset($_SESSION['name'], $_SESSION['department'], $_SESSION['role'], $_SESSION['user_id'])) {
-        throw new Exception("User not logged in");
-    }
-}
-
-function ensureDraftStatus(mysqli $conn) {
-    $result = $conn->query("SHOW COLUMNS FROM `3ydp` LIKE 'status'");
-    $column = $result ? $result->fetch_assoc() : null;
-
-    if (!$column || stripos($column['Type'], 'enum(') !== 0 || strpos($column['Type'], "'draft'") !== false) {
-        return;
-    }
-
-    preg_match_all("/'((?:[^'\\\\]|\\\\.)*)'/", $column['Type'], $matches);
-    $values = array_map(fn($value) => "'" . $conn->real_escape_string(stripslashes($value)) . "'", $matches[1]);
-    $values[] = "'draft'";
-
-    $nullSql = strtoupper($column['Null']) === 'YES' ? 'NULL' : 'NOT NULL';
-    $defaultSql = $column['Default'] !== null ? " DEFAULT '" . $conn->real_escape_string($column['Default']) . "'" : '';
-    $sql = "ALTER TABLE `3ydp` MODIFY `status` ENUM(" . implode(",", $values) . ") $nullSql$defaultSql";
-
-    if (!$conn->query($sql)) {
-        throw new Exception("Unable to update status enum for drafts: " . $conn->error);
-    }
-}
-
-function getApprovalData() {
-    $approvalConn = new mysqli("localhost", "root", "", "approval_db");
-    if ($approvalConn->connect_error) {
-        throw new Exception($approvalConn->connect_error);
-    }
-
-    $approvalData = [
-        'dean' => $_SESSION['dean'] ?? '',
-        'ces_head' => '',
-        'ces_head_suffix' => '',
-        'vp_acad' => '',
-        'vp_acad_suffix' => '',
-        'vp_admin' => '',
-        'vp_admin_suffix' => '',
-        'school_president' => '',
-        'school_president_suffix' => ''
-    ];
-
-    $approvalStmt = $approvalConn->prepare("
-        SELECT
-            ces_head,
-            ces_head_suffix,
-            vp_acad,
-            vp_acad_suffix,
-            vp_admin,
-            vp_admin_suffix,
-            school_president,
-            school_president_suffix
-        FROM approvals
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-    $approvalStmt->execute();
-    $approvalResult = $approvalStmt->get_result();
-
-    if ($approvalRow = $approvalResult->fetch_assoc()) {
-        $approvalData = array_merge($approvalData, $approvalRow);
-    }
-
-    $approvalStmt->close();
-
-    $documentInfo = [
-        'issue_status' => '',
-        'revision_number' => '',
-        'date_effective' => '',
-        'approved_by' => ''
-    ];
-
-    $documentResult = $approvalConn->query("
-        SELECT
-            issue_status,
-            revision_number,
-            date_effective,
-            approved_by
-        FROM document_info
-        ORDER BY updated_at DESC
-        LIMIT 1
-    ");
-
-    if ($documentResult && $documentRow = $documentResult->fetch_assoc()) {
-        $documentInfo = array_merge($documentInfo, $documentRow);
-    }
-
-    $approvalConn->close();
-
-    return [$approvalData, $documentInfo];
-}
-
-function normalizeReportData(array $data) {
+function transform_3ydp_payload(array $input): array {
     return [
-        'type' => $data['report_type'] ?? '3-year Development Plan',
-        'title' => $data['title_of_project'] ?? '',
-        'description' => $data['description_of_project'] ?? '',
-        'general_objectives' => $data['general_objectives'] ?? '',
-        'program_justification' => $data['program_justification'] ?? '',
-        'beneficiaries' => $data['beneficiaries'] ?? '',
-        'program_plan_text' => $data['program_plan_text'] ?? '',
-        'rows' => is_array($data['programPlanTable'] ?? null) ? $data['programPlanTable'] : []
+        'action' => $input['action'] ?? 'submit',
+        'draft_id' => $input['draft_id'] ?? null,
+        'type' => clean_3ydp_value($input['report_type'] ?? $input['type'] ?? THREE_YEAR_REPORT_TYPE),
+        'title_of_project' => clean_3ydp_value($input['title_of_project'] ?? ''),
+        'description_of_project' => clean_3ydp_value($input['description_of_project'] ?? ''),
+        'general_objectives' => clean_3ydp_value($input['general_objectives'] ?? ''),
+        'program_justification' => clean_3ydp_value($input['program_justification'] ?? ''),
+        'beneficiaries' => clean_3ydp_value($input['beneficiaries'] ?? ''),
+        'program_plan_text' => clean_3ydp_value($input['program_plan_text'] ?? ''),
+        'programPlanTable' => is_array($input['programPlanTable'] ?? null) ? $input['programPlanTable'] : []
     ];
 }
 
-function replaceProgramRows(mysqli $conn, int $reportId, array $rows) {
-    $deleteStmt = $conn->prepare("DELETE FROM `3ydp_programs` WHERE report_id=?");
-    $deleteStmt->bind_param("i", $reportId);
-    $deleteStmt->execute();
-    $deleteStmt->close();
+function find_3ydp_draft_id(PDO $pdo, string $userId, string $type): ?int {
+    $stmt = $pdo->prepare("SELECT id FROM `3ydp` WHERE user_id = :user_id AND type = :type AND status = 'draft' ORDER BY id DESC LIMIT 1");
+    $stmt->execute([':user_id' => $userId, ':type' => $type]);
+    $row = $stmt->fetch();
+    return $row ? (int) $row['id'] : null;
+}
+
+function save_3ydp_main(PDO $pdo, array $data): int {
+    $user = draft_require_user();
+    draft_ensure_status($pdo, '3ydp');
+
+    $status = ($data['action'] ?? '') === 'save_draft' ? 'draft' : 'pending';
+    $requestedDraftId = isset($data['draft_id']) ? (int) $data['draft_id'] : 0;
+    $reportId = null;
+
+    if ($requestedDraftId > 0) {
+        $stmt = $pdo->prepare("SELECT id FROM `3ydp` WHERE id = :id AND user_id = :user_id AND status = 'draft' LIMIT 1");
+        $stmt->execute([':id' => $requestedDraftId, ':user_id' => $user['user_id']]);
+        $row = $stmt->fetch();
+        $reportId = $row ? (int) $row['id'] : null;
+    }
+
+    if (!$reportId && $status === 'draft') {
+        $reportId = find_3ydp_draft_id($pdo, $user['user_id'], $data['type']);
+    }
+
+    $payload = array_merge([
+        'type' => $data['type'],
+        'title_of_project' => $data['title_of_project'],
+        'description_of_project' => $data['description_of_project'],
+        'general_objectives' => $data['general_objectives'],
+        'program_justification' => $data['program_justification'],
+        'beneficiaries' => $data['beneficiaries'],
+        'program_plan_text' => $data['program_plan_text'],
+        'status' => $status
+    ], draft_meta($pdo, $user));
+
+    $columns = draft_columns($pdo, '3ydp');
+    $payload = array_intersect_key($payload, array_flip($columns));
+    unset($payload['id'], $payload['created_at']);
+
+    if ($reportId) {
+        $sets = [];
+        $params = [':id' => $reportId, ':where_user_id' => $user['user_id']];
+
+        foreach ($payload as $column => $value) {
+            $sets[] = "`$column` = :$column";
+            $params[":$column"] = $value;
+        }
+
+        $sql = "UPDATE `3ydp` SET " . implode(', ', $sets) . " WHERE id = :id AND user_id = :where_user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $reportId;
+    }
+
+    $columnNames = array_keys($payload);
+    $placeholders = array_map(fn($column) => ":$column", $columnNames);
+    $params = [];
+
+    foreach ($payload as $column => $value) {
+        $params[":$column"] = $value;
+    }
+
+    $sql = "INSERT INTO `3ydp` (`" . implode('`, `', $columnNames) . "`) VALUES (" . implode(', ', $placeholders) . ")";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return (int) $pdo->lastInsertId();
+}
+
+function replace_3ydp_program_rows(PDO $pdo, int $reportId, array $rows): int {
+    $deleteStmt = $pdo->prepare("DELETE FROM `3ydp_programs` WHERE report_id = :report_id");
+    $deleteStmt->execute([':report_id' => $reportId]);
 
     if (!$rows) {
         return 0;
     }
 
-    $stmt = $conn->prepare("INSERT INTO `3ydp_programs`
-        (report_id, program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("
+        INSERT INTO `3ydp_programs`
+            (report_id, program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame)
+        VALUES
+            (:report_id, :program, :objectives, :strategies, :persons_agencies_involved, :resources_needed, :budget, :means_of_verification, :time_frame)
+    ");
     $inserted = 0;
 
     foreach ($rows as $row) {
-        $program = $row['program'] ?? '';
-        $objectives = $row['objectives'] ?? '';
-        $strategies = $row['strategies'] ?? '';
-        $personsAgencies = $row['persons_agencies_involved'] ?? '';
-        $resourcesNeeded = $row['resources_needed'] ?? '';
-        $budget = $row['budget'] ?? '';
-        $meansOfVerification = $row['means_of_verification'] ?? '';
-        $timeFrame = $row['time_frame'] ?? '';
+        $programRow = [
+            'program' => clean_3ydp_value($row['program'] ?? ''),
+            'objectives' => clean_3ydp_value($row['objectives'] ?? ''),
+            'strategies' => clean_3ydp_value($row['strategies'] ?? ''),
+            'persons_agencies_involved' => clean_3ydp_value($row['persons_agencies_involved'] ?? ''),
+            'resources_needed' => clean_3ydp_value($row['resources_needed'] ?? ''),
+            'budget' => clean_3ydp_value($row['budget'] ?? ''),
+            'means_of_verification' => clean_3ydp_value($row['means_of_verification'] ?? ''),
+            'time_frame' => clean_3ydp_value($row['time_frame'] ?? '')
+        ];
 
-        if (
-            trim($program) === '' &&
-            trim($objectives) === '' &&
-            trim($strategies) === '' &&
-            trim($personsAgencies) === '' &&
-            trim($resourcesNeeded) === '' &&
-            trim($budget) === '' &&
-            trim($meansOfVerification) === '' &&
-            trim($timeFrame) === ''
-        ) {
+        if (implode('', $programRow) === '') {
             continue;
         }
 
-        $stmt->bind_param(
-            "issssssss",
-            $reportId,
-            $program,
-            $objectives,
-            $strategies,
-            $personsAgencies,
-            $resourcesNeeded,
-            $budget,
-            $meansOfVerification,
-            $timeFrame
-        );
-
-        if ($stmt->execute()) {
-            $inserted++;
-        }
+        $stmt->execute(array_merge([':report_id' => $reportId], array_combine(
+            array_map(fn($column) => ":$column", array_keys($programRow)),
+            array_values($programRow)
+        )));
+        $inserted++;
     }
 
-    $stmt->close();
     return $inserted;
 }
 
-function findDraftId(mysqli $conn, int $userId, string $type) {
-    $stmt = $conn->prepare("SELECT id FROM `3ydp` WHERE user_id=? AND type=? AND status='draft' ORDER BY id DESC LIMIT 1");
-    $stmt->bind_param("is", $userId, $type);
-    $stmt->execute();
-    $row = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
+function load_3ydp_draft(PDO $pdo): ?array {
+    $user = draft_require_user();
+    draft_ensure_status($pdo, '3ydp');
 
-    return $row ? (int) $row['id'] : null;
-}
-
-function saveReport(mysqli $conn, array $data, string $status, ?int $requestedDraftId = null) {
-    $report = normalizeReportData($data);
-    [$approvalData, $documentInfo] = getApprovalData();
-
-    $createdByName = $_SESSION['name'];
-    $department = $_SESSION['department'];
-    $role = $_SESSION['role'];
-    $userId = (int) $_SESSION['user_id'];
-    $reportId = null;
-
-    if ($requestedDraftId) {
-        $checkStmt = $conn->prepare("SELECT id FROM `3ydp` WHERE id=? AND user_id=? AND status='draft' LIMIT 1");
-        $checkStmt->bind_param("ii", $requestedDraftId, $userId);
-        $checkStmt->execute();
-        $draftRow = $checkStmt->get_result()->fetch_assoc();
-        $checkStmt->close();
-        $reportId = $draftRow ? (int) $draftRow['id'] : null;
-    }
-
-    if (!$reportId && $status === 'draft') {
-        $reportId = findDraftId($conn, $userId, $report['type']);
-    }
-
-    $conn->begin_transaction();
-
-    try {
-        if ($reportId) {
-            $stmt = $conn->prepare("UPDATE `3ydp`
-                SET
-                    type=?,
-                    title_of_project=?,
-                    description_of_project=?,
-                    general_objectives=?,
-                    program_justification=?,
-                    beneficiaries=?,
-                    program_plan_text=?,
-                    created_by_name=?,
-                    department=?,
-                    role=?,
-                    user_id=?,
-                    dean=?,
-                    ces_head=?,
-                    ces_head_suffix=?,
-                    vp_acad=?,
-                    vp_acad_suffix=?,
-                    vp_admin=?,
-                    vp_admin_suffix=?,
-                    school_president=?,
-                    school_president_suffix=?,
-                    issue_status=?,
-                    revision_number=?,
-                    date_effective=?,
-                    approved_by=?,
-                    status=?
-                WHERE id=? AND user_id=?");
-            $paramTypes = "ssssssssssissssssssssssssii";
-            $stmt->bind_param(
-                $paramTypes,
-                $report['type'],
-                $report['title'],
-                $report['description'],
-                $report['general_objectives'],
-                $report['program_justification'],
-                $report['beneficiaries'],
-                $report['program_plan_text'],
-                $createdByName,
-                $department,
-                $role,
-                $userId,
-                $approvalData['dean'],
-                $approvalData['ces_head'],
-                $approvalData['ces_head_suffix'],
-                $approvalData['vp_acad'],
-                $approvalData['vp_acad_suffix'],
-                $approvalData['vp_admin'],
-                $approvalData['vp_admin_suffix'],
-                $approvalData['school_president'],
-                $approvalData['school_president_suffix'],
-                $documentInfo['issue_status'],
-                $documentInfo['revision_number'],
-                $documentInfo['date_effective'],
-                $documentInfo['approved_by'],
-                $status,
-                $reportId,
-                $userId
-            );
-            $stmt->execute();
-            $stmt->close();
-        } else {
-            $stmt = $conn->prepare("INSERT INTO `3ydp`
-                (
-                    type,
-                    title_of_project,
-                    description_of_project,
-                    general_objectives,
-                    program_justification,
-                    beneficiaries,
-                    program_plan_text,
-                    created_by_name,
-                    department,
-                    role,
-                    user_id,
-                    dean,
-                    ces_head,
-                    ces_head_suffix,
-                    vp_acad,
-                    vp_acad_suffix,
-                    vp_admin,
-                    vp_admin_suffix,
-                    school_president,
-                    school_president_suffix,
-                    issue_status,
-                    revision_number,
-                    date_effective,
-                    approved_by,
-                    status
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $paramTypes = "ssssssssssissssssssssssss";
-            $stmt->bind_param(
-                $paramTypes,
-                $report['type'],
-                $report['title'],
-                $report['description'],
-                $report['general_objectives'],
-                $report['program_justification'],
-                $report['beneficiaries'],
-                $report['program_plan_text'],
-                $createdByName,
-                $department,
-                $role,
-                $userId,
-                $approvalData['dean'],
-                $approvalData['ces_head'],
-                $approvalData['ces_head_suffix'],
-                $approvalData['vp_acad'],
-                $approvalData['vp_acad_suffix'],
-                $approvalData['vp_admin'],
-                $approvalData['vp_admin_suffix'],
-                $approvalData['school_president'],
-                $approvalData['school_president_suffix'],
-                $documentInfo['issue_status'],
-                $documentInfo['revision_number'],
-                $documentInfo['date_effective'],
-                $documentInfo['approved_by'],
-                $status
-            );
-            $stmt->execute();
-            $reportId = $conn->insert_id;
-            $stmt->close();
-        }
-
-        $inserted = replaceProgramRows($conn, $reportId, $report['rows']);
-        $conn->commit();
-
-        return [$reportId, $inserted];
-    } catch (Exception $e) {
-        $conn->rollback();
-        throw $e;
-    }
-}
-
-function loadDraft(mysqli $conn) {
-    $userId = (int) $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT * FROM `3ydp` WHERE user_id=? AND status='draft' ORDER BY id DESC LIMIT 1");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $draft = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
+    $stmt = $pdo->prepare("SELECT * FROM `3ydp` WHERE user_id = :user_id AND status = 'draft' ORDER BY id DESC LIMIT 1");
+    $stmt->execute([':user_id' => $user['user_id']]);
+    $draft = $stmt->fetch();
 
     if (!$draft) {
         return null;
     }
 
-    $programStmt = $conn->prepare("SELECT program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame FROM `3ydp_programs` WHERE report_id=? ORDER BY id ASC");
-    $draftId = (int) $draft['id'];
-    $programStmt->bind_param("i", $draftId);
-    $programStmt->execute();
-    $programResult = $programStmt->get_result();
-    $programs = [];
+    $programStmt = $pdo->prepare("
+        SELECT program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame
+        FROM `3ydp_programs`
+        WHERE report_id = :report_id
+        ORDER BY id ASC
+    ");
+    $programStmt->execute([':report_id' => $draft['id']]);
+    $draft['programPlanTable'] = $programStmt->fetchAll();
+    $draft['report_type'] = $draft['type'] ?? THREE_YEAR_REPORT_TYPE;
 
-    while ($row = $programResult->fetch_assoc()) {
-        $programs[] = $row;
-    }
-
-    $programStmt->close();
-
-    return [
-        'id' => $draft['id'],
-        'title_of_project' => $draft['title_of_project'],
-        'description_of_project' => $draft['description_of_project'],
-        'general_objectives' => $draft['general_objectives'],
-        'program_justification' => $draft['program_justification'],
-        'beneficiaries' => $draft['beneficiaries'],
-        'program_plan_text' => $draft['program_plan_text'],
-        'report_type' => $draft['type'],
-        'programPlanTable' => $programs
-    ];
+    return $draft;
 }
 
 try {
-    requireLogin();
-
-    $conn = new mysqli("localhost", "root", "", "ces_reports_db");
-    if ($conn->connect_error) {
-        throw new Exception($conn->connect_error);
-    }
-
-    ensureDraftStatus($conn);
-
-    $input = file_get_contents("php://input");
-    $data = json_decode($input, true);
-
-    if (!is_array($data)) {
-        throw new Exception("Invalid JSON input");
-    }
-
-    $action = $data['action'] ?? 'submit';
+    $pdo = draft_pdo();
+    $data = transform_3ydp_payload(draft_input());
+    $action = $data['action'];
 
     if ($action === 'get_draft') {
-        sendJson([
-            "success" => true,
-            "user_id" => (int) $_SESSION['user_id'],
-            "draft" => loadDraft($conn)
+        draft_json([
+            'success' => true,
+            'user_id' => (string) ($_SESSION['user_id'] ?? ''),
+            'draft' => load_3ydp_draft($pdo)
         ]);
     }
 
-    if ($action === 'save_draft') {
-        [$reportId, $inserted] = saveReport($conn, $data, 'draft', isset($data['draft_id']) ? (int) $data['draft_id'] : null);
-        sendJson([
-            "success" => true,
-            "message" => "Draft saved successfully.",
-            "draft_id" => $reportId,
-            "user_id" => (int) $_SESSION['user_id'],
-            "program_rows" => $inserted
+    if ($action === 'save_draft' || $action === 'submit') {
+        $pdo->beginTransaction();
+        $reportId = save_3ydp_main($pdo, $data);
+        $inserted = replace_3ydp_program_rows($pdo, $reportId, $data['programPlanTable']);
+        $pdo->commit();
+
+        draft_json([
+            'success' => true,
+            'message' => $action === 'save_draft'
+                ? 'Draft saved successfully.'
+                : "Report submitted with $inserted program row(s).",
+            'draft_id' => $reportId,
+            'report_id' => $reportId,
+            'user_id' => (string) ($_SESSION['user_id'] ?? ''),
+            'program_rows' => $inserted
         ]);
     }
 
-    if ($action === 'submit') {
-        [$reportId, $inserted] = saveReport($conn, $data, 'pending', isset($data['draft_id']) ? (int) $data['draft_id'] : null);
-        sendJson([
-            "success" => true,
-            "message" => "Report submitted with $inserted program row(s).",
-            "report_id" => $reportId,
-            "user_id" => (int) $_SESSION['user_id']
-        ]);
+    draft_json(['success' => false, 'message' => 'Invalid action.'], 400);
+} catch (Throwable $e) {
+    if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+        $pdo->rollBack();
     }
-
-    sendJson(["success" => false, "message" => "Invalid action."], 400);
-} catch (Exception $e) {
-    sendJson(["success" => false, "message" => $e->getMessage()], 500);
+    draft_json(['success' => false, 'message' => $e->getMessage()], 500);
 }
 ?>

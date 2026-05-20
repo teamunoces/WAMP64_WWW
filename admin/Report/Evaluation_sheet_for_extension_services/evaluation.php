@@ -25,7 +25,8 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
     }
 </style>
     <title>Evaluation Sheet for Extension Services</title>
-    <link rel="stylesheet" href="evaluation.css">
+    <link rel="stylesheet" href="../shared/draft.css?v=20260520a">
+    <link rel="stylesheet" href="evaluation.css?v=20260520a">
     <link rel="stylesheet" href="./darkmode.css">
 </head>
 <body>
@@ -266,13 +267,16 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "Evaluati
                 <div class="sig-line">Date: <input type="text" name="date" class="sig-input" placeholder="type here..."></div>
             </footer>
 
-            <div>
+            <div class="form-actions">
+                <button type="button" class="draft-button">Save Draft</button>
+                <button type="button" class="clear-button">Clear</button>
                 <button type="submit" class="submit-button">Submit</button>
             </div>
         </form>
     </div>
     <script>const reportType = "<?php echo $reportType; ?>";console.log(reportType);</script>
-    <script src="./post.js"></script>
+    <script src="../shared/draft-utils.js?v=20260520a"></script>
+    <script src="./post.js?v=20260520a"></script>
     <script src="./darkmode.js"></script>
 </body>
 </html>

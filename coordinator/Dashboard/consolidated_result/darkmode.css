@@ -21,10 +21,24 @@ body.dark-mode .act {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
 }
 
-body.dark-mode .table-card select {
-    background: #121212 !important;
+body.dark-mode .table-card select,
+body.dark-mode #barangaySelect,
+body.dark-mode #yearSelect {
+    background: #1f5f13 !important;
     color: #ffffff !important;
-    border: 1px solid #555 !important;
+    border: 1px solid rgba(255, 255, 255, 0.42) !important;
+}
+
+body.dark-mode #barangaySelect option,
+body.dark-mode #yearSelect option {
+    background: #1f5f13 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode #barangaySelect option:checked,
+body.dark-mode #yearSelect option:checked {
+    background: #59af29 !important;
+    color: #ffffff !important;
 }
 
 /* 4. The Main Container (The "Paper") */

@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 try {
-    $conn = new mysqli("localhost", "root", "", "ces_reports_db");
+    $conn = new mysqli("localhost", "root", "", "ces_database");
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
@@ -13,8 +13,8 @@ try {
     $year = $_GET['year'] ?? 'all';
     $currentUserId = $_SESSION['user_id'] ?? null;
 
-    $tableCheck = $conn->query("SHOW TABLES LIKE '3ydp'");
-    $programTableCheck = $conn->query("SHOW TABLES LIKE '3ydp_programs'");
+    $tableCheck = $conn->query("SHOW TABLES LIKE 'report_3ydp'");
+    $programTableCheck = $conn->query("SHOW TABLES LIKE 'report_3ydp_programs'");
 
     if (!$tableCheck || $tableCheck->num_rows === 0 || !$programTableCheck || $programTableCheck->num_rows === 0) {
         echo json_encode([
@@ -25,8 +25,8 @@ try {
         exit;
     }
 
-    $hasUserId = $conn->query("SHOW COLUMNS FROM `3ydp` LIKE 'user_id'")->num_rows > 0;
-    $hasProgress = $conn->query("SHOW COLUMNS FROM `3ydp_programs` LIKE 'progress'")->num_rows > 0;
+    $hasUserId = $conn->query("SHOW COLUMNS FROM `report_3ydp` LIKE 'user_id'")->num_rows > 0;
+    $hasProgress = $conn->query("SHOW COLUMNS FROM `report_3ydp_programs` LIKE 'progress'")->num_rows > 0;
 
     $where = [];
     $types = "";
@@ -55,7 +55,7 @@ try {
             p.department,
             p.status,
             p.created_at
-        FROM `3ydp` p
+        FROM `report_3ydp` p
         $whereSql
         ORDER BY p.created_at DESC, p.id DESC
         LIMIT 1
@@ -107,7 +107,7 @@ try {
                 program,
                 objectives,
                 $progressColumn
-            FROM `3ydp_programs`
+            FROM `report_3ydp_programs`
             WHERE report_id IN ($placeholders)
             ORDER BY id ASC
             LIMIT 3
@@ -140,7 +140,7 @@ try {
         $programStmt->close();
     }
 
-    $yearQuery = "SELECT DISTINCT YEAR(created_at) AS report_year FROM `3ydp`";
+    $yearQuery = "SELECT DISTINCT YEAR(created_at) AS report_year FROM `report_3ydp`";
     $yearWhere = [];
     $yearTypes = "";
     $yearParams = [];
