@@ -15,7 +15,7 @@ if (!isset($_SESSION['name']) || !isset($_SESSION['role'])) {
 $host = "localhost";
 $user = "root";
 $pass = "";
-$dbname = "ces_reports_db";
+$dbname = "ces_database";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
@@ -38,7 +38,7 @@ if (!is_numeric($report_id)) {
 }
 
 // Get files for this report - filter by both report_id and report_table
-$sql = "SELECT id, file_name, file_path, created_at FROM report_files WHERE report_id = ? AND report_table = ? ORDER BY created_at DESC";
+$sql = "SELECT id, file_name, file_path, created_at FROM coordinator_report_files WHERE report_id = ? AND report_table = ? ORDER BY created_at DESC";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     echo json_encode(["success" => false, "error" => "Database prepare error: " . $conn->error]);

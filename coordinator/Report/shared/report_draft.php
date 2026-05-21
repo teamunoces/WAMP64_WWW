@@ -6,7 +6,7 @@ function draft_pdo(): PDO {
     }
 
     $pdo = new PDO(
-        "mysql:host=localhost;dbname=ces_reports_db;charset=utf8mb4",
+        "mysql:host=localhost;dbname=ces_database;charset=utf8mb4",
         "root",
         "",
         [
@@ -22,6 +22,47 @@ function draft_json(array $payload, int $statusCode = 200): void {
     http_response_code($statusCode);
     echo json_encode($payload);
     exit;
+}
+
+function draft_table(string $table): string {
+    $aliases = [
+        '3ydp' => 'report_3ydp',
+        '3ydp_programs' => 'report_3ydp_programs',
+        'cert_appearance' => 'report_cert_appearance',
+        'coordinator_cnacr' => 'report_coordinator_cnacr',
+        'mar_header' => 'report_mar_header',
+        'mar_table' => 'report_mar_table',
+        'narrative_report' => 'report_narrative',
+        'program_monitoring_form' => 'report_program_monitoring_form',
+        'reflection_paper' => 'report_reflection_paper',
+        'evaluation_reports' => 'report_evaluation',
+        'pd_main' => 'report_pd_main',
+        'pd_detail' => 'report_pd_detail'
+    ];
+
+    $allowed = [
+        'report_3ydp',
+        'report_3ydp_programs',
+        'report_cert_appearance',
+        'report_coordinator_cnacr',
+        'report_mar_header',
+        'report_mar_table',
+        'report_narrative',
+        'report_program_monitoring_form',
+        'report_reflection_paper',
+        'report_evaluation',
+        'report_pd_main',
+        'report_pd_detail'
+    ];
+
+    $table = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $table = $aliases[$table] ?? $table;
+
+    if (!in_array($table, $allowed, true)) {
+        draft_json(['success' => false, 'message' => 'Invalid report table.'], 400);
+    }
+
+    return $table;
 }
 
 function draft_require_user(): array {
@@ -45,6 +86,7 @@ function draft_input(): array {
 }
 
 function draft_ensure_status(PDO $pdo, string $table): void {
+    $table = draft_table($table);
     $stmt = $pdo->query("SHOW COLUMNS FROM `$table` LIKE 'status'");
     $column = $stmt->fetch();
     if (!$column || stripos($column['Type'], 'enum(') !== 0 || strpos($column['Type'], "'draft'") !== false) {
@@ -60,6 +102,7 @@ function draft_ensure_status(PDO $pdo, string $table): void {
 }
 
 function draft_columns(PDO $pdo, string $table): array {
+    $table = draft_table($table);
     $stmt = $pdo->query("SHOW COLUMNS FROM `$table`");
     $columns = [];
     foreach ($stmt->fetchAll() as $column) {
@@ -81,13 +124,15 @@ function draft_meta(PDO $pdo, array $user): array {
         'school_president_suffix' => ''
     ];
 
-    $stmt = $pdo->query("
+    $stmt = $pdo->prepare("
         SELECT ces_head, ces_head_suffix, vp_acad, vp_acad_suffix,
                vp_admin, vp_admin_suffix, school_president, school_president_suffix
-        FROM approval_db.approvals
+        FROM approvals_coordinator
+        WHERE department = :department
         ORDER BY updated_at DESC
         LIMIT 1
     ");
+    $stmt->execute([':department' => $user['department']]);
     if ($row = $stmt->fetch()) {
         $approval = array_merge($approval, $row);
     }
@@ -100,7 +145,7 @@ function draft_meta(PDO $pdo, array $user): array {
     ];
     $stmt = $pdo->query("
         SELECT issue_status, revision_number, date_effective, approved_by
-        FROM approval_db.document_info
+        FROM approvals_document_info
         ORDER BY updated_at DESC
         LIMIT 1
     ");
@@ -119,6 +164,7 @@ function draft_meta(PDO $pdo, array $user): array {
 }
 
 function draft_find_id(PDO $pdo, string $table, string $userId, string $type): ?int {
+    $table = draft_table($table);
     $stmt = $pdo->prepare("SELECT id FROM `$table` WHERE user_id = :user_id AND type = :type AND status = 'draft' ORDER BY id DESC LIMIT 1");
     $stmt->execute([':user_id' => $userId, ':type' => $type]);
     $row = $stmt->fetch();
@@ -126,6 +172,7 @@ function draft_find_id(PDO $pdo, string $table, string $userId, string $type): ?
 }
 
 function draft_save_main(PDO $pdo, string $table, array $data, array $options = []): int {
+    $table = draft_table($table);
     $user = draft_require_user();
     draft_ensure_status($pdo, $table);
 
@@ -181,6 +228,7 @@ function draft_save_main(PDO $pdo, string $table, array $data, array $options = 
 }
 
 function draft_get_main(PDO $pdo, string $table, array $options = []): ?array {
+    $table = draft_table($table);
     $user = draft_require_user();
     draft_ensure_status($pdo, $table);
     $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE user_id = :user_id AND status = 'draft' ORDER BY id DESC LIMIT 1");

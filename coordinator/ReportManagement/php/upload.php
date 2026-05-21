@@ -15,7 +15,7 @@ if (!isset($_SESSION['name']) || !isset($_SESSION['role'])) {
 $host = "localhost";
 $user = "root";
 $pass = "";
-$dbname = "ces_reports_db";
+$dbname = "ces_database";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
@@ -78,7 +78,7 @@ $relative_path = "uploads/report_files/" . $unique_filename;
 // Check if this is a reupload (existing file)
 if ($existing_file_id && $existing_file_id !== '') {
     // Get old file path - also verify it belongs to the same report_table
-    $get_old_sql = "SELECT file_path FROM report_files WHERE id = ? AND report_table = ?";
+    $get_old_sql = "SELECT file_path FROM coordinator_report_files WHERE id = ? AND report_table = ?";
     $get_old_stmt = $conn->prepare($get_old_sql);
     $get_old_stmt->bind_param("is", $existing_file_id, $report_table);
     $get_old_stmt->execute();
@@ -94,7 +94,7 @@ if ($existing_file_id && $existing_file_id !== '') {
     }
     
     // Update existing record with new file - include report_table in WHERE clause
-    $sql = "UPDATE report_files SET file_name = ?, file_path = ?, created_at = CURRENT_TIMESTAMP WHERE id = ? AND report_table = ?";
+    $sql = "UPDATE coordinator_report_files SET file_name = ?, file_path = ?, created_at = CURRENT_TIMESTAMP WHERE id = ? AND report_table = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssis", $file_name, $relative_path, $existing_file_id, $report_table);
     
@@ -114,7 +114,7 @@ if ($existing_file_id && $existing_file_id !== '') {
     if (isset($get_old_stmt)) $get_old_stmt->close();
 } else {
     // Insert new record with report_table
-    $sql = "INSERT INTO report_files (report_id, report_table, file_name, file_path) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO coordinator_report_files (report_id, report_table, file_name, file_path) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isss", $report_id, $report_table, $file_name, $relative_path);
     

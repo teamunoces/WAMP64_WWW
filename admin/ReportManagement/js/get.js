@@ -13,6 +13,16 @@ const showAllState = {
 };
 
 const typeMap = {
+    "report_cnacr": "CNACR",
+    "report_coordinator_cnacr": "Community Needs Assessment Consolidated Report",
+    "report_3ydp": "3 Year Development Plan",
+    "report_pd_main": "Program Design",
+    "report_mar_header": "Monthly Accomplishment Report",
+    "report_program_monitoring_form": "Program Monitoring Form",
+    "report_evaluation": "Evaluation Sheet for Extension Services",
+    "report_cert_appearance": "Certificate of Appearance",
+    "report_reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+    "report_narrative": "Monthly Accomplishment Report- Narrative Report",
     "cnacr": "CNACR",
     "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
     "3ydp": "3 Year Development Plan",
@@ -39,7 +49,7 @@ function debugElement(id) {
 }
 
 function getTypeName(report) {
-    return typeMap[report.source_table] || report.source_table;
+    return report?.type || typeMap[report?.source_table] || "N/A";
 }
 
 function getReportTime(report) {
@@ -304,7 +314,7 @@ function populateFilterDropdowns() {
                 "reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
                 "narrative_report": "Monthly Accomplishment Report- Narrative Report"
             };
-           const typeName = typeMap[report.source_table] || report.source_table;
+           const typeName = getTypeName(report);
             
             if (reportRole === role) {
                 if (statusFilter === null || reportStatus === statusFilter) {
@@ -577,7 +587,7 @@ function attachActionEvents(data) {
                 
                 const reportWithDisplay = {
                     ...report,
-                    displayType: typeMap[report.source_table] || report.source_table
+                    displayType: getTypeName(report)
                 };
                 
                 // Check if showFeedbackModal exists
@@ -606,6 +616,8 @@ function attachActionEvents(data) {
                 const viewPath = getViewPath(report, row);
                 if (viewPath) {
                     window.location.href = `${viewPath}?id=${reportId}`;
+                } else {
+                    showNotification("View path not found", "error");
                 }
             }
         };
@@ -689,6 +701,16 @@ function getViewPath(report, row) {
     
     const viewMappings = {
         admin: {
+            "report_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/resultview/cnacrview.php",
+            "report_coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coor_cnacrview/cnacrview.php",
+            "report_3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",
+            "report_pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/pdview/pdview.php",
+            "report_mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
+            "report_program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
+            "report_evaluation": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
+            "report_cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coaview/coaview.php",
+            "report_reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
+            "report_narrative": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
             "cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/resultview/cnacrview.php",
             "coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coor_cnacrview/cnacrview.php",
             "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",
@@ -699,9 +721,18 @@ function getViewPath(report, row) {
             "cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coaview/coaview.php",
             "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
             "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
-            "default": "/admin/ReportManagement/actions/admin_view/defaultview/view.php"
+            "default": null
         },
         coordinatorApproved: {
+            "report_coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/cnacrview/cnacrview.php",
+            "report_3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/3ydpview/3ydpview.php",
+            "report_pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/pdview/pdview.php",
+            "report_mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/marview/marview.php",
+            "report_program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/program_monitoring_formview/program_monitoring_formview.php",
+            "report_evaluation": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/evaluation_sheetview/evaluation_sheetview.php",
+            "report_cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/coaview/coaview.php",
+            "report_reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/reflection_paperview/reflection_paperview.php",
+            "report_narrative": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/narrative_reportview/narrative_reportview.php",
             "coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/cnacrview/cnacrview.php",
             "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/3ydpview/3ydpview.php",
             "pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/pdview/pdview.php",
@@ -711,7 +742,7 @@ function getViewPath(report, row) {
             "cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/coaview/coaview.php",
             "reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/reflection_paperview/reflection_paperview.php",
             "narrative_report": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/narrative_reportview/narrative_reportview.php",
-            "default": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/coordinator_view/defaultview/view.php"
+            "default": null
         },
         coordinatorRejected: {
             "default": null
@@ -772,7 +803,7 @@ function showUploadModal(reportId, reportTable, report = null) {
         
     };
     
-    const displayType = report ? (typeMap[report.source_table] || report.source_table) : 'N/A';
+    const displayType = report ? getTypeName(report) : 'N/A';
     const displayTitle = report ? (report.title || 'N/A') : 'N/A';
     
     // Set report title with type

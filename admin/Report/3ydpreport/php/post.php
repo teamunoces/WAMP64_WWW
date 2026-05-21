@@ -26,7 +26,7 @@ function transform_3ydp_payload(array $input): array {
 }
 
 function find_3ydp_draft_id(PDO $pdo, string $userId, string $type): ?int {
-    $stmt = $pdo->prepare("SELECT id FROM `3ydp` WHERE user_id = :user_id AND type = :type AND status = 'draft' ORDER BY id DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT id FROM `report_3ydp` WHERE user_id = :user_id AND type = :type AND status = 'draft' ORDER BY id DESC LIMIT 1");
     $stmt->execute([':user_id' => $userId, ':type' => $type]);
     $row = $stmt->fetch();
     return $row ? (int) $row['id'] : null;
@@ -34,14 +34,14 @@ function find_3ydp_draft_id(PDO $pdo, string $userId, string $type): ?int {
 
 function save_3ydp_main(PDO $pdo, array $data): int {
     $user = draft_require_user();
-    draft_ensure_status($pdo, '3ydp');
+    draft_ensure_status($pdo, 'report_3ydp');
 
     $status = ($data['action'] ?? '') === 'save_draft' ? 'draft' : 'pending';
     $requestedDraftId = isset($data['draft_id']) ? (int) $data['draft_id'] : 0;
     $reportId = null;
 
     if ($requestedDraftId > 0) {
-        $stmt = $pdo->prepare("SELECT id FROM `3ydp` WHERE id = :id AND user_id = :user_id AND status = 'draft' LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id FROM `report_3ydp` WHERE id = :id AND user_id = :user_id AND status = 'draft' LIMIT 1");
         $stmt->execute([':id' => $requestedDraftId, ':user_id' => $user['user_id']]);
         $row = $stmt->fetch();
         $reportId = $row ? (int) $row['id'] : null;
@@ -62,7 +62,7 @@ function save_3ydp_main(PDO $pdo, array $data): int {
         'status' => $status
     ], draft_meta($pdo, $user));
 
-    $columns = draft_columns($pdo, '3ydp');
+    $columns = draft_columns($pdo, 'report_3ydp');
     $payload = array_intersect_key($payload, array_flip($columns));
     unset($payload['id'], $payload['created_at']);
 
@@ -75,7 +75,7 @@ function save_3ydp_main(PDO $pdo, array $data): int {
             $params[":$column"] = $value;
         }
 
-        $sql = "UPDATE `3ydp` SET " . implode(', ', $sets) . " WHERE id = :id AND user_id = :where_user_id";
+        $sql = "UPDATE `report_3ydp` SET " . implode(', ', $sets) . " WHERE id = :id AND user_id = :where_user_id";
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $reportId;
@@ -89,14 +89,14 @@ function save_3ydp_main(PDO $pdo, array $data): int {
         $params[":$column"] = $value;
     }
 
-    $sql = "INSERT INTO `3ydp` (`" . implode('`, `', $columnNames) . "`) VALUES (" . implode(', ', $placeholders) . ")";
+    $sql = "INSERT INTO `report_3ydp` (`" . implode('`, `', $columnNames) . "`) VALUES (" . implode(', ', $placeholders) . ")";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return (int) $pdo->lastInsertId();
 }
 
 function replace_3ydp_program_rows(PDO $pdo, int $reportId, array $rows): int {
-    $deleteStmt = $pdo->prepare("DELETE FROM `3ydp_programs` WHERE report_id = :report_id");
+    $deleteStmt = $pdo->prepare("DELETE FROM `report_3ydp_programs` WHERE report_id = :report_id");
     $deleteStmt->execute([':report_id' => $reportId]);
 
     if (!$rows) {
@@ -104,7 +104,7 @@ function replace_3ydp_program_rows(PDO $pdo, int $reportId, array $rows): int {
     }
 
     $stmt = $pdo->prepare("
-        INSERT INTO `3ydp_programs`
+        INSERT INTO `report_3ydp_programs`
             (report_id, program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame)
         VALUES
             (:report_id, :program, :objectives, :strategies, :persons_agencies_involved, :resources_needed, :budget, :means_of_verification, :time_frame)
@@ -139,9 +139,9 @@ function replace_3ydp_program_rows(PDO $pdo, int $reportId, array $rows): int {
 
 function load_3ydp_draft(PDO $pdo): ?array {
     $user = draft_require_user();
-    draft_ensure_status($pdo, '3ydp');
+    draft_ensure_status($pdo, 'report_3ydp');
 
-    $stmt = $pdo->prepare("SELECT * FROM `3ydp` WHERE user_id = :user_id AND status = 'draft' ORDER BY id DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM `report_3ydp` WHERE user_id = :user_id AND status = 'draft' ORDER BY id DESC LIMIT 1");
     $stmt->execute([':user_id' => $user['user_id']]);
     $draft = $stmt->fetch();
 
@@ -151,7 +151,7 @@ function load_3ydp_draft(PDO $pdo): ?array {
 
     $programStmt = $pdo->prepare("
         SELECT program, objectives, strategies, persons_agencies_involved, resources_needed, budget, means_of_verification, time_frame
-        FROM `3ydp_programs`
+        FROM `report_3ydp_programs`
         WHERE report_id = :report_id
         ORDER BY id ASC
     ");

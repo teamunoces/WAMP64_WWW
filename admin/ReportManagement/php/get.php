@@ -2,7 +2,7 @@
 session_start();
 header('Content-Type: application/json');
 
-$conn = new mysqli("localhost", "root", "", "ces_reports_db");
+$conn = new mysqli("localhost", "root", "", "ces_database");
 
 if ($conn->connect_error) {
     echo json_encode(["error" => $conn->connect_error]);
@@ -13,16 +13,16 @@ $reports = [];
 
 // ✅ ONLY THESE TABLES WILL BE USED
 $allowedTables = [
-    "3ydp",
-    "cnacr",
-    "coordinator_cnacr",
-    "mar_header",
-    "pd_main",
-    "program_monitoring_form",
-    "evaluation_reports",
-    "cert_appearance",
-    "reflection_paper",
-    "narrative_report"
+    "report_3ydp",
+    "report_cert_appearance",
+    "report_cnacr",
+    "report_coordinator_cnacr",
+    "report_mar_header",
+    "report_narrative",
+    "report_program_monitoring_form",
+    "report_reflection_paper",
+    "report_evaluation",
+    "report_pd_main"
 ];
 
 foreach ($allowedTables as $tableName) {
@@ -77,6 +77,7 @@ foreach ($allowedTables as $tableName) {
                 "title" => $title,
                 "department" => $department,
                 "created_at" => $created_at,
+                "type" => $row['type'] ?? '',
                 "status" => $status,
                 "role" => $role,
                 "source_table" => $tableName

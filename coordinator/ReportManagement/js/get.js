@@ -52,6 +52,15 @@ async function loadReports() {
         }
 
         const typeNameMap = {
+            "report_coordinator_cnacr": "Community Needs Assessment Consolidated Report",
+            "report_3ydp": "3 Year Development Plan",
+            "report_pd_main": "Program Design",
+            "report_mar_header": "Monthly Accomplishment Report",
+            "report_program_monitoring_form": "Program Monitoring Form",
+            "report_evaluation": "Evaluation Sheet for Extension Services",
+            "report_cert_appearance": "Certificate of Appearance",
+            "report_reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+            "report_narrative": "Monthly Accomplishment Report- Narrative Report",
             "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
             "3ydp": "3 Year Development Plan",
             "pd_main": "Program Design",
@@ -73,7 +82,7 @@ async function loadReports() {
             const status = (report.status || "").toLowerCase().trim();
             const reportWithMeta = {
                 ...report,
-                displayType: typeNameMap[report.source_table] || report.source_table,
+                displayType: report.type || typeNameMap[report.source_table] || "N/A",
                 index: index
             };
 
@@ -274,7 +283,7 @@ function attachSectionEvents(container) {
                     alert("Report archived successfully.");
                     loadReports(); // Reload all reports
                 } else {
-                    alert("Archive failed.");
+                    alert("Archive failed: " + (result.error || "Unknown error"));
                 }
 
             } catch (error) {
@@ -334,6 +343,15 @@ function attachSectionEvents(container) {
             if (status === "approve" || status === "approved") {
                 // DIFFERENT PATHS for approved
                 viewMap = {
+                    "report_coordinator_cnacr": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/cnacrview/cnacrview.php",
+                    "report_3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/3ydpview/3ydpview.php",
+                    "report_pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pdview/pdview.php",
+                    "report_mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/marview/marview.php",
+                    "report_program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pmfview/pmfview.php",
+                    "report_evaluation": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/evaluationview/evaluationview.php",
+                    "report_cert_appearance": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/coaview/coaview.php",
+                    "report_reflection_paper": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/reflectionview/reflectionview.php",
+                    "report_narrative": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/narrativeview/narrativeview.php",
                     "coordinator_cnacr": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/cnacrview/cnacrview.php",
                     "3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/3ydpview/3ydpview.php",
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/view/pdview/pdview.php",
@@ -347,6 +365,15 @@ function attachSectionEvents(container) {
             } else {
                 // NORMAL VIEW (need fix)
                 viewMap = {
+                    "report_coordinator_cnacr": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/cnacrview/cnacrneedview.php",
+                    "report_3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/3ydpview/3ydpneedview.php",
+                    "report_pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pdview/pdneedview.php",
+                    "report_mar_header": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/marview/marneedview.php",
+                    "report_program_monitoring_form": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pmfview/pmfneedview.php",
+                    "report_evaluation": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/evaluationview/evaluationneedview.php",
+                    "report_cert_appearance": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/coaview/coaneedview.php",
+                    "report_reflection_paper": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/reflectionview/reflectionneedview.php",
+                    "report_narrative": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/narrativeview/narrativeneedview.php",
                     "coordinator_cnacr": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/cnacrview/cnacrneedview.php",
                     "3ydp": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/3ydpview/3ydpneedview.php",
                     "pd_main": "/SYSTEM_VERSION_!/coordinator/ReportManagement/actions/feedback/pdview/pdneedview.php",

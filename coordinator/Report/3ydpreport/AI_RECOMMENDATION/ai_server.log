@@ -100,3 +100,6 @@ Press CTRL+C to quit
 127.0.0.1 - - [20/May/2026 14:47:53] "GET /health HTTP/1.1" 200 -
 127.0.0.1 - - [20/May/2026 14:47:53] "OPTIONS /recommend HTTP/1.1" 200 -
 127.0.0.1 - - [20/May/2026 14:47:53] "POST /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [21/May/2026 11:20:30] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [21/May/2026 11:20:30] "OPTIONS /recommend HTTP/1.1" 200 -
+127.0.0.1 - - [21/May/2026 11:20:30] "POST /recommend HTTP/1.1" 200 -

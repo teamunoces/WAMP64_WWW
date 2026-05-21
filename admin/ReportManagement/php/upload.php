@@ -15,7 +15,7 @@ if (!isset($_SESSION['name']) || !isset($_SESSION['role'])) {
 $host = "localhost";
 $user = "root";
 $pass = "";
-$dbname = "ces_reports_db";
+$dbname = "ces_database";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {

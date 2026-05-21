@@ -10,6 +10,16 @@ let adminReports = [];
 let showAllAdminState = false;
 
 const typeMap = {
+    "report_cnacr": "CNACR",
+    "report_coordinator_cnacr": "Community Needs Assessment Consolidated Report",
+    "report_3ydp": "3 Year Development Plan",
+    "report_pd_main": "Program Design",
+    "report_mar_header": "Monthly Accomplishment Report",
+    "report_program_monitoring_form": "Program Monitoring Form",
+    "report_evaluation": "Evaluation Sheet for Extension Services",
+    "report_cert_appearance": "Certificate of Appearance",
+    "report_reflection_paper": "Monthly Accomplishment Report- Reflection Paper",
+    "report_narrative": "Monthly Accomplishment Report- Narrative Report",
     "cnacr": "CNACR",
     "coordinator_cnacr": "Community Needs Assessment Consolidated Report",
     "3ydp": "3 Year Development Plan",
@@ -48,7 +58,7 @@ async function loadReports() {
             .filter(report => (report.role || "unknown").toLowerCase() === "admin")
             .map(report => ({
                 ...report,
-                displayType: typeMap[report.source_table] || report.source_table
+                displayType: report.type || typeMap[report.source_table] || "N/A"
             }));
 
         renderAdminTable();
@@ -295,7 +305,7 @@ function showUploadModal(reportId, reportTable, report = null) {
         "mar_header": "Monthly Accomplishment Report"
     };
     
-    const displayType = report ? (typeMap[report.source_table] || report.source_table) : 'N/A';
+    const displayType = report ? (report.type || typeMap[report.source_table] || 'N/A') : 'N/A';
     const displayTitle = report ? (report.title || 'N/A') : 'N/A';
     
     // Set report title with type
