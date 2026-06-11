@@ -150,6 +150,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return false;
     }
+
+    aiSearchInput.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' || event.repeat || recommendationButton.disabled) {
+            return;
+        }
+
+        event.preventDefault();
+        recommendationButton.click();
+    });
     
         recommendationButton.addEventListener('click', async function () {
             const finalQuery = aiSearchInput.value.trim();
