@@ -87,6 +87,10 @@ body {
 
 .filter-row {
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .type-badge {
@@ -98,6 +102,23 @@ body {
 
 .type-badge.green { background: #b37a00; }
 .type-badge.red { background: var(--orange-primary); }
+
+.clear-filter-btn {
+    margin-left: auto;
+    border: 0;
+    border-radius: 4px;
+    padding: 7px 14px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-filter-btn.green { background: #b37a00; }
+.clear-filter-btn.red { background: var(--orange-primary); }
+
+.clear-filter-btn:hover {
+    filter: brightness(0.9);
+}
 
 .table-header {
     padding: 8px 15px;

@@ -74,6 +74,8 @@ try {
                 AND r.`status` <> 'draft'
                 AND r.`type` IS NOT NULL
                 AND TRIM(r.`type`) <> ''
+                AND r.`department` IS NOT NULL
+                AND TRIM(r.`department`) <> ''
                 AND u.`is_active` = 1";
 
         if ($hasRoleColumn) {

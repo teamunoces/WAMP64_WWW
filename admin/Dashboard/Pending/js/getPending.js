@@ -50,7 +50,10 @@ function renderTable(data, tableBodyId, status) {
     data = Array.isArray(data)
         ? data.filter(report => {
             const hasType = String(report.type || '').trim() !== '';
-            return hasType && normalizeStatus(report.status || status) === status;
+            const hasDepartment = String(report.department || '').trim() !== '';
+            return hasType
+                && hasDepartment
+                && normalizeStatus(report.status || status) === status;
         })
         : [];
 
@@ -78,8 +81,10 @@ function applyFilter(status, tableBodyId) {
     status = normalizeStatus(status);
     if (!status) return;
 
-    const filterId = status === 'pending' ? 'pendingTypeFilter' : 'needFixTypeFilter';
-    const val = document.getElementById(filterId).value.toLowerCase();
+    const typeFilterId = status === 'pending' ? 'pendingTypeFilter' : 'needFixTypeFilter';
+    const departmentFilterId = status === 'pending' ? 'pendingDepartmentFilter' : 'needFixDepartmentFilter';
+    const selectedType = normalizeFilterValue(document.getElementById(typeFilterId).value);
+    const selectedDepartment = normalizeFilterValue(document.getElementById(departmentFilterId).value);
 
     let combined = [];
     const dataObj = reportData[status] || {};
@@ -87,10 +92,32 @@ function applyFilter(status, tableBodyId) {
         if (Array.isArray(dataObj[table])) combined = combined.concat(dataObj[table]);
     }
 
-    const filtered = val === "all" ? combined :
-        combined.filter(r => (r.type || '').toLowerCase() === val);
+    const filtered = combined.filter(report => {
+        const matchesType = selectedType === 'all'
+            || normalizeFilterValue(report.type) === selectedType;
+        const matchesDepartment = selectedDepartment === 'all'
+            || normalizeFilterValue(report.department) === selectedDepartment;
+
+        return matchesType && matchesDepartment;
+    });
 
     renderTable(filtered, tableBodyId, status);
+}
+
+function clearFilters(status, tableBodyId) {
+    status = normalizeStatus(status);
+    if (!status) return;
+
+    const typeFilterId = status === 'pending' ? 'pendingTypeFilter' : 'needFixTypeFilter';
+    const departmentFilterId = status === 'pending' ? 'pendingDepartmentFilter' : 'needFixDepartmentFilter';
+
+    document.getElementById(typeFilterId).value = 'All';
+    document.getElementById(departmentFilterId).value = 'All';
+    applyFilter(status, tableBodyId);
+}
+
+function normalizeFilterValue(value) {
+    return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
 function viewReport(id, type, status) {
