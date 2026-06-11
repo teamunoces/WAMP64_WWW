@@ -7,7 +7,7 @@ try {
     $host = 'localhost';
     $username = 'root';
     $password = '';
-    $database = 'ces_reports_db';
+    $database = 'ces_database';
 
     $conn = new mysqli($host, $username, $password, $database);
 
@@ -21,7 +21,7 @@ try {
         $reportId = intval($_GET['id']);
         
         // Get the main report
-        $stmt = $conn->prepare("SELECT * FROM cert_appearance WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM report_cert_appearance WHERE id = ?");
         if (!$stmt) {
             throw new Exception('Prepare failed: ' . $conn->error);
         }
@@ -46,7 +46,7 @@ try {
         $reportType = $conn->real_escape_string($_GET['type']);
         
         // Get reports by type - fetch all matching reports
-        $stmt = $conn->prepare("SELECT * FROM cert_appearance WHERE type = ? AND archived = 'not archived' ORDER BY id DESC");
+        $stmt = $conn->prepare("SELECT * FROM report_cert_appearance WHERE type = ? AND archived = 'not archived' ORDER BY id DESC");
         if (!$stmt) {
             throw new Exception('Prepare failed: ' . $conn->error);
         }

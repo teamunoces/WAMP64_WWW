@@ -263,9 +263,19 @@ function attachActionEvents(data) {
 }
 
 function getViewPath(report) {
-    const type = report.source_table.toLowerCase().trim();
+    const type = (report.source_table || "").toLowerCase().trim();
 
     const viewMappings = {
+        "report_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/resultview/cnacrview.php",
+        "report_coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coor_cnacrview/cnacrview.php",
+        "report_3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",
+        "report_pd_main": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/pdview/pdview.php",
+        "report_mar_header": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/marview/marview.php",
+        "report_program_monitoring_form": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/program_monitoring_formview/program_monitoring_formview.php",
+        "report_evaluation": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/evaluation_sheetview/evaluation_sheetview.php",
+        "report_cert_appearance": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coaview/coaview.php",
+        "report_reflection_paper": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/reflection_paperview/reflection_paperview.php",
+        "report_narrative": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/narrative_reportview/narrative_reportview.php",
         "cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/resultview/cnacrview.php",
         "coordinator_cnacr": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/coor_cnacrview/cnacrview.php",
         "3ydp": "/SYSTEM_VERSION_!/admin/ReportManagement/actions/admin_view/3ydpview/3ydpview.php",

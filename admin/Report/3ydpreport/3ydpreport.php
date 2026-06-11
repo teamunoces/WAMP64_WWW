@@ -173,10 +173,10 @@ $reportType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "3-year D
     const reportType = "<?php echo $reportType; ?>";
     console.log(reportType);
     </script>
-    <script src="./AI_RECOMMENDATION/AI.js?v=20260520a" defer></script>
     <script src="../shared/draft-utils.js?v=20260520a" defer></script>
     <script src="./js/post.js?v=20260520a" defer></script>
     <script src="paperlines.js"></script>
     <script src="./darkmode.js"></script>
+    <script src="./AI_RECOMMENDATION/AI.js?v=20260526c" defer></script>
 </body>
 </html>

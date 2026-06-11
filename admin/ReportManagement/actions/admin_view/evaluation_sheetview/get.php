@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 $host = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'ces_reports_db';
+$database = 'ces_database';
 
 $conn = new mysqli($host, $username, $password, $database);
 
@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
     $reportId = intval($_GET['id']);
     
     // Get the main report
-    $stmt = $conn->prepare("SELECT * FROM evaluation_reports WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM report_evaluation WHERE id = ?");
     $stmt->bind_param("i", $reportId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -41,7 +41,7 @@ if (isset($_GET['id'])) {
     $reportType = $conn->real_escape_string($_GET['type']);
     
     // Get reports by type - fetch all matching reports
-    $stmt = $conn->prepare("SELECT * FROM evaluation_reports WHERE type = ? AND archived = 'not archived' ORDER BY id DESC");
+    $stmt = $conn->prepare("SELECT * FROM report_evaluation WHERE type = ? AND archived = 'not archived' ORDER BY id DESC");
     $stmt->bind_param("s", $reportType);
     $stmt->execute();
     $result = $stmt->get_result();

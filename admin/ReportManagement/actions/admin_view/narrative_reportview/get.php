@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 // Database connection
 $host = 'localhost';
-$dbname = 'ces_reports_db';
+$dbname = 'ces_database';
 $username = 'root';
 $password = '';
 
@@ -24,8 +24,8 @@ $userDepartment = $_SESSION['department'] ?? '';
 $userId = $_SESSION['user_id'] ?? '';
 
 try {
-    // Build query for narrative_report table
-    $sql = "SELECT * FROM narrative_report WHERE 1=1";
+    // Build query for narrative report table
+    $sql = "SELECT * FROM report_narrative WHERE 1=1";
     $params = [];
     
     if ($reportId) {

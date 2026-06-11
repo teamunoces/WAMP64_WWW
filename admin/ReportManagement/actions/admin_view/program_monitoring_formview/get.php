@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 $host = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'ces_reports_db';
+$database = 'ces_database';
 
 $conn = new mysqli($host, $username, $password, $database);
 
@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
     $reportId = intval($_GET['id']);
     
     // First, get the main report
-    $stmt = $conn->prepare("SELECT * FROM program_monitoring_form WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM report_program_monitoring_form WHERE id = ?");
     $stmt->bind_param("i", $reportId);
     $stmt->execute();
     $result = $stmt->get_result();

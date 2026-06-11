@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 // Database connection
 $host = 'localhost';
-$dbname = 'ces_reports_db';
+$dbname = 'ces_database';
 $username = 'root'; // change if needed
 $password = ''; // change if needed
 
@@ -22,7 +22,7 @@ $reportType = isset($_GET['type']) ? $_GET['type'] : null;
 $userDepartment = $_SESSION['department'] ?? '';
 
 try {
-    $sql = "SELECT * FROM reflection_paper WHERE 1=1";
+    $sql = "SELECT * FROM report_reflection_paper WHERE 1=1";
     $params = [];
     
     if ($reportId) {
