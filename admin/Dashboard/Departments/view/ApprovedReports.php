@@ -78,6 +78,16 @@ function getReportType($table_name) {
     }
 }
 
+function getDisplayTitle($title, $report_type) {
+    $title = trim((string) $title);
+
+    if ($title === '' || preg_match('/^ces_head(?:_suffix)?/i', $title)) {
+        return $report_type;
+    }
+
+    return $title;
+}
+
 // Function to get column names for a table
 function getTableColumns($conn, $tableName) {
     $columns = [];
@@ -1057,38 +1067,67 @@ $debug_mode = false; // Set to true to see debug info
                 <?php else: ?>
                     <?php foreach ($all_reports as $report): 
                         $report_type = getReportType($report['source_table']);
+                        $display_title = getDisplayTitle($report['title'] ?? '', $report_type);
                         $attachments = getAttachments($conn, $report['id']);
                     ?>
                         <div class="report-card"
                                  data-report-type="<?php echo htmlspecialchars(getReportType($report['source_table'])); ?>"
                                  data-report-date="<?php echo htmlspecialchars(date('Y-m-d', strtotime($report['created_at']))); ?>">
-                              
+                                <div class="report-card-accent" aria-hidden="true"></div>
 
                                 <div class="report-header">
-                                    <h2 class="report-title">
-                                        <?php echo htmlspecialchars($report['title'] ?? 'Untitled'); ?>
-                                        <span class="report-type"><?php echo $report_type; ?></span>
-                                        <span class="status-badge">APPROVED</span>
-                                        <span class="coordinator-tag">Coordinator</span>
-                                    </h2>
+                                    <div class="report-heading">
+                                        <span class="report-eyebrow">Approved report</span>
+                                        <h2 class="report-title"><?php echo htmlspecialchars($display_title); ?></h2>
+                                        <div class="report-badges" aria-label="Report classification">
+                                            <span class="report-type"><?php echo htmlspecialchars($report_type); ?></span>
+                                            <span class="coordinator-tag">Coordinator</span>
+                                        </div>
+                                    </div>
 
-                                    <span class="report-date">
-                                        <?php echo isset($report['created_at']) ? date('F j, Y, g:i a', strtotime($report['created_at'])) : 'Date unknown'; ?>
-                                    </span>
+                                    <div class="report-header-side">
+                                        <span class="status-badge">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                                            Approved
+                                        </span>
+                                        <time class="report-date" datetime="<?php echo isset($report['created_at']) ? htmlspecialchars(date('c', strtotime($report['created_at']))) : ''; ?>">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"/></svg>
+                                            <?php echo isset($report['created_at']) ? date('M j, Y', strtotime($report['created_at'])) : 'Date unknown'; ?>
+                                        </time>
+                                    </div>
                                 </div>
 
                             
                             <div class="report-meta">
+                                <span class="meta-item submitted-by">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>
+                                    <span><small>Submitted by</small><?php echo htmlspecialchars($report['submitted_by'] ?? 'Unknown'); ?></span>
+                                </span>
+                                <span class="meta-item">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M6 21V7l6-4 6 4v14"/></svg>
+                                    <span><small>Department</small><?php echo htmlspecialchars($report['department'] ?? $department); ?></span>
+                                </span>
+                                <span class="meta-item">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                                    <span><small>Status</small>Approved</span>
+                                </span>
+                                <span class="meta-item">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0 0 4h14"/></svg>
+                                    <span><small>Role</small><?php echo htmlspecialchars(ucfirst($report['role'] ?? 'coordinator')); ?></span>
+                                </span>
+                                <span class="legacy-report-meta">
                                 <span class="submitted-by">
                                     📝 Submitted by: <i><?php echo htmlspecialchars($report['submitted_by'] ?? 'Unknown'); ?></i>
                                 </span>
                                 <span>🏢 Department: <?php echo htmlspecialchars($report['department'] ?? $department); ?></span>
                                 <span>📋 Status: <?php echo htmlspecialchars($report['status'] ?? 'approve'); ?></span>
                                 <span>👤 Role: <?php echo htmlspecialchars($report['role'] ?? 'coordinator'); ?></span>
+                                </span>
                             </div>
                             
-                            <div class="report-content">
-                                <?php echo nl2br(htmlspecialchars($report['description'] ?? 'No description available')); ?>
+                            <?php $description = trim((string) ($report['description'] ?? '')); ?>
+                            <div class="report-content<?php echo $description === '' ? ' is-empty' : ''; ?>">
+                                <?php echo $description !== '' ? nl2br(htmlspecialchars($description)) : 'No description available'; ?>
                             </div>
                             
                             <!-- Attachments Section -->
